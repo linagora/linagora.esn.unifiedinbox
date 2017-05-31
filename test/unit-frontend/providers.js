@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The Unified Inbox Angular module providers', function() {
 
-  var $rootScope, inboxProviders, inboxNewTwitterProvider, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
+  var $rootScope, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
       $httpBackend, jmapClient, inboxMailboxesService, jmap, ELEMENTS_PER_REQUEST;
 
   function elements(id, length, offset) {
@@ -63,12 +63,11 @@ describe('The Unified Inbox Angular module providers', function() {
     });
   });
 
-  beforeEach(angular.mock.inject(function(_$rootScope_, _inboxProviders_, _inboxNewTwitterProvider_, _inboxHostedMailMessagesProvider_, _inboxSearchResultsProvider_,
+  beforeEach(angular.mock.inject(function(_$rootScope_, _inboxProviders_, _inboxHostedMailMessagesProvider_, _inboxSearchResultsProvider_,
                                           _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _$httpBackend_, _inboxMailboxesService_, _jmap_,
                                           _ELEMENTS_PER_REQUEST_) {
     $rootScope = _$rootScope_;
     inboxProviders = _inboxProviders_;
-    inboxNewTwitterProvider = _inboxNewTwitterProvider_;
     inboxHostedMailMessagesProvider = _inboxHostedMailMessagesProvider_;
     inboxSearchResultsProvider = _inboxSearchResultsProvider_;
     inboxHostedMailAttachmentProvider = _inboxHostedMailAttachmentProvider_;
@@ -343,98 +342,6 @@ describe('The Unified Inbox Angular module providers', function() {
         done();
       });
       $rootScope.$digest();
-    });
-
-  });
-
-  describe('The inboxNewTwitterProvider factory', function() {
-
-    it('should paginate requests to the backend', function(done) {
-      var fetcher = inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets').fetch();
-
-      $httpBackend.expectGET('/unifiedinbox/api/inbox/tweets?account_id=myTwitterAccount&count=400').respond(200, elements('tweet', ELEMENTS_PER_REQUEST));
-
-      fetcher();
-      $httpBackend.flush();
-
-      $httpBackend.expectGET('/unifiedinbox/api/inbox/tweets?account_id=myTwitterAccount&count=400&max_id=tweet_199').respond(200, [{
-        id: 'tweet_200'
-      }]);
-
-      fetcher().then(function(tweets) {
-        expect(tweets.length).to.equal(1);
-
-        done();
-      });
-      $httpBackend.flush();
-    });
-
-    it('should support fetching recent items', function(done) {
-      var fetcher = inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets').fetch();
-
-      $httpBackend.expectGET('/unifiedinbox/api/inbox/tweets?account_id=myTwitterAccount&count=400').respond(200, elements('tweet', ELEMENTS_PER_REQUEST));
-
-      fetcher();
-      $httpBackend.flush();
-
-      $httpBackend.expectGET('/unifiedinbox/api/inbox/tweets?account_id=myTwitterAccount&count=400&since_id=tweet_0').respond(200, [
-        {
-          id: 'tweet_-1'
-        }
-      ]);
-
-      fetcher.loadRecentItems({ id: 'tweet_0' }).then(function(tweets) {
-        expect(tweets.length).to.equal(1);
-
-        done();
-      });
-      $httpBackend.flush();
-    });
-
-    describe('The buildFetchContext function', function() {
-
-      it('should resolve when no options are given', function(done) {
-        inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets').buildFetchContext().then(done);
-        $rootScope.$digest();
-      });
-
-      it('should resolve when quickFilter is not defined', function(done) {
-        inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets').buildFetchContext({}).then(done);
-        $rootScope.$digest();
-      });
-
-      it('should reject if quickFilter is defined', function(done) {
-        inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets').buildFetchContext({ quickFilter: 'filter' }).catch(function() {
-          done();
-        });
-        $rootScope.$digest();
-      });
-
-    });
-
-    describe('The itemMatches function', function() {
-
-      it('should resolve when no provider ID is selected', function(done) {
-        var provider = inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets');
-
-        provider.itemMatches({}, {}).then(done);
-        $rootScope.$digest();
-      });
-
-      it('should resolve when provider ID matches selected provider ID', function(done) {
-        var provider = inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets');
-
-        provider.itemMatches({}, { acceptedIds: ['id'] }).then(done);
-        $rootScope.$digest();
-      });
-
-      it('should reject when provider ID does not match selected provider ID', function(done) {
-        var provider = inboxNewTwitterProvider('id', 'myTwitterAccount', '/unifiedinbox/api/inbox/tweets');
-
-        provider.itemMatches({}, { acceptedIds: ['another_id'] }).catch(done);
-        $rootScope.$digest();
-      });
-
     });
 
   });

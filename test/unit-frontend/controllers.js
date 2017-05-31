@@ -225,7 +225,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         acceptedAccounts: ['myAccount'],
         filterByType: {
           jmap: {},
-          twitter: {},
           social: {}
         },
         context: 'myContext',
@@ -2136,42 +2135,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       initController('inboxSidebarEmailController');
 
       expect(session.user.preferredEmail).to.equal('admin@open-paas.org');
-    });
-
-  });
-
-  describe('The inboxSidebarTwitterController controller', function() {
-
-    var session;
-
-    beforeEach(inject(function(_session_) {
-      session = _session_;
-    }));
-
-    it('should assign twitterAccounts to $scope if the feature is enabled', function() {
-      var twitterAccounts = [{ id: 1 }, { id: 2 }];
-
-      config['linagora.esn.unifiedinbox.twitter.tweets'] = true;
-      session.getProviderAccounts = function() {
-        return twitterAccounts;
-      };
-
-      initController('inboxSidebarTwitterController');
-
-      expect(scope.twitterAccounts).to.deep.equal(twitterAccounts);
-    });
-
-    it('should not assign twitterAccounts to $scope if the feature is disabled', function() {
-      var twitterAccounts = [{ id: 1 }, { id: 2 }];
-
-      config['linagora.esn.unifiedinbox.twitter.tweets'] = false;
-      session.getProviderAccounts = function() {
-        return twitterAccounts;
-      };
-
-      initController('inboxSidebarTwitterController');
-
-      expect(scope.twitterAccounts).to.deep.equal([]);
     });
 
   });

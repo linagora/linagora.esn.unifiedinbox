@@ -254,16 +254,7 @@ angular.module('linagora.esn.unifiedinbox', [
       }))
       .state('unifiedinbox.inbox.message.move', stateOpeningModal({
         url: '/move'
-      }, '/unifiedinbox/views/email/view/move/index', 'inboxMoveItemController'))
-      .state('unifiedinbox.twitter', {
-        url: '/twitter/:username',
-        views: {
-          'main@unifiedinbox': {
-            templateUrl: '/unifiedinbox/views/twitter/list/index',
-            controller: 'listTwitterController as ctrl'
-          }
-        }
-      });
+      }, '/unifiedinbox/views/email/view/move/index', 'inboxMoveItemController'));
 
     var inbox = new dynamicDirectiveServiceProvider.DynamicDirective(true, 'application-menu-inbox', {priority: 45}),
         attachmentDownloadAction = new dynamicDirectiveServiceProvider.DynamicDirective(true, 'attachment-download-action');
@@ -273,24 +264,15 @@ angular.module('linagora.esn.unifiedinbox', [
   })
 
   .run(function($q, inboxConfig, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailThreadsProvider,
-                inboxTwitterDirectMessagesProvider, inboxTwitterMentionsProvider, session, searchProviders, inboxSearchResultsProvider,
-                DEFAULT_VIEW) {
+                session, searchProviders, inboxSearchResultsProvider, DEFAULT_VIEW) {
 
     $q.all([
-      inboxConfig('view', DEFAULT_VIEW),
-      inboxConfig('twitter.tweets')
+      inboxConfig('view', DEFAULT_VIEW)
     ]).then(function(config) {
-      var view = config[0],
-          twitterTweetsEnabled = config[1];
+      var view = config[0];
 
       inboxProviders.add(view === 'messages' ? inboxHostedMailMessagesProvider : inboxHostedMailThreadsProvider);
 
-      if (twitterTweetsEnabled) {
-        session.getProviderAccounts('twitter').forEach(function(account) {
-          inboxProviders.add(inboxTwitterMentionsProvider(account.id));
-          inboxProviders.add(inboxTwitterDirectMessagesProvider(account.id));
-        });
-      }
     });
 
     searchProviders.add(inboxSearchResultsProvider);

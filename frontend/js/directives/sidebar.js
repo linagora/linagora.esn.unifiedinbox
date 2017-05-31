@@ -11,15 +11,6 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxSidebarTwitter', function() {
-    return {
-      restrict: 'E',
-      templateUrl: '/unifiedinbox/views/sidebar/twitter/menu.html',
-      scope: {},
-      controller: 'inboxSidebarTwitterController'
-    };
-  })
-
   .directive('inboxSidebarConfigurationButton', function() {
     return {
       restrict: 'E',

@@ -618,16 +618,6 @@ angular.module('linagora.esn.unifiedinbox')
     });
   })
 
-  .controller('inboxSidebarTwitterController', function($scope, session, inboxConfig) {
-    $scope.twitterAccounts = [];
-
-    inboxConfig('twitter.tweets').then(function(twitterTweetsEnabled) {
-      if (twitterTweetsEnabled) {
-        $scope.twitterAccounts = session.getProviderAccounts('twitter');
-      }
-    });
-  })
-
   .controller('resolveEmailerController', function($scope) {
     $scope.$watch('emailer', function(emailer) {
       if (emailer) {
