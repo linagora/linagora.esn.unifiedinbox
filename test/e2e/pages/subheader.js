@@ -7,9 +7,9 @@ module.exports = function() {
   function clickButton(label) {
     if (label === 'Save') {
       return saveButton.click();
-    } else {
-      throw new Error('No such button on Inbox subheader: ' + label);
     }
+
+    throw new Error('No such button on Inbox subheader: ' + label);
   }
 
   return {

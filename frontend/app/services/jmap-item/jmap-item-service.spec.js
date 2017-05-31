@@ -313,6 +313,7 @@ describe('The inboxJmapItemService service', function() {
 
     it('should leverage open() and createReplyEmailObject()', function() {
       var inputEmail = { id: 'id', input: 'value' };
+
       inboxJmapItemService.reply(inputEmail);
       $rootScope.$digest();
 
@@ -326,6 +327,7 @@ describe('The inboxJmapItemService service', function() {
 
     it('should leverage open() and createReplyAllEmailObject()', function() {
       var inputEmail = { id: 'id', input: 'value' };
+
       inboxJmapItemService.replyAll(inputEmail);
       $rootScope.$digest();
 
@@ -339,6 +341,7 @@ describe('The inboxJmapItemService service', function() {
 
     it('should leverage open() and createForwardEmailObject()', function() {
       var inputEmail = { id: 'id', input: 'value' };
+
       inboxJmapItemService.forward(inputEmail);
       $rootScope.$digest();
 

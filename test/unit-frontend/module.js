@@ -41,6 +41,7 @@ describe('The Unified Inbox Angular module', function() {
         inboxProviders: inboxProviders,
         searchProviders: searchProviders
       };
+
       specificProvider = specificProvider || 'inboxProviders';
 
       providers[specificProvider].getAll().then(function(providers) {

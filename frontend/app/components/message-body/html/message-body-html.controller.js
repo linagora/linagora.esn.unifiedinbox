@@ -69,6 +69,7 @@
 
         $scope.$on('wm:' + IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT, function(event, cid, iframe) {
           var attachment = _.find(self.message.attachments, { cid: cid });
+
           iframe = iframe || self.iFrames[0];
           if (attachment) {
             attachment.getSignedDownloadUrl().then(function(url) {

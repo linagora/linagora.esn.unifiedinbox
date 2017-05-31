@@ -79,6 +79,7 @@ describe('The Unified Inbox Angular module services', function() {
   describe('The generateJwtToken service', function() {
 
     var $httpBackend, generateJwtToken;
+
     beforeEach(angular.mock.inject(function(_$httpBackend_, _generateJwtToken_) {
       $httpBackend = _$httpBackend_;
       generateJwtToken = _generateJwtToken_;
@@ -86,6 +87,7 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('should resolve response data on success', function(done) {
       var responseData = { key: 'value' };
+
       $httpBackend.expectPOST('/api/jwt/generate').respond(200, responseData);
       generateJwtToken().then(function(data) {
         expect(data).to.deep.equal(responseData);
@@ -176,6 +178,7 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('should give the client in the callback when jmapClientProvider resolves', function(done) {
       var jmapClient = { send: angular.noop };
+
       jmapClientProviderMock.get = function() { return $q.when(jmapClient); };
 
       withJmapClient(function(client) {
@@ -188,6 +191,7 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('should reject when jmapClient cannot be built', function(done) {
       var errorMessage = 'JMAP';
+
       jmapClientProviderMock.get = function() {
         return $q.reject(new Error(errorMessage));
       };
@@ -203,7 +207,9 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('should reject if the callback promise rejects', function(done) {
       jmapClientProviderMock.get = function() { return $q.when({}); };
+
       var e = new Error('error message');
+
       withJmapClient(function() {
         return $q.reject(e);
       }).then(done.bind(null, 'should reject'), function(err) {
@@ -264,6 +270,7 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should resolve response on success', function(done) {
         var data = { key: 'data' };
+
         $httpBackend.expectPOST('/unifiedinbox/api/inbox/sendemail').respond(200, data);
         sendEmail({}).then(function(resp) {
           expect(resp.data).to.deep.equal(data);
@@ -321,6 +328,7 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should reject if JMAP client fails to save email as draft', function(done) {
         var error = new Error('error message');
+
         jmapClientMock.saveAsDraft = function() {
           return $q.reject(error);
         };
@@ -652,6 +660,7 @@ describe('The Unified Inbox Angular module services', function() {
 
     describe('The getReplyAllRecipients function', function() {
       var email, sender, expectedEmail;
+
       it('should do nothing when email/sender is/are not provided', function() {
         expect(emailSendingService.getReplyAllRecipients(null, {})).to.be.undefined;
         expect(emailSendingService.getReplyAllRecipients({}, null)).to.be.undefined;
@@ -1220,18 +1229,20 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should return false if original and new are both undefined object', function() {
         var draft = draftService.startDraft(undefined);
+
         expect(draft.needToBeSaved(undefined)).to.equal(false);
       });
 
       it('should return false if original and new are both empty object', function() {
         var draft = draftService.startDraft({});
+
         expect(draft.needToBeSaved({})).to.equal(false);
       });
 
       it('should look for differences after having copying original', function() {
         var content = {subject: 'yo'};
-
         var draft = draftService.startDraft(content);
+
         content.subject = 'lo';
 
         expect(draft.needToBeSaved(content)).to.equal(true);
@@ -1245,6 +1256,7 @@ describe('The Unified Inbox Angular module services', function() {
           cc: [{email: 'cc@domain'}],
           bcc: [{email: 'bcc@domain'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1262,6 +1274,7 @@ describe('The Unified Inbox Angular module services', function() {
           cc: [{email: 'cc1@domain'}, {email: 'cc2@domain'}],
           bcc: [{email: 'bcc1@domain'}, {email: 'bcc2@domain'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1277,6 +1290,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           to: [{email: 'to@domain', name: 'before'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1289,6 +1303,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'yo',
           htmlBody: 'text'
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo'
         })).to.equal(true);
@@ -1298,6 +1313,7 @@ describe('The Unified Inbox Angular module services', function() {
         var draft = draftService.startDraft({
           subject: 'yo'
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text'
@@ -1310,6 +1326,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           to: []
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1323,6 +1340,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           to: [{email: 'first@domain'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1335,6 +1353,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'yo',
           htmlBody: 'text'
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1348,6 +1367,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           attachments: [{blobId: '1'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1361,6 +1381,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           attachments: [{blobId: '1', name: 'name 1'}, {blobId: '2', name: 'name 2'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1374,6 +1395,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           attachments: [{blobId: '1', name: 'name 1'}, {blobId: '2', name: 'name 2'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1387,6 +1409,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           cc: [{email: 'first@domain'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1400,6 +1423,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           bcc: [{email: 'first@domain'}]
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1412,6 +1436,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: '',
           htmlBody: 'text'
         });
+
         expect(draft.needToBeSaved({
           subject: undefined,
           htmlBody: 'text'
@@ -1421,6 +1446,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: undefined,
           htmlBody: 'text'
         });
+
         expect(draft2.needToBeSaved({
           subject: '',
           htmlBody: 'text'
@@ -1432,6 +1458,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: ' ',
           htmlBody: 'text'
         });
+
         expect(draft.needToBeSaved({
           subject: undefined,
           htmlBody: 'text'
@@ -1441,6 +1468,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: undefined,
           htmlBody: 'text'
         });
+
         expect(draft2.needToBeSaved({
           subject: ' ',
           htmlBody: 'text'
@@ -1452,6 +1480,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'subject',
           htmlBody: undefined
         });
+
         expect(draft.needToBeSaved({
           subject: 'subject',
           htmlBody: ''
@@ -1461,6 +1490,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'subject',
           htmlBody: ''
         });
+
         expect(draft2.needToBeSaved({
           subject: 'subject',
           htmlBody: undefined
@@ -1472,6 +1502,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'subject',
           htmlBody: undefined
         });
+
         expect(draft.needToBeSaved({
           subject: 'subject',
           htmlBody: ' '
@@ -1481,6 +1512,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'subject',
           htmlBody: ' '
         });
+
         expect(draft2.needToBeSaved({
           subject: 'subject',
           htmlBody: undefined
@@ -1493,6 +1525,7 @@ describe('The Unified Inbox Angular module services', function() {
           htmlBody: 'text',
           to: []
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text'
@@ -1504,6 +1537,7 @@ describe('The Unified Inbox Angular module services', function() {
           subject: 'yo',
           htmlBody: 'text'
         });
+
         expect(draft.needToBeSaved({
           subject: 'yo',
           htmlBody: 'text',
@@ -1567,7 +1601,9 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should do nothing and return rejected promise if needToBeSaved returns false', function(done) {
         jmapClient.saveAsDraft = sinon.spy();
+
         var draft = draftService.startDraft({});
+
         draft.needToBeSaved = function() {return false;};
 
         draft.save({}).catch(function() {
@@ -1580,7 +1616,9 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should call saveAsDraft if needToBeSaved returns true', function(done) {
         jmapClient.saveAsDraft = sinon.stub().returns($q.when({}));
+
         var draft = draftService.startDraft({});
+
         draft.needToBeSaved = function() {return true;};
 
         draft.save({to: []}).then(function() {
@@ -1639,6 +1677,7 @@ describe('The Unified Inbox Angular module services', function() {
         jmapClient.saveAsDraft = function() {return $q.when({});};
 
         var draft = draftService.startDraft({});
+
         draft.needToBeSaved = function() {return true;};
 
         draft.save({to: []});
@@ -1649,9 +1688,11 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should notify when has not saved successfully', function(done) {
         var err = {message: 'rejected with err'};
+
         jmapClient.saveAsDraft = function() {return $q.reject(err);};
 
         var draft = draftService.startDraft({});
+
         draft.needToBeSaved = function() {return true;};
 
         draft.save({to: []}).catch(function(error) {
@@ -2013,7 +2054,6 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('should renew the original jmap message with the ack id when saveDraft is called', function(done) {
       var message = new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {});
-
       var composition = new Composition(message);
 
       composition.email.htmlBody = 'new content';
@@ -2264,6 +2304,7 @@ describe('The Unified Inbox Angular module services', function() {
 
     it('"send" should cancel a delayed draft save', function(done) {
       var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {}));
+
       composition.email.subject = 'subject';
 
       jmapClient.saveAsDraft = sinon.spy();
@@ -2364,6 +2405,7 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should reopen the composer with the expected email when the grace period is cancelled', function(done) {
         var expectedEmail = { to: ['to@to'], cc: [], bcc: [], subject: 'expected subject', htmlBody: 'expected body', attachments: [] };
+
         newComposerService.open = sinon.spy();
 
         new Composition(expectedEmail).destroyDraft().then(function() {
@@ -2376,9 +2418,11 @@ describe('The Unified Inbox Angular module services', function() {
       it('should perform draft saving when the composition has been modified, then restored, then saved', function(done) {
         var modifyingEmail = { to: [], cc: [], bcc: [], subject: 'original subject', htmlBody: '', attachments: [] };
         var expectedDraft = draftService.startDraft(angular.copy(modifyingEmail));
+
         newComposerService.open = sinon.spy();
 
         var composition = new Composition(modifyingEmail);
+
         composition.email.subject = modifyingEmail.subject = 'modified subject';
 
         composition.destroyDraft().then(function() {
@@ -2392,6 +2436,7 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should delete the original draft when the grace period is not cancelled', function(done) {
         var message = new jmap.Message(jmapClient, 123, 'threadId', ['box1'], {});
+
         graceRequestResult.cancelled = false;
 
         new Composition(message).destroyDraft().then(function() {
@@ -2403,6 +2448,7 @@ describe('The Unified Inbox Angular module services', function() {
 
       it('should cancel the delayed save request', function() {
         var composition = new Composition();
+
         composition.email.htmlBody = 'content to save';
 
         composition.saveDraftSilently();

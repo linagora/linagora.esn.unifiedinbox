@@ -7,6 +7,7 @@ module.exports = function() {
   this.unifiedInboxButton = element(by.css('#header .application-menu a[href="/#/unifiedinbox"]'));
   this.clickOnModuleInMenu = function() {
     this.menuButton.click();
+
     return this.unifiedInboxButton.click();
   }.bind(this);
 

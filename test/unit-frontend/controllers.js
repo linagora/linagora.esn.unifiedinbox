@@ -968,6 +968,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     it('should expose move to the controller', function() {
       var email = { to: [] };
       var controller = initController('viewEmailController');
+
       scope.email = email;
 
       controller.move();
@@ -1325,6 +1326,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     it('should expose move to the controller', function() {
       var thread = { mailboxIds: [] };
       var controller = initController('viewThreadController');
+
       scope.thread = thread;
 
       controller.move();

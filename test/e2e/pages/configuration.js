@@ -13,9 +13,9 @@ module.exports = function() {
       return foldersTabButton.click();
     } else if (label === 'Vacation') {
       return vacationTabButton.click();
-    } else {
-      throw new Error('No such configuration tab: ' + label);
     }
+
+    throw new Error('No such configuration tab: ' + label);
   }
 
   return {

@@ -143,8 +143,10 @@ describe('The Unified Inbox Angular module filters', function() {
           { role: { value: undefined }},
           { role: { value: 'inbox' }}
         ];
-     expect(inboxFilterRestrictedMailboxesFilter(mailboxes)).to.deep.equal(expectedMailboxes);
+
+      expect(inboxFilterRestrictedMailboxesFilter(mailboxes)).to.deep.equal(expectedMailboxes);
     });
+
   });
 
 });

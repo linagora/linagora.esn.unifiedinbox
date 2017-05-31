@@ -536,6 +536,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
           subject: 'le sujet', htmlBody: '<p>Le contenu</p>',
           attachments: []
         };
+
         newComposerService.open = sinon.spy();
 
         sendDraftWhileOffline(aFakeEmail);

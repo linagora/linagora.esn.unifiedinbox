@@ -44,7 +44,9 @@ angular.module('linagora.esn.unifiedinbox', [
   'esn.registry',
   'material.components.virtualRepeat',
   'esn.module-registry',
-  'esn.user-configuration'
+  'esn.user-configuration',
+  'esn.ui',
+  'ng.deviceDetector'
 ])
 
   .config(function($stateProvider, dynamicDirectiveServiceProvider) {
