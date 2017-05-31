@@ -27,7 +27,6 @@ const angularAppFiles = [
   'services/models/thread.run.js',
   'services/plugins/plugins.js',
   'services/plugins/jmap/jmap-plugin.run.js',
-  'services/plugins/twitter/twitter-plugin.run.js',
   'services/filtered-list/filtered-list.js',
   'components/identities/identities.js',
   'components/identities/identities.controller.js',
@@ -81,12 +80,10 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
   states: {
     lib: function(dependencies, callback) {
       var inbox = require('./backend/webserver/api/inbox/router')(dependencies);
-      var twitter = require('./backend/webserver/api/twitter/router')(dependencies);
 
       var lib = {
         api: {
-          inbox: inbox,
-          twitter: twitter
+          inbox: inbox
         }
       };
 

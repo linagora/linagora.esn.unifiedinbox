@@ -119,7 +119,7 @@ describe('The inboxFilteringService service', function() {
       });
       service.getAvailableFilters();
 
-      expect(_(filters).reject({ isGlobal: true }).map('checked').value()).to.deep.equal([false, false]);
+      expect(_(filters).reject({ isGlobal: true }).map('checked').value()).to.deep.equal([]);
     });
 
   });
@@ -133,8 +133,7 @@ describe('The inboxFilteringService service', function() {
         acceptedAccounts: undefined,
         filterByType: {
           jmap: {},
-          social: {},
-          twitter: {}
+          social: {}
         },
         context: undefined,
         quickFilter: null
@@ -154,8 +153,7 @@ describe('The inboxFilteringService service', function() {
         acceptedAccounts: ['accountId'],
         filterByType: {
           jmap: {},
-          social: {},
-          twitter: {}
+          social: {}
         },
         context: 'mailboxId',
         quickFilter: null
@@ -181,8 +179,7 @@ describe('The inboxFilteringService service', function() {
           },
           social: {
             isSocial: true
-          },
-          twitter: {}
+          }
         },
         context: 'mailboxId',
         quickFilter: null

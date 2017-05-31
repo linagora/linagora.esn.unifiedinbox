@@ -794,18 +794,6 @@ angular.module('linagora.esn.unifiedinbox')
         displayName: 'Social',
         type: PROVIDER_TYPES.SOCIAL,
         isGlobal: true
-      },
-      {
-        id: 'inboxTwitterMentions',
-        displayName: 'Mentions',
-        type: PROVIDER_TYPES.TWITTER,
-        selectionById: true
-      },
-      {
-        id: 'inboxTwitterDirectMessages',
-        displayName: 'Direct Messages',
-        type: PROVIDER_TYPES.TWITTER,
-        selectionById: true
       }
     ];
   })

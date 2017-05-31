@@ -125,17 +125,6 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('twitterDisplay', function() {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: {
-        account: '='
-      },
-      templateUrl: '/unifiedinbox/views/sidebar/twitter/menu-item.html'
-    };
-  })
-
   .directive('inboxEmailer', function(session) {
     return {
       restrict: 'E',

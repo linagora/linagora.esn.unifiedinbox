@@ -32,8 +32,7 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('INBOX_SWIPE_DURATION', 500)
   .constant('PROVIDER_TYPES', {
     JMAP: 'jmap',
-    SOCIAL: 'social',
-    TWITTER: 'twitter'
+    SOCIAL: 'social'
   })
   .constant('INBOX_EVENTS', {
     VACATION_STATUS: 'inbox:vacationStatusUpdated',

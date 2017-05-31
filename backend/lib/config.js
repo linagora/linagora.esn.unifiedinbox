@@ -14,7 +14,6 @@ module.exports = dependencies => {
       isSaveDraftBeforeSendingEnabled: {},
       'composer.attachments': {},
       maxSizeUpload: {},
-      'twitter.tweets': {},
       drafts: {},
       swipeRightAction: {},
       'identities.default': {
