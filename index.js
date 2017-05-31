@@ -111,15 +111,12 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
 
       webserverWrapper.addApp('unifiedinbox', app);
 
+      require('./backend/lib/config')(dependencies).register();
+
       return callback();
     },
 
-    start: function(dependencies, callback) {
-      var config = require('./backend/lib/config')(dependencies);
-
-      config.register();
-      callback();
-    }
+    start: (dependencies, callback) => callback()
   }
 });
 
