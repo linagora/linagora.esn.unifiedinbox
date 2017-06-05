@@ -4,7 +4,7 @@ br
 br
 
 p {{ marker }}
-cite #{__('On')} {{ email.quoted.date | date:dateFormat:tz }}, #{__('from')} {{ email.quoted.from.email }}:
+cite #{__('On')} {{ email.quoted.date | esnDatetime }}, #{__('from')} {{ email.quoted.from.email }}:
 
 br
 br
