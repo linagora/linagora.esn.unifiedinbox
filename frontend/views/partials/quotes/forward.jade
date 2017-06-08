@@ -6,7 +6,7 @@ cite
   br
   | #{__('Subject')}: {{ email.quoted.subject }}
   br
-  | #{__('Date')}: {{ email.quoted.date | date:dateFormat:tz }}
+  | #{__('Date')}: {{ email.quoted.date | esnDatetime }}
   br
   | #{__('From')}: {{ email.quoted.from.email }}
   br

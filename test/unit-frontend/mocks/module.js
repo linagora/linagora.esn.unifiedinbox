@@ -25,3 +25,4 @@ angular.module('ngMessages', []);
 angular.module('ngGeolocation', []);
 angular.module('matchmedia-ng', []);
 angular.module('openpaas-logo', []);
+angular.module('esn.datetime', []);
