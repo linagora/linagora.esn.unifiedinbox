@@ -26,3 +26,13 @@ angular.module('ngGeolocation', []);
 angular.module('matchmedia-ng', []);
 angular.module('openpaas-logo', []);
 angular.module('esn.datetime', []);
+angular.module('esn.i18n', [])
+  .factory('esnI18nService', function() {
+    return {
+      translate: function(input) {
+        return {
+          toString: function() {return input;}
+        };
+      }
+    };
+  });
