@@ -82,11 +82,28 @@ module.exports = function(grunt) {
               'frontend/app/**/*.jade',
               'frontend/views/**/*.jade'
             ],
+            core: false
+          }, {
+            localeDir: 'node_modules/linagora-rse/backend/i18n/locales',
+            templateSrc: [
+              'node_modules/linagora-rse/frontend/views/**/*.jade',
+              'node_modules/linagora-rse/frontend/js/**/*.jade'
+            ],
             core: true
           }],
           verifyOptions: {
             defaultLocale: 'en',
-            locales: ['en', 'fr', 'vi']
+            locales: ['en', 'fr', 'vi'],
+            rules: [
+              'all-keys-translated',
+              'all-locales-present',
+              'default-locale-translate',
+              'key-trimmed',
+              'no-duplicate-among-modules',
+              'no-duplicate-with-core',
+              'no-untranslated-key',
+              'valid-json-file'
+            ]
           }
         }
       }
@@ -112,7 +129,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   grunt.registerTask('i18n', 'Check the translation files', ['i18n_checker']);
-  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all'/* Too complicated for now :( , 'i18n' */]);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'i18n']);
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'jscs:quick', 'lint_pattern:quick']);
   grunt.registerTask('spawn-servers', 'spawn servers', ['shell:mongo', 'shell:redis', 'shell:elasticsearch']);
   grunt.registerTask('kill-servers', 'kill servers', ['shell:mongo:kill', 'shell:redis:kill', 'shell:elasticsearch:kill']);
