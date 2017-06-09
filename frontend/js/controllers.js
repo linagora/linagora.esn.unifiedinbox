@@ -62,7 +62,7 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
-                                            attachmentUploadService, _, inboxConfig, inboxIdentitiesService,
+                                            attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
                                             DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
     var self = this,
         disableImplicitSavesAsDraft = false,
@@ -173,7 +173,9 @@ angular.module('linagora.esn.unifiedinbox')
 
           $files.forEach(function(file) {
             if (file.size > maxSizeUpload) {
-              return notificationFactory.weakError('', 'File ' + file.name + ' ignored as its size exceeds the ' + humanReadableMaxSizeUpload + ' limit');
+              return notificationFactory.weakError('',
+                esnI18nService.translate('File %s ignored as its size exceeds the %s limit', file.name, humanReadableMaxSizeUpload)
+              );
             }
 
             var attachment = newAttachment(client, file);
@@ -410,7 +412,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxDeleteFolderController', function($scope, $state, $stateParams, inboxMailboxesService, _) {
+  .controller('inboxDeleteFolderController', function(_, $scope, $state, $stateParams, inboxMailboxesService, esnI18nService) {
     inboxMailboxesService
       .assignMailbox($stateParams.mailbox, $scope, true)
       .then(function(mailbox) {
@@ -419,16 +421,23 @@ angular.module('linagora.esn.unifiedinbox')
             numberOfMailboxesToDisplay = 3,
             more = numberOfDescendants - numberOfMailboxesToDisplay;
 
-        $scope.message = 'You are about to remove folder ' + mailbox.displayName;
+        var messageFor1Folder = 'You are about to remove folder %s',
+            messageFor2To4Folders = messageFor1Folder + ' and its descendants including %s',
+            messageFor5Folders = messageFor2To4Folders + ' and %s',
+            messageForMoreFolders = messageFor2To4Folders + ' and %s more';
 
-        if (numberOfDescendants > 0) {
-          $scope.message += ' and its descendants including ' + descendants.slice(0, numberOfMailboxesToDisplay).map(_.property('displayName')).join(', ');
-        }
+        if (numberOfDescendants < 1) {
+          $scope.message = esnI18nService.translate(messageFor1Folder, mailbox.displayName).toString();
+        } else {
+          var displayingDescendants = descendants.slice(0, numberOfMailboxesToDisplay).map(_.property('displayName')).join(', ');
 
-        if (more === 1) {
-          $scope.message += ' and ' + descendants[numberOfMailboxesToDisplay].displayName;
-        } else if (more > 1) {
-          $scope.message += ' and ' + more + ' more';
+          if (more <= 0) {
+            $scope.message = esnI18nService.translate(messageFor2To4Folders, mailbox.displayName, displayingDescendants).toString();
+          } else if (more === 1) {
+            $scope.message = esnI18nService.translate(messageFor5Folders, mailbox.displayName, displayingDescendants, descendants[numberOfMailboxesToDisplay].displayName).toString();
+          } else {
+            $scope.message = esnI18nService.translate(messageForMoreFolders, mailbox.displayName, displayingDescendants, more).toString();
+          }
         }
       });
 
@@ -533,7 +542,11 @@ angular.module('linagora.esn.unifiedinbox')
             $scope.vacation.toDate = null;
           }
 
-          return asyncJmapAction('Modification of vacation settings', function(client) {
+          return asyncJmapAction({
+            progressing: 'Saving vacation settings...',
+            success: 'Vacation settings saved',
+            failure: 'Failed to save vacation settings'
+          }, function(client) {
             return client.setVacationResponse(new jmap.VacationResponse(client, $scope.vacation));
           }, {
             onFailure: {
@@ -597,12 +610,12 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('attachmentController', function(navigateTo, asyncAction) {
+  .controller('attachmentController', function(navigateTo, asyncAction, esnI18nService) {
     this.download = function(attachment) {
       return asyncAction({
         progressing: 'Please wait while your download is being prepared',
         success: 'Your download has started',
-        failure: 'Unable to download attachment ' + attachment.name
+        failure: esnI18nService.translate('Unable to download attachment %s', attachment.name)
       }, function() {
         return attachment.getSignedDownloadUrl().then(navigateTo);
       });

@@ -35,4 +35,7 @@ angular.module('esn.i18n', [])
         };
       }
     };
+  })
+  .filter('esnI18n', function() {
+    return function(input) { return input; };
   });
