@@ -27,6 +27,9 @@ describe('The inboxJmapItemService service', function() {
       createReplyAllEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); }),
       createForwardEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); })
     });
+    $provide.value('esnI18nService', {
+      translate: function(input) { return input; }
+    });
   }));
 
   beforeEach(inject(function(_$rootScope_, _jmap_, _inboxJmapItemService_, _notificationFactory_,
@@ -113,7 +116,7 @@ describe('The inboxJmapItemService service', function() {
       });
 
       inboxJmapItemService.moveToMailbox(newEmail(), mailbox).catch(function() {
-        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Cannot move "subject" to "inbox"');
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Cannot move "%s" to "%s"');
 
         done();
       });
@@ -131,7 +134,7 @@ describe('The inboxJmapItemService service', function() {
       });
 
       inboxJmapItemService.moveToMailbox([newEmail(), newEmail()], mailbox).catch(function() {
-        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Some items could not be moved to "inbox"');
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Some items could not be moved to "%s"');
 
         done();
       });
@@ -408,7 +411,7 @@ describe('The inboxJmapItemService service', function() {
       });
 
       inboxJmapItemService.setFlag(newEmail(), 'isUnread', true).catch(function() {
-        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Could not update "subject"');
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Could not update "%s"');
 
         done();
       });

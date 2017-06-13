@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService, backgroundAction,
-                                              jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, _,
+                                              jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, _, esnI18nService,
                                               INBOX_EVENTS) {
 
       return {
@@ -56,7 +56,9 @@
         $rootScope.$broadcast(INBOX_EVENTS.ITEM_MAILBOX_IDS_CHANGED, items);
 
         return asyncJmapAction({
-          failure: items.length > 1 ? 'Some items could not be moved to "' + mailbox.displayName + '"' : 'Cannot move "' + items[0].subject + '" to "' + mailbox.displayName + '"'
+          failure: items.length > 1 ?
+            esnI18nService.translate('Some items could not be moved to "%s"', mailbox.displayName) :
+            esnI18nService.translate('Cannot move "%s" to "%s"', items[0].subject, mailbox.displayName)
         }, function(client) {
           return client.setMessages({
             update: _.mapValues(itemsById, _.constant({ mailboxIds: toMailboxIds }))
@@ -141,7 +143,9 @@
         $rootScope.$broadcast(INBOX_EVENTS.ITEM_FLAG_CHANGED, items, flag, state);
 
         return asyncJmapAction({
-          failure: items.length > 1 ? 'Some items could not be updated' : 'Could not update "' + items[0].subject + '"'
+          failure: items.length > 1 ?
+            'Some items could not be updated' :
+            esnI18nService.translate('Could not update "%s"', items[0].subject)
         }, function(client) {
           return client.setMessages({
             update: _.mapValues(itemsById, _.constant(_.zipObject([flag], [state])))

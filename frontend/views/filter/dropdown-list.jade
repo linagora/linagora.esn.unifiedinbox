@@ -3,4 +3,4 @@
     label.dropdown-item
       input.dropdown-item-checkbox(type="checkbox", ng-model="filter.checked", ng-change="ctrl.dropdownItemClicked($index)")
       i.input-helper
-      | {{ filter.displayName }}
+      | {{ filter.displayName | esnI18n }}

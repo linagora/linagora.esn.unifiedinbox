@@ -19,6 +19,7 @@ angular.module('ngAnimate', []);
 angular.module('mgcrea.ngStrap', []);
 angular.module('mgcrea.ngStrap.modal', []);
 angular.module('mgcrea.ngStrap.alert', []);
+angular.module('mgcrea.ngStrap.popover', []);
 angular.module('angularFileUpload', []);
 angular.module('ngTagsInput', []);
 angular.module('ngMessages', []);
@@ -35,4 +36,7 @@ angular.module('esn.i18n', [])
         };
       }
     };
+  })
+  .filter('esnI18n', function() {
+    return function(input) { return input; };
   });
