@@ -120,5 +120,14 @@
   "Some items could not be moved to \"%s\"": "Some items could not be moved to \"%s\"",
   "Cannot move \"%s\" to \"%s\"": "Cannot move \"%s\" to \"%s\"",
   "Some items could not be updated": "Some items could not be updated",
-  "Could not update \"%s\"": "Could not update \"%s\""
+  "Could not update \"%s\"": "Could not update \"%s\"",
+  "Suggestions": "Suggestions",
+  "%s items": "%s items",
+  "1 item": "1 item",
+  "INBOX": "INBOX",
+  "Drafts": "Drafts",
+  "Outbox": "Outbox",
+  "Sent": "Sent",
+  "Trash": "Trash",
+  "Inbox": "Inbox"
 }

@@ -120,5 +120,14 @@
   "Some items could not be moved to \"%s\"": "Certains éléments n'ont pas pu être déplacés vers \"% s \"",
   "Cannot move \"%s\" to \"%s\"": "Impossible de déplacer \"%s\" vers \"%s\"",
   "Some items could not be updated": "Certains éléments n'ont pas pu être mis à jour",
-  "Could not update \"%s\"": "Impossible de mettre à jour \"%s\""
+  "Could not update \"%s\"": "Impossible de mettre à jour \"%s\"",
+  "Suggestions": "Suggestions",
+  "%s items": "%s éléments",
+  "1 item": "1 élément",
+  "INBOX": "INBOX",
+  "Drafts": "Brouillons",
+  "Outbox": "Boîte d'envoi",
+  "Sent": "Éléments envoyés",
+  "Trash": "Corbeille",
+  "Inbox": "Boîte de réception"
 }
