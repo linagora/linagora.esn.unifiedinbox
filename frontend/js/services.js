@@ -8,9 +8,9 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('generateJwtToken', function($http, _) {
+  .factory('generateJwtToken', function($http, _, httpConfigurer) {
     return function() {
-      return $http.post('/api/jwt/generate').then(_.property('data'));
+      return $http.post(httpConfigurer.getUrl('/api/jwt/generate')).then(_.property('data'));
     };
   })
 
@@ -63,9 +63,9 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService) {
+  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer) {
     function sendBySmtp(email) {
-      return $http.post('/unifiedinbox/api/inbox/sendemail', email);
+      return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
 
     function sendByJmapMovingDraftToOutbox(client, message) {

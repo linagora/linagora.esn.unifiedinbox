@@ -48,7 +48,8 @@ angular.module('linagora.esn.unifiedinbox', [
   'esn.ui',
   'ng.deviceDetector',
   'esn.datetime',
-  'esn.i18n'
+  'esn.i18n',
+  'esn.http'
 ])
 
   .config(function($stateProvider, dynamicDirectiveServiceProvider) {
