@@ -3,6 +3,7 @@
 var AwesomeModule = require('awesome-module');
 var Dependency = AwesomeModule.AwesomeModuleDependency;
 var path = require('path');
+const glob = require('glob-all');
 
 const angularAppFiles = [
   'components/sidebar/attachment/sidebar-attachment.component.js',
@@ -66,8 +67,25 @@ const angularJsFiles = [
 ];
 
 const FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
+const MODULE_NAME = 'unifiedinbox';
+const AWESOME_MODULE_NAME = `linagora.esn.${MODULE_NAME}`;
+const lessFiles = [path.resolve(__dirname, './frontend/app/inbox.less')];
 
-var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
+const angularLocalJsFiles = {
+  localJsFiles: angularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
+};
+
+const angularAppLocalJsFiles = {
+  localJsFiles: angularAppFiles.map(file => path.join(FRONTEND_JS_PATH, 'app', file))
+};
+
+const frontendViewFullPathModules = glob.sync([
+  FRONTEND_JS_PATH + '/views/**/*.jade', FRONTEND_JS_PATH + '/app/**/*.jade'
+]);
+
+const viewsFiles = frontendViewFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH, ''));
+
+var unifiedInboxModule = new AwesomeModule(AWESOME_MODULE_NAME, {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.logger', 'logger'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.esn-config', 'esn-config'),
@@ -94,19 +112,13 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
       var app = require('./backend/webserver/application')(dependencies),
           webserverWrapper = dependencies('webserver-wrapper');
 
-      webserverWrapper.injectAngularModules('unifiedinbox', angularJsFiles, 'linagora.esn.unifiedinbox', ['esn'], {
-        localJsFiles: angularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
-      });
+      webserverWrapper.injectAngularModules(MODULE_NAME, angularJsFiles, AWESOME_MODULE_NAME, ['esn'], angularLocalJsFiles);
 
-      webserverWrapper.injectAngularAppModules('unifiedinbox', angularAppFiles, 'linagora.esn.unifiedinbox', ['esn'], {
-        localJsFiles: angularAppFiles.map(file => path.join(FRONTEND_JS_PATH, 'app', file))
-      });
+      webserverWrapper.injectAngularAppModules(MODULE_NAME, angularAppFiles, AWESOME_MODULE_NAME, ['esn'], angularAppLocalJsFiles);
 
-      webserverWrapper.injectLess('unifiedinbox', [
-        path.resolve(__dirname, './frontend/app/inbox.less')
-      ], 'esn');
+      webserverWrapper.injectLess(MODULE_NAME, lessFiles, 'esn');
 
-      webserverWrapper.addApp('unifiedinbox', app);
+      webserverWrapper.addApp(MODULE_NAME, app);
 
       require('./backend/lib/config')(dependencies).register();
 
@@ -116,5 +128,62 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
     start: (dependencies, callback) => callback()
   }
 });
+
+unifiedInboxModule.frontendInjections = {
+  angularAppModules: [
+    [
+      MODULE_NAME,
+      angularAppFiles,
+      AWESOME_MODULE_NAME,
+      ['esn'],
+      angularAppLocalJsFiles
+    ]
+  ],
+  angularModules: [
+    [
+      MODULE_NAME,
+      angularJsFiles,
+      AWESOME_MODULE_NAME,
+      ['esn'],
+      angularLocalJsFiles
+    ]
+  ],
+  less: [
+    [MODULE_NAME, lessFiles, ['esn']]
+  ],
+  js: [
+    {
+      moduleName: MODULE_NAME,
+      path: {
+        base: 'frontend/js',
+        serve: `${MODULE_NAME}/js`
+      },
+      moduleJS: angularJsFiles
+    },
+    {
+      moduleName: MODULE_NAME,
+      path: {
+        base: 'frontend/app',
+        serve: `${MODULE_NAME}/app`
+      },
+      moduleJS: angularAppFiles
+    }
+  ],
+  views: [
+    {
+      moduleName: MODULE_NAME,
+      path: {
+        base: 'frontend',
+        serve: `${MODULE_NAME}`
+      },
+      moduleViews: viewsFiles
+    }
+  ],
+  i18n: [
+    'backend/lib/i18n/locales/fr.json',
+    'backend/lib/i18n/locales/en.json',
+    'backend/lib/i18n/locales/vi.json'
+  ]
+};
 
 module.exports = unifiedInboxModule;
