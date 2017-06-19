@@ -2,7 +2,7 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .directive('inboxDraggableListItem', function(inboxSelectionService) {
+  .directive('inboxDraggableListItem', function(inboxSelectionService, esnI18nService) {
     return {
       restrict: 'A',
       link: function(scope) {
@@ -20,10 +20,10 @@ angular.module('linagora.esn.unifiedinbox')
 
         scope.getDragMessage = function($dragData) {
           if ($dragData.length > 1) {
-            return $dragData.length + ' items';
+            return esnI18nService.translate('%s items', $dragData.length);
           }
 
-          return $dragData[0].subject || '1 item';
+          return $dragData[0].subject || esnI18nService.translate('1 item');
         };
       }
     };

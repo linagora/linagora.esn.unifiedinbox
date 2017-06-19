@@ -120,5 +120,14 @@
   "Some items could not be moved to \"%s\"": "Một số mục không thể chuyển đến \"%s\"",
   "Cannot move \"%s\" to \"%s\"": "Không thể chuyển \"%s\" đến \"%s\"",
   "Some items could not be updated": "Không thể cập nhật một số mục",
-  "Could not update \"%s\"": "Không thể cập nhật \"%s\""
+  "Could not update \"%s\"": "Không thể cập nhật \"%s\"",
+  "Suggestions": "Gợi ý",
+  "%s items": "%s mục",
+  "1 item": "1 mục",
+  "INBOX": "Hòm thư đến",
+  "Drafts": "Thư nháp",
+  "Outbox": "Hộp thư đi",
+  "Sent": "Thư đã gửi",
+  "Trash": "Thùng rác",
+  "Inbox": "Hòm thư"
 }
