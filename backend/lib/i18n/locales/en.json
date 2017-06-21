@@ -129,5 +129,14 @@
   "Outbox": "Outbox",
   "Sent": "Sent",
   "Trash": "Trash",
-  "Inbox": "Inbox"
+  "Inbox": "Inbox",
+  "Created folder %s": "Created folder %s",
+  "Folder %s is being created...": "Folder %s is being created...",
+  "Failed to create folder %s": "Failed to create folder %s",
+  "Deleted folder %s": "Deleted folder %s",
+  "Folder %s is being deleted...": "Folder %s is being deleted...",
+  "Failed to delete folder %s": "Failed to delete folder %s",
+  "Folder %s is modified": "Folder %s is modified",
+  "Folder %s is being modified...": "Folder %s is being modified...",
+  "Failed to modify folder %s": "Failed to modify folder %s"
 }

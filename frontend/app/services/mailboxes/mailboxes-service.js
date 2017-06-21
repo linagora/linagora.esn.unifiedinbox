@@ -9,7 +9,7 @@
     ])
 
     .factory('inboxMailboxesService', function($q, _, withJmapClient, jmap, inboxSpecialMailboxes, inboxMailboxesCache,
-                                               asyncJmapAction, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
+                                               asyncJmapAction, esnI18nService, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
       var mailboxesListAlreadyFetched = false;
 
@@ -35,18 +35,28 @@
       }
 
       function qualifyMailbox(mailbox) {
-        var parent = mailbox;
-
         mailbox.level = 1;
         mailbox.qualifiedName = mailbox.name;
 
-        parent = _findMailboxInCache(parent.parentId);
+        var parent = _findMailboxInCache(mailbox.parentId);
 
         while (parent) {
           mailbox.qualifiedName = parent.name + MAILBOX_LEVEL_SEPARATOR + mailbox.qualifiedName;
           mailbox.level++;
 
           parent = _findMailboxInCache(parent.parentId);
+        }
+
+        return mailbox;
+      }
+
+      function _translateMailboxes(mailboxes) {
+        return _.each(mailboxes, _translateMailbox);
+      }
+
+      function _translateMailbox(mailbox) {
+        if (mailbox && mailbox.role && mailbox.role.value) {
+          mailbox.name = esnI18nService.translate(mailbox.name).toString();
         }
 
         return mailbox;
@@ -119,6 +129,7 @@
         return withJmapClient(function(client) {
           return client.getMailboxes({ ids: [id] })
             .then(_.head) // We expect a single mailbox here
+            .then(_translateMailbox)
             .then(_updateMailboxCache)
             .then(_findMailboxInCache.bind(null, id))
             .then(_assignToObject(dst, 'mailbox'));
@@ -141,6 +152,7 @@
 
               return mailboxes;
             })
+            .then(_translateMailboxes)
             .then(_updateMailboxCache)
             .then(filter || _.identity);
         });
@@ -244,7 +256,11 @@
       }
 
       function createMailbox(mailbox, onFailure) {
-        return asyncJmapAction('Creation of folder ' + mailbox.name, function(client) {
+        return asyncJmapAction({
+          success: esnI18nService.translate('Created folder %s', mailbox.name),
+          progessing: esnI18nService.translate('Folder %s is being created...', mailbox.name),
+          failure: esnI18nService.translate('Failed to create folder %s', mailbox.name)
+        }, function(client) {
           return client.createMailbox(mailbox.name, mailbox.parentId);
         }, {
           onFailure: onFailure
@@ -259,7 +275,11 @@
           .push(mailbox.id)
           .value(); // According to JMAP spec, the X should be removed before Y if X is a descendent of Y
 
-        return asyncJmapAction('Deletion of folder ' + mailbox.displayName, function(client) {
+        return asyncJmapAction({
+          success: esnI18nService.translate('Deleted folder %s', mailbox.displayName),
+          progessing: esnI18nService.translate('Folder %s is being deleted...', mailbox.displayName),
+          failure: esnI18nService.translate('Failed to delete folder %s', mailbox.displayName)
+        }, function(client) {
           return client.setMailboxes({ destroy: ids })
             .then(function(response) {
               _removeMailboxesFromCache(response.destroyed);
@@ -272,7 +292,11 @@
       }
 
       function updateMailbox(oldMailbox, newMailbox) {
-        return asyncJmapAction('Modification of folder ' + oldMailbox.displayName, function(client) {
+        return asyncJmapAction({
+          success: esnI18nService.translate('Folder %s is modified', oldMailbox.displayName),
+          progressing: esnI18nService.translate('Folder %s is being modified...', oldMailbox.displayName),
+          failure: esnI18nService.translate('Failed to modify folder %s', oldMailbox.displayName)
+        }, function(client) {
           return client.updateMailbox(oldMailbox.id, {
             name: newMailbox.name,
             parentId: newMailbox.parentId
