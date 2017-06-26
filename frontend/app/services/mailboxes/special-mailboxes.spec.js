@@ -29,7 +29,6 @@ describe('The inboxSpecialMailboxes factory', function() {
         unreadMessages: 0
       });
     });
-
   });
 
   describe('The get fn', function() {

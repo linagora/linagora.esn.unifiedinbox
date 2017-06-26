@@ -32,9 +32,11 @@ angular.module('esn.i18n', [])
     return {
       translate: function(input) {
         return {
-          toString: function() {return input;}
+          text: input,
+          toString: function() { return input; }
         };
-      }
+      },
+      isI18nString: function() { return true; }
     };
   })
   .filter('esnI18n', function() {

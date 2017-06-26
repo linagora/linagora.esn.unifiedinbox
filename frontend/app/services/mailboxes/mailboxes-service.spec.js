@@ -597,7 +597,7 @@ describe('The inboxMailboxesService factory', function() {
         return $q.reject();
       };
       inboxMailboxesService.createMailbox(mailbox).then(null, function() {
-        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Creation of folder name failed');
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error');
 
         done();
       });

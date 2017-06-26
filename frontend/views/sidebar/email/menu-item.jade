@@ -11,6 +11,6 @@
     i.inbox-icon(ng-class='mailboxIcons')
   .menu-item
     span.menu-item-inner
-      bdi {{ mailbox.qualifiedName | esnI18n }}
+      bdi {{ mailbox.qualifiedName }}
     span.menu-item-after
   settings-overlay(ng-if="settings", settings-overlay-sref="unifiedinbox.inbox.folders.edit({ mailbox: mailbox.id })", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")

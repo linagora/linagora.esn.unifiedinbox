@@ -79,7 +79,7 @@
   "Last month": "Le mois dernier",
   "This year": "Cette année",
   "Old messages": "Anciens messages",
-  "You are about to remove folder %s": "Vous allez supprimer le dossier% s",
+  "You are about to remove folder %s": "Vous allez supprimer le dossier %s",
   "You are about to remove folder %s and its descendants including %s": "Vous êtes sur le point d'enlever le dossier %s et ses descendants, y compris %s",
   "You are about to remove folder %s and its descendants including %s and %s": "Vous êtes sur le point d'enlever le dossier %s et ses descendants, y compris %s et %s",
   "You are about to remove folder %s and its descendants including %s and %s more": "Vous êtes sur le point d'enlever le dossier %s et ses descendants, y compris %s et %s autres",
@@ -129,5 +129,14 @@
   "Outbox": "Boîte d'envoi",
   "Sent": "Éléments envoyés",
   "Trash": "Corbeille",
-  "Inbox": "Boîte de réception"
+  "Inbox": "Boîte de réception",
+  "Created folder %s": "Dossier %s créé",
+  "Folder %s is being created...": "Le dossier %s est en cours de création...",
+  "Failed to create folder %s": "Impossible de créer le dossier %s",
+  "Deleted folder %s": "Dossier %s supprimé",
+  "Folder %s is being deleted...": "Le dossier %s est en cours de suppression...",
+  "Failed to delete folder %s": "Impossible de supprimer le dossier %s",
+  "Folder %s is modified": "Dossier %s modifié",
+  "Folder %s is being modified...": "Le dossier %s est en cours de modification...",
+  "Failed to modify folder %s": "Impossible de modifier le dossier %s"
 }

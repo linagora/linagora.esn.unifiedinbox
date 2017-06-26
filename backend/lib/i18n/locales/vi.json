@@ -126,8 +126,17 @@
   "1 item": "1 mục",
   "INBOX": "Hòm thư đến",
   "Drafts": "Thư nháp",
-  "Outbox": "Hộp thư đi",
+  "Outbox": "Hòm thư đi",
   "Sent": "Thư đã gửi",
   "Trash": "Thùng rác",
-  "Inbox": "Hòm thư"
+  "Inbox": "Hòm thư",
+  "Created folder %s": "Đã tạo thư mục %s",
+  "Folder %s is being created...": "Thư mục %s đang được tạo...",
+  "Failed to create folder %s": "Tạo thư mục %s thất bại",
+  "Deleted folder %s": "Đã xóa thư mục %s",
+  "Folder %s is being deleted...": "Thư mục %s đang được xóa...",
+  "Failed to delete folder %s": "Xóa thư mục %s thất bại",
+  "Folder %s is modified": "Đã sửa thư mục %s",
+  "Folder %s is being modified...": "Thư mục %s đang được sửa...",
+  "Failed to modify folder %s": "Sửa thư mục %s thất bại"
 }

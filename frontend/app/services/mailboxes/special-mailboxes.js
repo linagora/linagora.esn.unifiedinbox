@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .factory('inboxSpecialMailboxes', function(_) {
+    .factory('inboxSpecialMailboxes', function(_, esnI18nService) {
       var mailboxes = [];
 
       return {
@@ -15,7 +15,7 @@
       /////
 
       function list() {
-        return mailboxes;
+        return _.each(mailboxes, _translateMailboxName);
       }
 
       function get(mailboxId) {
@@ -28,6 +28,16 @@
         mailbox.unreadMessages = 0;
 
         mailboxes.push(mailbox);
+      }
+
+      function _translateMailboxName(mailbox) {
+        if (!mailbox.nameTranslated) {
+          mailbox.name = esnI18nService.translate(mailbox.name).toString();
+          mailbox.qualifiedName = mailbox.name;
+          mailbox.nameTranslated = true;
+        }
+
+        return mailbox;
       }
     });
 
