@@ -57,7 +57,7 @@ describe('The EMailer run block', function() {
     emailer.resolve();
     $rootScope.$digest();
 
-    expect(emailer.avatarUrl).to.equal('/api/avatars?objectType=email&email=a@a.com&displayName=a');
+    expect(emailer.avatarUrl).to.equal('/api/avatars?email=a@a.com&objectType=email&displayName=a');
     expect(emailer.name).to.equal('a');
   });
 
@@ -73,7 +73,7 @@ describe('The EMailer run block', function() {
     emailer.resolve();
     $rootScope.$digest();
 
-    expect(emailer.avatarUrl).to.equal('/api/avatars?objectType=email&email=a@a.com&displayName=a');
+    expect(emailer.avatarUrl).to.equal('/api/avatars?email=a@a.com&objectType=email&displayName=a');
     expect(emailer.name).to.equal('a');
   });
 
