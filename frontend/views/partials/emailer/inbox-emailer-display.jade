@@ -31,4 +31,4 @@
 
 .date
   label.line-header #{__('Date')}:
-  span {{ email.date | esnDatetime }}
+  span {{ email.date | esnDatetime: 'shortDate time' }}
