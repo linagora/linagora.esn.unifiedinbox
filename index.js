@@ -49,7 +49,8 @@ const angularAppFiles = [
   'components/list/header/list-header.controller.js',
   'services/date-groups/date-groups.js',
   'filters/item-date.js',
-  'services/filtering/filtering-service.js'
+  'services/filtering/filtering-service.js',
+  'services/filtering/filters.js'
 ];
 
 const angularJsFiles = [

@@ -769,35 +769,6 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('inboxFilters', function(PROVIDER_TYPES) {
-    return [
-      {
-        id: 'isUnread',
-        displayName: 'Unread',
-        type: PROVIDER_TYPES.JMAP,
-        isGlobal: true
-      },
-      {
-        id: 'isFlagged',
-        displayName: 'Starred',
-        type: PROVIDER_TYPES.JMAP,
-        isGlobal: true
-      },
-      {
-        id: 'hasAttachment',
-        displayName: 'With attachments',
-        type: PROVIDER_TYPES.JMAP,
-        isGlobal: true
-      },
-      {
-        id: 'isSocial',
-        displayName: 'Social',
-        type: PROVIDER_TYPES.SOCIAL,
-        isGlobal: true
-      }
-    ];
-  })
-
   .factory('inboxSelectionService', function(_) {
     var selectedItems = [],
         selecting = false;
