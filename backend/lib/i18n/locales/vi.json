@@ -138,5 +138,18 @@
   "Failed to delete folder %s": "Xóa thư mục %s thất bại",
   "Folder %s is modified": "Đã sửa thư mục %s",
   "Folder %s is being modified...": "Thư mục %s đang được sửa...",
-  "Failed to modify folder %s": "Sửa thư mục %s thất bại"
+  "Failed to modify folder %s": "Sửa thư mục %s thất bại",
+  "JMAP API": "Địa chỉ JMAP API",
+  "Upload API": "Địa chỉ API để tải lên các tập tin",
+  "Download API": "Địa chỉ API để tải xuống các tập tin",
+  "Swipe right action": "Khi trượt thư sang phải",
+  "Move to trash": "Chuyển đến thùng rác",
+  "Display email as": "Xem thư dưới dạng",
+  "Threads": "Hội thoại",
+  "Messages": "Thư lẻ",
+  "Enable JMAP sending": "Gửi qua JMAP",
+  "Allow save draft before sending": "Lưu bản nháp trước khi gửi",
+  "Enable draft email": "Thư nháp",
+  "Enable attachments": "Đính kèm",
+  "Max size upload": "Dung lượng tải lên tối đa"
 }

@@ -138,5 +138,18 @@
   "Failed to delete folder %s": "Failed to delete folder %s",
   "Folder %s is modified": "Folder %s is modified",
   "Folder %s is being modified...": "Folder %s is being modified...",
-  "Failed to modify folder %s": "Failed to modify folder %s"
+  "Failed to modify folder %s": "Failed to modify folder %s",
+  "JMAP API": "JMAP API",
+  "Upload API": "Upload API",
+  "Download API": "Download API",
+  "Swipe right action": "Swipe right action",
+  "Move to trash": "Move to trash",
+  "Display email as": "Display email as",
+  "Threads": "Threads",
+  "Messages": "Messages",
+  "Enable JMAP sending": "Enable JMAP sending",
+  "Allow save draft before sending": "Allow save draft before sending",
+  "Enable draft email": "Enable draft email",
+  "Enable attachments": "Enable attachments",
+  "Max size upload": "Max size upload"
 }

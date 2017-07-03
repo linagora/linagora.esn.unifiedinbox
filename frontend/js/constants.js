@@ -60,6 +60,14 @@ angular.module('linagora.esn.unifiedinbox')
     id: 'linagora.esn.unifiedinbox',
     title: 'Unified Inbox',
     icon: '/unifiedinbox/images/inbox-icon.svg',
-    homePage: 'unifiedinbox'
+    homePage: 'unifiedinbox',
+    config: {
+      template: 'inbox-config-form',
+      displayIn: {
+        user: false,
+        domain: true,
+        platform: false
+      }
+    }
   })
   .constant('INBOX_SIGNATURE_SEPARATOR', '-- \n'); // https://tools.ietf.org/html/rfc3676#section-4.3
