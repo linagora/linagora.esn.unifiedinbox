@@ -49,7 +49,7 @@ describe('The inboxSpecialMailboxes factory', function() {
   describe('The add fn', function() {
 
     it('should add the mailbox to the list', function() {
-      inboxSpecialMailboxes.add({ id: 'new' });
+      inboxSpecialMailboxes.add({ id: 'new', name: 'New' });
 
       expect(inboxSpecialMailboxes.list()).to.have.length(2);
     });

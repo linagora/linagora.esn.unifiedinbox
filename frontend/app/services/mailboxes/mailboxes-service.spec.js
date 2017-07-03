@@ -375,8 +375,8 @@ describe('The inboxMailboxesService factory', function() {
 
       inboxSpecialMailboxes.get = function() {};
 
-      draftMailbox = { id: 11, role: jmap.MailboxRole.DRAFTS };
-      outboxMailbox = { id: 22, role: jmap.MailboxRole.OUTBOX };
+      draftMailbox = { id: 11, role: jmap.MailboxRole.DRAFTS, name: jmap.MailboxRole.DRAFTS.toString()};
+      outboxMailbox = { id: 22, role: jmap.MailboxRole.OUTBOX, name: jmap.MailboxRole.OUTBOX.toString()};
       jmapClient.getMailboxes = function() {
         return $q.when([draftMailbox, outboxMailbox]);
       };
