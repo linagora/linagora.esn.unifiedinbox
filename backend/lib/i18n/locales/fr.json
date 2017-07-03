@@ -138,5 +138,18 @@
   "Failed to delete folder %s": "Impossible de supprimer le dossier %s",
   "Folder %s is modified": "Dossier %s modifié",
   "Folder %s is being modified...": "Le dossier %s est en cours de modification...",
-  "Failed to modify folder %s": "Impossible de modifier le dossier %s"
+  "Failed to modify folder %s": "Impossible de modifier le dossier %s",
+  "JMAP API": "JMAP API",
+  "Upload API": "URL de l'API d'envoi de fichiers",
+  "Download API": "URL de l'API de téléchargement de fichiers",
+  "Swipe right action": "Action du glisser vers la droite (swipe right)",
+  "Move to trash": "Déplacer à la corbeille",
+  "Display email as": "Afficher l'email sous la forme",
+  "Threads": "Fils de discussion",
+  "Messages": "Messages",
+  "Enable JMAP sending": "Envoi par JMAP",
+  "Allow save draft before sending": "Autoriser l'enregistrement en brouillon avant envoi",
+  "Enable draft email": "Activer les brouillons",
+  "Enable attachments": "Activer les pièces jointes",
+  "Max size upload": "Taille maximum des envois"
 }

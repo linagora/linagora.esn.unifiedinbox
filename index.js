@@ -36,6 +36,7 @@ const angularAppFiles = [
   'components/identity/form/identity-form.js',
   'components/identity/form/identity-form.controller.js',
   'components/identity/form/subheader/identity-form-subheader.js',
+  'components/config/inbox-config-form.component.js',
   'services/identities/identities-service.js',
   'services/jmap-helper/jmap-helper.js',
   'filters/quote/quote.js',
