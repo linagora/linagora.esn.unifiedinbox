@@ -663,7 +663,9 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       it('should notify and not add the attachment if file is larger that the default limit', function() {
         initController('composerController').onAttachmentsSelect([{ name: 'name', size: DEFAULT_MAX_SIZE_UPLOAD + 1 }]).then(function() {
-          expect(notificationFactory.weakError).to.have.been.calledWith('', 'File name ignored as its size exceeds the 20MB limit');
+          var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+          expect(weakErrorMocksParameters[0]).to.equal('');
+          expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
           expect(scope.email.attachments).to.deep.equal([]);
         });
 
@@ -673,7 +675,9 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       it('should notify and not add the attachment if file is larger that a configured limit', function() {
         config['linagora.esn.unifiedinbox.maxSizeUpload'] = 1024 * 1024; // 1MB
         initController('composerController').onAttachmentsSelect([{ name: 'name', size: 1024 * 1024 * 2 }]).then(function() {
-          expect(notificationFactory.weakError).to.have.been.calledWith('', 'File name ignored as its size exceeds the 1MB limit');
+          var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+          expect(weakErrorMocksParameters[0]).to.equal('');
+          expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
           expect(scope.email.attachments).to.deep.equal([]);
         });
 
@@ -1558,7 +1562,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       initController('inboxDeleteFolderController');
       scope.$digest();
 
-      expect(scope.message).to.equal('You are about to remove folder 1 and its descendants including 2, 3, 4 and 5');
+      expect(scope.message).to.equal('You are about to remove folder %s and its descendants including %s and %s');
     });
 
     it('should initialize $scope.message with "and x more" when more than 4 mailbox descendants are going to be deleted', function() {
@@ -1574,7 +1578,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       initController('inboxDeleteFolderController');
       scope.$digest();
 
-      expect(scope.message).to.equal('You are about to remove folder 1 and its descendants including 2, 3, 4 and 2 more');
+      expect(scope.message).to.equal('You are about to remove folder %s and its descendants including %s and %s more');
     });
 
     it('should initialize $scope.message properly when the mailbox has no descendant', function() {
@@ -1585,7 +1589,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       initController('inboxDeleteFolderController');
       scope.$digest();
 
-      expect(scope.message).to.equal('You are about to remove folder 1');
+      expect(scope.message).to.equal('You are about to remove folder %s');
     });
 
     describe('The deleteFolder method', function() {
@@ -1853,7 +1857,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         expect(esnPreviousPage.back).to.have.been.calledWith('unifiedinbox');
         expect(jmapClient.setVacationResponse).to.have.been.calledWith();
-        expect(notificationFactory.weakSuccess).to.have.been.calledWith('', 'Modification of vacation settings succeeded');
+        expect(notificationFactory.weakSuccess.args[0][0]).to.equal('');
+        expect(notificationFactory.weakSuccess.args[0][1].toString()).to.equal('Vacation settings saved');
       });
 
       it('should unset toDate while creating vacation message if hasToDate is false', function() {
@@ -1903,7 +1908,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         expect(jmapClient.setVacationResponse).to.have.been.calledWith();
         expect(listener).to.not.have.been.called;
-        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Modification of vacation settings failed');
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Failed to save vacation settings');
       });
 
       it('should set vacation.loadedSuccessfully to false when an error occurs', function(done) {

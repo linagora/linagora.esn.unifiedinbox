@@ -22,8 +22,8 @@ module.exports = function(config) {
       'frontend/components/jmap-client/dist/jmap-client.js',
       'frontend/components/angular-moment/angular-moment.js',
       'frontend/components/angular-sanitize/angular-sanitize.js',
-      'frontend/components/angular-material/angular-material.min.js',
-      'frontend/components/angular-material/angular-material.min.css',
+      'frontend/components/angular-material/angular-material.js',
+      'frontend/components/angular-material/angular-material.css',
       'frontend/components/angular-uuid4/angular-uuid4.js',
       'frontend/components/angular-feature-flags/dist/featureFlags.js',
       'frontend/components/re-tree/re-tree.js',
@@ -31,18 +31,53 @@ module.exports = function(config) {
       'frontend/components/restangular/dist/restangular.js',
       'frontend/components/remarkable-bootstrap-notify/bootstrap-notify.js',
 
+      'frontend/components/chai-datetime/chai-datetime.js',
+      'frontend/components/angular-translate/angular-translate.js',
+      'frontend/components/offline/offline.js',
+      'frontend/components/angular-file-upload/dist/angular-file-upload.js',
+      'frontend/components/matchmedia-ng/matchmedia-ng.js',
+      'frontend/components/Autolinker.js/dist/Autolinker.js',
+      'frontend/components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+      'frontend/components/openpaas-logo/openpaas-logo.js',
+      'frontend/components/angular-strap/dist/angular-strap.js',
+      'frontend/components/angular-strap/dist/modules/modal.js',
+      'frontend/components/angular-strap/dist/modules/alert.js',
+      'frontend/components/angular-strap/dist/modules/popover.js',
+      'frontend/components/ng-tags-input/ng-tags-input.js',
+      'frontend/components/ngGeolocation/ngGeolocation.js',
+      'frontend/components/jquery.focus/dist/jquery.focus.js',
+      'frontend/components/jquery-mockjax/dist/jquery.mockjax.js',
+
+      'frontend/components/angular-material/angular-material.min.js',
+      'frontend/components/angular-material/angular-material.min.css',
+
+      'frontend/components/bootstrap/dist/js/bootstrap.js',
+      'frontend/components/summernote/dist/summernote.js',
+      'frontend/components/angular-summernote/dist/angular-summernote.js',
+      'frontend/components/angular-messages/angular-messages.js',
+      'frontend/components/angular-animate/angular-animate.js',
+      'frontend/components/waves/src/js/waves.js',
+
+      'node_modules/linagora-rse/modules/linagora.esn.graceperiod/frontend/js/*.js',
+
       'node_modules/linagora-rse/test/fixtures/code-generation/constants.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.module.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.js',
       'node_modules/linagora-rse/frontend/views/modules/**/*.jade',
 
       'test/unit-frontend/mocks/**/*.js',
+      'test/unit-frontend/**/*.js',
       'frontend/js/app.js',
       'frontend/js/**/*.js',
       'frontend/app/**/*.js',
 
       'frontend/app/**/*.jade',
-      'frontend/views/**/*.jade'
+      'frontend/views/**/*.jade',
+
+      { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
+      { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
+      { pattern: 'frontend/components/mdi/fonts/**/*.*', watched: false, included: false, served: true },
+      { pattern: 'frontend/app/components/message-body/html/*.*', watched: false, included: false, served: true }
     ],
     exclude: [
       'node_modules/linagora-rse/frontend/js/**/*.spec.js'
@@ -52,10 +87,21 @@ module.exports = function(config) {
     singleRun: true,
     autoWatch: true,
     browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+    customLaunchers: {
+      Chrome_with_debugging: {
+        base: 'Chrome',
+        flags: ['--remote-debugging-port=9222'],
+        debug: true
+      }
+    },
     reporters: ['coverage', 'spec'],
     preprocessors: {
       'frontend/js/**/*.js': ['coverage'],
       '**/*.jade': ['ng-jade2module']
+    },
+
+    proxies: {
+      '/images/': '/base/frontend/images/'
     },
 
     plugins: [
