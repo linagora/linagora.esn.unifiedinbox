@@ -29,10 +29,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   beforeEach(module(function($provide) {
     isMobile = false;
     windowMock = {
-      open: sinon.spy(),
-      history: {
-        back: angular.noop()
-      }
+      open: sinon.spy()
     };
     inboxConfigMock = {};
 
@@ -280,7 +277,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       $scope.mailbox = {
         role: {
           value: null
-        }
+        },
+          qualifiedName: 'test'
       };
       compileDirective('<mailbox-display mailbox="mailbox" />');
 
@@ -291,7 +289,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       $scope.mailbox = {
         role: {
           value: 'testrole'
-        }
+        },
+          qualifiedName: 'test'
       };
       compileDirective('<mailbox-display mailbox="mailbox" />');
 
@@ -303,7 +302,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
         role: {
           value: 'custom role'
         },
-        icon: 'mdi-custom-icon'
+          qualifiedName: 'test',
+          icon: 'mdi-custom-icon'
       };
       compileDirective('<mailbox-display mailbox="mailbox" />');
 
@@ -314,7 +314,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       $scope.mailbox = {
         role: {
           value: null
-        }
+        },
+          qualifiedName: 'test'
       };
       compileDirective('<mailbox-display mailbox="mailbox" hide-badge=true />');
 
@@ -330,7 +331,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
           id: '1',
           role: {
             value: 'testrole'
-          }
+          },
+          qualifiedName: 'test'
         };
         compileDirective('<mailbox-display mailbox="mailbox" />');
 
@@ -553,7 +555,10 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
       var mainHeader, ctrl;
 
-      beforeEach(inject(function() {
+      beforeEach(inject(function($httpBackend) {
+
+        $httpBackend.whenGET('/views/modules/header/search/search-header.html').respond(200, '<div>');
+        $httpBackend.whenGET('/views/modules/header/profile-menu/profile-menu.html').respond(200, '<div>');
 
         ctrl = compileDirective('<composer/>').controller('composer');
         ctrl.saveDraft = angular.noop;
@@ -623,7 +628,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
         $scope.editQuotedMail().then(function() {
           expect($scope.email.isQuoting).to.equal(true);
-          expect($scope.email.textBody).to.equal('\n\n\n\u0000On Aug 21, 2015 12:10:00 AM, from sender@linagora.com:\n\n> Hello');
+          expect($scope.email.textBody).to.equal('\n\n\n\u0000On Aug 21, 2015 2:10 AM, from sender@linagora.com:\n\n> Hello');
 
           done();
         });
@@ -1413,7 +1418,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   });
 
   describe('The emailBodyEditor', function() {
-
     it('should load summernote when isMobile()=false', function() {
       expect(compileDirective('<email-body-editor />').find('.summernote')).to.have.length(1);
     });

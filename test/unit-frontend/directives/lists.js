@@ -297,7 +297,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         it('should return the number of items if dragging multiple items', function() {
           compileDirective('<inbox-thread-list-item />');
 
-          expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }])).to.equal('3 items');
+          expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }]).toString()).to.equal('%s items');
         });
 
       });
@@ -531,7 +531,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         it('should return the number of items if dragging multiple items', function() {
           compileDirective('<inbox-thread-list-item />');
 
-          expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }])).to.equal('3 items');
+          expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }]).toString()).to.equal('%s items');
         });
 
       });
@@ -701,13 +701,13 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
     it('should return the item\'s length if dragging a single item without subject', function() {
       compileDirective('<div inbox-draggable-list-item />');
 
-      expect($scope.getDragMessage([{ id: 1 }])).to.equal('1 item');
+      expect($scope.getDragMessage([{ id: 1 }]).toString()).to.equal('1 item');
     });
 
     it('should return the number of items if dragging multiple items', function() {
       compileDirective('<div inbox-draggable-list-item />');
 
-      expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }])).to.equal('3 items');
+      expect($scope.getDragMessage([{ id: 1 }, { id: 2, subject: 'subject' }, { id: 3 }]).toString()).to.equal('%s items');
     });
 
   });

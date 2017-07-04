@@ -9,7 +9,7 @@ cite
   br
   | #{__('Subject')}: {{ email.quoted.subject }}
   br
-  | #{__('Date')}: {{ email.quoted.date | esnDatetime }}
+  | #{__('Date')}: {{ email.quoted.date | esnDatetime:"mediumDate time" }}
   br
   | #{__('From')}: {{ email.quoted.from.email }}
   br
