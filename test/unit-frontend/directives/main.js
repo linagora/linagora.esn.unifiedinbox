@@ -23,6 +23,9 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     angular.mock.module('esn.dropdownList');
     angular.mock.module('esn.previous-page');
     angular.mock.module('linagora.esn.unifiedinbox');
+    angular.mock.module('esn.datetime', function($provide) {
+      $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
+    });
     module('jadeTemplates');
   });
 
@@ -628,7 +631,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
         $scope.editQuotedMail().then(function() {
           expect($scope.email.isQuoting).to.equal(true);
-          expect($scope.email.textBody).to.equal('\n\n\n\u0000On Aug 21, 2015 2:10 AM, from sender@linagora.com:\n\n> Hello');
+          expect($scope.email.textBody).to.equal('\n\n\n\u0000On Aug 21, 2015 12:10 AM, from sender@linagora.com:\n\n> Hello');
 
           done();
         });
