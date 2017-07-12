@@ -15,6 +15,9 @@ describe('The Unified Inbox Angular module services', function() {
     angular.mock.module('esn.core');
     angular.mock.module('linagora.esn.unifiedinbox');
     angular.mock.module('jadeTemplates');
+    angular.mock.module('esn.datetime', function($provide) {
+      $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
+    });
   });
 
   beforeEach(module(function($provide) {
@@ -2502,7 +2505,7 @@ describe('The Unified Inbox Angular module services', function() {
       it('should quote htmlBody using a richtext template if not on mobile', function(done) {
         emailBodyService.quote(quotedMessage(email))
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 2:10 AM, from test@open-paas.org</cite><blockquote><p>HtmlBody</p></blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 12:10 AM, from test@open-paas.org</cite><blockquote><p>HtmlBody</p></blockquote>');
           })
           .then(done, done);
 
@@ -2512,7 +2515,7 @@ describe('The Unified Inbox Angular module services', function() {
       it('should quote textBody using a richtext template if not on mobile and htmlBody is not available', function(done) {
         emailBodyService.quote(quotedMessage(_.omit(email, 'htmlBody')))
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 2:10 AM, from test@open-paas.org</cite><blockquote>TextBody</blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 12:10 AM, from test@open-paas.org</cite><blockquote>TextBody</blockquote>');
           })
           .then(done, done);
 
@@ -2523,7 +2526,7 @@ describe('The Unified Inbox Angular module services', function() {
         isMobile = true;
         emailBodyService.quote(quotedMessage(_.omit(email, 'htmlBody')), 'default', false)
           .then(function(text) {
-            expect(text).to.equal('\n\n\n\u0000On Aug 21, 2015 2:10 AM, from test@open-paas.org:\n\n> TextBody');
+            expect(text).to.equal('\n\n\n\u0000On Aug 21, 2015 12:10 AM, from test@open-paas.org:\n\n> TextBody');
           })
           .then(done, done);
 
@@ -2534,7 +2537,7 @@ describe('The Unified Inbox Angular module services', function() {
         isMobile = true;
         emailBodyService.quote(quotedMessage(_.omit(email, 'htmlBody')), 'default', true)
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 2:10 AM, from test@open-paas.org</cite><blockquote>TextBody</blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 12:10 AM, from test@open-paas.org</cite><blockquote>TextBody</blockquote>');
           })
           .then(done, done);
 
@@ -2544,7 +2547,7 @@ describe('The Unified Inbox Angular module services', function() {
       it('should leverage the rich mode of forward template if specified', function(done) {
         emailBodyService.quote(quotedMessage(email), 'forward')
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 2:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote><p>HtmlBody</p></blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 12:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote><p>HtmlBody</p></blockquote>');
           })
           .then(done, done);
 
@@ -2555,7 +2558,7 @@ describe('The Unified Inbox Angular module services', function() {
         isMobile = true;
         emailBodyService.quote(quotedMessage(_.omit(email, 'htmlBody')), 'forward', false)
           .then(function(text) {
-            expect(text).to.equal('\n\n\n\u0000------- Forwarded message -------\nSubject: Heya\nDate: Aug 21, 2015 2:10 AM\nFrom: test@open-paas.org\n\n\n\n> TextBody');
+            expect(text).to.equal('\n\n\n\u0000------- Forwarded message -------\nSubject: Heya\nDate: Aug 21, 2015 12:10 AM\nFrom: test@open-paas.org\n\n\n\n> TextBody');
           })
           .then(done, done);
 
@@ -2566,7 +2569,7 @@ describe('The Unified Inbox Angular module services', function() {
         isMobile = true;
         emailBodyService.quote(quotedMessage(_.omit(email, 'htmlBody')), 'forward', true)
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 2:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote>TextBody</blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 12:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote>TextBody</blockquote>');
           })
           .then(done, done);
 
@@ -2586,7 +2589,7 @@ describe('The Unified Inbox Angular module services', function() {
 
         emailBodyService.quote(quotedMessage(email))
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 2:10 AM, from test@open-paas.org</cite><blockquote>Text<br/>Body<br/>Test</blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 12:10 AM, from test@open-paas.org</cite><blockquote>Text<br/>Body<br/>Test</blockquote>');
           })
           .then(done, done);
 
@@ -2606,7 +2609,7 @@ describe('The Unified Inbox Angular module services', function() {
 
         emailBodyService.quote(quotedMessage(email))
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 2:10 AM, from test@open-paas.org</cite><blockquote><p><div>Test\nTest</div\n></p></blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>On Aug 21, 2015 12:10 AM, from test@open-paas.org</cite><blockquote><p><div>Test\nTest</div\n></p></blockquote>');
           })
           .then(done, done);
 
@@ -2626,7 +2629,7 @@ describe('The Unified Inbox Angular module services', function() {
 
         emailBodyService.quote(quotedMessage(email), 'forward')
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 2:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote>Text<br/>Body<br/>Test</blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 12:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote>Text<br/>Body<br/>Test</blockquote>');
           })
           .then(done, done);
 
@@ -2646,7 +2649,7 @@ describe('The Unified Inbox Angular module services', function() {
 
         emailBodyService.quote(quotedMessage(email), 'forward')
           .then(function(text) {
-            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 2:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote><p><div>Test\nTest</div\n></p></blockquote>');
+            expect(text).to.equal('<p><br/></p><cite>------- Forwarded message -------<br/>Subject: Heya<br/>Date: Aug 21, 2015 12:10 AM<br/>From: test@open-paas.org<br/><br/></cite><blockquote><p><div>Test\nTest</div\n></p></blockquote>');
           })
           .then(done, done);
 
