@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The Unified Inbox Angular module providers', function() {
 
   var $rootScope, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
-      $httpBackend, jmapClient, inboxMailboxesService, jmap, ELEMENTS_PER_REQUEST;
+      jmapClient, inboxMailboxesService, jmap, ELEMENTS_PER_REQUEST;
 
   function elements(id, length, offset) {
     var array = [], start = offset || 0;
@@ -64,7 +64,7 @@ describe('The Unified Inbox Angular module providers', function() {
   });
 
   beforeEach(angular.mock.inject(function(_$rootScope_, _inboxProviders_, _inboxHostedMailMessagesProvider_, _inboxSearchResultsProvider_,
-                                          _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _$httpBackend_, _inboxMailboxesService_, _jmap_,
+                                          _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _inboxMailboxesService_, _jmap_,
                                           _ELEMENTS_PER_REQUEST_) {
     $rootScope = _$rootScope_;
     inboxProviders = _inboxProviders_;
@@ -72,7 +72,6 @@ describe('The Unified Inbox Angular module providers', function() {
     inboxSearchResultsProvider = _inboxSearchResultsProvider_;
     inboxHostedMailAttachmentProvider = _inboxHostedMailAttachmentProvider_;
     inboxHostedMailThreadsProvider = _inboxHostedMailThreadsProvider_;
-    $httpBackend = _$httpBackend_;
     inboxMailboxesService = _inboxMailboxesService_;
     jmap = _jmap_;
 
