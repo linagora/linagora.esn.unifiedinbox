@@ -3,3 +3,4 @@ node_modules
 frontend/components
 npm-debug.log
 tmp/
+package-lock.json
