@@ -3037,7 +3037,7 @@ describe('The Unified Inbox Angular module services', function() {
       $rootScope.$digest();
     });
 
-    it('should reject on error', function(done) {
+    it.skip('should reject on error', function(done) {
       $.mockjax({
         url: 'http://jmap',
         response: function() {
