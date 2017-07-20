@@ -361,7 +361,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('composerDesktop', function($timeout, $compile, KEYCODES) {
+  .directive('composerDesktop', function($rootScope, $timeout, $compile, KEYCODES, ESN_BOX_OVERLAY_EVENTS) {
     return {
       restrict: 'E',
       templateUrl: '/unifiedinbox/views/composer/composer-desktop.html',
@@ -382,11 +382,26 @@ angular.module('linagora.esn.unifiedinbox')
           }, 0);
         }
 
+        function focusOnResize() {
+          if (scope.lastFocused) {
+            $timeout(function() { scope.lastFocused.focus(); }, 350);
+          }
+        }
+
         function _getEventKey(event) {
           return event.which || event.keyCode;
         }
 
+        function handleFocusEvent(event) {
+          scope.lastFocused = event.target;
+        }
+
+        function startTrackingFocus(element) {
+          element.context.children[0].addEventListener('focusin', handleFocusEvent, true);
+        }
+
         scope.onInit = function(event) {
+          startTrackingFocus(element);
           focusOnRightField(scope.email);
 
           element
@@ -407,6 +422,8 @@ angular.module('linagora.esn.unifiedinbox')
                 event.preventDefault();
               }
             });
+
+          scope.unsubFocus = scope.$on(ESN_BOX_OVERLAY_EVENTS.RESIZED, focusOnResize);
 
           // We initialize our Composition instance with the summernote representation of the body
           // which allows us to later compare it with the current body, to detect user changes.
@@ -452,6 +469,7 @@ angular.module('linagora.esn.unifiedinbox')
 
         scope.hide = scope.$hide;
         scope.$on('$destroy', function() {
+          scope.unsubFocus && scope.unsubFocus();
           controller.saveDraft();
         });
       }
