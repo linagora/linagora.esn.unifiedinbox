@@ -345,8 +345,10 @@ describe('The inboxMailboxesService factory', function() {
       inboxMailboxesService.assignMailboxesList(destObject);
       $rootScope.$digest();
       inboxMailboxesService.moveUnreadMessages([1], [2], 1);
+      var orderedMailboxes = destObject.mailboxes
+        .sort(function(a, b) { return +a.id - +b.id; });
 
-      expect(destObject.mailboxes).to.shallowDeepEqual([
+      expect(orderedMailboxes).to.shallowDeepEqual([
         { id: 1, unreadMessages: 0},
         { id: 2, unreadMessages: 3}
       ]);
