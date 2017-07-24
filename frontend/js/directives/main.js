@@ -383,8 +383,11 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         function focusOnResize() {
-          if (scope.lastFocused) {
-            $timeout(function() { scope.lastFocused.focus(); }, 350);
+          if (scope.lastFocused && scope.lastFocused.node) {
+            if (!!scope.lastFocused.isFoldable && scope.isCollapsed) {
+              scope.isCollapsed = false;
+            }
+            $timeout(function() { scope.lastFocused.node.focus(); }, 350);
           }
         }
 
@@ -392,8 +395,15 @@ angular.module('linagora.esn.unifiedinbox')
           return event.which || event.keyCode;
         }
 
+        function isRecipient(inputElement) {
+          return angular.element(inputElement).closest('recipients-auto-complete').length > 0;
+        }
+
         function handleFocusEvent(event) {
-          scope.lastFocused = event.target;
+          scope.lastFocused = {
+            node: event.target,
+            isFoldable: isRecipient(event.target) && !scope.isCollapsed
+          };
         }
 
         function startTrackingFocus(element) {
