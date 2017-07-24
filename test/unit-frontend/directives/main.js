@@ -1040,6 +1040,26 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       });
     });
 
+    describe('refocusing when notified to (e.g. from box-overlay)', function() {
+
+      var ESN_BOX_OVERLAY_EVENTS;
+
+      beforeEach(inject(function($rootScope, _ESN_BOX_OVERLAY_EVENTS_) {
+        ESN_BOX_OVERLAY_EVENTS = _ESN_BOX_OVERLAY_EVENTS_;
+      }));
+
+       it('should keep focus on same field when resized', function() {
+        $scope.email = {};
+        compileDirective('<composer-desktop />');
+        $timeout.flush();
+        element.find('.compose-subject').focus();
+
+        $scope.$broadcast(ESN_BOX_OVERLAY_EVENTS.RESIZED);
+
+        expect(document.activeElement).to.equal(element.find('.compose-subject')[0]);
+      });
+    });
+
     describe('The updateIdentity function', function() {
 
       var identity = {
