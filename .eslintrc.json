@@ -2,6 +2,7 @@
   "extends": "linagora-esn",
   "rules": {
     "no-process-env": "off",
-    "arrow-parens": ["error", "as-needed"]
+    "arrow-parens": ["error", "as-needed"],
+    "newline-after-var": "error"
   }
 }

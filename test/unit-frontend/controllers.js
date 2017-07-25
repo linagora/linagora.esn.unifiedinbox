@@ -664,6 +664,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       it('should notify and not add the attachment if file is larger that the default limit', function() {
         initController('composerController').onAttachmentsSelect([{ name: 'name', size: DEFAULT_MAX_SIZE_UPLOAD + 1 }]).then(function() {
           var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+
           expect(weakErrorMocksParameters[0]).to.equal('');
           expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
           expect(scope.email.attachments).to.deep.equal([]);
@@ -676,6 +677,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         config['linagora.esn.unifiedinbox.maxSizeUpload'] = 1024 * 1024; // 1MB
         initController('composerController').onAttachmentsSelect([{ name: 'name', size: 1024 * 1024 * 2 }]).then(function() {
           var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+
           expect(weakErrorMocksParameters[0]).to.equal('');
           expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
           expect(scope.email.attachments).to.deep.equal([]);

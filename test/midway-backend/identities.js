@@ -17,15 +17,16 @@ describe('The Identities API', function() {
 
   let helpers, models, app;
 
-  beforeEach(function(done) {
+  before(function(done) {
     helpers = this.helpers;
+    helpers.modules.initMidway('linagora.esn.unifiedinbox', helpers.callbacks.noErrorAnd(done));
+  });
 
-    helpers.modules.initMidway('linagora.esn.unifiedinbox', helpers.callbacks.noErrorAnd(() => {
-      helpers.api.applyDomainDeployment('linagora_test_domain', helpers.callbacks.noErrorAnd(deployedModels => {
-        models = deployedModels;
+  beforeEach(function(done) {
+    helpers.api.applyDomainDeployment('linagora_test_domain', helpers.callbacks.noErrorAnd(deployedModels => {
+      models = deployedModels;
 
-        done();
-      }));
+      done();
     }));
   });
 
