@@ -58,8 +58,12 @@ module.exports = function(config) {
       'frontend/components/angular-animate/angular-animate.js',
       'frontend/components/waves/src/js/waves.js',
 
-      'node_modules/linagora-rse/modules/linagora.esn.graceperiod/frontend/js/*.js',
+      { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
+      { pattern: 'frontend/app/components/message-body/html/*.*', watched: false, included: false, served: true },
+      { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
+      { pattern: 'frontend/components/mdi/fonts/**/*.*', watched: false, included: false, served: true },
 
+      'node_modules/linagora-rse/modules/linagora.esn.graceperiod/frontend/js/*.js',
       'node_modules/linagora-rse/test/fixtures/code-generation/constants.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.module.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.js',
@@ -70,14 +74,8 @@ module.exports = function(config) {
       'frontend/js/app.js',
       'frontend/js/**/*.js',
       'frontend/app/**/*.js',
-
       'frontend/app/**/*.jade',
-      'frontend/views/**/*.jade',
-
-      { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
-      { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
-      { pattern: 'frontend/components/mdi/fonts/**/*.*', watched: false, included: false, served: true },
-      { pattern: 'frontend/app/components/message-body/html/*.*', watched: false, included: false, served: true }
+      'frontend/views/**/*.jade'
     ],
     exclude: [
       'node_modules/linagora-rse/frontend/js/**/*.spec.js'
