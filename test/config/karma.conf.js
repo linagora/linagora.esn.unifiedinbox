@@ -67,15 +67,15 @@ module.exports = function(config) {
       'node_modules/linagora-rse/test/fixtures/code-generation/constants.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.module.js',
       'node_modules/linagora-rse/frontend/js/modules/**/*.js',
-      'node_modules/linagora-rse/frontend/views/modules/**/*.jade',
+      'node_modules/linagora-rse/frontend/views/modules/**/*.pug',
 
       'test/unit-frontend/mocks/**/*.js',
       'test/unit-frontend/**/*.js',
       'frontend/js/app.js',
       'frontend/js/**/*.js',
       'frontend/app/**/*.js',
-      'frontend/app/**/*.jade',
-      'frontend/views/**/*.jade'
+      'frontend/app/**/*.pug',
+      'frontend/views/**/*.pug'
     ],
     exclude: [
       'node_modules/linagora-rse/frontend/js/**/*.spec.js'
@@ -95,7 +95,7 @@ module.exports = function(config) {
     reporters: ['coverage', 'spec'],
     preprocessors: {
       'frontend/js/**/*.js': ['coverage'],
-      '**/*.jade': ['ng-jade2module']
+      '**/*.pug': ['ng-jade2module']
     },
 
     proxies: {
@@ -118,7 +118,7 @@ module.exports = function(config) {
       stripPrefix: 'frontend',
       cacheIdFromPath: function(filepath) {
         return filepath
-          .replace(/jade$/, 'html')
+          .replace(/pug$/, 'html')
           .replace(/^frontend/, '/unifiedinbox')
           .replace(/^node_modules\/linagora-rse\/frontend/, '');
       },

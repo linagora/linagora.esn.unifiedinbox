@@ -70,8 +70,8 @@ module.exports = function(grunt) {
           dirs: [{
             localeDir: 'backend/lib/i18n/locales',
             templateSrc: [
-              'frontend/app/**/*.jade',
-              'frontend/views/**/*.jade'
+              'frontend/app/**/*.pug',
+              'frontend/views/**/*.pug'
             ],
             core: true
           }],
@@ -80,6 +80,22 @@ module.exports = function(grunt) {
             locales: ['en', 'fr', 'vi']
           }
         }
+      }
+    },
+
+    puglint: {
+      all: {
+        options: {
+          config: {
+            disallowAttributeInterpolation: true,
+            disallowLegacyMixinCall: true,
+            validateExtensions: true,
+            validateIndentation: 2
+          }
+        },
+        src: [
+          'frontend/**/*.pug'
+        ]
       }
     }
   });
@@ -94,11 +110,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-i18n-checker');
+  grunt.loadNpmTasks('grunt-puglint');
 
   grunt.loadTasks('tasks');
 
   grunt.registerTask('i18n', 'Check the translation files', ['i18n_checker']);
-  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all'/* Too complicated for now :( , 'i18n' */]);
+  grunt.registerTask('pug-linter', 'Check the pug/jade files', ['puglint:all']);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'pug-linter'/* Too complicated for now :( , 'i18n' */]);
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'jscs:quick', 'lint_pattern:quick']);
   grunt.registerTask('test-midway-backend', ['splitfiles:midway']);
   grunt.registerTask('test-unit-backend', 'Test backend code', ['mochacli:backend']);
