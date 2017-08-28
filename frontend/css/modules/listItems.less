@@ -3,7 +3,7 @@
 @inbox-sub-header-height: @sub-header-height + @inbox-list-header-height;
 @inbox-sub-header-height-md: @sub-header-height-md + @inbox-list-header-height;
 @inbox-sub-header-height-xl: @sub-header-height-xl + @inbox-list-header-height;
-@inbox-list-item-height: 34px;
+@inbox-list-item-height: 36px;
 @inbox-list-item-height-xl: 88px;
 
 .inbox-root {
@@ -177,8 +177,13 @@
           .esn-flex-noshrink;
           .user-select(none);
 
-          height: 40px;
-          width: 52px;
+          height: 47px;
+          width: 60px;
+          padding-top: 7px;
+          padding-left: 10px;
+          padding-right: 10px;
+          margin-top: -7px;
+          margin-left: -10px;
 
           img {
             .avatar(40px);
@@ -197,6 +202,11 @@
           }
 
           .checkbox {
+
+            & [type="checkbox"] {
+              display: none;
+            }
+
             .input-helper::before, .input-helper::after {
               top: 10px;
               left: 10px;
@@ -296,7 +306,7 @@
         max-height: @inbox-list-item-height;
 
         .inbox-list-item-content {
-          padding: 3px 10px;
+          padding: 4px 10px;
           min-height: @inbox-list-item-height;
           max-height: @inbox-list-item-height;
 
@@ -336,8 +346,12 @@
           }
 
           .list-image {
-            height: 28px;
-            width: 40px;
+            height: 36px;
+            width: 52px;
+            padding: 4px 12px;
+            margin-top: -4px;
+            margin-bottom: -4px;
+            margin-left: -10px;
 
             img {
               .avatar(28px);
