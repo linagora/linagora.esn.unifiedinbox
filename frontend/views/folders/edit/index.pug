@@ -19,7 +19,7 @@
         .modal-footer.flex
           .flex-vertical-centered.flex-start
             .delete-button
-              button.btn.btn-link.btn-icon.color-danger.delete(type='button', ui-sref='.delete')
+              button.btn.btn-link.btn-icon.color-danger.delete(type='button', ui-sref='unifiedinbox.inbox.folders.delete({ mailbox: mailbox.id })')
                 i.mdi.mdi-delete
           .flex-vertical-centered.flex-end
             button.btn.btn-link.color-default(type='button', esn-back-button="^") #{__('Cancel')}

@@ -1,0 +1,9 @@
+md-menu-item(ng-if="ctrl.isFolder", ui-sref="unifiedinbox.inbox.folders.edit({ mailbox: ctrl.mailbox.id })")
+  md-button
+    md-icon(md-menu-origin, md-svg-icon="settings", aria-label="settings Icon")
+    | #{__('Folder settings')}
+md-menu-divider(ng-if="ctrl.isFolder")
+md-menu-item(ng-if="ctrl.isFolder", ui-sref="unifiedinbox.inbox.folders.delete({ mailbox: ctrl.mailbox.id })")
+  md-button
+    md-icon(md-menu-origin, md-svg-icon="delete", aria-label="delete Icon")
+    | #{__('Delete folder')}
