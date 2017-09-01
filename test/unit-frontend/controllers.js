@@ -1621,7 +1621,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         ctrl.deleteFolder();
         scope.$digest();
 
-        expect($state.go).to.have.been.calledWith('unifiedinbox');
+        expect($state.go).to.have.been.calledWith('unifiedinbox.inbox', { type: '', account: '', context: '' });
       });
 
       it('should support the adaptive user interface concept: it goes to unifiedinbox if destroyMailbox is rejected', function() {
@@ -1634,7 +1634,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         ctrl.deleteFolder();
         scope.$digest();
 
-        expect($state.go).to.have.been.calledWith('unifiedinbox');
+        expect($state.go).to.have.been.calledWith('unifiedinbox.inbox', { type: '', account: '', context: '' });
       });
 
     });
