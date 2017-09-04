@@ -113,6 +113,17 @@
           .flex-space-between;
           .flex-shorthand(1, 1);
           .flex-vertical-centered;
+
+          .lv-title {
+            color: lighten(@text-color, 6%);
+          }
+
+          &.bold {
+            .lv-title {
+              font-weight: 500;
+              color: @headings-color;
+            }
+          }
         }
 
         .badge-number {
