@@ -442,7 +442,7 @@ angular.module('linagora.esn.unifiedinbox')
       });
 
     this.deleteFolder = function() {
-      $state.go('unifiedinbox');
+      $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' });
 
       return inboxMailboxesService.destroyMailbox($scope.mailbox);
     };
