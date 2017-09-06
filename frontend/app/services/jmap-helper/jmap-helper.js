@@ -29,7 +29,8 @@
               subject: emailState.subject,
               to: _mapToEMailer(emailState.to),
               cc: _mapToEMailer(emailState.cc),
-              bcc: _mapToEMailer(emailState.bcc)
+              bcc: _mapToEMailer(emailState.bcc),
+              headers: emailState.headers
             };
             var bodyProperty = emailState.htmlBody ? 'htmlBody' : emailBodyService.bodyProperty;
 

@@ -196,6 +196,62 @@ describe('The inboxJmapHelper service', function() {
       $rootScope.$digest();
     });
 
+    it('should include headers when provided', function() {
+      inboxJmapHelper.toOutboundMessage({}, {
+        identity: {
+          name: 'Sender',
+          email: 'sender@domain'
+        },
+        subject: 'expected subject',
+        htmlBody: 'expected htmlBody',
+        headers: {
+          'In-Reply-To': '123',
+          References: '123 456'
+        },
+        to: [{email: 'to@domain', name: 'to'}], cc: [], bcc: []
+      }).then(function(message) {
+        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
+          from: new jmap.EMailer({
+            name: 'Sender',
+            email: 'sender@domain'
+          }),
+          replyTo: null,
+          subject: 'expected subject',
+          htmlBody: 'expected htmlBody',
+          headers: {
+            'In-Reply-To': '123',
+            References: '123 456'
+          },
+          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
+        }));
+      });
+      $rootScope.$digest();
+    });
+
+    it('should NOT set headers when NOT provided', function() {
+      inboxJmapHelper.toOutboundMessage({}, {
+        identity: {
+          name: 'Sender',
+          email: 'sender@domain'
+        },
+        subject: 'expected subject',
+        htmlBody: 'expected htmlBody',
+        to: [{email: 'to@domain', name: 'to'}], cc: [], bcc: []
+      }).then(function(message) {
+        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
+          from: new jmap.EMailer({
+            name: 'Sender',
+            email: 'sender@domain'
+          }),
+          replyTo: null,
+          subject: 'expected subject',
+          htmlBody: 'expected htmlBody',
+          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
+        }));
+      });
+      $rootScope.$digest();
+    });
+
   });
 
 });

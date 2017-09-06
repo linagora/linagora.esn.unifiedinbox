@@ -987,6 +987,79 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
+      it('should set In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          to: [
+            {email: '1@linagora.com' },
+            {email: 'from@linagora.com', name: 'linagora'}
+          ],
+          subject: 'Re: my subject',
+          quoted: email,
+          quoteTemplate: 'default',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should update In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890',
+            References: '123 456'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          to: [
+            {email: '1@linagora.com' },
+            {email: 'from@linagora.com', name: 'linagora'}
+          ],
+          subject: 'Re: my subject',
+          quoted: email,
+          quoteTemplate: 'default',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '123 456 1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
     });
 
     describe('The createReplyEmailObject function', function() {
@@ -1085,6 +1158,77 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createReplyEmailObject('id', sender).then(function(email) {
           expect(email.attachments).to.be.undefined;
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should set In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          cc: [{displayName: '2', email: '2@linagora.com'}],
+          bcc: [{displayName: '3', email: '3@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          to: [{email: 'from@linagora.com', name: 'linagora'}],
+          subject: 'Re: my subject',
+          quoted: email,
+          quoteTemplate: 'default',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createReplyEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should update In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          cc: [{displayName: '2', email: '2@linagora.com'}],
+          bcc: [{displayName: '3', email: '3@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890',
+            References: '123 456'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          to: [{email: 'from@linagora.com', name: 'linagora'}],
+          subject: 'Re: my subject',
+          quoted: email,
+          quoteTemplate: 'default',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '123 456 1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createReplyEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
         }).then(done, done);
 
         $rootScope.$digest();
@@ -1193,6 +1337,73 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
           expect(email.attachments).to.shallowDeepEqual([{attachment: 'A'}, {attachment: 'B'}]);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should set In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          subject: 'Fwd: my subject',
+          quoted: email,
+          quoteTemplate: 'forward',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should update In-Reply-To/References headers', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          to: [{displayName: '1', email: '1@linagora.com'}],
+          cc: [{displayName: '2', email: '2@linagora.com'}],
+          bcc: [{displayName: '3', email: '3@linagora.com'}],
+          headers: {
+            'Message-Id': '1234567890',
+            References: '123 456'
+          },
+          date: '12:00:00 14:00',
+          subject: 'my subject',
+          htmlBody: '<p>my body</p>'
+        };
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+        expectedAnswer = {
+          from: 'sender@linagora.com',
+          subject: 'Fwd: my subject',
+          quoted: email,
+          quoteTemplate: 'forward',
+          headers: {
+            'In-Reply-To': '1234567890',
+            References: '123 456 1234567890'
+          },
+          isQuoting: true
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
+          expect(email).to.shallowDeepEqual(expectedAnswer);
         }).then(done, done);
 
         $rootScope.$digest();
