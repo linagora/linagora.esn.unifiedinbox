@@ -247,6 +247,34 @@ angular.module('linagora.esn.unifiedinbox')
       return email;
     }
 
+    function _linkToParentMessage(message, newEmail) {
+      if (!message.headers) {
+        return newEmail;
+      }
+      var quotedId = message.headers['Message-Id'];
+      var parentReferences = message.headers['References'] || '';
+      var newHeaders = newEmail.headers || {};
+
+      if (quotedId) {
+        newHeaders['In-Reply-To'] = quotedId;
+      }
+
+      // append quoted message id to the References collection
+      var refsColl = parentReferences && parentReferences
+        .split(' ')
+        .map(function(l) {
+          return l.replace(/\n$/, '');
+        })
+        .filter(function(l) {
+          return l;
+        });
+
+      newHeaders['References'] = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
+      newEmail.headers = newHeaders;
+
+      return newEmail;
+    }
+
     function _createQuotedEmail(subjectPrefix, recipients, templateName, includeAttachments, messageId, sender) {
       return inboxJmapHelper.getMessageById(messageId).then(function(message) {
         var newRecipients = recipients ? recipients(message, sender) : {},
@@ -273,9 +301,11 @@ angular.module('linagora.esn.unifiedinbox')
           });
         }
 
-        return emailBodyService.quote(newEmail, templateName).then(function(body) {
-          return _enrichWithQuote(newEmail, body);
-        });
+        return emailBodyService.quote(newEmail, templateName)
+          .then(function(body) {
+            return _enrichWithQuote(newEmail, body);
+          })
+          .then(_linkToParentMessage(message, newEmail));
       });
     }
 
