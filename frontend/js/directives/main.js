@@ -639,12 +639,16 @@ angular.module('linagora.esn.unifiedinbox')
       scope: {
         email: '='
       },
-      controller: function($scope) {
+      controller: function($scope, esnShortcuts, INBOX_SHORTCUTS) {
         ['reply', 'replyAll', 'forward'].forEach(function(action) {
           this[action] = function() {
             inboxJmapItemService[action]($scope.email);
           };
         }.bind(this));
+
+        esnShortcuts.use(INBOX_SHORTCUTS.REPLY_EMAIL, this.reply, $scope);
+        esnShortcuts.use(INBOX_SHORTCUTS.REPLY_ALL_EMAIL, this.replyAll, $scope);
+        esnShortcuts.use(INBOX_SHORTCUTS.FORWARD_EMAIL, this.forward, $scope);
       },
       controllerAs: 'ctrl'
     };

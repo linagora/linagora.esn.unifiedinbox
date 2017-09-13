@@ -150,5 +150,8 @@
   "Allow save draft before sending": "Lưu bản nháp trước khi gửi",
   "Enable draft email": "Thư nháp",
   "Enable attachments": "Đính kèm",
-  "Max size upload": "Dung lượng tải lên tối đa"
+  "Max size upload": "Dung lượng tải lên tối đa",
+  "Compose new email": "Soạn thư mới",
+  "View next email": "Xem thư sau",
+  "View previous email": "Xem thư trước"
 }
