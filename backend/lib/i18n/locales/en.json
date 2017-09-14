@@ -150,5 +150,8 @@
   "Allow save draft before sending": "Allow save draft before sending",
   "Enable draft email": "Enable draft email",
   "Enable attachments": "Enable attachments",
-  "Max size upload": "Max size upload"
+  "Max size upload": "Max size upload",
+  "Compose new email": "Compose new email",
+  "View next email": "View next email",
+  "View previous email": "View previous email"
 }

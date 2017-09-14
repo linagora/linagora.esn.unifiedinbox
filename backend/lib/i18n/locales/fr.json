@@ -150,5 +150,8 @@
   "Allow save draft before sending": "Autoriser l'enregistrement en brouillon avant envoi",
   "Enable draft email": "Activer les brouillons",
   "Enable attachments": "Activer les pièces jointes",
-  "Max size upload": "Taille maximum des envois"
+  "Max size upload": "Taille maximum des envois",
+  "Compose new email": "Composez un nouvel email",
+  "View next email": "Voir l'email suivant",
+  "View previous email": "Voir l'email précédent"
 }

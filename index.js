@@ -51,7 +51,9 @@ const angularAppFiles = [
   'services/date-groups/date-groups.js',
   'filters/item-date.js',
   'services/filtering/filtering-service.js',
-  'services/filtering/filters.js'
+  'services/filtering/filters.js',
+  'services/shortcuts/shortcuts.run.js',
+  'services/shortcuts/shortcuts.constants.js'
 ];
 
 const angularJsFiles = [
