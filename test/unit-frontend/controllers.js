@@ -885,7 +885,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     var jmapMessage;
 
     beforeEach(function() {
-      jmapMessage = new jmap.Message(jmapClient, 'messageId1', 'threadId1', [$stateParams.mailbox], {
+      jmapMessage = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', [$stateParams.mailbox], {
         isUnread: false
       });
 
@@ -924,7 +924,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should update $scope.email if it exists (opening an item from the list)', function(done) {
-      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'threadId1', [$stateParams.mailbox], {
+      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
         id: 'id',
         isFlagged: false
       });
@@ -944,7 +944,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should stop throbber when JMAP request has failed', function(done) {
-      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'threadId1', [$stateParams.mailbox], {
+      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
         id: 'id',
         isFlagged: false
       });

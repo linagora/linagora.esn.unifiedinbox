@@ -50,7 +50,7 @@ describe('The inboxJmapItemService service', function() {
   }));
 
   function newEmail(isUnread, isFlagged) {
-    return new jmap.Message({}, 'id' + ++counter, 'threadId', ['inbox'], {
+    return new jmap.Message({}, 'id' + ++counter, 'blobId', 'threadId', ['inbox'], {
       subject: 'subject',
       isUnread: isUnread,
       isFlagged: isFlagged
@@ -80,7 +80,7 @@ describe('The inboxJmapItemService service', function() {
       };
 
       inboxJmapItemService.moveToTrash([
-        new jmap.Message({}, 'id', 'trheadId', ['id_inbox'], { subject: 'subject' })
+        new jmap.Message({}, 'id', 'blobId', 'trheadId', ['id_inbox'], { subject: 'subject' })
       ]).then(function() {
         expect(jmapClientMock.setMessages).to.have.been.calledWith({
           update: {

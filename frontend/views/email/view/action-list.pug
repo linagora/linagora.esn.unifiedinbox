@@ -42,3 +42,8 @@
       i.mdi.mdi-delete
       span.label
         | #{__('Delete')}
+  .action
+    a(ng-click='ctrl.download()', title=__('Download (.eml)'), href="", target="_blank")
+      i.mdi.mdi-download
+      span.label
+        | #{__('Download (.eml)')}
