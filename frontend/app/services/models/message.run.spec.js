@@ -22,7 +22,7 @@ describe('The Message run block', function() {
   }));
 
   function newMessage(options) {
-    return new jmap.Message(null, 'id', 'threadId', ['inbox'], options);
+    return new jmap.Message(null, 'id', 'blobId', 'threadId', ['inbox'], options);
   }
 
   it('should have a correct initial value for isUnread', function() {

@@ -34,7 +34,7 @@ describe('The inboxFilteredList factory', function() {
   }));
 
   function newMessage(options) {
-    var message = new jmap.Message(jmapClient, 'id' + ++counter, 'threadId', ['id_inbox'], options);
+    var message = new jmap.Message(jmapClient, 'id' + ++counter, 'blobId', 'threadId', ['id_inbox'], options);
 
     message.provider = inboxHostedMailMessagesProvider;
 

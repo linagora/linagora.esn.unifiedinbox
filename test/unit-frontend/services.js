@@ -2267,7 +2267,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should renew the original jmap message with the ack id when saveDraft is called', function(done) {
-      var message = new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {});
+      var message = new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {});
       var composition = new Composition(message);
 
       composition.email.htmlBody = 'new content';
@@ -2281,7 +2281,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should not save incomplete attachments in the drafts', function(done) {
-      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1']));
+      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1']));
 
       composition.email.attachments = [
         { blobId: '1', upload: { promise: $q.when() } },
@@ -2300,7 +2300,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should renew the original jmap message with the second ack id when saveDraft is called twice, after the debouce delay', function(done) {
-      var message = new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {});
+      var message = new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {});
 
       message.destroy = sinon.stub().returns($q.when());
       var secondSaveAck = new jmap.CreateMessageAck(jmapClient, {
@@ -2328,7 +2328,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should debouce multiple calls to saveDraftSilently', function(done) {
-      var message = new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {});
+      var message = new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {});
 
       var composition = new Composition(message);
 
@@ -2348,7 +2348,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should update the original message in the composition, with the email state used to save the draft', function(done) {
-      var message = new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {});
+      var message = new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {});
 
       message.destroy = sinon.stub().returns($q.when());
 
@@ -2374,7 +2374,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('"saveDraft" should cancel a delayed draft save', function(done) {
-      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {}));
+      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {}));
 
       composition.email.subject = 'subject';
 
@@ -2447,7 +2447,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('"send" fn should destroy the original draft, when it is a jmap.Message', function() {
-      var message = new jmap.Message(null, 'id', 'threadId', ['box1'], {
+      var message = new jmap.Message(null, 'id', 'blobId', 'threadId', ['box1'], {
         to: [{displayName: '1', email: '1@linagora.com'}]
       });
 
@@ -2517,7 +2517,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('"send" should cancel a delayed draft save', function(done) {
-      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'threadId', ['box1'], {}));
+      var composition = new Composition(new jmap.Message(jmapClient, 'not expected id', 'blobId', 'threadId', ['box1'], {}));
 
       composition.email.subject = 'subject';
 
@@ -2603,7 +2603,7 @@ describe('The Unified Inbox Angular module services', function() {
       });
 
       it('should destroy an existing draft even if email is empty', function(done) {
-        var existingDraft = new jmap.Message(jmapClient, 123, 'threadId', ['box1'], { subject: 'a subject' }),
+        var existingDraft = new jmap.Message(jmapClient, 123, 'blobId', 'threadId', ['box1'], { subject: 'a subject' }),
             composition = new Composition(existingDraft);
 
         composition.email.subject = '';
@@ -2649,7 +2649,7 @@ describe('The Unified Inbox Angular module services', function() {
       });
 
       it('should delete the original draft when the grace period is not cancelled', function(done) {
-        var message = new jmap.Message(jmapClient, 123, 'threadId', ['box1'], {});
+        var message = new jmap.Message(jmapClient, 123, 'blobId', 'threadId', ['box1'], {});
 
         graceRequestResult.cancelled = false;
 

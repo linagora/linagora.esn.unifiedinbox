@@ -4,8 +4,9 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService, backgroundAction,
+                                              withJmapClient,
                                               jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, _, esnI18nService,
-                                              INBOX_EVENTS) {
+                                              INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE) {
 
       return {
         reply: reply,
@@ -18,6 +19,7 @@
         moveToTrash: moveToTrash,
         moveToMailbox: moveToMailbox,
         moveMultipleItems: moveMultipleItems,
+        downloadEML: downloadEML,
         setFlag: setFlag
       };
 
@@ -163,6 +165,23 @@
               return $q.reject(response);
             });
         }, { silent: true });
+      }
+
+      function _truncateWithEllipsis(text, max) {return text.substr(0, max - 1) + (text.length > max ? '…' : ''); }
+
+      function downloadEML(itemOrItems) {
+        var item = _.isArray(itemOrItems) ? itemOrItems[0] : itemOrItems;
+        var messageSubject = _truncateWithEllipsis(item.subject, INBOX_DISPLAY_NAME_SIZE);
+
+        return asyncJmapAction({
+          progressing: esnI18nService.translate('Downloading message "%s"...', messageSubject),
+          success: esnI18nService.translate('Message "%s" successfully downloaded', messageSubject),
+          failure: esnI18nService.translate('Could not download message "%s"', messageSubject)
+        }, function(client) {
+          var encodedSubject = encodeURIComponent((messageSubject || 'message') + '.eml');
+
+          return new jmap.Attachment(client, item.blobId, { name: encodedSubject }).getSignedDownloadUrl();
+        });
       }
     });
 

@@ -596,7 +596,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('email', function(inboxJmapItemService) {
+  .directive('email', function(inboxJmapItemService, navigateTo) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -611,6 +611,10 @@ angular.module('linagora.esn.unifiedinbox')
             email.isCollapsed = !email.isCollapsed;
             $scope.$broadcast('email:collapse', email.isCollapsed);
           }
+        };
+
+        this.download = function() {
+          inboxJmapItemService.downloadEML($scope.email).then(navigateTo);
         };
       },
       controllerAs: 'ctrl',

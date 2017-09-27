@@ -195,7 +195,7 @@ describe('The Unified Inbox Angular module providers', function() {
     describe('The itemMatches function', function() {
 
       function newMessage(mailboxId, options) {
-        return new jmap.Message(null, 'id', 'threadId', [mailboxId || 'id_inbox'], options);
+        return new jmap.Message(null, 'id', 'blobId', 'threadId', [mailboxId || 'id_inbox'], options);
       }
 
       function jmapFilter(context, filter) {

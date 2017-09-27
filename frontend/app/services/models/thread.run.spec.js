@@ -25,7 +25,7 @@ describe('The Thread run block', function() {
   }
 
   function newMessage(mailboxIds, options) {
-    return new jmap.Message(null, 'id', 'threadId', mailboxIds, options);
+    return new jmap.Message(null, 'id', 'blobId', 'threadId', mailboxIds, options);
   }
 
   it('should have id, mailboxIds, subject, date, hasAttachment and emails properties', function() {
