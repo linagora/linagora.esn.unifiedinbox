@@ -158,7 +158,13 @@
   "Compose new email": "Soạn thư mới",
   "View next email": "Xem thư sau",
   "View previous email": "Xem thư trước",
+  "Delete folder": "Xóa thư mục",
+  "Empty trash": "Làm rỗng thùng rác",
+  "Number of items per request, on bulk READ operations": "Số lượng thư trên mỗi yêu cầu ĐỌC",
+  "Number of items per request, on bulk DELETE operations": "Số lượng thư trên mỗi yêu cầu XÓA",
+  "Trash is empty": "Thùng rác rỗng",
+  "Empty trash in progress": "Đang dọn dẹp thùng rác",
+  "Empty the trash failed": "Dọn dẹp thùng rác thất bại",
   "Navigation": "Điều hướng",
-  "Actions": "Tác vụ",
-  "Delete Folder": "Xóa thư mục"
+  "Actions": "Tác vụ"
 }

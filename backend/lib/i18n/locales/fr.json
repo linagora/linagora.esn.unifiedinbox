@@ -158,7 +158,15 @@
   "Compose new email": "Composez un nouvel email",
   "View next email": "Voir l'email suivant",
   "View previous email": "Voir l'email précédent",
+  "Delete folder": "Supprimer le dossier",
+  "Empty trash": "Vider la corbeille",
+  "Number of items per request, on bulk READ operations" : "Nombre d'éléments par requête, pour les opérations READ en masse",
+  "Number of items per request, on bulk DELETE operations": "Nombre d'éléments par requête, pour les opérations DELETE en masse",
+  "Number of email per page to get": "Nombre d'email recuperé par page",
+  "Number of email per page to destroy": "Nombre d'email détruit par page",
+  "Trash is empty": "La poubelle est vidée",
+  "Empty trash in progress": "La poubelle est en train de se vider",
+  "Empty the trash failed": "Impossible de vider la poubelle",
   "Navigation": "Navigation",
-  "Actions": "Actions",
-  "Delete folder": "Supprimer le dossier"
+  "Actions": "Actions"
 }

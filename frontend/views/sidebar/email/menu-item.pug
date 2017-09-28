@@ -7,12 +7,15 @@
     esn-is-drop-zone="isDropZone($dragData)"
   )
   .badge-container
-    .badge(ng-if="!hideBadge && mailbox.unreadMessages !== 0") {{ mailbox.unreadMessages | maxPlus:99 }}
+    .badge(ng-if="!hideBadge && mailbox.unreadMessages !== 0")
+      span(ng-class="{ 'hide-badge-number' : mailbox.role.value === 'trash' && badgeLoadingActivated }") {{ mailbox.unreadMessages | maxPlus:99 }}
+      span(ng-if="mailbox.role.value === 'trash' && badgeLoadingActivated")
+        i.mdi.mdi-loading.badge-loading-activate
     i.inbox-icon(ng-class='mailboxIcons')
 
   .menu-item
     span.menu-item-inner
       bdi {{ mailbox.qualifiedName }}
     span.menu-item-after
-  settings-overlay(ng-if="settings && !hideBadge", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
+  settings-overlay(ng-if="settings || mailbox.role.value === 'trash' && !hideBadge", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
     inbox-folder-settings(is-folder="settings", mailbox="mailbox")

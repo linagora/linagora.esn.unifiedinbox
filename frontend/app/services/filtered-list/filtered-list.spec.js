@@ -6,8 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxFilteredList factory', function() {
 
-  var counter = 0;
-  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, inboxHostedMailMessagesProvider, INBOX_EVENTS;
+  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, inboxHostedMailMessagesProvider, INBOX_EVENTS, counter;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -44,6 +43,8 @@ describe('The inboxFilteredList factory', function() {
   beforeEach(function() {
     inboxFilteringService.setProviderFilters({ types: ['jmap'] });
     _.find(inboxFilters, { id: 'isUnread' }).checked = true;
+
+    counter = 0;
   });
 
   it('should render the list when filters change', function() {
@@ -215,6 +216,27 @@ describe('The inboxFilteredList factory', function() {
       inboxFilteredList.addAll([message]);
 
       expect(inboxFilteredList.getById(message.id)).to.equal(message);
+    });
+
+  });
+
+  describe('The removeFromList function', function() {
+
+    it('should render element list removed if id match', function() {
+      var messages = [
+        newMessage({ isUnread: true, date: 1 }),
+        newMessage({ isUnread: true, date: 0 }),
+        newMessage({ isUnread: true, date: -1 })
+      ];
+
+      inboxFilteredList.addAll(messages);
+      $rootScope.$digest();
+
+      var removeIdList = ['id1', 'id2'],
+          removeFromList = inboxFilteredList.removeFromList(removeIdList);
+
+      expect(removeFromList[0]).to.deep.equal(messages[0]);
+      expect(removeFromList[1]).to.deep.equal(messages[1]);
     });
 
   });

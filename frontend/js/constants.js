@@ -23,6 +23,8 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('ATTACHMENTS_ATTRIBUTES', ['blobId', 'isInline', 'name', 'size', 'type'])
   .constant('DEFAULT_MAX_SIZE_UPLOAD', 20971520)
   .constant('DRAFT_SAVING_DEBOUNCE_DELAY', 1000)
+  .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS', 30)
+  .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS', 30)
   .constant('DEFAULT_VIEW', 'messages')
   .constant('IFRAME_MESSAGE_PREFIXES', {
     CHANGE_DOCUMENT: '[linagora.esn.unifiedinbox.changeDocument]',
@@ -39,7 +41,8 @@ angular.module('linagora.esn.unifiedinbox')
     FILTER_CHANGED: 'inbox:filterChanged',
     ITEM_SELECTION_CHANGED: 'inbox:itemSelectionChanged',
     ITEM_FLAG_CHANGED: 'inbox:itemFlagChanged',
-    ITEM_MAILBOX_IDS_CHANGED: 'inbox:itemMailboxIdsChanged'
+    ITEM_MAILBOX_IDS_CHANGED: 'inbox:itemMailboxIdsChanged',
+    BADGE_LOADING_ACTIVATED: 'inbox:badgeLoadingActivated'
   })
   .constant('INBOX_SUMMERNOTE_OPTIONS', {
     focus: false,

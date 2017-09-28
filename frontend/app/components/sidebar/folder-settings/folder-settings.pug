@@ -2,6 +2,10 @@ md-menu-item(ng-if="ctrl.isFolder", ui-sref="unifiedinbox.inbox.folders.edit({ m
   md-button
     md-icon(md-menu-origin, md-svg-icon="settings", aria-label="settings Icon")
     | #{__('Folder settings')}
+md-menu-item(ng-if="ctrl.mailbox.role.value === 'trash'")
+  md-button(ng-disabled="ctrl.mailbox.totalMessages === 0", ng-click="ctrl.emptyTrash(ctrl.mailbox.id)")
+    md-icon(md-menu-origin, md-svg-icon="delete-empty", aria-label="empty Icon")
+    | #{__('Empty trash')}
 md-menu-divider(ng-if="ctrl.isFolder")
 md-menu-item(ng-if="ctrl.isFolder", ui-sref="unifiedinbox.inbox.folders.delete({ mailbox: ctrl.mailbox.id })")
   md-button

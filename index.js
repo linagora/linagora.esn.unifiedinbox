@@ -54,7 +54,8 @@ const angularAppFiles = [
   'services/filtering/filters.js',
   'services/shortcuts/shortcuts.run.js',
   'services/shortcuts/shortcuts.constants.js',
-  'components/sidebar/folder-settings/folder-settings.component.js'
+  'components/sidebar/folder-settings/folder-settings.component.js',
+  'components/sidebar/folder-settings/folder-settings.controller.js'
 ];
 
 const angularJsFiles = [
