@@ -9,8 +9,10 @@
   .badge-container
     .badge(ng-if="!hideBadge && mailbox.unreadMessages !== 0") {{ mailbox.unreadMessages | maxPlus:99 }}
     i.inbox-icon(ng-class='mailboxIcons')
+
   .menu-item
     span.menu-item-inner
       bdi {{ mailbox.qualifiedName }}
     span.menu-item-after
-  settings-overlay(ng-if="settings", settings-overlay-sref="unifiedinbox.inbox.folders.edit({ mailbox: mailbox.id })", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
+  settings-overlay(ng-if="settings && !hideBadge", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
+    inbox-folder-settings(is-folder="settings", mailbox="mailbox")

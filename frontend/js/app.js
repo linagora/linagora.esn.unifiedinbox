@@ -50,10 +50,13 @@ angular.module('linagora.esn.unifiedinbox', [
   'esn.datetime',
   'esn.i18n',
   'esn.http',
-  'esn.shortcuts'
+  'esn.shortcuts',
+  'material.components.button',
+  'material.components.menu',
+  'material.components.icon'
 ])
 
-  .config(function($stateProvider, dynamicDirectiveServiceProvider) {
+  .config(function($stateProvider, dynamicDirectiveServiceProvider, $mdIconProvider) {
 
     function stateOpeningListItem(state) {
       function toggleElementOpened(opening) {
@@ -158,10 +161,10 @@ angular.module('linagora.esn.unifiedinbox', [
         params: { mailbox: null }
       }, '/unifiedinbox/views/folders/add/index', 'addFolderController'))
       .state('unifiedinbox.inbox.folders.edit', stateOpeningModal({
-        url: '/:mailbox'
+        url: '/edit/:mailbox'
       }, '/unifiedinbox/views/folders/edit/index', 'editFolderController'))
-      .state('unifiedinbox.inbox.folders.edit.delete', stateOpeningModal({
-        url: '/delete'
+      .state('unifiedinbox.inbox.folders.delete', stateOpeningModal({
+        url: '/delete/:mailbox'
       }, '/unifiedinbox/views/folders/delete/index', 'inboxDeleteFolderController'))
       .state('unifiedinbox.configuration', {
         url: '/configuration',
@@ -265,6 +268,8 @@ angular.module('linagora.esn.unifiedinbox', [
 
     dynamicDirectiveServiceProvider.addInjection('esn-application-menu', inbox);
     dynamicDirectiveServiceProvider.addInjection('attachments-action-list', attachmentDownloadAction);
+
+    $mdIconProvider.defaultIconSet('images/mdi/mdi.svg', 24);
   })
 
   .run(function($q, inboxConfig, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailThreadsProvider,

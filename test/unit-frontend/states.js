@@ -101,14 +101,14 @@ describe('The Inbox states', function() {
   describe('The unifiedinbox.folders.edit.delete state', function() {
 
     it('should open a $modal when entering the state', function() {
-      goTo('unifiedinbox.inbox.folders.edit.delete', { mailbox: '1' });
+      goTo('unifiedinbox.inbox.folders.delete', { mailbox: '1' });
       goTo('unifiedinbox.inbox', { mailbox: '1' });
 
       expect($modal).to.have.been.calledWith();
     });
 
     it('should close the modal when leaving the state', function() {
-      goTo('unifiedinbox.inbox.folders.edit.delete', { mailbox: '1' });
+      goTo('unifiedinbox.inbox.folders.delete', { mailbox: '1' });
       goTo('unifiedinbox.inbox', { mailbox: '1' });
 
       expect(hideModal).to.have.been.calledWith();
