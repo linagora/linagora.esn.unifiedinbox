@@ -8,11 +8,20 @@
     esnShortcuts,
     newComposerService,
     INBOX_SHORTCUTS_CATEGORY,
-    INBOX_SHORTCUTS
+    INBOX_SHORTCUTS_NAVIGATION_CATEGORY,
+    INBOX_SHORTCUTS_ACTIONS_CATEGORY
   ) {
-    esnShortcuts.register(INBOX_SHORTCUTS_CATEGORY, INBOX_SHORTCUTS);
+    var subCategories = [INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY];
 
-    esnShortcuts.use(INBOX_SHORTCUTS.OPEN_COMPOSER, function() {
+    subCategories.forEach(function(subCategory) {
+      subCategory.parentId = INBOX_SHORTCUTS_CATEGORY.id;
+      subCategory.moduleDetector = INBOX_SHORTCUTS_CATEGORY.moduleDetector;
+    });
+    esnShortcuts.register(INBOX_SHORTCUTS_CATEGORY);
+    esnShortcuts.register(INBOX_SHORTCUTS_NAVIGATION_CATEGORY);
+    esnShortcuts.register(INBOX_SHORTCUTS_ACTIONS_CATEGORY);
+
+    esnShortcuts.use(INBOX_SHORTCUTS_CATEGORY.shortcuts.OPEN_COMPOSER, function() {
       newComposerService.open({});
     });
   }
