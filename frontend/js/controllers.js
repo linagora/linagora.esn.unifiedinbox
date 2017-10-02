@@ -232,7 +232,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, INBOX_SHORTCUTS) {
+  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, INBOX_SHORTCUTS_NAVIGATION_CATEGORY) {
     $scope.email = $stateParams.item;
 
     inboxAsyncHostedMailControllerHelper(this, function() {
@@ -295,8 +295,8 @@ angular.module('linagora.esn.unifiedinbox')
       return openAdjacentMessage('previous');
     };
 
-    esnShortcuts.use(INBOX_SHORTCUTS.VIEW_NEXT_EMAIL, this.next, $scope);
-    esnShortcuts.use(INBOX_SHORTCUTS.VIEW_PREVIOUS_EMAIL, this.previous, $scope);
+    esnShortcuts.use(INBOX_SHORTCUTS_NAVIGATION_CATEGORY.shortcuts.VIEW_NEXT_EMAIL, this.next, $scope);
+    esnShortcuts.use(INBOX_SHORTCUTS_NAVIGATION_CATEGORY.shortcuts.VIEW_PREVIOUS_EMAIL, this.previous, $scope);
   })
 
   .controller('viewThreadController', function($scope, $stateParams, $state, withJmapClient, inboxJmapItemService, _, JMAP_GET_MESSAGES_VIEW) {
