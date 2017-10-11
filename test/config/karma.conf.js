@@ -65,7 +65,6 @@ module.exports = function(config) {
       'frontend/components/angular-file-saver/dist/angular-file-saver.bundle.js',
 
       { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
-      { pattern: 'frontend/app/components/message-body/html/*.*', watched: false, included: false, served: true },
       { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
       { pattern: 'frontend/components/mdi/fonts/**/*.*', watched: false, included: false, served: true },
 
@@ -107,7 +106,8 @@ module.exports = function(config) {
     },
 
     proxies: {
-      '/images/': '/base/frontend/images/'
+      '/images/': '/base/frontend/images/',
+      '/iframe/': '/base/frontend/app/components/message-body/html/'
     },
 
     plugins: [

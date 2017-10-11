@@ -59,6 +59,17 @@ function setDocument(newDocument) {
 
     parent.postMessage('[linagora.esn.unifiedinbox.inlineAttachment]' + cid, '*');
   });
+
+  var location = window.location.toString();
+  var protocol = location.split('/')[0];
+  var domain = location.split('/')[2];
+
+  Array.prototype.forEach.call(document.querySelectorAll('a[href^="' + protocol + '//' + domain + '"]'), function(element) {
+    element.onclick = function(event) {
+      event.preventDefault();
+      parent.postMessage('[linagora.esn.unifiedinbox.changeCurrentLocation]' + element.href, '*');
+    };
+  });   
 }
 
 function replaceInlineImageUrl(cidAndUrl) {

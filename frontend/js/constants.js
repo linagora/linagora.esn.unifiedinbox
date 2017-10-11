@@ -30,7 +30,8 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('IFRAME_MESSAGE_PREFIXES', {
     CHANGE_DOCUMENT: '[linagora.esn.unifiedinbox.changeDocument]',
     MAILTO: '[linagora.esn.unifiedinbox.mailtoClick]',
-    INLINE_ATTACHMENT: '[linagora.esn.unifiedinbox.inlineAttachment]'
+    INLINE_ATTACHMENT: '[linagora.esn.unifiedinbox.inlineAttachment]',
+    CHANGE_CURRENT_LOCATION: '[linagora.esn.unifiedinbox.changeCurrentLocation]'
   })
   .constant('INBOX_SWIPE_DURATION', 500)
   .constant('PROVIDER_TYPES', {
