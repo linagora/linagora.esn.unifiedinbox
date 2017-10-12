@@ -58,6 +58,12 @@ module.exports = function(config) {
       'frontend/components/angular-animate/angular-animate.js',
       'frontend/components/waves/src/js/waves.js',
 
+      'frontend/components/videogular/videogular.min.js',
+      'frontend/components/videogular-buffering/vg-buffering.min.js',
+      'frontend/components/videogular-controls/vg-controls.min.js',
+      'frontend/components/videogular-overlay-play/vg-overlay-play.min.js',
+      'frontend/components/angular-file-saver/dist/angular-file-saver.bundle.js',
+
       { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
       { pattern: 'frontend/app/components/message-body/html/*.*', watched: false, included: false, served: true },
       { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
