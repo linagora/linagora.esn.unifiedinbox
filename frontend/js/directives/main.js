@@ -106,7 +106,8 @@ angular.module('linagora.esn.unifiedinbox')
         mailbox: '=',
         hideBadge: '@',
         settings: '=',
-        hideAside: '&'
+        hideAside: '&',
+        shared: '='
       },
       templateUrl: '/unifiedinbox/views/sidebar/email/menu-item.html',
       link: function(scope) {
