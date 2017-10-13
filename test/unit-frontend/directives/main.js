@@ -11,7 +11,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       iFrameResize = angular.noop, elementScrollService, $stateParams, $dropdown,
       isMobile, searchService, autosize, windowMock, fakeNotification,
       sendEmailFakePromise, cancellationLinkAction, inboxConfigMock, inboxJmapItemService, _, INBOX_EVENTS,
-      notificationFactory, esnPreviousPage;
+      notificationFactory, esnPreviousPage, $httpBackend;
 
   beforeEach(function() {
     angular.module('esn.iframe-resizer-wrapper', []);
@@ -82,19 +82,26 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     $provide.value('localTimezone', 'UTC');
   }));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$stateParams_, _$templateCache_, session, _inboxJmapItemService_,
-                             _inboxPlugins_, ___, _INBOX_EVENTS_, _notificationFactory_, _esnPreviousPage_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$stateParams_, _$templateCache_, _$httpBackend_, session,
+                             _inboxJmapItemService_, _inboxPlugins_, ___, _INBOX_EVENTS_, _notificationFactory_, _esnPreviousPage_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
     $stateParams = _$stateParams_;
     $templateCache = _$templateCache_;
+    $httpBackend = _$httpBackend_;
     inboxJmapItemService = _inboxJmapItemService_;
     inboxPlugins = _inboxPlugins_;
     _ = ___;
     esnPreviousPage = _esnPreviousPage_;
     INBOX_EVENTS = _INBOX_EVENTS_;
     notificationFactory = _notificationFactory_;
+
+    // in the mailbox-display we put a folder-settings component which use an icon provider that load this icon set
+    // if this icon provider is moved somewhere else, this test will have to be moved as well probable.
+    $httpBackend
+      .whenGET('images/mdi/mdi.svg')
+      .respond('');
 
     session.user = {
       preferredEmail: 'user@open-paas.org',

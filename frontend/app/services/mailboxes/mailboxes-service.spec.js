@@ -356,6 +356,32 @@ describe('The inboxMailboxesService factory', function() {
 
   });
 
+  describe('The updateTotalMessages function', function() {
+
+    it('should decrease total messages of from mailboxes and increase it for to mailboxes', function() {
+      var destObject = {};
+
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 1, totalMessages: 1},
+          { id: 2, totalMessages: 2}
+        ]);
+      };
+
+      inboxMailboxesService.assignMailboxesList(destObject);
+      $rootScope.$digest();
+      inboxMailboxesService.updateTotalMessages([1], [2], 1);
+      var orderedMailboxes = destObject.mailboxes
+        .sort(function(a, b) { return +a.id - +b.id; });
+
+      expect(orderedMailboxes).to.shallowDeepEqual([
+        { id: 1, totalMessages: 0},
+        { id: 2, totalMessages: 3}
+      ]);
+    });
+
+  });
+
   describe('The canMoveMessage function', function() {
 
     var message, mailbox, draftMailbox, outboxMailbox;
@@ -816,6 +842,16 @@ describe('The inboxMailboxesService factory', function() {
 
       inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.DRAFTS).catch(done);
       $rootScope.$digest();
+    });
+
+  });
+
+  describe('The emptyMailbox function', function() {
+
+    it('should set unreadMessages and totalMessages mailbox to null', function() {
+      inboxMailboxesCache[0] = { id: 2, name: '2', totalMessages: 3, unreadMessages: 1 };
+
+      expect(inboxMailboxesService.emptyMailbox(2)).to.deep.equal({ id: 2, name: '2', totalMessages: 0, unreadMessages: 0 });
     });
 
   });

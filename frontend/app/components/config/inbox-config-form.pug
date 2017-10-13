@@ -50,3 +50,7 @@ ng-form.p-t-25(name='form')
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations['composer.attachments'].value", form="form")
     admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
+    esn-form-group(label=__('Number of items per request, on bulk READ operations'))
+      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkReadOperations.value", name="numberItemsPerPageOnBulkReadOperations")
+    esn-form-group(label=__('Number of items per request, on bulk DELETE operations'))
+      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkDeleteOperations.value", name="numberItemsPerPageOnBulkDeleteOperations")

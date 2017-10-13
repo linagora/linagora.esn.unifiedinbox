@@ -8,6 +8,7 @@
         isFolder: '=',
         mailbox: '='
       },
-      controllerAs: 'ctrl'
+      controllerAs: 'ctrl',
+      controller: 'inboxFolderSettingsController'
     });
 })();

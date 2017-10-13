@@ -7,7 +7,8 @@ var expect = chai.expect;
 describe('The inboxJmapItemService service', function() {
 
   var $rootScope, jmap, inboxJmapItemService, newComposerService, emailSendingService, quoteEmail, jmapClientMock,
-      notificationFactory, counter, infiniteListService, inboxSelectionService, INFINITE_LIST_EVENTS, INBOX_EVENTS;
+      notificationFactory, counter, infiniteListService, inboxSelectionService, INFINITE_LIST_EVENTS, INBOX_EVENTS,
+      inboxConfigMock;
 
   beforeEach(module('linagora.esn.unifiedinbox'));
 
@@ -16,9 +17,16 @@ describe('The inboxJmapItemService service', function() {
     jmapClientMock = {
       setMessages: sinon.spy(function() {
         return $q.when(new jmap.SetResponse(jmapClientMock));
+      }),
+      destroyMessages: sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock));
+      }),
+      getMessageList: sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock));
       })
     };
     quoteEmail = function() { return {transformed: 'value'}; };
+    inboxConfigMock = {};
 
     $provide.value('withJmapClient', function(callback) { return callback(jmapClientMock); });
     $provide.value('newComposerService', newComposerService = { open: sinon.spy() });
@@ -29,6 +37,9 @@ describe('The inboxJmapItemService service', function() {
     });
     $provide.value('esnI18nService', {
       translate: function(input) { return input; }
+    });
+    $provide.value('inboxConfig', function(key, defaultValue) {
+      return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
     });
   }));
 
@@ -60,6 +71,12 @@ describe('The inboxJmapItemService service', function() {
   function mockSetMessages(rejectedIds) {
     jmapClientMock.setMessages = sinon.spy(function() {
       return $q.when(new jmap.SetResponse(jmapClientMock, { notUpdated: rejectedIds || {} }));
+    });
+  }
+
+  function mockDestroyMessages(rejectedIds) {
+    jmapClientMock.destroyMessages = sinon.spy(function() {
+      return $q.when(new jmap.SetResponse(jmapClientMock, { notDestroyed: rejectedIds || {} }));
     });
   }
 
@@ -105,6 +122,7 @@ describe('The inboxJmapItemService service', function() {
       inboxMailboxesService = _inboxMailboxesService_;
 
       inboxMailboxesService.moveUnreadMessages = sinon.spy(inboxMailboxesService.moveUnreadMessages);
+      inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
       mailbox = { id: 'mailboxId', name: 'inbox', displayName: 'inbox' };
     }));
 
@@ -160,6 +178,7 @@ describe('The inboxJmapItemService service', function() {
       mockSetMessages();
 
       inboxJmapItemService.moveToMailbox([newEmail(), newEmail(), newEmail()], mailbox).then(function() {
+
         expect(jmapClientMock.setMessages).to.have.been.calledWith({
           update: {
             id1: { mailboxIds: ['mailboxId'] },
@@ -183,6 +202,9 @@ describe('The inboxJmapItemService service', function() {
       expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledTwice;
       expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
       expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
+      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledTwice;
+      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
+      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
 
       $rootScope.$digest();
     });
@@ -200,10 +222,13 @@ describe('The inboxJmapItemService service', function() {
       inboxJmapItemService.moveToMailbox([email, email2], mailbox).catch(function() {
         expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledOnce;
         expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['mailboxId'], ['inbox'], 1);
+        expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledOnce;
+        expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['mailboxId'], ['inbox'], 1);
 
         done();
       });
       inboxMailboxesService.moveUnreadMessages.reset();
+      inboxMailboxesService.updateTotalMessages.reset();
 
       $rootScope.$digest();
     });
@@ -534,6 +559,90 @@ describe('The inboxJmapItemService service', function() {
       expect(eventHandler).to.have.been.calledWith(sinon.match.any, [message], 'isUnread', true);
       expect(eventHandler).to.have.been.calledWith(sinon.match.any, [message], 'isUnread', false);
       expect(message.isUnread).to.equal(false);
+    });
+
+  });
+
+  describe('The emptyMailbox function', function() {
+
+    var inboxMailboxesService, inboxMailboxesCache, inboxFilteredList, notificationFactory,
+        perPage, messageIdsList, mailboxId;
+
+    beforeEach(inject(function(_inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_, _notificationFactory_) {
+      inboxMailboxesService = _inboxMailboxesService_;
+      inboxMailboxesCache = _inboxMailboxesCache_;
+      inboxFilteredList = _inboxFilteredList_;
+      notificationFactory = _notificationFactory_;
+
+      inboxMailboxesService.getMessageListFilter = sinon.spy(inboxMailboxesService.getMessageListFilter);
+      inboxFilteredList.removeFromList = sinon.spy(inboxFilteredList.removeFromList);
+      inboxMailboxesService.emptyMailbox = sinon.spy(inboxMailboxesService.emptyMailbox);
+      inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
+      notificationFactory.weakError = sinon.spy(notificationFactory.weakError);
+      perPage = 30;
+      inboxConfigMock.numberItemsPerPageOnBulkReadOperations = perPage;
+      inboxConfigMock.numberItemsPerPageOnBulkDeleteOperations = perPage;
+      mailboxId = 'id_trash';
+      inboxMailboxesCache[0] = { id: mailboxId, name: 'name_trash', displayName: 'name_trash', totalMessages: 6, unreadMessages: 1 };
+      messageIdsList = ['1', '2', '3', '4', '5', '6'];
+
+      jmapClientMock.getMessageList = function(opts) {
+        expect(opts).to.deep.equal({
+          filter: { inMailboxes: [mailboxId]},
+          limit: perPage,
+          position: 0
+        });
+
+        return $q.when(new jmap.MessageList({}, { messageIds: ['1', '2', '3', '4', '5', '6']}));
+      };
+    }));
+
+    it('should call getMessageList with the correct options for multiple item, and resolve when destroyMessages succeeds', function(done) {
+      inboxJmapItemService.emptyMailbox(mailboxId).then(function() {
+        expect(jmapClientMock.destroyMessages).to.have.been.calledWith(messageIdsList);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should call removeFromList and emptyMailbox', function(done) {
+      inboxJmapItemService.emptyMailbox(mailboxId).then(function() {
+        expect(inboxFilteredList.removeFromList).to.have.been.calledOnce;
+        expect(inboxFilteredList.removeFromList).to.have.been.calledWith(messageIdsList);
+        expect(inboxMailboxesService.emptyMailbox).to.have.been.calledOnce;
+        expect(inboxMailboxesCache[0].totalMessages).to.deep.equal(0);
+        expect(inboxMailboxesCache[0].unreadMessages).to.deep.equal(0);
+
+        done();
+      });
+      $rootScope.$digest();
+      inboxMailboxesService.updateTotalMessages.reset();
+    });
+
+    it('should show error toast on destroyMessages failure, and rejects the promise', function() {
+      mockDestroyMessages();
+
+      inboxJmapItemService.emptyMailbox(mailboxId).catch(function() {
+        expect(notificationFactory.weakError).to.have.been.calledOnce;
+        expect(notificationFactory.weakError).to.have.been.calledWith('error', 'Empty the trash fail');
+      });
+      $rootScope.$digest();
+    });
+
+    it('should destroyMessages and broadcast an event', function(done) {
+      var eventHandler = sinon.spy();
+
+      $rootScope.$on(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, eventHandler);
+
+      inboxJmapItemService.emptyMailbox(mailboxId).then(function() {
+        done();
+      });
+      $rootScope.$digest();
+
+      expect(eventHandler).to.have.been.calledTwice;
+      expect(eventHandler.firstCall).to.be.true;
+      expect(eventHandler.secondCall).to.be.false;
     });
 
   });

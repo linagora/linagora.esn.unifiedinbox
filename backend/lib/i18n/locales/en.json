@@ -158,7 +158,13 @@
   "Compose new email": "Compose new email",
   "View next email": "View next email",
   "View previous email": "View previous email",
+  "Delete folder": "Delete folder",
+  "Empty trash": "Empty trash",
+  "Number of items per request, on bulk READ operations" : "Number of items per request, on bulk READ operations",
+  "Number of items per request, on bulk DELETE operations": "Number of items per request, on bulk DELETE operations",
+  "Trash is empty": "Trash is empty",
+  "Empty trash in progress": "Empty trash in progress",
+  "Empty the trash failed": "Empty the trash failed",
   "Navigation": "Navigation",
-  "Actions": "Actions",
-  "Delete Folder": "Delete folder"
+  "Actions": "Actions"
 }

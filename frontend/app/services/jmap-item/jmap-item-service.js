@@ -5,8 +5,9 @@
 
     .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService, backgroundAction,
                                               withJmapClient,
-                                              jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, _, esnI18nService,
-                                              INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE) {
+                                              jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, notificationFactory, _, esnI18nService,
+                                              INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE, inboxFilteredList, inboxConfig, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS,
+                                              INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS) {
 
       return {
         reply: reply,
@@ -20,7 +21,8 @@
         moveToMailbox: moveToMailbox,
         moveMultipleItems: moveMultipleItems,
         downloadEML: downloadEML,
-        setFlag: setFlag
+        setFlag: setFlag,
+        emptyMailbox: emptyMailbox
       };
 
       /////
@@ -49,6 +51,7 @@
             if (item.isUnread) {
               inboxMailboxesService.moveUnreadMessages(item.mailboxIds, toMailboxIds, 1);
             }
+            inboxMailboxesService.updateTotalMessages(item.mailboxIds, toMailboxIds, 1);
 
             _updateItemMailboxIds(item, toMailboxIds);
 
@@ -75,6 +78,7 @@
                 if (item.isUnread) {
                   inboxMailboxesService.moveUnreadMessages(toMailboxIds, item.mailboxIds, 1);
                 }
+                inboxMailboxesService.updateTotalMessages(toMailboxIds, item.mailboxIds, 1);
 
                 return item;
               });
@@ -84,6 +88,86 @@
               return $q.reject(response);
             });
         }, { silent: true });
+      }
+
+      function emptyMailbox(mailboxId) {
+
+        return inboxMailboxesService.getMessageListFilter(mailboxId).then(function(mailboxFilter) {
+          $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, true);
+
+          return inboxConfig('numberItemsPerPageOnBulkReadOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS).then(function(numberItemsPerPageOnBulkReadOperations) {
+            return _listOfAllMessageIds(mailboxFilter, numberItemsPerPageOnBulkReadOperations)
+              .then(function(messageIds) {
+                inboxFilteredList.removeFromList(messageIds);
+                inboxMailboxesService.emptyMailbox(mailboxId);
+
+                return asyncJmapAction({
+                  success: esnI18nService.translate('Trash is empty'),
+                  progessing: esnI18nService.translate('Empty trash in progress')
+                }, function() {
+                  return inboxConfig('numberItemsPerPageOnBulkDeleteOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS).then(function(numberItemsPerPageOnBulkDeleteOperations) {
+                    return _destroyAllMessages(messageIds, numberItemsPerPageOnBulkDeleteOperations);
+                  });
+                });
+              })
+              .catch(function() {
+                notificationFactory.weakError('error', esnI18nService.translate('Empty the trash failed'));
+              })
+              .finally(function() {
+                $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, false);
+              });
+          });
+        });
+      }
+
+      function _destroyAllMessages(messageIds, numberItemsPerPageOnBulkDeleteOperations) {
+        var ids = messageIds.slice();
+
+        function loop() {
+          if (!ids.length) {
+            return $q.resolve(true);
+          }
+
+          var idsOfTheMessageBatch = ids.splice(0, numberItemsPerPageOnBulkDeleteOperations);
+
+          return withJmapClient(function(client) {
+            client.destroyMessages(idsOfTheMessageBatch).then(loop).catch(loop);
+          });
+        }
+
+        loop();
+      }
+
+      function _listOfAllMessageIds(mailboxFilter, numberItemsPerPageOnBulkReadOperations) {
+        var allIds = [];
+        var position = 0;
+
+        function loop() {
+          return withJmapClient(function(client) {
+            return client.getMessageList({
+              filter: mailboxFilter,
+              limit: numberItemsPerPageOnBulkReadOperations,
+              position: position
+            })
+              .then(function(response) {
+                var newMessageIds = response.messageIds;
+
+                if (newMessageIds.length > 0) {
+                  allIds = allIds.concat(newMessageIds);
+                }
+
+                if (newMessageIds.length < numberItemsPerPageOnBulkReadOperations) {
+                  return allIds;
+                }
+
+                position = position + numberItemsPerPageOnBulkReadOperations;
+
+                return loop();
+              });
+          });
+        }
+
+        return loop();
       }
 
       function moveMultipleItems(itemOrItems, mailbox) {

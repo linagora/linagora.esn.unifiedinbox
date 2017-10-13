@@ -25,7 +25,9 @@
         destroyMailbox: destroyMailbox,
         updateMailbox: updateMailbox,
         isRestrictedMailbox: isRestrictedMailbox,
-        getMailboxWithRole: getMailboxWithRole
+        getMailboxWithRole: getMailboxWithRole,
+        updateTotalMessages: updateTotalMessages,
+        emptyMailbox: emptyMailbox
       };
 
       /////
@@ -68,6 +70,16 @@
 
           if (mailbox) {
             mailbox.unreadMessages = Math.max(mailbox.unreadMessages + adjust, 0);
+          }
+        });
+      }
+
+      function _updateTotalMessages(mailboxIds, adjust) {
+        mailboxIds.forEach(function(id) {
+          var mailbox = _findMailboxInCache(id);
+
+          if (mailbox) {
+            mailbox.totalMessages = Math.max(mailbox.totalMessages + adjust, 0);
           }
         });
       }
@@ -167,6 +179,11 @@
       function moveUnreadMessages(fromMailboxIds, toMailboxIds, numberOfUnreadMessage) {
         _updateUnreadMessages(fromMailboxIds, -numberOfUnreadMessage);
         _updateUnreadMessages(toMailboxIds, numberOfUnreadMessage);
+      }
+
+      function updateTotalMessages(fromMailboxIds, toMailboxIds, numberOfUnreadMessage) {
+        _updateTotalMessages(fromMailboxIds, -numberOfUnreadMessage);
+        _updateTotalMessages(toMailboxIds, numberOfUnreadMessage);
       }
 
       function isRestrictedMailbox(mailbox) {
@@ -310,6 +327,16 @@
         return _getAllMailboxes(function(mailboxes) {
           return _.filter(mailboxes, { role: role });
         }).then(_.head);
+      }
+
+      function emptyMailbox(mailboxId) {
+        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId }),
+            targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+
+        inboxMailboxesCache[targetIndexInCache].unreadMessages = 0;
+        inboxMailboxesCache[targetIndexInCache].totalMessages = 0;
+
+        return inboxMailboxesCache[targetIndexInCache];
       }
     });
 

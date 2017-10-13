@@ -17,7 +17,8 @@
         list: list,
         getById: getById,
         addAll: addAll,
-        asMdVirtualRepeatModel: asMdVirtualRepeatModel
+        asMdVirtualRepeatModel: asMdVirtualRepeatModel,
+        removeFromList: removeFromList
       };
 
       /////
@@ -65,6 +66,22 @@
             return renderedList.length;
           }
         };
+      }
+
+      function removeFromList(removeIdList) {
+        var removedlist = [];
+
+        removeIdList.forEach(function(item) {
+          if (itemsById[item]) {
+            removedlist.push(itemsById[item]);
+            items.splice(itemsById[item], 1);
+            delete itemsById.item;
+          }
+        });
+
+        _buildRenderedList();
+
+        return removedlist;
       }
 
       function _buildRenderedList() {

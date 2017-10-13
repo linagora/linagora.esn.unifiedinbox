@@ -14,6 +14,8 @@ module.exports = dependencies => {
       isSaveDraftBeforeSendingEnabled: {},
       'composer.attachments': {},
       maxSizeUpload: {},
+      numberItemsPerPageOnBulkReadOperations: {},
+      numberItemsPerPageOnBulkDeleteOperations: {},
       drafts: {},
       swipeRightAction: {},
       'identities.default': {
