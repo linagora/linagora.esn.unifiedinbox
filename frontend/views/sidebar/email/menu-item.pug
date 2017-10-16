@@ -17,5 +17,5 @@
     span.menu-item-inner
       bdi {{ mailbox.qualifiedName }}
     span.menu-item-after
-  settings-overlay(ng-if="settings || mailbox.role.value === 'trash' && !hideBadge", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
+  settings-overlay(ng-if="settings && !hideBadge || !shared", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
     inbox-folder-settings(is-folder="settings", mailbox="mailbox")

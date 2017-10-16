@@ -168,5 +168,7 @@
   "Empty trash in progress": "La poubelle est en train de se vider",
   "Empty the trash failed": "Impossible de vider la poubelle",
   "Navigation": "Navigation",
-  "Actions": "Actions"
+  "Actions": "Actions",
+  "My folders": "Mes dossiers",
+  "Shared folders": "Dossiers partagés"
 }
