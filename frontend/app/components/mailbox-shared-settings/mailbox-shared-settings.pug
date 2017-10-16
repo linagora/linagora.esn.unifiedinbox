@@ -1,0 +1,20 @@
+.modal.full-screen(tabindex="-1", role="dialog")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", ng-click="$hide()") &times;
+        h4.modal-title #{__('Sharing settings')}
+      .modal-body
+        .inbox-mailbox-shared-settings
+          .user-search.form-group
+            .autocomplete
+              h5.field-name #{__('Invite people:')}
+              users-autocomplete-input(mutable-users='ctrl.users', on-user-added='ctrl.onUserAdded', on-adding-user='ctrl.onAddingUser', add-from-autocomplete-only='true')
+
+          h5.field-name #{__('Who has access:')}
+          .shared-users-list
+            inbox-mailbox-shared-settings-user(user="user", owner="ctrl.sessionUser", on-user-removed='ctrl.onUserRemoved', ng-repeat="user in ctrl.usersShared")
+      .modal-footer
+        button.btn.btn-link.color-default(type="button", ng-click="$hide()") #{__('Cancel')}
+        button.btn.btn-primary(type='button', ng-click='ctrl.addSharedUsers(); $hide()') #{__('Save')}
+

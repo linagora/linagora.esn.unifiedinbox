@@ -17,5 +17,5 @@
     span.menu-item-inner
       bdi {{ mailbox.qualifiedName }}
     span.menu-item-after
-  settings-overlay(ng-if="mailbox.role.value !== 'all' && !hideBadge || !shared", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
-    inbox-folder-settings(is-folder="settings", mailbox="mailbox")
+  settings-overlay(ng-if="mailbox.role.value !== 'all' && !hideBadge && !shared", ng-click="$event.stopImmediatePropagation(); hideAside();", ui-sref-active-eq="selected")
+    inbox-folder-settings(is-folder="settings", mailbox="mailbox", is-shared="shared")
