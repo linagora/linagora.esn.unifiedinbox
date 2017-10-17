@@ -27,7 +27,8 @@
         isRestrictedMailbox: isRestrictedMailbox,
         getMailboxWithRole: getMailboxWithRole,
         updateTotalMessages: updateTotalMessages,
-        emptyMailbox: emptyMailbox
+        emptyMailbox: emptyMailbox,
+        markAllAsRead: markAllAsRead
       };
 
       /////
@@ -327,6 +328,15 @@
         return _getAllMailboxes(function(mailboxes) {
           return _.filter(mailboxes, { role: role });
         }).then(_.head);
+      }
+
+      function markAllAsRead(mailboxId) {
+        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId }),
+            targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+
+        inboxMailboxesCache[targetIndexInCache].unreadMessages = 0;
+
+        return inboxMailboxesCache[targetIndexInCache];
       }
 
       function emptyMailbox(mailboxId) {

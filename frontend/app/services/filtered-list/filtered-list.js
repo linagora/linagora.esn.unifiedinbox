@@ -18,7 +18,8 @@
         getById: getById,
         addAll: addAll,
         asMdVirtualRepeatModel: asMdVirtualRepeatModel,
-        removeFromList: removeFromList
+        removeFromList: removeFromList,
+        updateFlagFromList: updateFlagFromList
       };
 
       /////
@@ -29,6 +30,16 @@
 
       function getById(id) {
         return itemsById[id];
+      }
+
+      function updateFlagFromList(updateMessageIds, flag, state) {
+        updateMessageIds.forEach(function(id) {
+          if (itemsById[id]) {
+            itemsById[id][flag] = state;
+          }
+        });
+
+        _buildRenderedList();
       }
 
       function addAll(newItems) {

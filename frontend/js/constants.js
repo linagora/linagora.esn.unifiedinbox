@@ -25,6 +25,7 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('DRAFT_SAVING_DEBOUNCE_DELAY', 1000)
   .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS', 30)
   .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS', 30)
+  .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS', 30)
   .constant('DEFAULT_VIEW', 'messages')
   .constant('IFRAME_MESSAGE_PREFIXES', {
     CHANGE_DOCUMENT: '[linagora.esn.unifiedinbox.changeDocument]',

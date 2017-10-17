@@ -8,6 +8,7 @@
     var self = this;
 
     self.emptyTrash = emptyTrash;
+    self.markAllAsRead = markAllAsRead;
 
     /////
 
@@ -15,6 +16,10 @@
       if (mailboxId) {
         inboxJmapItemService.emptyMailbox(mailboxId);
       }
+    }
+
+    function markAllAsRead(mailboxId) {
+      inboxJmapItemService.markAllAsRead(mailboxId);
     }
   }
 })();
