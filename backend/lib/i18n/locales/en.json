@@ -162,11 +162,15 @@
   "Empty trash": "Empty trash",
   "Number of items per request, on bulk READ operations" : "Number of items per request, on bulk READ operations",
   "Number of items per request, on bulk DELETE operations": "Number of items per request, on bulk DELETE operations",
+  "Number of items per request, on bulk AS READ operations": "Number of items per request, on bulk AS READ operations",
   "Trash is empty": "Trash is empty",
   "Empty trash in progress": "Empty trash in progress",
   "Empty the trash failed": "Empty the trash failed",
   "Navigation": "Navigation",
   "Actions": "Actions",
   "My folders": "My folders",
-  "Shared folders": "Shared folders"
+  "Shared folders": "Shared folders",
+  "All messages in folder have been marked as read": "All messages in folder have been marked as read",
+  "Mark all as read in progress ...": "Mark all as read in progress ...",
+  "Failed to mark folder messages as read": "Failed to mark folder messages as read"
 }

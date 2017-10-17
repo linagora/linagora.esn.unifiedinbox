@@ -8,7 +8,7 @@ describe('The inboxJmapItemService service', function() {
 
   var $rootScope, jmap, inboxJmapItemService, newComposerService, emailSendingService, quoteEmail, jmapClientMock,
       notificationFactory, counter, infiniteListService, inboxSelectionService, INFINITE_LIST_EVENTS, INBOX_EVENTS,
-      inboxConfigMock;
+      inboxConfigMock, inboxMailboxesService, inboxFilteredList;
 
   beforeEach(module('linagora.esn.unifiedinbox'));
 
@@ -44,7 +44,8 @@ describe('The inboxJmapItemService service', function() {
   }));
 
   beforeEach(inject(function(_$rootScope_, _jmap_, _inboxJmapItemService_, _notificationFactory_,
-                             _infiniteListService_, _inboxSelectionService_, _INFINITE_LIST_EVENTS_, _INBOX_EVENTS_) {
+                             _infiniteListService_, _inboxSelectionService_, _INFINITE_LIST_EVENTS_, _INBOX_EVENTS_,
+                             _inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_) {
     $rootScope = _$rootScope_;
     jmap = _jmap_;
     inboxJmapItemService = _inboxJmapItemService_;
@@ -53,6 +54,17 @@ describe('The inboxJmapItemService service', function() {
     inboxSelectionService = _inboxSelectionService_;
     INFINITE_LIST_EVENTS = _INFINITE_LIST_EVENTS_;
     INBOX_EVENTS = _INBOX_EVENTS_;
+
+    inboxMailboxesService = _inboxMailboxesService_;
+    inboxFilteredList = _inboxFilteredList_;
+
+    inboxMailboxesService.getMessageListFilter = sinon.spy(inboxMailboxesService.getMessageListFilter);
+    inboxFilteredList.removeFromList = sinon.spy(inboxFilteredList.removeFromList);
+    inboxFilteredList.updateFlagFromList = sinon.spy(inboxFilteredList.updateFlagFromList);
+    inboxMailboxesService.emptyMailbox = sinon.spy(inboxMailboxesService.emptyMailbox);
+    inboxMailboxesService.markAllAsRead = sinon.spy(inboxMailboxesService.markAllAsRead);
+    inboxMailboxesService.updateFlag = sinon.spy(inboxMailboxesService.updateFlag);
+    inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
 
     inboxSelectionService.unselectAllItems = sinon.spy(inboxSelectionService.unselectAllItems);
     infiniteListService.actionRemovingElements = sinon.spy(infiniteListService.actionRemovingElements);
@@ -568,17 +580,11 @@ describe('The inboxJmapItemService service', function() {
     var inboxMailboxesService, inboxMailboxesCache, inboxFilteredList, notificationFactory,
         perPage, messageIdsList, mailboxId;
 
-    beforeEach(inject(function(_inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_, _notificationFactory_) {
+    beforeEach(inject(function(_inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_) {
       inboxMailboxesService = _inboxMailboxesService_;
       inboxMailboxesCache = _inboxMailboxesCache_;
       inboxFilteredList = _inboxFilteredList_;
-      notificationFactory = _notificationFactory_;
 
-      inboxMailboxesService.getMessageListFilter = sinon.spy(inboxMailboxesService.getMessageListFilter);
-      inboxFilteredList.removeFromList = sinon.spy(inboxFilteredList.removeFromList);
-      inboxMailboxesService.emptyMailbox = sinon.spy(inboxMailboxesService.emptyMailbox);
-      inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
-      notificationFactory.weakError = sinon.spy(notificationFactory.weakError);
       perPage = 30;
       inboxConfigMock.numberItemsPerPageOnBulkReadOperations = perPage;
       inboxConfigMock.numberItemsPerPageOnBulkDeleteOperations = perPage;
@@ -645,6 +651,83 @@ describe('The inboxJmapItemService service', function() {
       expect(eventHandler.secondCall).to.be.false;
     });
 
+  });
+
+  describe('The mark all as read function', function() {
+
+    var _, unreadFlag, state, inboxMailboxesService, inboxMailboxesCache, inboxFilteredList,
+    perPage, messageIdsList, mailboxId;
+
+    beforeEach(inject(function(___, _inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_) {
+      inboxMailboxesService = _inboxMailboxesService_;
+      inboxMailboxesCache = _inboxMailboxesCache_;
+      inboxFilteredList = _inboxFilteredList_;
+       _ = ___;
+
+      perPage = 30;
+      inboxConfigMock.numberItemsPerPageOnBulkReadOperations = perPage;
+      inboxConfigMock.numberItemsPerPageOnBulkUpdateOperations = perPage;
+      mailboxId = '123';
+      unreadFlag = 'isUnread';
+      state = false;
+      inboxMailboxesCache[0] = { id: mailboxId, name: 'mailboxName', displayName: 'mailbox_Name', totalMessages: 6, unreadMessages: 4 };
+      messageIdsList = ['id1', 'id2', 'id3'];
+
+      jmapClientMock.getMessageList = function(opts) {
+        expect(opts).to.deep.equal({
+          filter: { inMailboxes: [mailboxId]},
+          limit: perPage,
+          position: 0
+        });
+
+        return $q.when(new jmap.MessageList({}, { messageIds: ['id1', 'id2', 'id3']}));
+      };
+
+    }));
+
+    it('should update the messages as read state', function(done) {
+      inboxJmapItemService.setAllFlag(mailboxId).then(function(unreadFlag, state) {
+        expect(jmapClientMock.setMessages).to.have.been.calledWith(
+          {
+            update: messageIdsList.reduce(function(updateObject, ids) {
+              updateObject[ids] = _.zipObject([unreadFlag], [state]);
+
+              return updateObject;
+            }, {})
+          });
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should call updateFlagFromList and update the badge', function(done) {
+      inboxJmapItemService.setAllFlag(mailboxId).then(function() {
+        expect(inboxFilteredList.updateFlagFromList).to.have.been.calledOnce;
+        expect(inboxFilteredList.updateFlagFromList).to.have.been.calledWith(messageIdsList);
+        expect(inboxMailboxesService.markAllAsRead).to.have.been.calledOnce;
+        expect(inboxMailboxesCache[0].unreadMessages).to.deep.equal(0);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should update badge of broadcast', function(done) {
+      var eventHandler = sinon.spy();
+
+      $rootScope.$on(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, eventHandler);
+
+      inboxJmapItemService.markAllAsRead(mailboxId, unreadFlag, state).then(function() {
+
+        expect(eventHandler).to.have.been.calledTwice;
+        expect(eventHandler.firstCall.args[1]).to.be.true;
+        expect(eventHandler.secondCall.args[1]).to.be.false;
+
+        done();
+      });
+      $rootScope.$digest();
+    });
   });
 
 });

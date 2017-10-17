@@ -162,11 +162,15 @@
   "Empty trash": "Làm rỗng thùng rác",
   "Number of items per request, on bulk READ operations": "Số lượng thư trên mỗi yêu cầu ĐỌC",
   "Number of items per request, on bulk DELETE operations": "Số lượng thư trên mỗi yêu cầu XÓA",
+  "Number of items per request, on bulk AS READ operations": "Số lượng thư trên mỗi yêu cầu CẬP NHẬT",
   "Trash is empty": "Thùng rác rỗng",
   "Empty trash in progress": "Đang dọn dẹp thùng rác",
   "Empty the trash failed": "Dọn dẹp thùng rác thất bại",
   "Navigation": "Điều hướng",
   "Actions": "Tác vụ",
   "My folders": "Thư mục của tôi",
-  "Shared folders": "Thư mục được chia sẻ"
+  "Shared folders": "Thư mục được chia sẻ",
+  "All messages in folder have been marked as read": "Đã đánh dấu",
+  "Mark all as read in progress ...": "Đang đánh dấu...",
+  "Failed to mark folder messages as read": "Không thể đánh dấu"
 }

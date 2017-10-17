@@ -7,7 +7,7 @@
                                               withJmapClient,
                                               jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, notificationFactory, _, esnI18nService,
                                               INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE, inboxFilteredList, inboxConfig, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS,
-                                              INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS) {
+                                              INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS) {
 
       return {
         reply: reply,
@@ -22,7 +22,9 @@
         moveMultipleItems: moveMultipleItems,
         downloadEML: downloadEML,
         setFlag: setFlag,
-        emptyMailbox: emptyMailbox
+        emptyMailbox: emptyMailbox,
+        markAllAsRead: markAllAsRead,
+        setAllFlag: setAllFlag
       };
 
       /////
@@ -103,9 +105,10 @@
 
                 return asyncJmapAction({
                   success: esnI18nService.translate('Trash is empty'),
-                  progessing: esnI18nService.translate('Empty trash in progress')
+                  progressing: esnI18nService.translate('Empty trash in progress')
                 }, function() {
-                  return inboxConfig('numberItemsPerPageOnBulkDeleteOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS).then(function(numberItemsPerPageOnBulkDeleteOperations) {
+                  return inboxConfig('numberItemsPerPageOnBulkDeleteOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS)
+                    .then(function(numberItemsPerPageOnBulkDeleteOperations) {
                     return _destroyAllMessages(messageIds, numberItemsPerPageOnBulkDeleteOperations);
                   });
                 });
@@ -266,6 +269,62 @@
 
           return new jmap.Attachment(client, item.blobId, { name: encodedSubject }).getSignedDownloadUrl();
         });
+      }
+
+      function markAllAsRead(mailboxId) {
+        return this.setAllFlag(mailboxId, 'isUnread', false);
+      }
+
+      function _updateFlag(messageIds, flag, state, numberItemsPerPageOnBulkUpdateOperations) {
+        function loop() {
+          if (!messageIds.length) {
+            return $q.resolve(true);
+          }
+
+          var idsOfTheMessageBatch = messageIds.splice(0, numberItemsPerPageOnBulkUpdateOperations);
+
+          return withJmapClient(function(client) {
+            client.setMessages({
+              update: idsOfTheMessageBatch.reduce(function(updateObject, ids) {
+                updateObject[ids] = _.zipObject([flag], [state]);
+
+                return updateObject;
+              }, {})
+            }).then(function() {
+                inboxFilteredList.updateFlagFromList(idsOfTheMessageBatch, flag, state);
+                loop();
+            }).catch(loop);
+          });
+        }
+
+        loop();
+      }
+
+      function setAllFlag(mailboxId, flag, state) {
+
+        return inboxMailboxesService.getMessageListFilter(mailboxId).then(function(mailboxFilter) {
+          $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, true);
+
+          return inboxConfig('numberItemsPerPageOnBulkReadOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS).then(function(numberItemsPerPageOnBulkReadOperations) {
+            return _listOfAllMessageIds(mailboxFilter, numberItemsPerPageOnBulkReadOperations)
+              .then(function(messageIds) {
+                return asyncJmapAction({
+                  success: esnI18nService.translate('All messages in folder have been marked as read'),
+                  progressing: esnI18nService.translate('Marking folder messages as read ...'),
+                  failure: esnI18nService.translate('Failed to mark folder messages as read')
+                }, function() {
+                  return inboxConfig('numberItemsPerPageOnBulkUpdateOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS)
+                    .then(function(numberItemsPerPageOnBulkUpdateOperations) {
+                      return _updateFlag(messageIds, flag, state, numberItemsPerPageOnBulkUpdateOperations);
+                    })
+                    .then(function() {
+                      $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, false);
+                      inboxMailboxesService.markAllAsRead(mailboxId);
+                    });
+                  });
+                });
+              });
+          });
       }
     });
 

@@ -1,3 +1,7 @@
+md-menu-item
+  md-button(ng-disabled="ctrl.mailbox.unreadMessages === 0", ng-click="ctrl.markAllAsRead(ctrl.mailbox.id)")
+    md-icon(md-menu-origin, md-svg-icon="email-open", aria-label="email open Icon")
+    | #{__('Mark all as read')}
 md-menu-item(ng-if="ctrl.isFolder", ui-sref="unifiedinbox.inbox.folders.edit({ mailbox: ctrl.mailbox.id })")
   md-button
     md-icon(md-menu-origin, md-svg-icon="settings", aria-label="settings Icon")

@@ -16,6 +16,7 @@ module.exports = dependencies => {
       maxSizeUpload: {},
       numberItemsPerPageOnBulkReadOperations: {},
       numberItemsPerPageOnBulkDeleteOperations: {},
+      numberItemsPerPageOnBulkUpdateOperations: {},
       drafts: {},
       swipeRightAction: {},
       'identities.default': {
