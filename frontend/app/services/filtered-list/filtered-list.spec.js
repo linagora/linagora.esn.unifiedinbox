@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxFilteredList factory', function() {
 
-  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, inboxHostedMailMessagesProvider, INBOX_EVENTS, counter;
+  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, inboxHostedMailMessagesProvider, INBOX_EVENTS, counter, inboxConfigMock;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -18,6 +18,11 @@ describe('The inboxFilteredList factory', function() {
     };
 
     $provide.value('withJmapClient', function(callback) { return callback(jmapClient); });
+
+    inboxConfigMock = {};
+    $provide.value('inboxConfig', function(key, defaultValue) {
+      return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
+    });
   }));
 
   beforeEach(inject(function(_$rootScope_, _jmap_, _inboxFilteringService_, _inboxFilters_, ___, _inboxFilteredList_,
