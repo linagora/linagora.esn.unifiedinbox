@@ -172,5 +172,6 @@
   "Shared folders": "Thư mục được chia sẻ",
   "All messages in folder have been marked as read": "Đã đánh dấu",
   "Mark all as read in progress ...": "Đang đánh dấu...",
-  "Failed to mark folder messages as read": "Không thể đánh dấu"
+  "Failed to mark folder messages as read": "Không thể đánh dấu",
+  "Mark all as read": "Đánh dấu đã đọc"
 }

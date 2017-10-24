@@ -172,5 +172,6 @@
   "Shared folders": "Shared folders",
   "All messages in folder have been marked as read": "All messages in folder have been marked as read",
   "Mark all as read in progress ...": "Mark all as read in progress ...",
-  "Failed to mark folder messages as read": "Failed to mark folder messages as read"
+  "Failed to mark folder messages as read": "Failed to mark folder messages as read",
+  "Mark all as read": "Mark all as read"
 }
