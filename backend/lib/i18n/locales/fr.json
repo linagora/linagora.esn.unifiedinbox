@@ -175,6 +175,7 @@
   "All messages in folder have been marked as read": "Tous les messages de votre dossier sont lu",
   "Mark all as read in progress ...": "La boite est entrain de marquer tous les messages comme lu",
   "Failed to mark folder messages as read": "Impossible de marquer tous les messages comme lu",
+  "Mark all as read": "Marquer tous comme lu",
   "Owner": "Propriétaire",
   "Sharing settings": "Paramètres de partage",
   "Invite people:": "Inviter des utilisateurs:",
