@@ -774,7 +774,7 @@ describe('The inboxMailboxesService factory', function() {
     var originalMailbox;
 
     beforeEach(function() {
-      originalMailbox = { id: 'id', name: 'name' };
+      originalMailbox = { id: 'id', name: 'name'};
     });
 
     it('should call client.updateMailbox, passing the new options', function(done) {
@@ -782,13 +782,14 @@ describe('The inboxMailboxesService factory', function() {
         expect(id).to.equal('id');
         expect(options).to.deep.equal({
           name: 'name',
-          parentId: 123
+          parentId: 123,
+          sharedWith: {}
         });
 
         done();
       };
 
-      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123 });
+      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123, sharedWith: {} });
     });
 
     it('should not update the cache if the update fails', function(done) {

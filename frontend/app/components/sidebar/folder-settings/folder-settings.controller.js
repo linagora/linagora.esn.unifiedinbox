@@ -4,11 +4,12 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxFolderSettingsController', inboxFolderSettingsController);
 
-  function inboxFolderSettingsController(inboxJmapItemService) {
+  function inboxFolderSettingsController($scope, inboxJmapItemService) {
     var self = this;
 
     self.emptyTrash = emptyTrash;
     self.markAllAsRead = markAllAsRead;
+    $scope.mailbox = self.mailbox;
 
     /////
 

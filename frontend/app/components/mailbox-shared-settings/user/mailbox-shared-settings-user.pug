@@ -1,0 +1,13 @@
+.inbox-mailbox-shared-settings-item
+  .meta
+    .avatar
+      esn-avatar(user-id="ctrl.user._id")
+    .title
+      .name
+        span {{::ctrl.user.displayName}}
+      .owner
+        span {{::ctrl.user.preferredEmail}}
+  .actions
+    span(ng-if="ctrl.user._id === ctrl.owner._id") #{__('Owner')}
+    button.btn.btn-link.btn-icon.button(title=__('Delete'), ng-hide="ctrl.user._id === ctrl.owner._id", ng-click="ctrl.onUserRemoved(ctrl.user)")
+      i.mdi.mdi-close

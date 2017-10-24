@@ -110,8 +110,7 @@
         }
 
         mailboxes.forEach(function(mailbox) {
-          var index = _.findIndex(inboxMailboxesCache, { id: mailbox.id }),
-              targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+          var targetIndexInCache = _getMailboxIndexInCache(mailbox.id);
 
           inboxMailboxesCache[targetIndexInCache] = mailbox;
         });
@@ -337,7 +336,8 @@
         }, function(client) {
           return client.updateMailbox(oldMailbox.id, {
             name: newMailbox.name,
-            parentId: newMailbox.parentId
+            parentId: newMailbox.parentId,
+            sharedWith: newMailbox.sharedWith
           });
         })
           .then(_.assign.bind(null, oldMailbox, newMailbox))
@@ -360,13 +360,18 @@
       }
 
       function emptyMailbox(mailboxId) {
-        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId }),
-            targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+        var targetIndexInCache = _getMailboxIndexInCache(mailboxId);
 
         inboxMailboxesCache[targetIndexInCache].unreadMessages = 0;
         inboxMailboxesCache[targetIndexInCache].totalMessages = 0;
 
         return inboxMailboxesCache[targetIndexInCache];
+      }
+
+      function _getMailboxIndexInCache(mailboxId) {
+        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId });
+
+        return index > -1 ? index : inboxMailboxesCache.length;
       }
     });
 

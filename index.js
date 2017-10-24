@@ -55,7 +55,10 @@ const angularAppFiles = [
   'services/shortcuts/shortcuts.run.js',
   'services/shortcuts/shortcuts.constants.js',
   'components/sidebar/folder-settings/folder-settings.component.js',
-  'components/sidebar/folder-settings/folder-settings.controller.js'
+  'components/sidebar/folder-settings/folder-settings.controller.js',
+  'components/mailbox-shared-settings/mailbox-shared-settings.component.js',
+  'components/mailbox-shared-settings/mailbox-shared-settings.controller.js',
+  'components/mailbox-shared-settings/user/mailbox-shared-settings-user.component.js'
 ];
 
 const angularJsFiles = [
