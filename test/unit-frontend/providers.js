@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The Unified Inbox Angular module providers', function() {
 
   var $rootScope, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
-      jmapClient, inboxMailboxesService, jmap, ELEMENTS_PER_REQUEST;
+      jmapClient, inboxMailboxesService, inboxConfigMock, jmap, ELEMENTS_PER_REQUEST;
 
   function elements(id, length, offset) {
     var array = [], start = offset || 0;
@@ -59,6 +59,10 @@ describe('The Unified Inbox Angular module providers', function() {
         $delegate.flagIsUnreadChanged = sinon.spy($delegate.flagIsUnreadChanged);
 
         return $delegate;
+      });
+      inboxConfigMock = {};
+      $provide.value('inboxConfig', function(key, defaultValue) {
+        return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
       });
     });
   });
