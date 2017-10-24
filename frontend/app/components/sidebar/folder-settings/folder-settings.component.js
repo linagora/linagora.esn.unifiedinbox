@@ -5,8 +5,9 @@
     .component('inboxFolderSettings', {
       templateUrl: '/unifiedinbox/app/components/sidebar/folder-settings/folder-settings.html',
       bindings: {
-        isFolder: '=',
-        mailbox: '='
+        isFolder: '<',
+        mailbox: '=',
+        isShared: '<'
       },
       controllerAs: 'ctrl',
       controller: 'inboxFolderSettingsController'

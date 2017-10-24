@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxMailboxesService factory', function() {
 
-  var inboxMailboxesCache, inboxMailboxesService, jmapClient, $rootScope, jmap, notificationFactory;
+  var inboxMailboxesCache, inboxMailboxesService, jmapClient, $rootScope, jmap, notificationFactory, inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -20,14 +20,20 @@ describe('The inboxMailboxesService factory', function() {
       strongInfo: sinon.spy(function() { return { close: sinon.spy() }; })
     };
     $provide.value('notificationFactory', notificationFactory);
+
+    inboxConfigMock = {};
+    $provide.value('inboxConfig', function(key, defaultValue) {
+      return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
+    });
   }));
 
-  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_, _inboxMailboxesCache_, _jmap_, _notificationFactory_) {
+  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_, _inboxMailboxesCache_, _jmap_, _notificationFactory_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_) {
     inboxMailboxesCache = _inboxMailboxesCache_;
     notificationFactory = _notificationFactory_;
     inboxMailboxesService = _inboxMailboxesService_;
     $rootScope = _$rootScope_;
     jmap = _jmap_;
+    INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY = _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_;
   }));
 
   describe('The filterSystemMailboxes function', function() {
@@ -192,6 +198,56 @@ describe('The inboxMailboxesService factory', function() {
         { id: 4, name: '4', level: 1, sortOrder: 2, qualifiedName: '4' },
         { id: 7, name: '0', level: 1, sortOrder: 3, qualifiedName: '0' }
       ];
+
+      inboxMailboxesService.assignMailboxesList().then(function(mailboxes) {
+        expect(mailboxes).to.deep.equal(expected);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should NOT set mailboxes\' sidebar visibility when none found in user configuration', function(done) {
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 1, name: '1' },
+          { id: 2, name: '2', parentId: 1 },
+          { id: 3, name: '3', parentId: 2 }
+        ]);
+      };
+      var expected = [
+        { id: 1, name: '1', level: 1, qualifiedName: '1'},
+        { id: 2, name: '2', parentId: 1, level: 2, qualifiedName: '1 / 2' },
+        { id: 3, name: '3', parentId: 2, level: 3, qualifiedName: '1 / 2 / 3' }
+      ];
+
+      inboxMailboxesService.assignMailboxesList().then(function(mailboxes) {
+        expect(mailboxes).to.deep.equal(expected);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should set mailboxes\' sidebar visibility according to user configuration', function(done) {
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 1, name: '1', namespace: { type: 'delegated' } },
+          { id: 2, name: '2', parentId: 1 },
+          { id: 3, name: '3', parentId: 2, namespace: { type: 'personal' } },
+          { id: 4, name: '4' },
+          { id: 5, name: '5', parentId: 1 }
+        ]);
+      };
+      var expected = [
+        { id: 1, name: '1', namespace: { type: 'delegated' }, level: 1, qualifiedName: '1', isSharedAndHidden: true},
+        { id: 2, name: '2', parentId: 1, level: 2, qualifiedName: '1 / 2' },
+        { id: 3, name: '3', parentId: 2, namespace: { type: 'personal' }, level: 3, qualifiedName: '1 / 2 / 3' },
+        { id: 5, name: '5', parentId: 1, level: 2, qualifiedName: '1 / 5'},
+        { id: 4, name: '4', level: 1, qualifiedName: '4' }
+      ];
+
+      inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { 1: true, 3: true, 5: true, 12: true };
 
       inboxMailboxesService.assignMailboxesList().then(function(mailboxes) {
         expect(mailboxes).to.deep.equal(expected);
@@ -718,7 +774,7 @@ describe('The inboxMailboxesService factory', function() {
     var originalMailbox;
 
     beforeEach(function() {
-      originalMailbox = { id: 'id', name: 'name' };
+      originalMailbox = { id: 'id', name: 'name'};
     });
 
     it('should call client.updateMailbox, passing the new options', function(done) {
@@ -726,13 +782,14 @@ describe('The inboxMailboxesService factory', function() {
         expect(id).to.equal('id');
         expect(options).to.deep.equal({
           name: 'name',
-          parentId: 123
+          parentId: 123,
+          sharedWith: {}
         });
 
         done();
       };
 
-      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123 });
+      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123, sharedWith: {} });
     });
 
     it('should not update the cache if the update fails', function(done) {

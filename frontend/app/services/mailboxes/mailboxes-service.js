@@ -8,8 +8,9 @@
       'drafts'
     ])
 
-    .factory('inboxMailboxesService', function($q, _, withJmapClient, jmap, inboxSpecialMailboxes, inboxMailboxesCache,
-                                               asyncJmapAction, esnI18nService, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
+    .factory('inboxMailboxesService', function($q, _, withJmapClient, jmap, asyncJmapAction,
+                                               inboxSpecialMailboxes, inboxMailboxesCache, inboxConfig, inboxSharedMailboxesService,
+                                               esnI18nService, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
       var mailboxesListAlreadyFetched = false;
 
@@ -65,6 +66,24 @@
         return mailbox;
       }
 
+      function _shouldMailboxBeHidden(hiddenMailboxes, mailbox) {
+        return inboxSharedMailboxesService.isShared(mailbox) &&
+          _.has(hiddenMailboxes, mailbox.id);
+      }
+
+      function _getInvisibleItems() {
+        return inboxSharedMailboxesService.getHiddenMaiboxesConfig();
+      }
+
+      function _addSharedMailboxVisibility(mailboxes) {
+        return _getInvisibleItems()
+          .then(function(invisibleItems) {
+            return _.forEach(mailboxes, function(mailbox) {
+              _shouldMailboxBeHidden(invisibleItems, mailbox) && _.assign(mailbox, { isSharedAndHidden: true });
+            });
+          });
+      }
+
       function _updateUnreadMessages(mailboxIds, adjust) {
         mailboxIds.forEach(function(id) {
           var mailbox = _findMailboxInCache(id);
@@ -91,8 +110,7 @@
         }
 
         mailboxes.forEach(function(mailbox) {
-          var index = _.findIndex(inboxMailboxesCache, { id: mailbox.id }),
-              targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+          var targetIndexInCache = _getMailboxIndexInCache(mailbox.id);
 
           inboxMailboxesCache[targetIndexInCache] = mailbox;
         });
@@ -166,6 +184,7 @@
               return mailboxes;
             })
             .then(_translateMailboxes)
+            .then(_addSharedMailboxVisibility)
             .then(_updateMailboxCache)
             .then(filter || _.identity);
         });
@@ -317,7 +336,8 @@
         }, function(client) {
           return client.updateMailbox(oldMailbox.id, {
             name: newMailbox.name,
-            parentId: newMailbox.parentId
+            parentId: newMailbox.parentId,
+            sharedWith: newMailbox.sharedWith
           });
         })
           .then(_.assign.bind(null, oldMailbox, newMailbox))
@@ -340,13 +360,18 @@
       }
 
       function emptyMailbox(mailboxId) {
-        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId }),
-            targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+        var targetIndexInCache = _getMailboxIndexInCache(mailboxId);
 
         inboxMailboxesCache[targetIndexInCache].unreadMessages = 0;
         inboxMailboxesCache[targetIndexInCache].totalMessages = 0;
 
         return inboxMailboxesCache[targetIndexInCache];
+      }
+
+      function _getMailboxIndexInCache(mailboxId) {
+        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId });
+
+        return index > -1 ? index : inboxMailboxesCache.length;
       }
     });
 

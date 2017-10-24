@@ -30,6 +30,11 @@ module.exports = dependencies => {
           admin: 'rw',
           user: 'rw'
         }
+      },
+      hiddenSharedMaiboxes: {
+        rights: {
+          user: 'rw'
+        }
       }
     }
   };
