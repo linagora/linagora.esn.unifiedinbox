@@ -29,7 +29,8 @@
         getMailboxWithRole: getMailboxWithRole,
         updateTotalMessages: updateTotalMessages,
         emptyMailbox: emptyMailbox,
-        markAllAsRead: markAllAsRead
+        markAllAsRead: markAllAsRead,
+        sharedMailboxesList: sharedMailboxesList
       };
 
       /////
@@ -169,6 +170,12 @@
 
       function assignMailboxesList(dst, filter) {
         return _getAllMailboxes(filter).then(_assignToObject(dst, 'mailboxes'));
+      }
+
+      function sharedMailboxesList() {
+        return _getAllMailboxes().then(function(mailboxList) {
+          return _.filter(mailboxList, { namespace: { type: 'Delegated' }});
+        });
       }
 
       function _getAllMailboxes(filter) {

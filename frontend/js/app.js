@@ -217,6 +217,14 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.configuration.shared', {
+        url: '/shared',
+        views: {
+          'configuration@unifiedinbox.configuration': {
+            template: '<inbox-shared-mailboxes />'
+          }
+        }
+      })
       .state('unifiedinbox.inbox', {
         url: '/inbox?type&account&context',
         views: {
