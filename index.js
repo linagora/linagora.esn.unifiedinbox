@@ -22,6 +22,7 @@ const angularAppFiles = [
   'services/models/emailer.run.js',
   'services/models/mailbox.run.js',
   'filters/filter-descendant-mailboxes.js',
+  'filters/visible-shared-mailboxes.js',
   'services/models/make-selectable.js',
   'services/models/message.run.js',
   'services/models/thread.run.js',
