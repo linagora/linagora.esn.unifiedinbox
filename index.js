@@ -59,7 +59,11 @@ const angularAppFiles = [
   'components/sidebar/folder-settings/folder-settings.controller.js',
   'components/mailbox-shared-settings/mailbox-shared-settings.component.js',
   'components/mailbox-shared-settings/mailbox-shared-settings.controller.js',
-  'components/mailbox-shared-settings/user/mailbox-shared-settings-user.component.js'
+  'components/mailbox-shared-settings/user/mailbox-shared-settings-user.component.js',
+  'components/shared-mailboxes/shared-mailboxes.component.js',
+  'components/shared-mailboxes/shared-mailboxes.controller.js',
+  'components/shared-mailboxes/subheader/shared-mailboxes-subheader.js',
+  'components/shared-mailboxes/shared-mailbox/shared-mailbox.component.js'
 ];
 
 const angularJsFiles = [

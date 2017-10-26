@@ -913,4 +913,31 @@ describe('The inboxMailboxesService factory', function() {
 
   });
 
+   describe('The sharedMailboxesList function', function() {
+
+    it('should return a promise', function(done) {
+      inboxMailboxesService.sharedMailboxesList().then(function(mailboxes) {
+        expect(mailboxes).to.deep.equal([]);
+
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should filter shared mailboxes', function() {
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 1, name: '1', totalMessages: 3, unreadMessages: 1, namespace: { type: 'delegated' } },
+          { id: 2, name: '2', totalMessages: 3, unreadMessages: 1}
+        ]);
+      };
+      inboxMailboxesService.sharedMailboxesList(function(mailboxes) {
+        expect(mailboxes).to.have.length(1);
+      });
+
+      $rootScope.$digest();
+    });
+  });
+
 });
