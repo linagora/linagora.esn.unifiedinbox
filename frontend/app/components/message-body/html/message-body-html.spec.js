@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxMessageBodyHtml component', function() {
 
-  var $compile, $rootScope, $timeout, IFRAME_MESSAGE_PREFIXES;
+  var $compile, $rootScope, $timeout, $window, IFRAME_MESSAGE_PREFIXES, loadImagesAsyncFilter;
   var element, iFrameResize;
 
   function compile(html) {
@@ -40,13 +40,15 @@ describe('The inboxMessageBodyHtml component', function() {
     });
   });
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _IFRAME_MESSAGE_PREFIXES_, jmap) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$window_, _IFRAME_MESSAGE_PREFIXES_, jmap, _loadImagesAsyncFilter_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
+    $window = _$window_;
     IFRAME_MESSAGE_PREFIXES = _IFRAME_MESSAGE_PREFIXES_;
+    loadImagesAsyncFilter = _loadImagesAsyncFilter_;
 
-    $rootScope.message = new jmap.Message({}, 'id', 'threadId', ['inbox'], {
+    $rootScope.message = new jmap.Message({}, 'id', 'blobId', 'threadId', ['inbox'], {
       htmlBody: '<html><body><div>Message HTML Body</div></body></html>'
     });
   }));
@@ -61,7 +63,7 @@ describe('The inboxMessageBodyHtml component', function() {
    * PhantomJS does not work fine with iFrame and 'load' events, thus the .skip()
    * Tests run under Chrome and Firefox, though...
    */
-  it.skip('should enable iFrame resizer on the iFrame', function(done) {
+  it('should enable iFrame resizer on the iFrame', function(done) {
     iFrameResize = function(options) {
       expect(options).to.shallowDeepEqual({
         checkOrigin: false,
@@ -94,6 +96,41 @@ describe('The inboxMessageBodyHtml component', function() {
     });
     $rootScope.$broadcast('email:collapse');
     $timeout.flush();
+  });
+
+  it('should have link on same domain opening in OpenPaas', function(done) {
+    $rootScope.message.htmlBody = '<html><body>HELLO <a href="http://localhost:8080/#/calendar"> CALENDAR</a></body></html>';
+
+    iFrameResize = function() {
+      return [{
+        iFrameResizer: {
+          resize: done
+        }
+      }];
+    };
+
+    compile('<inbox-message-body-html message="message" />');
+
+    var iframe = element.find('iframe');
+
+    iframe[0].sandbox = 'allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin';
+    // trick to actually load the iframe
+    iframe[0].src = 'http://localhost:9876/iframe/message-body-html-iframe.pug';
+
+    iframe.load(function(event) {
+      var document = new XMLSerializer().serializeToString(event.target.contentDocument);
+      var iFrameContent = loadImagesAsyncFilter($rootScope.message.htmlBody, []);
+
+      expect(document).to.include('/unifiedinbox/js/helpers/iframe-new-document-handler.js');
+
+      event.target.contentWindow.postMessage('[linagora.esn.unifiedinbox.changeDocument]' + iFrameContent, '*');
+
+      // not working yet (get that https://pad.linagora.com/p/iframe.html)
+      // event.target.contentDocument.find('a')[0].click()
+      expect($window.location).to.be.equal($window.location);
+
+      done();
+    });
   });
 
   it('should post html content after having filtered it with loadImagesAsync filters', function(done) {

@@ -34,6 +34,7 @@
 
           self.iFrames = iFrameResize({
             checkOrigin: false,
+            scrolling: true,
             inPageLinks: true,
             heightCalculationMethod: 'max',
             sizeWidth: true,

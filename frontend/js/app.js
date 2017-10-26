@@ -299,6 +299,12 @@ angular.module('linagora.esn.unifiedinbox', [
     });
   })
 
+  .run(function($window, listenToPrefixedWindowMessage, IFRAME_MESSAGE_PREFIXES) {
+    listenToPrefixedWindowMessage(IFRAME_MESSAGE_PREFIXES.CHANGE_CURRENT_LOCATION, function(url) {
+      $window.location.href = url;
+    });
+  })
+
   .run(function($rootScope) {
     $rootScope.inbox = {
       list: {
