@@ -31,7 +31,7 @@ module.exports = dependencies => {
           user: 'rw'
         }
       },
-      hiddenSharedMaiboxes: {
+      hiddenSharedMailboxes: {
         rights: {
           user: 'rw'
         }
