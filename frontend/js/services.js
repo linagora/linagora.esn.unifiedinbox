@@ -842,7 +842,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .service('inboxSharedMailboxesService', function($q, _, inboxConfig, esnUserConfigurationService,
-                                                   INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_SHAREDMAILBOXES_NAMESPACE_TYPE) {
+                                                   INBOX_MODULE_NAME, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_SHAREDMAILBOXES_NAMESPACE_TYPE) {
     var hiddenSharedMaiboxesConfig;
 
     function isSharedMailbox(mailbox) {
@@ -872,6 +872,13 @@ angular.module('linagora.esn.unifiedinbox')
       return _.assign(cleanOldList, newList);
     }
 
+    function _storeHiddenSharedMailboxes(mailboxesToHide) {
+        return esnUserConfigurationService.set([{
+          name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY,
+          value: mailboxesToHide
+        }], INBOX_MODULE_NAME);
+    }
+
     function _hideMailboxes(computeHiddenMailboxes, mailboxes) {
       if (!mailboxes) {
         return $q.reject('no mailboxes provided');
@@ -888,10 +895,7 @@ angular.module('linagora.esn.unifiedinbox')
 
       return getHiddenMaiboxesConfig()
         .then(function(currentConfig) {
-          return esnUserConfigurationService.set([{
-            name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY,
-            value: computeHiddenMailboxes(currentConfig, updatesHiddenConfig)
-          }]);
+          return _storeHiddenSharedMailboxes(computeHiddenMailboxes(currentConfig, updatesHiddenConfig));
         });
     }
 
