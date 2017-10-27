@@ -254,10 +254,18 @@
         }, { silent: true });
       }
 
-      function _truncateWithEllipsis(text, max) {return text.substr(0, max - 1) + (text.length > max ? '…' : ''); }
+      function _truncateWithEllipsis(text, max) {
+        text = text || esnI18nService.translate('(No subject)');
+
+        return text.substr(0, max - 1) + (text.length > max ? '…' : '');
+      }
 
       function downloadEML(itemOrItems) {
         var item = _.isArray(itemOrItems) ? itemOrItems[0] : itemOrItems;
+
+        if (!item) {
+          return $q.reject(new Error('No message provided for downloading !'));
+        }
         var messageSubject = _truncateWithEllipsis(item.subject, INBOX_DISPLAY_NAME_SIZE);
 
         return asyncJmapAction({
@@ -265,7 +273,7 @@
           success: esnI18nService.translate('Message "%s" successfully downloaded', messageSubject),
           failure: esnI18nService.translate('Could not download message "%s"', messageSubject)
         }, function(client) {
-          var encodedSubject = encodeURIComponent((messageSubject || 'message') + '.eml');
+          var encodedSubject = encodeURIComponent(messageSubject + '.eml');
 
           return new jmap.Attachment(client, item.blobId, { name: encodedSubject }).getSignedDownloadUrl();
         });
