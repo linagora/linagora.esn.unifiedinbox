@@ -182,5 +182,7 @@
   "Who has access:": "Utilisateurs ayant accès:",
   "Shared mailboxes": "Boîtes partagées",
   "Mailbox name": "Nom de la boîte",
-  "Hide": "Cacher"
+  "Hide": "Cacher",
+  "Mark as read": "Marquer comme lu",
+  "Mark as unread": "Marquer comme non lu"
 }
