@@ -1,10 +1,10 @@
 .action-list(ng-click='$hide(); $event.stopPropagation()')
   .action(ng-switch='thread.isUnread')
-    a(ng-switch-when='false', ng-click='ctrl.markAsUnread()', title=__('Unread'))
+    a(ng-switch-when='false', ng-click='ctrl.markAsUnread()', title=__('Mark as unread'))
       i.mdi.mdi-eye-off
       span.label
         | #{__('Unread')}
-    a(ng-switch-when='true', ng-click='ctrl.markAsRead()', title=__('Read'))
+    a(ng-switch-when='true', ng-click='ctrl.markAsRead()', title=__('Mark as read'))
       i.mdi.mdi-eye
       span.label
         | #{__('Read')}

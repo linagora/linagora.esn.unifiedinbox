@@ -180,5 +180,7 @@
   "Who has access:": "Ai có quyền truy cập:",
   "Shared mailboxes": "Các hộp thư được chia sẻ",
   "Mailbox name": "Tên hộp thư",
-  "Hide": "Ẩn"
+  "Hide": "Ẩn",
+  "Mark as read": "Đánh dấu là đã đọc",
+  "Mark as unread": "Đánh dấu là chưa đọc"
 }
