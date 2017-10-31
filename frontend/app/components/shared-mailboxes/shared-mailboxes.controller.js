@@ -20,7 +20,7 @@
       }
 
       function onSave() {
-        inboxSharedMailboxesService.setHiddenMailboxes(self.mailboxes);
+        inboxSharedMailboxesService.setHiddenMailboxes(_.filter(self.mailboxes, { isSharedAndHidden: true }));
       }
 
     });
