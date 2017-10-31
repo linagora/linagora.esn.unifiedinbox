@@ -12,6 +12,8 @@ const angularAppFiles = [
   'components/message-body/html/message-body-html.js',
   'components/message-body/html/message-body-html.controller.js',
   'components/message-body/text/message-body-text.js',
+  'services/mailboxes/shared-mailboxes.js',
+  'services/mailboxes/shared-mailboxes.constants.js',
   'services/mailboxes/mailboxes-service.js',
   'components/list/group-toggle-selection/list-group-toggle-selection.js',
   'components/list/group-toggle-selection/list-group-toggle-selection.controller.js',
