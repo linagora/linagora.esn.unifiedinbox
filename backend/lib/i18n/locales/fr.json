@@ -184,5 +184,6 @@
   "Mailbox name": "Nom de la boîte",
   "Hide": "Cacher",
   "Mark as read": "Marquer comme lu",
-  "Mark as unread": "Marquer comme non lu"
+  "Mark as unread": "Marquer comme non lu",
+  "(No subject)": "(Aucun objet)"
 }

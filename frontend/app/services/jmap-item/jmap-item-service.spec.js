@@ -23,7 +23,12 @@ describe('The inboxJmapItemService service', function() {
       }),
       getMessageList: sinon.spy(function() {
         return $q.when(new jmap.SetResponse(jmapClientMock));
-      })
+      }),
+      downloadUrl: 'http://fakeurl/',
+      _defaultHeaders: sinon.spy(function() { return {}; }),
+      transport: { post: sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock));
+      })}
     };
     quoteEmail = function() { return {transformed: 'value'}; };
     inboxConfigMock = {};
@@ -728,6 +733,92 @@ describe('The inboxJmapItemService service', function() {
       });
       $rootScope.$digest();
     });
+  });
+
+  describe('The download message as EML function', function() {
+
+    it('should post to downloadUrl to fetch the message', function(done) {
+      var getSignedDownloadUrlMock = sinon.stub(jmap.Attachment.prototype, 'getSignedDownloadUrl', function() { return $q.when({}); });
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId']);
+
+      inboxJmapItemService.downloadEML(emptyMessage).then(function() {
+        expect(getSignedDownloadUrlMock).to.have.been.calledOnce;
+        getSignedDownloadUrlMock.restore();
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should set a default filename for empty subject', function(done) {
+      var attachmentStub = sinon.spy(jmap, 'Attachment');
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId']);
+
+      inboxJmapItemService.downloadEML(emptyMessage).then(function() {
+        expect(attachmentStub).to.have.been.calledWith(jmapClientMock, 'blobId', { name: '(No%20subject).eml'});
+        attachmentStub.restore();
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should use provided subject as filename', function(done) {
+      var attachmentStub = sinon.spy(jmap, 'Attachment');
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId'], {subject: 'Subject123'});
+
+      inboxJmapItemService.downloadEML(emptyMessage).then(function() {
+        expect(attachmentStub).to.have.been.calledWith(jmapClientMock, 'blobId', { name: 'Subject123.eml'});
+        attachmentStub.restore();
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should use provided QUOTED subject as filename', function(done) {
+      var attachmentStub = sinon.spy(jmap, 'Attachment');
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId'], {subject: 'Subject 123'});
+
+      inboxJmapItemService.downloadEML(emptyMessage).then(function() {
+        expect(attachmentStub).to.have.been.calledWith(jmapClientMock, 'blobId', { name: 'Subject%20123.eml'});
+        attachmentStub.restore();
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should truncate filename when subject is too long', function(done) {
+      var attachmentStub = sinon.spy(jmap, 'Attachment');
+      var veryLongSubject = 'Subject1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+      var expectedLongFilename = 'Subject12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012%E2%80%A6.eml';
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId'], {subject: veryLongSubject});
+
+      inboxJmapItemService.downloadEML(emptyMessage).then(function() {
+        expect(attachmentStub).to.have.been.calledWith(jmapClientMock, 'blobId', { name: expectedLongFilename});
+        attachmentStub.restore();
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should reject when no item provided', function(done) {
+      inboxJmapItemService.downloadEML().catch(function rejected(error) {
+        expect(error.message).to.contains('No message provided ');
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should display a notification error when download fails', function(done) {
+      var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId']);
+
+      jmapClientMock.transport.post = sinon.spy(function() { return $q.reject('FAILURE'); });
+      inboxJmapItemService.downloadEML(emptyMessage).catch(function(e) {
+        expect(e).to.equal('FAILURE');
+        expect(notificationFactory.weakError).to.have.been.calledOnce;
+        done();
+      });
+      $rootScope.$digest();
+    });
+
   });
 
 });
