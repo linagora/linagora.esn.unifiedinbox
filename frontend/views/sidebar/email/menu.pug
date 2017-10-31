@@ -28,7 +28,7 @@
 
         hr
         .lv-item #{__('Shared folders')}
-        mailbox-display.lv-item(shared="true", hide-aside="$hide()", mailbox="mailbox", ng-repeat="mailbox in mailboxes | inboxFilterVisibleSharedMailboxes track by mailbox.id", ui-sref="unifiedinbox.inbox({ type: 'jmap', account: '', context: mailbox.id })")
+        mailbox-display.lv-item(shared="true", hide-aside="$hide()", mailbox="mailbox", ng-repeat="mailbox in mailboxes | inboxFilterVisibleSharedMailboxes | filter: { name: ctrl.filter } track by mailbox.id", ui-sref="unifiedinbox.inbox({ type: 'jmap', account: '', context: mailbox.id })")
 
   .lv-body(ng-switch-when="ERROR")
     inbox-sidebar-account-unavailable.lv-item(account="::ctrl.account", ng-click="ctrl.load()")
