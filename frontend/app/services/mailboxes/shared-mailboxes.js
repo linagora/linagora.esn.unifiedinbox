@@ -47,7 +47,7 @@
         }
         mailboxes = angular.isArray(mailboxes) ? mailboxes : [mailboxes];
 
-        var idsToHide = _.map(_.compact(_.pluck(mailboxes, 'id')), String);
+        var idsToHide = _.map(_.compact(_.pluck(_.filter(mailboxes, { isSharedAndHidden: true }), 'id')), String);
         var rangeOfTrueFor = _.compose(_.partialRight(_.map, _.constant(true)), _.range, _.size);
         var updatesHiddenConfig = _.zipObject(idsToHide, rangeOfTrueFor(idsToHide));
 
