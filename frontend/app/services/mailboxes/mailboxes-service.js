@@ -79,8 +79,13 @@
       function _addSharedMailboxVisibility(mailboxes) {
         return _getInvisibleItems()
           .then(function(invisibleItems) {
+            return _shouldMailboxBeHidden.bind(null, invisibleItems);
+          })
+          .then(function(shouldHide) {
             return _.forEach(mailboxes, function(mailbox) {
-              _shouldMailboxBeHidden(invisibleItems, mailbox) && _.assign(mailbox, { isSharedAndHidden: true });
+              if (shouldHide(mailbox)) {
+                mailbox.isDisplayed = false;
+              }
             });
           });
       }
@@ -173,8 +178,8 @@
       }
 
       function sharedMailboxesList() {
-        return _getAllMailboxes().then(function(mailboxList) {
-          return _.filter(mailboxList, { namespace: { type: 'Delegated' }});
+        return _getAllMailboxes().then(function(mailboxes) {
+          return _.filter(mailboxes, inboxSharedMailboxesService.isShared);
         });
       }
 

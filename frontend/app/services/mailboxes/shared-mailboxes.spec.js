@@ -101,7 +101,7 @@
       });
 
       it('should save new config through esnUserConfigurationService when non-empty mailbox collection is provided', function(done) {
-        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#2', name: 'Shared #2', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false }, { id: '#2', name: 'Shared #2', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
@@ -114,7 +114,7 @@
 
       it('should save new merged mailbox ids when mailboxes includes existing ids', function(done) {
         inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { '#2': true };
-        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#2', name: 'Shared #2', isSharedAndHidden: true }, { id: '#3', name: 'Shared #3', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false }, { id: '#2', name: 'Shared #2', isDisplayed: false }, { id: '#3', name: 'Shared #3', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
@@ -127,7 +127,7 @@
 
       it('should merge old hidden mailboxes list with provided list', function(done) {
         inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { '#2': true };
-        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#3', name: 'Shared #3', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false }, { id: '#3', name: 'Shared #3', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
@@ -140,7 +140,7 @@
 
       it('should only consider Truthy values in config objects', function(done) {
         inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { '#2': false };
-        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#3', name: 'Shared #3', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.hideNewMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false }, { id: '#3', name: 'Shared #3', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
@@ -177,7 +177,7 @@
       });
 
       it('should save new config through esnUserConfigurationService when non-empty mailbox collection is provided', function(done) {
-        inboxSharedMailboxesService.setHiddenMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#2', name: 'Shared #2', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.setHiddenMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false }, { id: '#2', name: 'Shared #2', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
@@ -190,7 +190,7 @@
 
       it('should only store provided hidden mailboxes list, overriding current list', function(done) {
         inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { '#2': true };
-        inboxSharedMailboxesService.setHiddenMailboxes([{ id: '#1', name: 'Shared #1', isSharedAndHidden: true }, { id: '#3', name: 'Shared #3', isSharedAndHidden: true }])
+        inboxSharedMailboxesService.setHiddenMailboxes([{ id: '#1', name: 'Shared #1', isDisplayed: false}, { id: '#3', name: 'Shared #3', isDisplayed: false }])
           .then(function() {
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
