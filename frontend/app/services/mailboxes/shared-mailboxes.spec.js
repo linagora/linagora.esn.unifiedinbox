@@ -95,6 +95,7 @@
         inboxSharedMailboxesService.hideNewMailboxes([{ name: 'INBOX' }, { name: 'OUTBOX' }])
           .then(function(result) {
             expect(result).to.be.empty;
+            expect(esnUserConfigurationServiceMock.set).to.not.have.been.called.once;
             done();
           });
         $rootScope.$digest();
@@ -195,6 +196,20 @@
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
             expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
               name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, value: { '#1': true, '#3': true }
+            }]);
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should override hidden mailboxes list even when no mailbox is provided', function(done) {
+        inboxConfigMock[INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY] = { '#2': true };
+        inboxSharedMailboxesService.setHiddenMailboxes([])
+          .then(function(result) {
+            expect(result).to.be.empty;
+            expect(esnUserConfigurationServiceMock.set).to.have.been.calledOnce;
+            expect(esnUserConfigurationServiceMock.set).to.have.been.calledWith([{
+              name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, value: { }
             }]);
             done();
           });

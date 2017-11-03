@@ -24,16 +24,6 @@
         return hiddenSharedMaiboxesConfig;
       }
 
-      function _overwriteMailboxesList(__, newList) {
-        return newList;
-      }
-
-      function _appendMissingMailboxes(oldList, newList) {
-        var cleanOldList = _.zipObject(_.filter(_.pairs(oldList), function(pair) {return !!pair[1];}));
-
-        return _.assign(cleanOldList, newList);
-      }
-
       function _storeHiddenSharedMailboxes(mailboxesToHide) {
         return esnUserConfigurationService.set([{
           name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY,
@@ -41,23 +31,30 @@
         }], INBOX_MODULE_NAME);
       }
 
-      function _hideMailboxes(computeHiddenMailboxes, mailboxes) {
+      function _overwriteMailboxesList(__, newList) {
+        return _storeHiddenSharedMailboxes(newList);
+      }
+
+      function _appendMissingMailboxes(oldList, newList) {
+        var cleanOldList = _.zipObject(_.filter(_.pairs(oldList), function(pair) {return !!pair[1];}));
+
+        return _.isEmpty(newList) ? $q.when({}) : _storeHiddenSharedMailboxes(_.assign(cleanOldList, newList));
+      }
+
+      function _hideMailboxes(storeHiddenSharedMailboxes, mailboxes) {
         if (!mailboxes) {
           return $q.reject('no mailboxes provided');
         }
         mailboxes = angular.isArray(mailboxes) ? mailboxes : [mailboxes];
+        var mailboxesToHide = _.filter(mailboxes, { isDisplayed: false });
 
-        var idsToHide = _.map(_.compact(_.pluck(_.filter(mailboxes, { isDisplayed: false }), 'id')), String);
+        var idsToHide = _.map(_.compact(_.pluck(mailboxesToHide, 'id')), String);
         var rangeOfTrueFor = _.compose(_.partialRight(_.map, _.constant(true)), _.range, _.size);
         var updatesHiddenConfig = _.zipObject(idsToHide, rangeOfTrueFor(idsToHide));
 
-        if (_.isEmpty(updatesHiddenConfig)) {
-          return $q.when({});
-        }
-
         return getHiddenMaiboxesConfig()
           .then(function(currentConfig) {
-            return _storeHiddenSharedMailboxes(computeHiddenMailboxes(currentConfig, updatesHiddenConfig));
+            return storeHiddenSharedMailboxes(currentConfig, updatesHiddenConfig);
           });
       }
 
