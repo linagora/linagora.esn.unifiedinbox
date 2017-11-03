@@ -8,7 +8,7 @@
       'drafts'
     ])
 
-    .factory('inboxMailboxesService', function($q, _, withJmapClient, jmap, asyncJmapAction,
+    .factory('inboxMailboxesService', function($q, _, $state, withJmapClient, jmap, asyncJmapAction,
                                                inboxSpecialMailboxes, inboxMailboxesCache, inboxConfig, inboxSharedMailboxesService,
                                                esnI18nService, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
@@ -30,7 +30,8 @@
         updateTotalMessages: updateTotalMessages,
         emptyMailbox: emptyMailbox,
         markAllAsRead: markAllAsRead,
-        sharedMailboxesList: sharedMailboxesList
+        sharedMailboxesList: sharedMailboxesList,
+        updateSharedMailboxCache: updateSharedMailboxCache
       };
 
       /////
@@ -178,8 +179,46 @@
       }
 
       function sharedMailboxesList() {
-        return _getAllMailboxes().then(function(mailboxes) {
-          return _.filter(mailboxes, inboxSharedMailboxesService.isShared);
+        return _getAllMailboxes().then(_getSharedMailboxes);
+      }
+
+      function _getSharedMailboxes(mailboxes) {
+        return _.filter(mailboxes, inboxSharedMailboxesService.isShared);
+      }
+
+      function _getDifferenceById(toInspect, toExclude) {
+        return _.difference(_.map(toInspect, 'id'), _.map(toExclude, 'id'));
+      }
+
+      function updateSharedMailboxCache() {
+        return withJmapClient(function(jmapClient) {
+          return jmapClient.getMailboxes()
+            .then(function(mailboxList) {
+              var sharedToAddCache = [];
+              var sharedMailboxList = _getSharedMailboxes(mailboxList);
+              var sharedMailboxCache = _getSharedMailboxes(inboxMailboxesCache);
+              var addedSharedFoldersIds = _getDifferenceById(sharedMailboxList, sharedMailboxCache);
+              var removedSharedFoldersIds = _getDifferenceById(sharedMailboxCache, sharedMailboxList);
+
+              if (!_.isEmpty(addedSharedFoldersIds)) {
+                addedSharedFoldersIds.forEach(function(id) {
+                  sharedToAddCache.push(_.find(sharedMailboxList, { id: id }));
+                });
+                _updateMailboxCache(sharedToAddCache);
+              }
+
+              if (!_.isEmpty(removedSharedFoldersIds)) {
+
+                _removeMailboxesFromCache(removedSharedFoldersIds);
+
+                if (removedSharedFoldersIds.includes($state.params.context) === true) {
+                  $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' }, { location: 'replace' });
+                }
+              }
+            })
+            .then(function() {
+              return _getSharedMailboxes(inboxMailboxesCache);
+            });
         });
       }
 
