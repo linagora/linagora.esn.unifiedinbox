@@ -5,8 +5,9 @@
     .component('inboxMailboxSharedSettingsUser', {
       bindings: {
         user: '<',
+        sessionUser: '<',
         owner: '<',
-        onUserRemoved: '='
+        onUserRemoved: '=?'
       },
       controllerAs: 'ctrl',
       templateUrl: '/unifiedinbox/app/components/mailbox-shared-settings/user/mailbox-shared-settings-user.html'

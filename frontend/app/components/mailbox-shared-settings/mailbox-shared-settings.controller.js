@@ -10,7 +10,8 @@
     session,
     inboxMailboxesService,
     userAPI,
-    userUtils
+    userUtils,
+    $q
   ) {
 
     var self = this;
@@ -21,6 +22,7 @@
     self.onUserRemoved = onUserRemoved;
     self.onAddingUser = onAddingUser;
     self.addSharedUsers = addSharedUsers;
+    self.isOwner = isOwner;
     self.sessionUser = session.user;
     self.originalMailbox = $scope.mailbox;
 
@@ -30,23 +32,46 @@
 
     function $onInit() {
       self.mailbox = _.clone(self.originalMailbox);
-      self.sessionUser.displayName = userUtils.displayNameOf(self.sessionUser);
-      self.usersShared = self.usersShared.concat(self.sessionUser);
 
+      getOwner().then(function(owner) {
+        owner.displayName = userUtils.displayNameOf(owner);
+        self.owner = owner;
+        self.usersShared = self.usersShared.concat(self.owner);
+      });
       getUserSharedInformation(self.mailbox.sharedWith);
+    }
+
+    function getOwner() {
+      var owner;
+
+      if (self.mailbox.namespace.owner && self.mailbox.namespace.owner !== self.sessionUser.preferredEmail) {
+        owner = getUsersByEmail(self.mailbox.namespace.owner);
+      } else {
+        owner = self.sessionUser;
+      }
+
+      return $q.resolve(owner);
     }
 
     function getUserSharedInformation(userSharedList) {
       if (!_.isEmpty(userSharedList)) {
         _.forOwn(userSharedList, function(rightList, email) {
-          userAPI.getUsersByEmail(email).then(function(response) {
-            if (response.data && response.data[0]) {
-              response.data[0].displayName = userUtils.displayNameOf(response.data[0]);
-              self.usersShared = self.usersShared.concat(response.data[0]);
+          getUsersByEmail(email).then(function(user) {
+            if (user) {
+              user.displayName = userUtils.displayNameOf(user);
+              self.usersShared = self.usersShared.concat(user);
             }
           });
         });
       }
+    }
+
+    function getUsersByEmail(email) {
+      return userAPI.getUsersByEmail(email).then(function(response) {
+        if (response.data && response.data[0]) {
+          return response.data[0];
+        }
+      });
     }
 
     function onUserAdded(user) {
@@ -82,6 +107,10 @@
       });
 
       return inboxMailboxesService.updateMailbox(self.originalMailbox, self.mailbox);
+    }
+
+    function isOwner() {
+      return self.owner === self.sessionUser;
     }
   }
 })();
