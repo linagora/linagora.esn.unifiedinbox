@@ -240,7 +240,7 @@ describe('The inboxMailboxesService factory', function() {
         ]);
       };
       var expected = [
-        { id: 1, name: '1', namespace: { type: 'delegated' }, level: 1, qualifiedName: '1', isSharedAndHidden: true},
+        { id: 1, name: '1', namespace: { type: 'delegated' }, level: 1, qualifiedName: '1', isDisplayed: false},
         { id: 2, name: '2', parentId: 1, level: 2, qualifiedName: '1 / 2' },
         { id: 3, name: '3', parentId: 2, namespace: { type: 'personal' }, level: 3, qualifiedName: '1 / 2 / 3' },
         { id: 5, name: '5', parentId: 1, level: 2, qualifiedName: '1 / 5'},

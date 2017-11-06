@@ -29,7 +29,7 @@ describe('The inboxSharedMailboxesController controller', function() {
     });
 
     mailboxes = [
-      { id: 1, namespace: { type: 'delegated' }, isSharedAndHidden: true },
+      { id: 1, namespace: { type: 'delegated' }, isDisplayed: false },
       { id: 2, name: '3', namespace: { type: 'personal' } }
     ];
 
@@ -56,7 +56,7 @@ describe('The inboxSharedMailboxesController controller', function() {
       expect(inboxMailboxesService.sharedMailboxesList).to.have.been.called;
     });
 
-    it('should add property isSharedAndHidden:false if undefined', function() {
+    it('should set isDisplayed to true if undefined', function() {
       var controller = initController();
 
       $rootScope.$digest();
@@ -65,8 +65,8 @@ describe('The inboxSharedMailboxesController controller', function() {
       $rootScope.$digest();
 
       expectedMailboxes = [
-        { id: 1, namespace: { type: 'delegated' }, isSharedAndHidden: true },
-        { id: 2, name: '3', namespace: { type: 'personal' }, isSharedAndHidden: false }
+        { id: 1, namespace: { type: 'delegated' }, isDisplayed: false },
+        { id: 2, name: '3', namespace: { type: 'personal' }, isDisplayed: true }
       ];
 
       expect(controller.mailboxes).to.deep.equal(expectedMailboxes);

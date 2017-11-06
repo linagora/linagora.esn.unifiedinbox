@@ -19,7 +19,7 @@ describe('The inboxFilterVisibleSharedMailboxes filter', function() {
   it('should filter hidden shared mailboxes out', function() {
     var mailboxes = [
         { role: { value: 'outbox' }},
-        { id: 2, namespace: { type: 'delegated' }, isSharedAndHidden: true},
+        { id: 2, namespace: { type: 'delegated' }, isDisplayed: false},
         { id: 3, name: '3', namespace: { type: 'personal' } },
         { id: 4, namespace: { type: 'delegated' }},
         { role: { value: undefined }},

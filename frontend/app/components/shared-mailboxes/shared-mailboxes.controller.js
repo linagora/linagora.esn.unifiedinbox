@@ -14,13 +14,13 @@
       function $onInit() {
         inboxMailboxesService.sharedMailboxesList().then(function(mailboxes) {
           self.mailboxes = _.map(mailboxes, function(mailbox) {
-            return _.defaults(mailbox, { isSharedAndHidden: false });
+            return _.defaults(mailbox, { isDisplayed: true });
           });
         });
       }
 
       function onSave() {
-        inboxSharedMailboxesService.setHiddenMailboxes(_.filter(self.mailboxes, { isSharedAndHidden: true }));
+        inboxSharedMailboxesService.setHiddenMailboxes(self.mailboxes);
       }
 
     });
