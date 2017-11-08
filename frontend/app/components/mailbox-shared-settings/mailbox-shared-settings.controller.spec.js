@@ -45,8 +45,8 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
   });
 
   beforeEach(function() {
-    mailbox = {_id: '1', sharedWith: {'user2@test.com': ['l', 'r']}};
-    anothermailbox = {_id: '2', sharedWith: {}};
+    mailbox = {_id: '1', namespace: {owner: 'user2@test.com'}, sharedWith: {'user1@test.com': ['l', 'r']}};
+    anothermailbox = {_id: '2', namespace: {owner: 'user2@test.com'}, sharedWith: {}};
 
     angular.mock.inject(function(_$rootScope_, _$controller_, _inboxMailboxesService_, _$q_, _userUtils_) {
       $rootScope = _$rootScope_;
@@ -60,7 +60,9 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
     scope.mailbox = mailbox;
 
     inboxMailboxesService.updateMailbox = sinon.spy();
-    userUtils.displayNameOf = sinon.spy();
+    userUtils.displayNameOf = sinon.spy(function() {
+      return 'user1 user1';
+    });
   });
 
   function initController() {
@@ -74,16 +76,41 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
   }
 
   describe('$onInit', function() {
+    beforeEach(function() {
+      mailbox = {_id: '1', namespace: {owner: 'user1@test.com'}, sharedWith: {}};
+      scope.mailbox = mailbox;
+    });
+
     it('should clone originalMailbox', function() {
       var $controller = initController();
 
       expect($controller.originalMailbox).to.deep.equal(mailbox);
     });
 
-    it('should add  displayName to sessionUser', function() {
-      var $controller = initController();
+    describe('The getOwner function', function() {
+      it('should get displayNameOf owner', function() {
+        $controller = initController();
 
-      expect(userUtils.displayNameOf).to.have.been.calledWith($controller.sessionUser);
+        expect(userUtils.displayNameOf).to.have.been.called;
+      });
+
+      it('should set the owner and add it in usersShared', function() {
+        var $controller = initController();
+
+        $rootScope.$digest();
+
+        var owner = {_id: '1', firstname: 'user1', lastname: 'user1', preferredEmail: 'user1@test.com', displayName: 'user1 user1'};
+
+        expect($controller.owner).to.be.deep.equal(owner);
+      });
+
+      it('if add owner in object usersShared', function() {
+        var $controller = initController();
+
+        $rootScope.$digest();
+
+        expect($controller.usersShared).to.have.lengthOf(1);
+      });
     });
   });
 
@@ -93,12 +120,10 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
 
       var $controller = initController();
 
-      $controller.sessionUser = user;
-
       expect($controller.mailbox.sharedWith).to.be.deep.equal({});
     });
 
-    it('if sharedWith is emtpy object usersShared should only have sessionUser', function() {
+    it('if sharedWith is emtpy object usersShared should only have owner', function() {
       scope.mailbox = anothermailbox;
 
       var $controller = initController();
