@@ -940,4 +940,88 @@ describe('The inboxMailboxesService factory', function() {
     });
   });
 
+   describe('The updateSharedMailboxCache function', function() {
+
+     it('should do anything on inboxMailboxesCache', function(done) {
+        inboxMailboxesCache = [];
+        jmapClient.getMailboxes = function() {
+          return $q.when([]);
+        };
+
+        inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
+          expect(sharedMailboxes).to.deep.equal([]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+     });
+
+     it('should add and remove anything on inboxMailboxesCache', function(done) {
+        inboxMailboxesCache = [{ id: 2, name: '2', namespace: { type: 'Delegated' }}];
+        jmapClient.getMailboxes = function() {
+          return $q.when([{ id: 2, name: '2', namespace: { type: 'Delegated' }}]);
+        };
+
+        inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
+          expect(sharedMailboxes).to.deep.equal([{ id: 2, name: '2', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '2' }]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+     });
+
+     it('should add new shared mailboxes to inboxMailboxesCache', function(done) {
+        inboxMailboxesCache = [{ id: 2, name: '2', namespace: { type: 'Delegated' }}];
+        jmapClient.getMailboxes = function() {
+          return $q.when([{ id: 1, name: '1', namespace: { type: 'Delegated' }}, { id: 2, name: '2', namespace: { type: 'Delegated' }}]);
+        };
+
+        inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
+          expect(sharedMailboxes).to.deep.equal([{id: 1, name: '1', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '1'},
+                                                 {id: 2, name: '2', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '2'}]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+     });
+
+     it('should remove shared mailboxes FROM inboxMailboxesCache', function(done) {
+        inboxMailboxesCache = [{ id: 2, name: '2', namespace: { type: 'Delegated' }}, { id: 1, name: '1', namespace: { type: 'Delegated' }}];
+        jmapClient.getMailboxes = function() {
+          return $q.when([{ id: 1, name: '1', namespace: { type: 'Delegated' }}]);
+        };
+
+        inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
+          expect(sharedMailboxes).to.deep.equal([{ id: 1, name: '1', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '1' }]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+     });
+
+     it('should update (add and remove) shared mailboxes to inboxMailboxesCache', function(done) {
+        inboxMailboxesCache = [{ id: 1, name: '1', namespace: { type: 'Delegated' }},
+                               { id: 2, name: '2', namespace: { type: 'Delegated' }},
+                               { id: 3, name: '3', namespace: { type: 'Delegated' }},
+                               { id: 4, name: '4'}, { id: 5, name: '5'}, { id: 6, name: '6'}];
+
+        jmapClient.getMailboxes = function() {
+          return $q.when([{ id: 2, name: '2', namespace: { type: 'Delegated' }}, { id: 4, name: '4', namespace: { type: 'Delegated' }}]);
+        };
+
+        inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
+          expect(sharedMailboxes).to.deep.equal([{ id: 2, name: '2', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '2' },
+                                                 { id: 4, name: '4', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '4' }]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+     });
+   });
+
 });

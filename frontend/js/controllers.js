@@ -624,13 +624,27 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxSidebarEmailController', function($scope, inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper, session) {
+  .controller('inboxSidebarEmailController', function($scope, _, $state, $interval, inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper, session, INFINITE_LIST_POLLING_INTERVAL) {
+    setupFolderPolling();
+
     $scope.specialMailboxes = inboxSpecialMailboxes.list();
     $scope.emailAddress = session.user.preferredEmail;
 
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxMailboxesService.assignMailboxesList($scope);
     });
+
+    function setupFolderPolling() {
+      if (INFINITE_LIST_POLLING_INTERVAL > 0) {
+        var folderPoller = $interval(function() {
+          inboxMailboxesService.updateSharedMailboxCache();
+        }, INFINITE_LIST_POLLING_INTERVAL);
+
+        $scope.$on('$destroy', function() {
+          $interval.cancel(folderPoller);
+        });
+      }
+    }
   })
 
   .controller('resolveEmailerController', function($scope) {
