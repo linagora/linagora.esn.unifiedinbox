@@ -150,6 +150,17 @@
           .inbox-preview-inline {
             display: none;
           }
+
+          .flags-container {
+            .flex-row;
+            
+            min-width: 40px;
+            font-size: 20px;
+            margin: auto 5px auto 0;
+
+            color: lighten(@m-gray, 10%);
+          }
+
         }
 
         .inbox-list-item-date-and-indicators {
@@ -388,8 +399,8 @@
             .flex-row-reverse;
 
             .inbox-from {
-              min-width: 230px;
-              max-width: 230px;
+              min-width: 200px;
+              max-width: 200px;
               margin: auto 5px auto 0;
 
               .email {

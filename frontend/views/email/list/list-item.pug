@@ -20,6 +20,9 @@
             span.inbox-subject-inline {{ item.subject }}
             span.inbox-preview-inline.inbox-preview-divider(ng-if='item.subject') -
             .inbox-preview-inline.lv-small.preview(ng-if="item.preview") {{ item.preview }}
+          .flags-container
+            i.flag-icon.mdi.mdi-forward.visible-lg(ng-if='item.isForwarded')
+            i.flag-icon.mdi.mdi-reply.visible-lg(ng-if='item.isAnswered')
           inbox-emailer.inbox-from.lv-title(emailer="item.from")
         .inbox-list-item-date-and-indicators
           .date-container {{ item.date | inboxItemDate }}

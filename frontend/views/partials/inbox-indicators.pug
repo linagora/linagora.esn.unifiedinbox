@@ -2,5 +2,7 @@
   .inbox-message-indicators.flex-vertical-centered(dynamic-directive='inbox-message-indicators')
   ul.actions
     li.action-item
-      i.email-status-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
+      i.flag-icon.mdi.mdi-forward.hidden-lg(ng-if='item.isForwarded')
+      i.flag-icon.mdi.mdi-reply.hidden-lg(ng-if='item.isAnswered')
+      i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
     inbox-star(item='item')
