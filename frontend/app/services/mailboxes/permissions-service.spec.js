@@ -11,6 +11,7 @@
 
     beforeEach(module('linagora.esn.unifiedinbox'));
     beforeEach(module(function($provide) {
+      mockPromise = undefined;
       mailboxesServiceMock = { updateMailbox: sinon.spy(function() { return mockPromise || $q.when();}) };
       $provide.value('inboxMailboxesService', mailboxesServiceMock);
     }));
@@ -161,6 +162,118 @@
         sharingRolesService.grant(firstSharingRole, mailboxToShare, shareeEmail)
           .then(function(updatedMailbox) {
             expect(updatedMailbox.sharedWith).to.deep.equal({'user2@open-paas.org': firstSharingPermissions});
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+    });
+
+    describe('The revoke function', function() {
+
+      it('should reject when invalid mailbox is provided', function(done) {
+        sharingRolesService.revoke({name: 'fake share'}, 'user2@open-paas.org')
+          .catch(function(error) {
+            expect(error.message).to.have.string('invalid mailbox');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should reject when not performed by mailbox\'s owner', function(done) {
+        var shareOwner = 'user1@open-paas.org';
+        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+
+        sharingRolesService.revoke(share, 'user2@open-paas.org')
+          .catch(function(m) {
+            expect(m.message).to.have.string('Only user ' + shareOwner + ' is allowed');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should reject when preferredEmail is empty', function(done) {
+        sharingRolesService.revoke(mailboxToShare, '')
+          .catch(function(error) {
+            expect(error.message).to.have.string('email not provided');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should revoke user\'s permissions to access mailbox', function(done) {
+        var shareeEmail = 'user2@open-paas.org';
+
+        mailboxToShare.sharedWith[shareeEmail] = ['l', 'r', 'w'];
+        sharingRolesService.revoke(mailboxToShare, shareeEmail)
+          .then(function(updatedMailbox) {
+            expect(updatedMailbox.sharedWith).to.deep.equal({});
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+    });
+
+    describe('The revokeAndUpdate function', function() {
+
+      it('should reject when invalid mailbox is provided', function(done) {
+        sharingRolesService.revokeAndUpdate({name: 'fake share'}, 'user2@open-paas.org')
+          .catch(function(error) {
+            expect(error.message).to.have.string('invalid mailbox');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should reject when not performed by mailbox\'s owner', function(done) {
+        var shareOwner = 'user1@open-paas.org';
+        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+
+        sharingRolesService.revokeAndUpdate(share, 'user2@open-paas.org')
+          .catch(function(m) {
+            expect(m.message).to.have.string('Only user ' + shareOwner + ' is allowed');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should reject when preferredEmail is empty', function(done) {
+        sharingRolesService.revokeAndUpdate(mailboxToShare, '')
+          .catch(function(error) {
+            expect(error.message).to.have.string('email not provided');
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should revoke user\'s permissions to access mailbox', function(done) {
+        var shareeEmail = 'user2@open-paas.org';
+        var originalSharedWith = {};
+
+        originalSharedWith[shareeEmail] = ['l', 'r', 'w'];
+        mailboxToShare.sharedWith = originalSharedWith;
+
+        sharingRolesService.revokeAndUpdate(mailboxToShare, shareeEmail)
+          .then(function(updatedMailbox) {
+            expect(updatedMailbox.sharedWith).to.deep.equal({});
+            expect(mailboxesServiceMock.updateMailbox).to.have.been.calledWithExactly(
+              sinon.match({sharedWith: originalSharedWith}),
+              sinon.match({sharedWith: {}}));
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should reject if updateMailbox has failed', function(done) {
+        var shareeEmail = 'user2@open-paas.org';
+
+        mailboxToShare.sharedWith[shareeEmail] = ['l', 'r', 'w'];
+        mockPromise = $q.reject('FAILURE!!!'); // WARNING: temporal coupling HERE :(
+
+        sharingRolesService.revokeAndUpdate(mailboxToShare, shareeEmail)
+          .catch(function(error) {
+            expect(error).to.equal('FAILURE!!!');
             done();
           });
         $rootScope.$digest();

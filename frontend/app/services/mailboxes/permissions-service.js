@@ -12,6 +12,8 @@
         grant: grant,
         grantDefaultRole: grantDefaultRole,
         grantAndUpdate: grantAndUpdate,
+        revoke: revoke,
+        revokeAndUpdate: revokeAndUpdate,
         getRole: getRole,
         getDefaultRole: getDefaultRole
       };
@@ -66,6 +68,34 @@
         var originalMailbox = _.cloneDeep(mailbox);
 
         return grant(role, mailbox, preferredEmail)
+          .then(_.partial(inboxMailboxesService.updateMailbox, originalMailbox))
+          .then(_.constant(mailbox));
+      }
+
+      function revoke(mailbox, preferredEmail) {
+        if (!isValidMailbox(mailbox)) {
+          return $q.reject(new Error('invalid mailbox provided'));
+        }
+        if (!isMyOwnMailbox(mailbox)) {
+          return $q.reject(new Error('Only user ' +
+            (mailbox.namespace && mailbox.namespace.owner || '') +
+            ' is allowed to update sharing settings'));
+        }
+        if (!preferredEmail) {
+          return $q.reject(new Error('user email not provided'));
+        }
+        if (!_.has(mailbox.sharedWith, preferredEmail)) {
+          return $q.reject(new Error('"' + preferredEmail + '" had not been granted yet!'));
+        }
+        delete mailbox.sharedWith[preferredEmail];
+
+        return $q.when(mailbox);
+      }
+
+      function revokeAndUpdate(mailbox, preferredEmail) {
+        var originalMailbox = _.cloneDeep(mailbox);
+
+        return revoke(mailbox, preferredEmail)
           .then(_.partial(inboxMailboxesService.updateMailbox, originalMailbox))
           .then(_.constant(mailbox));
       }
