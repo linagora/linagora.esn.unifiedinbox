@@ -992,7 +992,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: {email: 'from@linagora.com', name: 'linagora'},
           to: [{displayName: '1', email: '1@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890'
+            'Message-ID': '1234567890'
           },
           date: '12:00:00 14:00',
           subject: 'my subject',
@@ -1028,7 +1028,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: {email: 'from@linagora.com', name: 'linagora'},
           to: [{displayName: '1', email: '1@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890',
+            'Message-ID': '1234567890',
             References: '123 456'
           },
           date: '12:00:00 14:00',
@@ -1170,7 +1170,7 @@ describe('The Unified Inbox Angular module services', function() {
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890'
+            'Message-ID': '1234567890'
           },
           date: '12:00:00 14:00',
           subject: 'my subject',
@@ -1205,7 +1205,7 @@ describe('The Unified Inbox Angular module services', function() {
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890',
+            'Message-ID': '1234567890',
             References: '123 456'
           },
           date: '12:00:00 14:00',
@@ -1347,7 +1347,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: {email: 'from@linagora.com', name: 'linagora'},
           to: [{displayName: '1', email: '1@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890'
+            'Message-ID': '1234567890'
           },
           date: '12:00:00 14:00',
           subject: 'my subject',
@@ -1381,7 +1381,7 @@ describe('The Unified Inbox Angular module services', function() {
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
           headers: {
-            'Message-Id': '1234567890',
+            'Message-ID': '1234567890',
             References: '123 456'
           },
           date: '12:00:00 14:00',

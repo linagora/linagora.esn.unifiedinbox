@@ -251,7 +251,7 @@ angular.module('linagora.esn.unifiedinbox')
       if (!message.headers) {
         return newEmail;
       }
-      var quotedId = message.headers['Message-Id'];
+      var quotedId = message.headers['Message-ID'];
       var parentReferences = message.headers['References'] || '';
       var newHeaders = newEmail.headers || {};
 
