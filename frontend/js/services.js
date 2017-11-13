@@ -291,6 +291,8 @@ angular.module('linagora.esn.unifiedinbox')
 
         includeAttachments && (newEmail.attachments = message.attachments);
 
+        newEmail = _linkToParentMessage(message, newEmail);
+
         // We do not automatically quote the message if we're using a plain text editor and the message
         // has a HTML body. In this case the "Edit Quoted Mail" button will show
         if (!emailBodyService.supportsRichtext() && message.htmlBody) {
@@ -304,8 +306,7 @@ angular.module('linagora.esn.unifiedinbox')
         return emailBodyService.quote(newEmail, templateName)
           .then(function(body) {
             return _enrichWithQuote(newEmail, body);
-          })
-          .then(_linkToParentMessage(message, newEmail));
+          });
       });
     }
 
