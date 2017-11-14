@@ -247,13 +247,13 @@ angular.module('linagora.esn.unifiedinbox')
       return email;
     }
 
-    function _linkToParentMessage(message, newEmail) {
+    function _getParentRelatedHeaders(message) {
       if (!message.headers) {
-        return newEmail;
+        return;
       }
       var quotedId = message.headers['Message-ID'];
       var parentReferences = message.headers['References'] || '';
-      var newHeaders = newEmail.headers || {};
+      var newHeaders = {};
 
       if (quotedId) {
         newHeaders['In-Reply-To'] = quotedId;
@@ -270,9 +270,9 @@ angular.module('linagora.esn.unifiedinbox')
         });
 
       newHeaders['References'] = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
-      newEmail.headers = newHeaders;
+      
+      return newHeaders;
 
-      return newEmail;
     }
 
     function _createQuotedEmail(subjectPrefix, recipients, templateName, includeAttachments, messageId, sender) {
@@ -286,12 +286,11 @@ angular.module('linagora.esn.unifiedinbox')
               subject: prefixSubject(message.subject, subjectPrefix),
               quoted: message,
               isQuoting: false,
-              quoteTemplate: templateName
+              quoteTemplate: templateName,
+              headers: _getParentRelatedHeaders(message)
             };
 
         includeAttachments && (newEmail.attachments = message.attachments);
-
-        newEmail = _linkToParentMessage(message, newEmail);
 
         // We do not automatically quote the message if we're using a plain text editor and the message
         // has a HTML body. In this case the "Edit Quoted Mail" button will show
