@@ -1007,15 +1007,19 @@ describe('The inboxMailboxesService factory', function() {
         inboxMailboxesCache = [{ id: 1, name: '1', namespace: { type: 'Delegated' }},
                                { id: 2, name: '2', namespace: { type: 'Delegated' }},
                                { id: 3, name: '3', namespace: { type: 'Delegated' }},
-                               { id: 4, name: '4'}, { id: 5, name: '5'}, { id: 6, name: '6'}];
+                               { id: 4, name: '4', namespace: { type: 'Personal' }},
+                               { id: 5, name: '5', namespace: { type: 'Personal' }},
+                               { id: 6, name: '6', namespace: { type: 'Personal' }}];
 
         jmapClient.getMailboxes = function() {
-          return $q.when([{ id: 2, name: '2', namespace: { type: 'Delegated' }}, { id: 4, name: '4', namespace: { type: 'Delegated' }}]);
+          return $q.when([{ id: 2, name: '2', namespace: { type: 'Delegated' }},
+                          { id: 3, name: '33333333', namespace: { type: 'Delegated' }},
+                          { id: 5, name: '5', namespace: { type: 'Personal' }}]);
         };
 
         inboxMailboxesService.updateSharedMailboxCache().then(function(sharedMailboxes) {
           expect(sharedMailboxes).to.deep.equal([{ id: 2, name: '2', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '2' },
-                                                 { id: 4, name: '4', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '4' }]);
+                                                 { id: 3, name: '33333333', namespace: { type: 'Delegated' }, level: 1, qualifiedName: '33333333' }]);
 
           done();
         });

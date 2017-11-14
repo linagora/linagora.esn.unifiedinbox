@@ -194,18 +194,9 @@
         return withJmapClient(function(jmapClient) {
           return jmapClient.getMailboxes()
             .then(function(mailboxList) {
-              var sharedToAddCache = [];
               var sharedMailboxList = _getSharedMailboxes(mailboxList);
               var sharedMailboxCache = _getSharedMailboxes(inboxMailboxesCache);
-              var addedSharedFoldersIds = _getDifferenceById(sharedMailboxList, sharedMailboxCache);
               var removedSharedFoldersIds = _getDifferenceById(sharedMailboxCache, sharedMailboxList);
-
-              if (!_.isEmpty(addedSharedFoldersIds)) {
-                addedSharedFoldersIds.forEach(function(id) {
-                  sharedToAddCache.push(_.find(sharedMailboxList, { id: id }));
-                });
-                _updateMailboxCache(sharedToAddCache);
-              }
 
               if (!_.isEmpty(removedSharedFoldersIds)) {
 
@@ -215,6 +206,8 @@
                   $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' }, { location: 'replace' });
                 }
               }
+
+               _updateMailboxCache(mailboxList);
             })
             .then(function() {
               return _getSharedMailboxes(inboxMailboxesCache);
