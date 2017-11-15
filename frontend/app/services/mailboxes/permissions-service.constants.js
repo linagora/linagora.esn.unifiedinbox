@@ -13,6 +13,6 @@
     // cf IMAP ACL Extension https://tools.ietf.org/html/rfc4314#section-2.1
     .constant('INBOX_MAILBOX_SHARING_PERMISSIONS', {
       READ_AND_UPDATE: ['l', 'r', 'w'],
-      ORGANIZE: ['l', 'r', 'w', 'i', 'e']
+      ORGANIZE: ['l', 'r', 'w', 'i', 'e', 't']
     });
 })();
