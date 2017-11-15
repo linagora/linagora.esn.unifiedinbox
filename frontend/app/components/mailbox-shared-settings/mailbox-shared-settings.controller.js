@@ -9,6 +9,7 @@
     _,
     session,
     inboxMailboxesService,
+    inboxSharedMailboxesPermissionsService,
     userAPI,
     userUtils,
     $q
@@ -18,6 +19,7 @@
 
     self.usersShared = [];
     self.users = [];
+    self.defaultRole = inboxSharedMailboxesPermissionsService.getDefaultRole();
     self.onUserAdded = onUserAdded;
     self.onUserRemoved = onUserRemoved;
     self.onAddingUser = onAddingUser;
@@ -99,14 +101,30 @@
       return canBeAdded;
     }
 
+    function isShareRecipient(email) {
+      return self.sessionUser.preferredEmail !== email &&
+        (self.mailbox && self.mailbox.namespace && self.mailbox.namespace.owner !== email);
+    }
+
+    function assignDefaultPermissionsTo(email) {
+      return inboxSharedMailboxesPermissionsService.grantDefaultRole(self.mailbox, email);
+    }
+
+    function waitForCompletion(promises) {
+      return promises.reduce($q.when, $q.resolve());
+    }
+
     function addSharedUsers() {
       self.mailbox.sharedWith = {};
-      self.usersShared.splice(0, 1);
-      self.usersShared.forEach(function(element) {
-        self.mailbox.sharedWith[element.preferredEmail] = ['l', 'r'];
-      });
+      var uniqueRecipientsEmailsList = _.uniq(_.pluck(self.usersShared, 'preferredEmail'));
 
-      return inboxMailboxesService.updateMailbox(self.originalMailbox, self.mailbox);
+      return waitForCompletion(
+        uniqueRecipientsEmailsList
+          .filter(isShareRecipient)
+          .map(assignDefaultPermissionsTo)
+      ).then(function() {
+        return inboxMailboxesService.updateMailbox(self.originalMailbox, self.mailbox);
+      });
     }
 
     function isOwner() {

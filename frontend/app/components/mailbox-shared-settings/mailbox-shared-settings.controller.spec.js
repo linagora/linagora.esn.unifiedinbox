@@ -219,8 +219,19 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       $controller.addSharedUsers();
       $rootScope.$digest();
 
-      expect($controller.usersShared).to.have.lengthOf(1);
       expect(inboxMailboxesService.updateMailbox).to.have.been.calledWith($controller.originalMailbox, $controller.mailbox);
     });
+
+    it('should exclude mailbox owner from sharedWith prop', function() {
+      var $controller = initController();
+
+      $controller.usersShared = [{ _id: '123', preferredEmail: $controller.mailbox.namespace.owner }];
+
+      $controller.addSharedUsers();
+      $rootScope.$digest();
+
+      expect(inboxMailboxesService.updateMailbox).to.have.been.calledWith($controller.originalMailbox, sinon.match({sharedWith: {}}));
+    });
   });
+
 });
