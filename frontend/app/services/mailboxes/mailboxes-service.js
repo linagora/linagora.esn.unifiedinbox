@@ -31,7 +31,9 @@
         emptyMailbox: emptyMailbox,
         markAllAsRead: markAllAsRead,
         sharedMailboxesList: sharedMailboxesList,
-        updateSharedMailboxCache: updateSharedMailboxCache
+        updateSharedMailboxCache: updateSharedMailboxCache,
+        canMoveMessagesIntoMailbox: canMoveMessagesIntoMailbox,
+        canMoveMessagesOutOfMailbox: canMoveMessagesOutOfMailbox
       };
 
       /////
@@ -258,6 +260,26 @@
         return false;
       }
 
+      function canMoveMessagesOutOfMailbox(mailboxId) {
+        var mailbox = _.find(inboxMailboxesCache, { id: mailboxId });
+
+        if (isRestrictedMailbox(mailbox) || (mailbox && !mailbox.mayRemoveItems)) {
+          return false;
+        }
+
+        return true;
+      }
+
+      function canMoveMessagesIntoMailbox(mailboxId) {
+        var mailbox = _.find(inboxMailboxesCache, { id: mailboxId });
+
+        if (_isSpecialMailbox(mailboxId) || isRestrictedMailbox(mailbox) || (mailbox && !mailbox.mayAddItems)) {
+          return false;
+        }
+
+        return true;
+      }
+
       function canMoveMessage(message, toMailbox) {
         // do not allow moving draft message
         if (message.isDraft) {
@@ -270,18 +292,13 @@
         }
 
         // do not allow moving to special mailbox
-        if (_isSpecialMailbox(toMailbox.id)) {
-          return false;
-        }
-
-        // do not allow moving to restricted mailboxes
-        if (isRestrictedMailbox(toMailbox)) {
+        if (!canMoveMessagesIntoMailbox(toMailbox.id)) {
           return false;
         }
 
         // do not allow moving out restricted mailboxes
         return message.mailboxIds.every(function(mailboxId) {
-          return !isRestrictedMailbox(_.find(inboxMailboxesCache, { id: mailboxId }));
+          return canMoveMessagesOutOfMailbox(mailboxId);
         });
 
       }

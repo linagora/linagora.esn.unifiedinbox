@@ -14,7 +14,7 @@
       i.mdi.mdi-star-off
       span.label
         | #{__('Unstar')}
-  .action
+  .action(ng-show='ctrl.canMoveMessagesOutOfMailbox()')
     a(ng-click='ctrl.move()', title=__('Move to'))
       i.mdi.mdi-folder-move
       span.label

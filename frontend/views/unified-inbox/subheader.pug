@@ -15,6 +15,6 @@ block right
     .inbox-selection-aware-subheader.inbox-not-selecting(ng-switch-when="false")
       inbox-list-sidebar-attachment-button(ng-if="ctrl.contextSupportsAttachments")
     .inbox-selection-aware-subheader.inbox-selecting(ng-switch-when="true")
-      inbox-subheader-delete-button(ng-click="ctrl.moveToTrash()")
+      inbox-subheader-delete-button(ng-click="ctrl.moveToTrash()" ng-show="ctrl.canMoveMessagesOutOfMailbox()")
       inbox-subheader-mark-as-read-button(ng-click="ctrl.markAsRead()")
       inbox-subheader-more-button(action-list="/unifiedinbox/views/unified-inbox/action-list.html")

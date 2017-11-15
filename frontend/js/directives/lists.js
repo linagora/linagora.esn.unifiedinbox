@@ -51,7 +51,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                              inboxSwipeHelper, infiniteListService, inboxSelectionService) {
+                                              inboxSwipeHelper, infiniteListService, inboxMailboxesService, inboxSelectionService) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -100,6 +100,10 @@ angular.module('linagora.esn.unifiedinbox')
           markAsRead: self.markAsRead,
           moveToTrash: self.moveToTrash
         });
+
+        self.canMoveMessagesOutOfMailbox = function() {
+          return inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first($scope.email.mailboxIds));
+        }
       },
       controllerAs: 'ctrl',
       templateUrl: '/unifiedinbox/views/email/list/list-item.html'
