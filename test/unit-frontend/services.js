@@ -3237,6 +3237,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should call jmapClientProvider to get the authToken', function(done) {
+      this.timeout(4000);
       var mockjax = function(data) {
         expect(data.headers.Authorization).to.equal(jmapClientMock.authToken);
 
@@ -3261,6 +3262,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should POST the file, passing the content type and resolve on success', function(done) {
+      this.timeout(4000);
       $.mockjax(function(options) {
         return {
           url: 'http://jmap',
@@ -3305,6 +3307,7 @@ describe('The Unified Inbox Angular module services', function() {
     });
 
     it('should reject on timeout', function(done) {
+      this.timeout(4000);
       $.mockjax({
         url: 'http://jmap',
         isTimeout: true

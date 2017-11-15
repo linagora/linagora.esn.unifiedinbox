@@ -1449,6 +1449,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
   describe('The emailBodyEditor', function() {
     it('should load summernote when isMobile()=false', function() {
+      this.timeout(4000);
       expect(compileDirective('<email-body-editor />').find('.summernote')).to.have.length(1);
     });
 
