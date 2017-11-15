@@ -7,7 +7,12 @@
 
     .constant('INBOX_MAILBOX_SHARING_ROLES', {
       READ_AND_UPDATE: 'READ_AND_UPDATE',
-      ORGANIZE: 'ORGANIZE'
+      READ_AND_UPDATE_LABEL: 'Consultation',
+      READ_AND_UPDATE_LABEL_LONG: 'Read and update messages',
+
+      ORGANIZE: 'ORGANIZE',
+      ORGANIZE_LABEL: 'Organize',
+      ORGANIZE_LABEL_LONG: 'Consultation and organize folder'
     })
 
     // cf IMAP ACL Extension https://tools.ietf.org/html/rfc4314#section-2.1

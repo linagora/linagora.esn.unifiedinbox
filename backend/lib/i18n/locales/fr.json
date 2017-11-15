@@ -185,5 +185,9 @@
   "Show": "Afficher",
   "Mark as read": "Marquer comme lu",
   "Mark as unread": "Marquer comme non lu",
-  "(No subject)": "(Aucun objet)"
+  "(No subject)": "(Aucun objet)",
+  "Consultation": "Consultation",
+  "Read and update messages": "Lecture et modifier les messages",
+  "Organize":"Organiser",
+  "Consultation and organize folder":"Consulter et organiser le dossier"
 }

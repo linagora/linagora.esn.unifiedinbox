@@ -14,9 +14,11 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
     mailbox,
     anothermailbox,
     inboxMailboxesService,
+    inboxSharedMailboxesPermissionsService,
     userAPIMock,
     userUtils,
-    $q;
+    $q,
+    INBOX_MAILBOX_SHARING_ROLES;
 
   beforeEach(function() {
     user = {_id: '1', firstname: 'user1', lastname: 'user1', preferredEmail: 'user1@test.com'};
@@ -45,23 +47,31 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
   });
 
   beforeEach(function() {
-    mailbox = {_id: '1', namespace: {owner: 'user2@test.com'}, sharedWith: {'user1@test.com': ['l', 'r']}};
-    anothermailbox = {_id: '2', namespace: {owner: 'user2@test.com'}, sharedWith: {}};
-
-    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxMailboxesService_, _$q_, _userUtils_) {
+    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxMailboxesService_, _$q_, _userUtils_, _inboxSharedMailboxesPermissionsService_, _INBOX_MAILBOX_SHARING_ROLES_) {
       $rootScope = _$rootScope_;
       $controller = _$controller_;
       scope = $rootScope.$new();
       userUtils = _userUtils_;
       inboxMailboxesService = _inboxMailboxesService_;
+      inboxSharedMailboxesPermissionsService = _inboxSharedMailboxesPermissionsService_;
+      INBOX_MAILBOX_SHARING_ROLES = _INBOX_MAILBOX_SHARING_ROLES_;
       $q = _$q_;
     });
 
+    mailbox = {_id: '1', namespace: {owner: 'user2@test.com'}, sharedWith: {'user1@test.com': INBOX_MAILBOX_SHARING_ROLES.READ_AND_UPDATE}};
+    anothermailbox = {_id: '2', namespace: {owner: 'user2@test.com'}, sharedWith: {}};
     scope.mailbox = mailbox;
 
     inboxMailboxesService.updateMailbox = sinon.spy();
     userUtils.displayNameOf = sinon.spy(function() {
       return 'user1 user1';
+    });
+
+    inboxSharedMailboxesPermissionsService.grantDefaultRole = sinon.spy();
+    inboxSharedMailboxesPermissionsService.grant = sinon.spy();
+    inboxSharedMailboxesPermissionsService.revoke = sinon.spy();
+    inboxSharedMailboxesPermissionsService.getRole = sinon.spy(function() {
+      return $q.when(INBOX_MAILBOX_SHARING_ROLES.ORGANIZE);
     });
   });
 
@@ -103,14 +113,6 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
 
         expect($controller.owner).to.be.deep.equal(owner);
       });
-
-      it('if add owner in object usersShared', function() {
-        var $controller = initController();
-
-        $rootScope.$digest();
-
-        expect($controller.usersShared).to.have.lengthOf(1);
-      });
     });
   });
 
@@ -123,19 +125,20 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       expect($controller.mailbox.sharedWith).to.be.deep.equal({});
     });
 
-    it('if sharedWith is emtpy object usersShared should only have owner', function() {
+    it('if sharedWith is emtpy object usersShared should be emtpy too', function() {
       scope.mailbox = anothermailbox;
 
       var $controller = initController();
 
-      expect($controller.usersShared).to.have.lengthOf(1);
+      expect($controller.usersShared).to.have.lengthOf(0);
     });
 
-    it('should call getUsersByEmail for all usersShared and add it in usersShared list', function() {
+    it('should getUserByEmail and getRole for all usersShared and add it in usersShared list', function() {
       var $controller = initController();
 
-      expect(userAPIMock.getUsersByEmail).to.have.been.calledWith(otheruser.preferredEmail);
-      expect($controller.usersShared).to.have.lengthOf(2);
+      expect(userAPIMock.getUsersByEmail).to.have.been.calledWith(user.preferredEmail);
+      expect(inboxSharedMailboxesPermissionsService.getRole).to.have.been.calledWith($controller.mailbox, user.preferredEmail);
+      expect($controller.usersShared).to.have.lengthOf(1);
     });
   });
 
@@ -143,11 +146,13 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
     it('should fill controller usersShared with the user shared', function() {
       var $controller = initController();
 
-      $controller.onUserAdded(anotheruser);
+      $controller.onUserAdded(otheruser);
       $rootScope.$digest();
 
-      expect($controller.usersShared[2]).to.deep.equal(anotheruser);
-      expect($controller.usersShared).to.have.lengthOf(3);
+      expect($controller.usersShared[1]).to.deep.equal(otheruser);
+      expect($controller.usersShared[1].selectedShareeRight).to.deep.equal(INBOX_MAILBOX_SHARING_ROLES.READ_AND_UPDATE);
+      expect($controller.usersShared).to.have.lengthOf(2);
+      expect(inboxSharedMailboxesPermissionsService.grantDefaultRole).to.have.been.calledWith($controller.mailbox, otheruser.preferredEmail);
       expect($controller.users).to.deep.equal([]);
     });
   });
@@ -159,7 +164,7 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       $controller.onUserRemoved();
       $rootScope.$digest();
 
-      expect($controller.usersShared).to.have.lengthOf(2);
+      expect($controller.usersShared).to.have.lengthOf(1);
     });
 
     it('should remove user added in usersShared', function() {
@@ -170,7 +175,9 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       $controller.onUserRemoved(anotheruser);
       $rootScope.$digest();
 
-      expect($controller.usersShared).to.have.lengthOf(2);
+      expect($controller.usersShared).to.have.lengthOf(1);
+      expect(inboxSharedMailboxesPermissionsService.revoke).to.have.been.calledWith($controller.mailbox, anotheruser.preferredEmail);
+
     });
   });
 
@@ -209,6 +216,26 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       ];
 
       expect($controller.onAddingUser($tag)).to.be.false;
+    });
+  });
+
+  describe('The onUserRoleChanged function', function() {
+    it('should not change the usersShared when user is not defined', function() {
+      var $controller = initController();
+
+      $controller.onUserRoleChanged();
+      $rootScope.$digest();
+
+      expect($controller.usersShared).to.have.lengthOf(1);
+    });
+
+    it('should fill controller usersShared with the user shared', function() {
+      var $controller = initController();
+
+      $controller.onUserRoleChanged(INBOX_MAILBOX_SHARING_ROLES.ORGANIZE, user.preferredEmail);
+      $rootScope.$digest();
+
+      expect(inboxSharedMailboxesPermissionsService.grant).to.have.been.calledWith(INBOX_MAILBOX_SHARING_ROLES.ORGANIZE, $controller.mailbox, user.preferredEmail);
     });
   });
 

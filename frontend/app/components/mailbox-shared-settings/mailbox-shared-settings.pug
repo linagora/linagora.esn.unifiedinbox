@@ -12,11 +12,12 @@
               users-autocomplete-input(mutable-users='ctrl.users', on-user-added='ctrl.onUserAdded', on-adding-user='ctrl.onAddingUser', add-from-autocomplete-only='true')
           h5.field-name #{__('Who has access:')}
           .shared-users-list
-            inbox-mailbox-shared-settings-user(user="user", owner="ctrl.owner", session-user="ctrl.sessionUser", on-user-removed='ctrl.onUserRemoved', ng-repeat="user in ctrl.usersShared")
+            inbox-mailbox-shared-settings-owner(owner="ctrl.owner")
+            inbox-mailbox-shared-settings-user(user="user", is-owner="ctrl.isOwner", delegation-types="ctrl.delegationTypes", on-user-removed='ctrl.onUserRemoved', on-user-role-changed='ctrl.onUserRoleChanged', ng-repeat="user in ctrl.usersShared")
 
         .inbox-mailbox-shared-settings-owner(ng-if="!ctrl.isOwner()")
           .shared-users-list
-            inbox-mailbox-shared-settings-user(user="ctrl.owner", owner="ctrl.owner", session-user="ctrl.sessionUser")
+            inbox-mailbox-shared-settings-owner(owner="ctrl.owner")
 
       .modal-footer(ng-if="ctrl.isOwner()")
         button.btn.btn-link.color-default(type="button", ng-click="$hide()") #{__('Cancel')}
