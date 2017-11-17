@@ -65,12 +65,12 @@ describe('The inboxMailboxesService factory', function() {
 
   describe('The isRestrictedMailbox function', function() {
 
-    it('should return true for restricted mailboxes', function() {
+    it('should return true for mailboxes having a restricted role', function() {
       expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'drafts' }})).to.equal(true);
       expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'outbox' }})).to.equal(true);
     });
 
-    it('should return false for non restricted mailboxes', function() {
+    it('should return false for mailboxes having a non-restricted role', function() {
       expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'inbox' }})).to.equal(false);
       expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: undefined }})).to.equal(false);
     });
@@ -438,10 +438,119 @@ describe('The inboxMailboxesService factory', function() {
 
   });
 
+  describe('The canMoveMessagesOutOfMailbox function', function() {
+
+    var inboxMailboxesCache;
+
+    beforeEach(inject(function(_inboxSpecialMailboxes_, _inboxMailboxesCache_) {
+      inboxMailboxesCache = _inboxMailboxesCache_;
+    }));
+
+    it('should allow if mailbox not in cache', function() {
+      var mailbox = { id: 1 };
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(mailbox.id)).to.equal(true);
+    });
+
+    it('should disallow if user does not have mayRemoveItems permission', function() {
+      var mailbox = { id: 1, mayRemoveItems: false };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(mailbox.id)).to.equal(false);
+    });
+
+    it('should allow if mailbox has mayRemoveItems permission', function() {
+      var mailbox = { id: 1, mayRemoveItems: true };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(mailbox.id)).to.equal(true);
+    });
+
+    it('should disallow moving message out from Draft mailbox', function() {
+      var draftMailbox = { id: 11, mayAddItems: true, role: jmap.MailboxRole.DRAFTS, name: jmap.MailboxRole.DRAFTS.toString()};
+
+      inboxMailboxesCache.push(draftMailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(draftMailbox.id)).to.equal(false);
+    });
+
+    it('should disallow moving message out from Outbox mailbox', function() {
+      var outboxMailbox = { id: 22, mayAddItems: true, role: jmap.MailboxRole.OUTBOX, name: jmap.MailboxRole.OUTBOX.toString()};
+
+      inboxMailboxesCache.push(outboxMailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(outboxMailbox.id)).to.equal(false);
+    });
+
+  });
+
+  describe('The canMoveMessagesIntoMailbox function', function() {
+
+    var inboxMailboxesCache, inboxSpecialMailboxes, draftMailbox, outboxMailbox;
+
+    beforeEach(inject(function(_inboxMailboxesCache_, _inboxSpecialMailboxes_) {
+      inboxMailboxesCache = _inboxMailboxesCache_;
+      inboxSpecialMailboxes = _inboxSpecialMailboxes_;
+
+      inboxSpecialMailboxes.get = function() {};
+
+      draftMailbox = { id: 11, mayAddItems: true, role: jmap.MailboxRole.DRAFTS, name: jmap.MailboxRole.DRAFTS.toString()};
+      outboxMailbox = { id: 22, mayAddItems: true, role: jmap.MailboxRole.OUTBOX, name: jmap.MailboxRole.OUTBOX.toString()};
+
+      jmapClient.getMailboxes = function() {
+        return $q.when([draftMailbox, outboxMailbox]);
+      };
+      inboxMailboxesService.assignMailboxesList({});
+      $rootScope.$digest();
+    }));
+
+    it('should allow if mailbox not in cache', function() {
+      var mailbox = { id: 1 };
+
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox.id)).to.equal(true);
+    });
+
+    it('should forbid if user does not have mayAddItems permission', function() {
+      var mailbox = { id: 1, mayAddItems: false };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox.id)).to.equal(false);
+    });
+
+    it('should allow if user has mayAddItems permission', function() {
+      var mailbox = { id: 1, mayAddItems: true };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox.id)).to.equal(true);
+    });
+
+    it('should disallow moving message to Draft mailbox', function() {
+      inboxMailboxesCache.push(draftMailbox);
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(draftMailbox.id)).to.equal(false);
+    });
+
+    it('should disallow moving message to Outbox mailbox', function() {
+      inboxMailboxesCache.push(outboxMailbox);
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(outboxMailbox.id)).to.equal(false);
+    });
+
+    it('should disallow moving message to special mailbox', function() {
+      var mailbox = { id: 1 };
+
+      inboxSpecialMailboxes.get = function() {
+        return { id: 'special mailbox id' };
+      };
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox)).to.equal(false);
+    });
+  });
+
   describe('The canMoveMessage function', function() {
 
-    var message, mailbox, draftMailbox, outboxMailbox;
-    var inboxSpecialMailboxes;
+    var message, mailbox;
 
     beforeEach(function() {
       message = {
@@ -453,20 +562,6 @@ describe('The inboxMailboxesService factory', function() {
         role: {}
       };
     });
-
-    beforeEach(inject(function(_inboxSpecialMailboxes_) {
-      inboxSpecialMailboxes = _inboxSpecialMailboxes_;
-
-      inboxSpecialMailboxes.get = function() {};
-
-      draftMailbox = { id: 11, role: jmap.MailboxRole.DRAFTS, name: jmap.MailboxRole.DRAFTS.toString()};
-      outboxMailbox = { id: 22, role: jmap.MailboxRole.OUTBOX, name: jmap.MailboxRole.OUTBOX.toString()};
-      jmapClient.getMailboxes = function() {
-        return $q.when([draftMailbox, outboxMailbox]);
-      };
-      inboxMailboxesService.assignMailboxesList({});
-      $rootScope.$digest();
-    }));
 
     function checkResult(result) {
       expect(inboxMailboxesService.canMoveMessage(message, mailbox)).to.equal(result);
@@ -483,38 +578,6 @@ describe('The inboxMailboxesService factory', function() {
 
     it('should disallow moving message to same mailbox', function() {
       message.mailboxIds = [1, 2];
-      checkResult(false);
-    });
-
-    it('should disallow moving message to Draft mailbox', function() {
-      mailbox.role = jmap.MailboxRole.DRAFTS;
-      checkResult(false);
-    });
-
-    it('should disallow moving message to Outbox mailbox', function() {
-      mailbox.role = jmap.MailboxRole.OUTBOX;
-      checkResult(false);
-    });
-
-    it('should disallow moving message out from Draft mailbox', function() {
-      message.mailboxIds = [draftMailbox.id];
-      checkResult(false);
-    });
-
-    it('should disallow moving message out from Outbox mailbox', function() {
-      message.mailboxIds = [outboxMailbox.id];
-      checkResult(false);
-    });
-
-    it('should allow moving message out from mailbox that is not in mailboxesCache', function() {
-      message.mailboxIds = [99];
-      checkResult(true);
-    });
-
-    it('should disallow moving message to special mailbox', function() {
-      inboxSpecialMailboxes.get = function() {
-        return { id: 'special mailbox id' };
-      };
       checkResult(false);
     });
 

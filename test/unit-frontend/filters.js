@@ -126,23 +126,28 @@ describe('The Unified Inbox Angular module filters', function() {
 
   describe('The inboxFilterRestrictedMailboxes filter', function() {
 
-    var inboxFilterRestrictedMailboxesFilter;
+    var inboxFilterRestrictedMailboxesFilter, inboxMailboxesCache;
 
-    beforeEach(inject(function(_inboxFilterRestrictedMailboxesFilter_) {
+    beforeEach(inject(function(_inboxFilterRestrictedMailboxesFilter_, jmap, _inboxMailboxesCache_) {
       inboxFilterRestrictedMailboxesFilter = _inboxFilterRestrictedMailboxesFilter_;
+      inboxMailboxesCache = _inboxMailboxesCache_;
     }));
 
     it('should filter RestrictMailboxes', function() {
       var mailboxes = [
-          { role: { value: 'outbox' }},
-          { role: { value: 'drafts' }},
-          { role: { value: undefined }},
-          { role: { value: 'inbox' }}
+          { id: 1, mayAddItems: true, role: { value: 'outbox' }},
+          { id: 2, mayAddItems: true, role: { value: 'drafts' }},
+          { id: 3, mayAddItems: true, role: { value: undefined }},
+          { id: 4, mayAddItems: true, role: { value: 'inbox' }}
         ],
         expectedMailboxes = [
-          { role: { value: undefined }},
-          { role: { value: 'inbox' }}
+          { id: 3, mayAddItems: true, role: { value: undefined }},
+          { id: 4, mayAddItems: true, role: { value: 'inbox' }}
         ];
+
+      mailboxes.forEach(function(mailbox) {
+        inboxMailboxesCache.push(mailbox);
+      });
 
       expect(inboxFilterRestrictedMailboxesFilter(mailboxes)).to.deep.equal(expectedMailboxes);
     });

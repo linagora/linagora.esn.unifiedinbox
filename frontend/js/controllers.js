@@ -232,7 +232,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, INBOX_SHORTCUTS_NAVIGATION_CATEGORY) {
+  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, INBOX_SHORTCUTS_NAVIGATION_CATEGORY) {
     $scope.email = $stateParams.item;
 
     inboxAsyncHostedMailControllerHelper(this, function() {
@@ -271,6 +271,10 @@ angular.module('linagora.esn.unifiedinbox')
     this.move = function() {
       $state.go('.move', { item: $scope.email });
     };
+
+    this.canMoveMessagesOutOfMailbox = function() {
+      return inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first($scope.email.mailboxIds));
+    }
 
     function openAdjacentMessage(direction) {
       var getAdjacentMessage = $scope.email[direction];
@@ -655,7 +659,7 @@ angular.module('linagora.esn.unifiedinbox')
     });
   })
 
-  .controller('inboxListSubheaderController', function($state, $stateParams, inboxSelectionService, inboxJmapItemService, inboxPlugins) {
+  .controller('inboxListSubheaderController', function($state, $stateParams, inboxSelectionService, inboxJmapItemService, inboxMailboxesService, inboxPlugins) {
     var self = this,
         account = $stateParams.account,
         context = $stateParams.context,
@@ -686,4 +690,18 @@ angular.module('linagora.esn.unifiedinbox')
     self.move = function() {
       $state.go('.move', { selection: true });
     };
+
+    self.canMoveMessagesOutOfMailbox = function() {
+      var selectedItems = inboxSelectionService.getSelectedItems();
+
+      var itemsThatCannotMove = _.filter(selectedItems, function(item) {
+        return !inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first(item.mailboxIds));
+      });
+
+      if (itemsThatCannotMove && itemsThatCannotMove.length) {
+        return false;
+      }
+
+      return true;
+    }
   });

@@ -55,7 +55,7 @@ angular.module('linagora.esn.unifiedinbox')
   .filter('inboxFilterRestrictedMailboxes', function(inboxMailboxesService, _) {
     return function(mailboxes) {
       return _.filter(mailboxes, function(mailbox) {
-        return !inboxMailboxesService.isRestrictedMailbox(mailbox);
+        return inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox.id);
       });
     };
   });
