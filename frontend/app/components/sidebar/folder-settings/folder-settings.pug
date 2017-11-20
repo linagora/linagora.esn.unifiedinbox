@@ -4,8 +4,8 @@ md-menu-item
     | #{__('Mark all as read')}
 md-menu-item(ng-if="ctrl.mailbox.role.value !== 'all'", esn-modal-launcher="/unifiedinbox/app/components/mailbox-shared-settings/mailbox-shared-settings.html", controller-as="ctrl", controller="InboxMailboxSharedSettingsController")
   md-button
-    md-icon(md-menu-origin, md-svg-icon="account-multiple", aria-label="share Icon")
-    | #{__('Share')}
+    md-icon(md-menu-origin, md-svg-icon="account-multiple", aria-label="sharing settings Icon")
+    | #{__('Sharing settings')}
 md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared", ui-sref="unifiedinbox.inbox.folders.edit({ mailbox: ctrl.mailbox.id })")
   md-button
     md-icon(md-menu-origin, md-svg-icon="settings", aria-label="settings Icon")

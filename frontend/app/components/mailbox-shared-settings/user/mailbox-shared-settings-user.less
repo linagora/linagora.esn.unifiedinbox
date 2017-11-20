@@ -1,8 +1,6 @@
-.inbox-mailbox-shared-settings-item {
+.inbox-mailbox-shared-settings-user {
   .flex-vertical-centered;
   .flex-space-between;
-
-  margin: 4px;
 
   .meta {
     .flex-row;
@@ -31,10 +29,44 @@
 
   .rights {
     .flex-grow;
-    .flex-horizontal-centered;
+    .all-centered;
+
+    .select {
+      max-width: 120px;
+    }
+
+    .mdi {
+      font-size: 1.2em;
+      padding-right: 5px;
+      color: @gray-light;
+    }
   }
 
   .actions {
     .flex-grow;
+    .flex-shorthand(0, 0, 0);
+
+    .mdi {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
   }
 }
+
+.is-desktop {
+  .inbox-mailbox-shared-settings-user {
+    .rights {
+      padding-left: 15px;
+
+      .select {
+        max-width: 300px;
+      }
+    }
+
+    .actions {
+      .flex-grow;
+      .flex-shorthand(1, 0, 0);
+    }
+  }
+}
+

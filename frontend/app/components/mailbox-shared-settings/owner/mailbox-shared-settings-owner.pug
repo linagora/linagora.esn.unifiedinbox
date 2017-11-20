@@ -1,0 +1,12 @@
+.inbox-mailbox-shared-settings-user
+  .meta
+    .avatar
+      esn-avatar(user-id="ctrl.owner._id")
+    .title
+      .name
+        span {{::ctrl.owner.displayName}}
+      .owner
+        span {{::ctrl.owner.preferredEmail}}
+
+  .actions
+    span #{__('Owner')}

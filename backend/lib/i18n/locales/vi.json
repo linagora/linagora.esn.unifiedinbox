@@ -183,5 +183,9 @@
   "Show": "Hiển thị",
   "Mark as read": "Đánh dấu là đã đọc",
   "Mark as unread": "Đánh dấu là chưa đọc",
-  "(No subject)": "(Không có chủ đề)"
+  "(No subject)": "(Không có chủ đề)",
+  "Consultation": "Tra cứu",
+  "Read and update messages": "Đọc và cập nhật thư",
+  "Organize":"Tổ chức",
+  "Consultation and organize folder":"Tra cứu và tổ chức thư mục"
 }

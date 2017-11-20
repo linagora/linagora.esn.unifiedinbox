@@ -183,5 +183,9 @@
   "Show": "Show",
   "Mark as read": "Mark as read",
   "Mark as unread": "Mark as unread",
-  "(No subject)": "(No subject)"
+  "(No subject)": "(No subject)",
+  "Consultation": "Consultation",
+  "Read and update messages": "Read and update messages",
+  "Organize":"Organize",
+  "Consultation and organize folder":"Consultation and organize folder"
 }

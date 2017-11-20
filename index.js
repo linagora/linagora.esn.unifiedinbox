@@ -64,6 +64,7 @@ const angularAppFiles = [
   'components/mailbox-shared-settings/mailbox-shared-settings.component.js',
   'components/mailbox-shared-settings/mailbox-shared-settings.controller.js',
   'components/mailbox-shared-settings/user/mailbox-shared-settings-user.component.js',
+  'components/mailbox-shared-settings/owner/mailbox-shared-settings-owner.component.js',
   'components/shared-mailboxes/shared-mailboxes.component.js',
   'components/shared-mailboxes/shared-mailboxes.controller.js',
   'components/shared-mailboxes/subheader/shared-mailboxes-subheader.js',
