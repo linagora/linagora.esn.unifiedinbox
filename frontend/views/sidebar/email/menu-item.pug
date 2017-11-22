@@ -7,9 +7,9 @@
     esn-is-drop-zone="isDropZone($dragData)"
   )
   .badge-container
-    .badge(ng-if="!hideBadge && mailbox.unreadMessages !== 0")
-      span(ng-class="{ 'hide-badge-number' : mailbox.role.value === 'trash' && badgeLoadingActivated }") {{ mailbox.unreadMessages | maxPlus:99 }}
-      span(ng-if="mailbox.role.value === 'trash' && badgeLoadingActivated")
+    .badge(ng-if="!hideBadge && mailbox.unreadMessages > 0 || mailbox.id === badgeLoadingActivated")
+      span(ng-class="{ 'hide-badge-number' : mailbox.id === badgeLoadingActivated }") {{ mailbox.unreadMessages | maxPlus:99 }}
+      span(ng-if="mailbox.id === badgeLoadingActivated")
         i.mdi.mdi-loading.badge-loading-activate
     i.inbox-icon(ng-class='mailboxIcons')
 
