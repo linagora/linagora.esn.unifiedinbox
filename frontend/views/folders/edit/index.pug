@@ -17,10 +17,6 @@
                 select.form-control(ng-model="mailbox.parentId", ng-options="box.id as box.qualifiedName for box in mailboxes | inboxFilterDescendantMailboxes: mailbox.id")
                   option(value="") #{__('Unified Inbox')}
         .modal-footer.flex
-          .flex-vertical-centered.flex-start
-            .delete-button
-              button.btn.btn-link.btn-icon.color-danger.delete(type='button', ui-sref='unifiedinbox.inbox.folders.delete({ mailbox: mailbox.id })')
-                i.mdi.mdi-delete
           .flex-vertical-centered.flex-end
             button.btn.btn-link.color-default(type='button', esn-back-button="^") #{__('Cancel')}
             button.btn.btn-primary.save(esn-submit="editFolder()") #{__('Save')}
