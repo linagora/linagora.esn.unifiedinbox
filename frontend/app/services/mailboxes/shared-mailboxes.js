@@ -18,13 +18,20 @@
 
       function getHiddenMaiboxesConfig() {
         if (!hiddenSharedMaiboxesConfig) {
-          hiddenSharedMaiboxesConfig = inboxConfig(INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, {});
+          return inboxConfig(INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, {})
+          .then(function(results) {
+            hiddenSharedMaiboxesConfig = results;
+
+            return hiddenSharedMaiboxesConfig;
+          });
         }
 
-        return hiddenSharedMaiboxesConfig;
+        return $q.when(hiddenSharedMaiboxesConfig);
       }
 
       function _storeHiddenSharedMailboxes(mailboxesToHide) {
+        hiddenSharedMaiboxesConfig = mailboxesToHide;
+
         return esnUserConfigurationService.set([{
           name: INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY,
           value: mailboxesToHide

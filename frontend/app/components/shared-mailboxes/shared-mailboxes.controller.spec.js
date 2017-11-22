@@ -36,7 +36,9 @@ describe('The inboxSharedMailboxesController controller', function() {
     inboxMailboxesService.sharedMailboxesList = sinon.spy(function() {
       return $q.when(mailboxes);
     });
-    inboxSharedMailboxesService.setHiddenMailboxes = sinon.spy();
+    inboxSharedMailboxesService.setHiddenMailboxes = sinon.spy(function() {
+      return $q.when();
+    });
   });
 
   function initController() {

@@ -13,14 +13,18 @@
 
       function $onInit() {
         inboxMailboxesService.sharedMailboxesList().then(function(mailboxes) {
-          self.mailboxes = _.map(mailboxes, function(mailbox) {
+          var originalMailboxes = _.map(mailboxes, function(mailbox) {
             return _.defaults(mailbox, { isDisplayed: true });
           });
+
+          self.mailboxes = _.cloneDeep(originalMailboxes);
         });
       }
 
       function onSave() {
-        inboxSharedMailboxesService.setHiddenMailboxes(self.mailboxes);
+        inboxSharedMailboxesService.setHiddenMailboxes(self.mailboxes).then(function() {
+          inboxMailboxesService.updateSharedMailboxCache();
+        });
       }
 
     });

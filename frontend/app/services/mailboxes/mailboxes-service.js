@@ -196,7 +196,9 @@
         return withJmapClient(function(jmapClient) {
           return jmapClient.getMailboxes()
             .then(function(mailboxList) {
-              var sharedMailboxList = _getSharedMailboxes(mailboxList);
+              return _addSharedMailboxVisibility(_getSharedMailboxes(mailboxList));
+            })
+            .then(function(sharedMailboxList) {
               var sharedMailboxCache = _getSharedMailboxes(inboxMailboxesCache);
               var removedSharedFoldersIds = _getDifferenceById(sharedMailboxCache, sharedMailboxList);
 
@@ -209,7 +211,7 @@
                 }
               }
 
-               _updateMailboxCache(mailboxList);
+               _updateMailboxCache(sharedMailboxList);
             })
             .then(function() {
               return _getSharedMailboxes(inboxMailboxesCache);

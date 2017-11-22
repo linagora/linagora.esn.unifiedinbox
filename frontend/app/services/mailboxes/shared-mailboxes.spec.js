@@ -68,7 +68,9 @@
 
       it('should delegate only once when called twice', function(done) {
         inboxSharedMailboxesService.getHiddenMaiboxesConfig()
-          .then(inboxSharedMailboxesService.getHiddenMaiboxesConfig())
+          .then(function() {
+            return inboxSharedMailboxesService.getHiddenMaiboxesConfig();
+          })
           .then(function() {
             expect(configHiddenSharedCalls).to.equal(1);
             done();
