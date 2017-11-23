@@ -726,7 +726,7 @@ describe('The inboxJmapItemService service', function() {
       inboxJmapItemService.markAllAsRead(mailboxId, unreadFlag, state).then(function() {
 
         expect(eventHandler).to.have.been.calledTwice;
-        expect(eventHandler.firstCall.args[1]).to.be.true;
+        expect(eventHandler.firstCall.args[1]).to.equal(mailboxId);
         expect(eventHandler.secondCall.args[1]).to.be.false;
 
         done();
