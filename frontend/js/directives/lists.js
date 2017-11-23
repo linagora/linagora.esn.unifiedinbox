@@ -102,8 +102,17 @@ angular.module('linagora.esn.unifiedinbox')
         });
 
         self.canMoveMessagesOutOfMailbox = function() {
-          return inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first($scope.email.mailboxIds));
-        }
+          var context = $stateParams.context;
+
+          if (context) {
+            return inboxMailboxesService.canMoveMessagesOutOfMailbox(context);
+          }
+
+          // unified inbox does not have any context. In that case, we get mailbox from the selected email.
+          return !$scope.email || $scope.email.mailboxIds.every(function(mailboxId) {
+            return inboxMailboxesService.canMoveMessagesOutOfMailbox(mailboxId);
+          });
+        };
       },
       controllerAs: 'ctrl',
       templateUrl: '/unifiedinbox/views/email/list/list-item.html'
