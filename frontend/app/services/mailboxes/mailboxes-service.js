@@ -414,8 +414,7 @@
       }
 
       function markAllAsRead(mailboxId) {
-        var index = _.findIndex(inboxMailboxesCache, { id: mailboxId }),
-            targetIndexInCache = index > -1 ? index : inboxMailboxesCache.length;
+        var targetIndexInCache = _getMailboxIndexInCache(mailboxId);
 
         inboxMailboxesCache[targetIndexInCache].unreadMessages = 0;
 

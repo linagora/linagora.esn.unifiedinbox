@@ -38,8 +38,6 @@
             itemsById[id][flag] = state;
           }
         });
-
-        _buildRenderedList();
       }
 
       function addAll(newItems) {
