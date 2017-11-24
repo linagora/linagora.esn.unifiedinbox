@@ -255,7 +255,7 @@
       }
 
       function _truncateWithEllipsis(text, max) {
-        text = text || esnI18nService.translate('(No subject)');
+        text = text || esnI18nService.translate('(No subject)').toString();
 
         return text.substr(0, max - 1) + (text.length > max ? '…' : '');
       }
