@@ -635,6 +635,8 @@ describe('The inboxJmapItemService service', function() {
       mockDestroyMessages();
 
       inboxJmapItemService.emptyMailbox(mailboxId).catch(function() {
+        expect(inboxFilteredList.removeFromList).to.have.been.calledOnce;
+        expect(inboxMailboxesService.emptyMailbox).to.have.been.calledOnce;
         expect(notificationFactory.weakError).to.have.been.calledOnce;
         expect(notificationFactory.weakError).to.have.been.calledWith('error', 'Empty the trash fail');
       });
