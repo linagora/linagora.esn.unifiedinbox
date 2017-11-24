@@ -55,7 +55,8 @@ angular.module('linagora.esn.unifiedinbox')
     return {
       restrict: 'E',
       controller: function($scope) {
-        var self = this;
+        var self = this,
+        context = $stateParams.context;
 
         // need this scope value for action list
         $scope.email = $scope.item;
@@ -101,17 +102,23 @@ angular.module('linagora.esn.unifiedinbox')
           moveToTrash: self.moveToTrash
         });
 
-        self.canMoveMessagesOutOfMailbox = function() {
-          var context = $stateParams.context;
-
-          if (context) {
-            return inboxMailboxesService.canMoveMessagesOutOfMailbox(context);
+        function _canActionBeDone(mailboxId, message, checkFunction) {
+          if (mailboxId) {
+            return checkFunction(mailboxId);
           }
 
           // unified inbox does not have any context. In that case, we get mailbox from the selected email.
-          return !$scope.email || $scope.email.mailboxIds.every(function(mailboxId) {
-            return inboxMailboxesService.canMoveMessagesOutOfMailbox(mailboxId);
+          return !message || message.mailboxIds.every(function(mailboxId) {
+            return checkFunction(mailboxId);
           });
+        }
+
+        self.canTrashMessages = function() {
+          return _canActionBeDone(context, $scope.email, inboxMailboxesService.canTrashMessages);
+        };
+
+        self.canMoveMessagesOutOfMailbox = function() {
+          return _canActionBeDone(context, $scope.email, inboxMailboxesService.canMoveMessagesOutOfMailbox);
         };
       },
       controllerAs: 'ctrl',
