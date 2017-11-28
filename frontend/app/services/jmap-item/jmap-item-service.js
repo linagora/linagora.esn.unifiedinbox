@@ -100,9 +100,6 @@
           return inboxConfig('numberItemsPerPageOnBulkReadOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS).then(function(numberItemsPerPageOnBulkReadOperations) {
             return _listOfAllMessageIds(mailboxFilter, numberItemsPerPageOnBulkReadOperations)
               .then(function(messageIds) {
-                inboxFilteredList.removeFromList(messageIds);
-                inboxMailboxesService.emptyMailbox(mailboxId);
-
                 return asyncJmapAction({
                   success: esnI18nService.translate('Trash is empty'),
                   progressing: esnI18nService.translate('Empty trash in progress')
@@ -118,6 +115,7 @@
               })
               .finally(function() {
                 $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, false);
+                inboxMailboxesService.emptyMailbox(mailboxId);
               });
           });
         });
@@ -134,11 +132,15 @@
           var idsOfTheMessageBatch = ids.splice(0, numberItemsPerPageOnBulkDeleteOperations);
 
           return withJmapClient(function(client) {
-            client.destroyMessages(idsOfTheMessageBatch).then(loop).catch(loop);
+            return client.destroyMessages(idsOfTheMessageBatch).then(function() {
+              inboxFilteredList.removeFromList(idsOfTheMessageBatch);
+
+              return loop();
+            }).catch(loop);
           });
         }
 
-        loop();
+        return loop();
       }
 
       function _listOfAllMessageIds(mailboxFilter, numberItemsPerPageOnBulkReadOperations) {
