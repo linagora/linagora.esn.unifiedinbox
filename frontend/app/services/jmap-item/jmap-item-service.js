@@ -294,7 +294,7 @@
           var idsOfTheMessageBatch = messageIds.splice(0, numberItemsPerPageOnBulkUpdateOperations);
 
           return withJmapClient(function(client) {
-            client.setMessages({
+            return client.setMessages({
               update: idsOfTheMessageBatch.reduce(function(updateObject, ids) {
                 updateObject[ids] = _.zipObject([flag], [state]);
 
@@ -302,12 +302,13 @@
               }, {})
             }).then(function() {
                 inboxFilteredList.updateFlagFromList(idsOfTheMessageBatch, flag, state);
-                loop();
+
+                return loop();
             }).catch(loop);
           });
         }
 
-        loop();
+        return loop();
       }
 
       function setAllFlag(mailboxId, flag, state) {
