@@ -161,12 +161,15 @@ describe('The inboxListGroupToggleSelection component', function() {
 
     compileDirective('<inbox-list-header filters="filters"/>');
 
+    element.find('i.clickable.mdi.mdi-magnify').click();
+
     expect(element.find('.inbox-filter-button')).to.have.length(2);
   });
 
   it('should update quick filter when user searches for some text', function() {
     compileDirective('<inbox-list-header />');
 
+    element.find('i.clickable.mdi.mdi-magnify').click();
     element.find('.inbox-list-header-quick-filter input').val('filter').trigger('input');
     $timeout.flush(); // Because of the 'debounce' option
 
@@ -176,6 +179,8 @@ describe('The inboxListGroupToggleSelection component', function() {
   it('should initialize the quickFilter input to nothing, when no quickFilter exists', function() {
     compileDirective('<inbox-list-header />');
 
+    element.find('i.clickable.mdi.mdi-magnify').click();
+
     expect(element.find('.inbox-list-header-quick-filter input').val()).to.equal('');
   });
 
@@ -183,6 +188,8 @@ describe('The inboxListGroupToggleSelection component', function() {
     inboxFilteringService.setQuickFilter('filter');
 
     compileDirective('<inbox-list-header />');
+
+    element.find('i.clickable.mdi.mdi-magnify').click();
 
     expect(element.find('.inbox-list-header-quick-filter input').val()).to.equal('filter');
   });
@@ -192,6 +199,7 @@ describe('The inboxListGroupToggleSelection component', function() {
 
     compileDirective('<inbox-list-header />');
 
+    element.find('i.clickable.mdi.mdi-magnify').click();
     inboxFilteringService.setQuickFilter('newFilter');
     $rootScope.$digest();
 
@@ -203,6 +211,7 @@ describe('The inboxListGroupToggleSelection component', function() {
 
     compileDirective('<inbox-list-header />');
 
+    element.find('i.clickable.mdi.mdi-magnify').click();
     inboxFilteringService.clearFilters();
     $rootScope.$digest();
 

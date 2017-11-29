@@ -1,19 +1,21 @@
 .inbox-filter-input {
   margin: 2px 0;
 
+  .animated('fadeIn', 300ms);
+
   &:before {
     font-family: 'MaterialDesignIcons';
     content: "\f349"; // mdi-magnify
     position: absolute;
-    font-size: 1.2em;
-    left: 7px;
+    font-size: 1.4em;
     top: 50%;
     transform: translateY(-50%);
   }
 
   .inbox-filter-input-field {
     width: 100%;
-    padding-left: 37px;
+    padding-left: 1.4em;
+    max-width: 194px;
     background: transparent;
   }
 
@@ -31,6 +33,7 @@
   .inbox-filter-input {
     input:not([type="button"]):not([type="submit"]):not([type="file"]).inbox-filter-input-field {
       font-size: 1em;
+      padding-left: 2em;
     }
   }
 }

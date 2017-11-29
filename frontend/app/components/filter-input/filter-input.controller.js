@@ -10,7 +10,9 @@
 
       /////
 
-      function clearFilter() {
+      function clearFilter($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
         self.onChange({ $filter: self.filter = '' });
       }
     });
