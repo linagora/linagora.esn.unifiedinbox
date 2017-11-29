@@ -273,8 +273,15 @@ angular.module('linagora.esn.unifiedinbox')
     };
 
     this.canMoveMessagesOutOfMailbox = function() {
-      return inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first($scope.email.mailboxIds));
-    }
+      if ($stateParams.context) {
+        return inboxMailboxesService.canMoveMessagesOutOfMailbox($stateParams.context);
+      }
+
+      // unified inbox does not have any context. In that case, we get mailbox from the selected email.
+      return !$scope.email || $scope.email.mailboxIds.every(function(mailboxId) {
+        return inboxMailboxesService.canMoveMessagesOutOfMailbox(mailboxId);
+      });
+    };
 
     function openAdjacentMessage(direction) {
       var getAdjacentMessage = $scope.email[direction];
@@ -692,16 +699,17 @@ angular.module('linagora.esn.unifiedinbox')
     };
 
     self.canMoveMessagesOutOfMailbox = function() {
-      var selectedItems = inboxSelectionService.getSelectedItems();
-
-      var itemsThatCannotMove = _.filter(selectedItems, function(item) {
-        return !inboxMailboxesService.canMoveMessagesOutOfMailbox(_.first(item.mailboxIds));
-      });
-
-      if (itemsThatCannotMove && itemsThatCannotMove.length) {
-        return false;
+      if (context) {
+        return inboxMailboxesService.canMoveMessagesOutOfMailbox(context);
       }
 
-      return true;
-    }
+      var selectedItems = inboxSelectionService.getSelectedItems();
+
+      // unified inbox does not have any context. In that case, we get mailbox from the selected email.
+      return !selectedItems || selectedItems.every(function(item) {
+        return item.mailboxIds.every(function(mailboxId) {
+          return inboxMailboxesService.canMoveMessagesOutOfMailbox(mailboxId);
+        });
+      });
+    };
   });

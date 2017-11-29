@@ -27,10 +27,6 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
       return $delegate;
     });
-
-    $provide.value('inboxMailboxesService', inboxMailboxesService = {
-      assignMailbox: sinon.spy()
-    });
   }));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, _inboxJmapItemService_, _infiniteListService_, _inboxSelectionService_) {
@@ -430,6 +426,72 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     });
 
+    describe('The canMoveMessagesOutOfMailbox function', function() {
+
+      var $stateParams, inboxMailboxesService, serviceStub, mockCanMoveMessageResult;
+
+      beforeEach(angular.mock.inject(function(_$stateParams_, _inboxMailboxesService_) {
+        $stateParams = _$stateParams_;
+        inboxMailboxesService = _inboxMailboxesService_;
+        $stateParams.context = null;
+      }));
+
+      beforeEach(function() {
+        serviceStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return mockCanMoveMessageResult; });
+      });
+
+      function canMoveMessagesOutOfMailbox() {
+        return element.controller('inboxMessageListItem').canMoveMessagesOutOfMailbox();
+      }
+
+      it('should return true when context available', function() {
+        $stateParams.context = '1234';
+        mockCanMoveMessageResult = true;
+
+        compileDirective('<inbox-message-list-item />');
+        var result = canMoveMessagesOutOfMailbox();
+
+        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledWith($stateParams.context);
+        expect(result).is.true;
+      });
+
+      it('should return true when no context nor scope.email', function() {
+        $stateParams.context = null;
+        $scope.item = null;
+
+        compileDirective('<inbox-message-list-item />');
+
+        expect(canMoveMessagesOutOfMailbox()).is.true;
+      });
+
+      it('should return true when all mailboxes allow moving message', function() {
+        $stateParams.context = null;
+        $scope.item = { mailboxIds: ['1', '2', '3'] };
+        mockCanMoveMessageResult = true;
+
+        compileDirective('<inbox-message-list-item />');
+        var result = canMoveMessagesOutOfMailbox();
+
+        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledThrice;
+        expect(result).is.true;
+      });
+
+      it('should return false when one mailbox forbids moving message', function() {
+        $stateParams.context = null;
+        $scope.item = { mailboxIds: ['1', '2', '3'] };
+
+        serviceStub.restore();
+        serviceStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox');
+        serviceStub.onFirstCall().returns(true);
+        serviceStub.onSecondCall().returns(true);
+        serviceStub.onThirdCall().returns(false);
+
+        compileDirective('<inbox-message-list-item />');
+
+        expect(canMoveMessagesOutOfMailbox()).is.false;
+      });
+    });
+
     describe('The swipe feature', function() {
 
       beforeEach(function() {
@@ -543,6 +605,16 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
   describe('The inboxSearchMessageListItem directive', function() {
 
     describe('The inboxMailboxesService.assignMailbox', function() {
+
+      var inboxMailboxesService;
+
+      beforeEach(angular.mock.inject(function(_inboxMailboxesService_) {
+        inboxMailboxesService = _inboxMailboxesService_;
+      }));
+
+      beforeEach(function() {
+        inboxMailboxesService.assignMailbox = sinon.spy();
+      });
 
       it('should call assignMailbox with one item', function() {
         $scope.item = { mailboxIds: ['123'] };
