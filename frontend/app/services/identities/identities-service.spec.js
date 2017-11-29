@@ -140,6 +140,26 @@ describe('The inboxIdentitiesService factory', function() {
       $rootScope.$digest();
     });
 
+    it('should edit an existing identity', function(done) {
+      var identity = { id: 'id', email: 'b@b.com' },
+          updatedIdentity = { id: 'id', email: 'a@a.com' };
+
+      config['linagora.esn.unifiedinbox.identities'] = [identity];
+
+      inboxIdentitiesService.storeIdentity(updatedIdentity);
+      $httpBackend.flush();
+
+      inboxIdentitiesService.getAllIdentities().then(function(identities) {
+        expect(identities).to.deep.equal([
+          { id: 'default', isDefault: true },
+          updatedIdentity
+        ]);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
     it('should store only the signature of the default identity', function(done) {
       defaultIdentity.textSignature = 'signature';
 
