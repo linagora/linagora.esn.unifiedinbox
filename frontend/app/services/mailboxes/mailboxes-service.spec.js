@@ -63,20 +63,6 @@ describe('The inboxMailboxesService factory', function() {
 
   });
 
-  describe('The isRestrictedMailbox function', function() {
-
-    it('should return true for mailboxes having a restricted role', function() {
-      expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'drafts' }})).to.equal(true);
-      expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'outbox' }})).to.equal(true);
-    });
-
-    it('should return false for mailboxes having a non-restricted role', function() {
-      expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: 'inbox' }})).to.equal(false);
-      expect(inboxMailboxesService.isRestrictedMailbox({ role: { value: undefined }})).to.equal(false);
-    });
-
-  });
-
   describe('The assignMailboxesList function', function() {
 
     it('should return a promise', function(done) {
@@ -484,6 +470,14 @@ describe('The inboxMailboxesService factory', function() {
       expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(outboxMailbox.id)).to.equal(false);
     });
 
+    it('should allow if valid mailbox directly passed as param', function() {
+      var mailbox = { id: 1, mayRemoveItems: true };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesOutOfMailbox(mailbox)).to.equal(true);
+    });
+
   });
 
   describe('The canMoveMessagesIntoMailbox function', function() {
@@ -546,6 +540,52 @@ describe('The inboxMailboxesService factory', function() {
       };
       expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox)).to.equal(false);
     });
+
+    it('should allow if valid mailbox directly passed as param', function() {
+      var mailbox = { id: 1, mayAddItems: true };
+
+      inboxMailboxesCache.push(mailbox);
+
+      expect(inboxMailboxesService.canMoveMessagesIntoMailbox(mailbox)).to.equal(true);
+    });
+  });
+
+  describe('The canTrashMessages function', function() {
+
+    var draftMailbox, trashMailbox;
+
+    beforeEach(function() {
+      draftMailbox = {
+        id: 11,
+        mayAddItems: true,
+        role: jmap.MailboxRole.DRAFTS,
+        name: jmap.MailboxRole.DRAFTS.toString()
+      };
+      trashMailbox = {
+        id: 11,
+        mayAddItems: true,
+        role: jmap.MailboxRole.TRASH,
+        name: jmap.MailboxRole.TRASH.toString()
+      };
+    });
+
+    it('should allow if mailbox not in cache', function() {
+      var mailbox = { id: 1 };
+
+      expect(inboxMailboxesService.canTrashMessages(mailbox.id)).to.equal(true);
+    });
+
+    it('should allow trashing drafts', function() {
+      expect(inboxMailboxesService.canTrashMessages(draftMailbox.id)).to.equal(true);
+    });
+
+    it('should forbid trashing from trash', function() {
+      expect(inboxMailboxesService.canTrashMessages(trashMailbox.id)).to.equal(true);
+    });
+
+    it('should allow passing draft mailbox directly', function() {
+      expect(inboxMailboxesService.canTrashMessages(draftMailbox)).to.equal(true);
+    });
   });
 
   describe('The canMoveMessage function', function() {
@@ -571,9 +611,15 @@ describe('The inboxMailboxesService factory', function() {
       checkResult(true);
     });
 
-    it('should disallow moving draft message', function() {
+    it('should disallow moving draft messages to a mailbox that is not trash', function() {
       message.isDraft = true;
       checkResult(false);
+    });
+
+    it('should allow moving draft message to trash', function() {
+      message.isDraft = true;
+      mailbox.role = jmap.MailboxRole.TRASH;
+      checkResult(true);
     });
 
     it('should disallow moving message to same mailbox', function() {

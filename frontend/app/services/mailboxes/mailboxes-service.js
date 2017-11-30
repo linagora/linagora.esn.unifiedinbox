@@ -25,13 +25,13 @@
         createMailbox: createMailbox,
         destroyMailbox: destroyMailbox,
         updateMailbox: updateMailbox,
-        isRestrictedMailbox: isRestrictedMailbox,
         getMailboxWithRole: getMailboxWithRole,
         updateTotalMessages: updateTotalMessages,
         emptyMailbox: emptyMailbox,
         markAllAsRead: markAllAsRead,
         sharedMailboxesList: sharedMailboxesList,
         updateSharedMailboxCache: updateSharedMailboxCache,
+        canTrashMessages: canTrashMessages,
         canMoveMessagesIntoMailbox: canMoveMessagesIntoMailbox,
         canMoveMessagesOutOfMailbox: canMoveMessagesOutOfMailbox
       };
@@ -254,7 +254,7 @@
         _updateTotalMessages(toMailboxIds, numberOfUnreadMessage);
       }
 
-      function isRestrictedMailbox(mailbox) {
+      function _isRestrictedMailbox(mailbox) {
         if (mailbox && mailbox.role) {
           return INBOX_RESTRICTED_MAILBOXES.indexOf(mailbox.role.value) > -1;
         }
@@ -262,30 +262,50 @@
         return false;
       }
 
-      function canMoveMessagesOutOfMailbox(mailboxId) {
-        var mailbox = _.find(inboxMailboxesCache, { id: mailboxId });
+      function _getMailboxFromId(mailboxObjectOrId) {
+        return (mailboxObjectOrId && mailboxObjectOrId.id ? mailboxObjectOrId : _.find(inboxMailboxesCache, { id: mailboxObjectOrId }));
+      }
 
-        if (isRestrictedMailbox(mailbox) || (mailbox && !mailbox.mayRemoveItems)) {
+      function canMoveMessagesOutOfMailbox(mailboxObjectOrId) {
+        var mailbox = _getMailboxFromId(mailboxObjectOrId);
+
+        if (mailbox && (_isRestrictedMailbox(mailbox) || !mailbox.mayRemoveItems)) {
           return false;
         }
 
         return true;
       }
 
-      function canMoveMessagesIntoMailbox(mailboxId) {
-        var mailbox = _.find(inboxMailboxesCache, { id: mailboxId });
+      function canMoveMessagesIntoMailbox(mailboxObjectOrId) {
+        var mailbox = _getMailboxFromId(mailboxObjectOrId);
 
-        if (_isSpecialMailbox(mailboxId) || isRestrictedMailbox(mailbox) || (mailbox && !mailbox.mayAddItems)) {
+        if (mailbox && (_isSpecialMailbox(mailbox.id) || _isRestrictedMailbox(mailbox) || !mailbox.mayAddItems)) {
           return false;
         }
 
         return true;
+      }
+
+      function canTrashMessages(fromMailboxObjectOrId) {
+        var mailbox = _getMailboxFromId(fromMailboxObjectOrId);
+
+        if (mailbox) {
+          if (mailbox.role === jmap.MailboxRole.DRAFTS) {
+            return true;
+          }
+
+          if (mailbox.role === jmap.MailboxRole.TRASH) {
+            return false;
+          }
+        }
+
+        return canMoveMessagesOutOfMailbox(mailbox);
       }
 
       function canMoveMessage(message, toMailbox) {
-        // do not allow moving draft message
+        // do not allow moving draft message, except to trash
         if (message.isDraft) {
-          return false;
+          return toMailbox && toMailbox.role === jmap.MailboxRole.TRASH;
         }
 
         // do not allow moving to the same mailbox

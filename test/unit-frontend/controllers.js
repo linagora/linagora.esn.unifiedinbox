@@ -1062,22 +1062,20 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     });
 
-    describe('The canMoveMessagesOutOfMailbox function', function() {
+    describe('The canTrashMessages function', function() {
 
-      var controller, testResult, serviceStub;
+      var controller, testResult, inboxMailboxesServiceCanTrashMessagesStub;
 
       beforeEach(function() {
-        serviceStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return testResult; });
+        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return testResult; });
         controller = initController('viewEmailController');
       });
 
       it('should return true when context is set', function() {
         $stateParams.context = '123';
         testResult = true;
-        var result = controller.canMoveMessagesOutOfMailbox();
 
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledWith($stateParams.context);
-        expect(result).is.true;
+        expect(controller.canTrashMessages()).is.true;
       });
 
       it('should return true when context unavailable but scope.email has mailbox', function() {
@@ -1086,10 +1084,73 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         scope.email = { mailboxIds: [testMailboxId] };
         $stateParams.context = null;
         testResult = true;
-        var result = controller.canMoveMessagesOutOfMailbox();
 
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledWith(testMailboxId);
-        expect(result).is.true;
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return true when neither context nor scope.email available', function() {
+        scope.email = null;
+        $stateParams.context = null;
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return true when all mailboxId of email authorize trashing', function() {
+        scope.email = { mailboxIds: ['1234', '1235'] };
+        $stateParams.context = null;
+        testResult = true;
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return false if one mailbox forbids trashing', function() {
+        scope.email = { mailboxIds: ['1', '2', '3'] };
+        $stateParams.context = null;
+        testResult = true;
+
+        inboxMailboxesServiceCanTrashMessagesStub.restore();
+        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages');
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(0).returns(true);
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(1).returns(false);
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(2).returns(true);
+
+        expect(controller.canTrashMessages()).is.false;
+      });
+
+      it('should return false if all mailboxes forbid trashing', function() {
+        scope.email = { mailboxIds: ['1234', '1235'] };
+        $stateParams.context = null;
+        testResult = false;
+
+        expect(controller.canTrashMessages()).is.false;
+      });
+
+    });
+
+    describe('The canMoveMessagesOutOfMailbox function', function() {
+
+      var controller, testResult, inboxMailboxesServiceCanTrashMessagesStub;
+
+      beforeEach(function() {
+        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return testResult; });
+        controller = initController('viewEmailController');
+      });
+
+      it('should return true when context is set', function() {
+        $stateParams.context = '123';
+        testResult = true;
+
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
+      });
+
+      it('should return true when context unavailable but scope.email has mailbox', function() {
+        var testMailboxId = '1234';
+
+        scope.email = { mailboxIds: [testMailboxId] };
+        $stateParams.context = null;
+        testResult = true;
+
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
       });
 
       it('should return true when neither context nor scope.email available', function() {
@@ -1104,10 +1165,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         $stateParams.context = null;
         testResult = true;
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledTwice;
-        expect(result).is.true;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
       });
 
       it('should return false if one mailbox forbid moving', function() {
@@ -1115,16 +1173,13 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         $stateParams.context = null;
         testResult = true;
 
-        serviceStub.restore();
-        serviceStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox');
-        serviceStub.onCall(0).returns(true);
-        serviceStub.onCall(1).returns(false);
-        serviceStub.onCall(2).returns(true);
+        inboxMailboxesServiceCanTrashMessagesStub.restore();
+        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox');
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(0).returns(true);
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(1).returns(false);
+        inboxMailboxesServiceCanTrashMessagesStub.onCall(2).returns(true);
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledTwice;
-        expect(result).is.false;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
       });
 
       it('should return false if all mailboxes forbid moving', function() {
@@ -1132,10 +1187,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         $stateParams.context = null;
         testResult = false;
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledOnce;
-        expect(result).is.false;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
       });
 
     });
@@ -2226,7 +2278,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
   describe('The inboxListSubheaderController controller', function() {
 
-    var controller, inboxJmapItemService, item1, item2, inboxMailboxesService, canMoveMessagesMockResult;
+    var controller, inboxJmapItemService, item1, item2, canDoActionMockResult;
 
     function initController() {
       controller = $controller('inboxListSubheaderController', {
@@ -2239,7 +2291,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
           moveToTrash: sinon.spy()
         },
         inboxMailboxesService: inboxMailboxesService = {
-          canMoveMessagesOutOfMailbox: sinon.spy(function() { return canMoveMessagesMockResult; })
+          canMoveMessagesOutOfMailbox: sinon.spy(function() { return canDoActionMockResult; }),
+          canTrashMessages: sinon.spy(function() { return canDoActionMockResult; })
         }
       });
       $rootScope.$digest();
@@ -2373,6 +2426,71 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     });
 
+    describe('The canTrashMessages function', function() {
+      var selectedItemsMock;
+
+      beforeEach(function() {
+        inboxSelectionService.getSelectedItems = sinon.spy(function() { return selectedItemsMock;});
+      });
+
+      it('should return true when context is set', function() {
+        $stateParams.context = '1234';
+        canDoActionMockResult = true;
+
+        initController();
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return true when no context nor selectedItems', function() {
+        $stateParams.context = null;
+        selectedItemsMock = [];
+
+        initController();
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return true when all selected email belong to mailboxes that allow moving', function() {
+        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+
+        selectedItemsMock = [message1, message2];
+        $stateParams.context = null;
+        canDoActionMockResult = true;
+
+        initController();
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+
+      it('should return false when emails belong to mailboxes that forbid moving', function() {
+        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+
+        selectedItemsMock = [message1, message2];
+        $stateParams.context = null;
+        canDoActionMockResult = false;
+
+        initController();
+
+        expect(controller.canTrashMessages()).is.false;
+      });
+
+      it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
+        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
+          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
+
+        selectedItemsMock = [message1, message2];
+        $stateParams.context = null;
+        canDoActionMockResult = true;
+
+        initController();
+
+        expect(controller.canTrashMessages()).is.true;
+      });
+    });
+
     describe('The canMoveMessagesOutOfMailbox function', function() {
 
       var selectedItemsMock;
@@ -2383,14 +2501,11 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       it('should return true when context is set', function() {
         $stateParams.context = '1234';
-        canMoveMessagesMockResult = true;
+        canDoActionMockResult = true;
 
         initController();
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledWith($stateParams.context);
-        expect(result).is.true;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
       });
 
       it('should return true when no context nor selectedItems', function() {
@@ -2400,7 +2515,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         initController();
 
         expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.not.have.been.called;
       });
 
       it('should return true when all selected email belong to mailboxes that allow moving', function() {
@@ -2409,14 +2523,11 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         selectedItemsMock = [message1, message2];
         $stateParams.context = null;
-        canMoveMessagesMockResult = true;
+        canDoActionMockResult = true;
 
         initController();
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledTwice;
-        expect(result).is.true;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
       });
 
       it('should return false when emails belong to mailboxes that forbid moving', function() {
@@ -2425,14 +2536,11 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         selectedItemsMock = [message1, message2];
         $stateParams.context = null;
-        canMoveMessagesMockResult = false;
+        canDoActionMockResult = false;
 
         initController();
 
-        var result = controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.calledOnce;
-        expect(result).is.false;
+        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
       });
 
       it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
@@ -2441,15 +2549,12 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         selectedItemsMock = [message1, message2];
         $stateParams.context = null;
-        canMoveMessagesMockResult = true;
+        canDoActionMockResult = true;
 
         initController();
 
-        controller.canMoveMessagesOutOfMailbox();
-
-        expect(inboxMailboxesService.canMoveMessagesOutOfMailbox).to.have.been.callCount(5);
+        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
       });
-
     });
 
     it('should default contextSupportsAttachments to true if there\'s no type selected', function() {
