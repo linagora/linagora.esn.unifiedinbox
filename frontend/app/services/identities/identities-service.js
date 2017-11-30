@@ -50,6 +50,10 @@
             identity.id = uuid4.generate();
 
             identities.push(identity);
+          } else {
+            var identityEdit = _.find(identities, { id: identity.id });
+
+            _.merge(identityEdit, identity);
           }
 
           return esnUserConfigurationService.set([_getConfigurationObjectForIdentity(identity)], INBOX_MODULE_NAME);

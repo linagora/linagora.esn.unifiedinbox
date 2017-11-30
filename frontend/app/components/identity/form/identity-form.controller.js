@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxIdentityFormController', function($state, inboxIdentitiesService, asyncAction) {
+    .controller('inboxIdentityFormController', function(_, $state, inboxIdentitiesService, asyncAction) {
       var self = this;
 
       self.$onInit = $onInit;
@@ -14,7 +14,7 @@
       function $onInit() {
         if (self.identityId) {
           inboxIdentitiesService.getIdentity(self.identityId).then(function(identity) {
-            self.identity = identity;
+            self.identity = _.clone(identity);
           });
         } else {
           self.identity = {};
