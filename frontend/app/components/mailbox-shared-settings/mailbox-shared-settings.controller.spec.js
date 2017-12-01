@@ -62,7 +62,7 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
     anothermailbox = {_id: '2', namespace: {owner: 'user2@test.com'}, sharedWith: {}};
     scope.mailbox = mailbox;
 
-    inboxMailboxesService.updateMailbox = sinon.spy();
+    inboxMailboxesService.shareMailbox = sinon.spy();
     userUtils.displayNameOf = sinon.spy(function() {
       return 'user1 user1';
     });
@@ -246,7 +246,7 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       $controller.addSharedUsers();
       $rootScope.$digest();
 
-      expect(inboxMailboxesService.updateMailbox).to.have.been.calledWith($controller.originalMailbox, $controller.mailbox);
+      expect(inboxMailboxesService.shareMailbox).to.have.been.calledWith($controller.mailbox);
     });
 
     it('should exclude mailbox owner from sharedWith prop', function() {
@@ -257,7 +257,7 @@ describe('The InboxMailboxSharedSettingsController controller', function() {
       $controller.addSharedUsers();
       $rootScope.$digest();
 
-      expect(inboxMailboxesService.updateMailbox).to.have.been.calledWith($controller.originalMailbox, sinon.match({sharedWith: {}}));
+      expect(inboxMailboxesService.shareMailbox).to.have.been.calledWith(mailbox);
     });
   });
 

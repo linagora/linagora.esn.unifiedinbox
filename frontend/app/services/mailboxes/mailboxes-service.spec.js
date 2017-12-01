@@ -891,14 +891,13 @@ describe('The inboxMailboxesService factory', function() {
         expect(id).to.equal('id');
         expect(options).to.deep.equal({
           name: 'name',
-          parentId: 123,
-          sharedWith: {}
+          parentId: 123
         });
 
         done();
       };
 
-      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123, sharedWith: {} });
+      inboxMailboxesService.updateMailbox(originalMailbox, { id: 'id', name: 'name', parentId: 123 });
     });
 
     it('should not update the cache if the update fails', function(done) {
@@ -962,6 +961,61 @@ describe('The inboxMailboxesService factory', function() {
           name: '3',
           qualifiedName: '1_Renamed / 3',
           level: 2
+        }]);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+  });
+
+  describe('The shareMailbox function', function() {
+    var originalMailbox,
+        sharingSettings = { 'bob@example.com': ['l'] };
+
+    beforeEach(function() {
+      originalMailbox = { id: 'id', name: 'name'};
+    });
+
+    it('should call client.updateMailbox, passing only sharing settings', function(done) {
+      jmapClient.updateMailbox = function(id, options) {
+        expect(id).to.equal('id');
+        expect(options).to.deep.equal({
+          sharedWith: sharingSettings
+        });
+
+        done();
+      };
+
+      originalMailbox.sharedWith = sharingSettings;
+      inboxMailboxesService.shareMailbox(originalMailbox);
+    });
+
+    it('should not update the cache if the update fails', function(done) {
+      jmapClient.updateMailbox = function() {
+        return $q.reject();
+      };
+
+      originalMailbox.sharedWith = sharingSettings;
+      inboxMailboxesService.shareMailbox(originalMailbox).then(null, function() {
+        expect(inboxMailboxesCache.length).to.equal(0);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should update the cache if the update succeeds', function(done) {
+      jmapClient.updateMailbox = function() {
+        return $q.when(new jmap.Mailbox(jmapClient, 'id', 'name', { sharedWith: sharingSettings }));
+      };
+
+      originalMailbox.sharedWith = sharingSettings;
+      inboxMailboxesService.shareMailbox(originalMailbox).then(function() {
+        expect(inboxMailboxesCache).to.shallowDeepEqual([{
+          id: 'id',
+          sharedWith: sharingSettings
         }]);
 
         done();

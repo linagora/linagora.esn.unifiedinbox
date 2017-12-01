@@ -25,6 +25,7 @@
         createMailbox: createMailbox,
         destroyMailbox: destroyMailbox,
         updateMailbox: updateMailbox,
+        shareMailbox: shareMailbox,
         getMailboxWithRole: getMailboxWithRole,
         updateTotalMessages: updateTotalMessages,
         emptyMailbox: emptyMailbox,
@@ -411,20 +412,29 @@
         });
       }
 
-      function updateMailbox(oldMailbox, newMailbox) {
+      function _updateMailboxProperties(oldMailbox, propertiesToUpdate) {
         return asyncJmapAction({
           success: esnI18nService.translate('Folder %s is modified', oldMailbox.displayName),
           progressing: esnI18nService.translate('Folder %s is being modified...', oldMailbox.displayName),
           failure: esnI18nService.translate('Failed to modify folder %s', oldMailbox.displayName)
         }, function(client) {
-          return client.updateMailbox(oldMailbox.id, {
-            name: newMailbox.name,
-            parentId: newMailbox.parentId,
-            sharedWith: newMailbox.sharedWith
-          });
+          return client.updateMailbox(oldMailbox.id, propertiesToUpdate);
         })
-          .then(_.assign.bind(null, oldMailbox, newMailbox))
+          .then(_.assign.bind(null, oldMailbox, propertiesToUpdate))
           .then(_updateMailboxCache);
+      }
+
+      function updateMailbox(oldMailbox, propertiesToUpdate) {
+        return _updateMailboxProperties(oldMailbox, {
+          name: propertiesToUpdate.name,
+          parentId: propertiesToUpdate.parentId
+        });
+      }
+
+      function shareMailbox(mailboxToShare) {
+        return _updateMailboxProperties(mailboxToShare, {
+          sharedWith: mailboxToShare.sharedWith
+        });
       }
 
       function getMailboxWithRole(role) {
