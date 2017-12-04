@@ -1,16 +1,20 @@
 .inbox-list-header {
-  .flex-space-between;
   .flex-vertical-centered;
 
   height: @inbox-list-header-height;
   padding: 0 20px;
   color: lighten(@secondaryTextColor, 20%);
 
-  .mdi {
+  .clickable:not(.text-danger):not(a):not(.menu-root).mdi, .mdi {
     font-size: 1.4em;
 
     &.active {
       color: @primaryColor;
+    }
+
+    &:hover {
+      color: @text-color;
+      background-color: transparent;
     }
   }
 
@@ -19,6 +23,7 @@
   }
 
   .inbox-list-header-actions {
+    margin-left: auto;
     .flex-vertical-centered;
 
     > * {
