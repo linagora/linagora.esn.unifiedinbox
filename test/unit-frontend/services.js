@@ -2453,7 +2453,7 @@ describe('The Unified Inbox Angular module services', function() {
       var result = new Composition(email).canBeSentOrNotify();
 
       expect(result).to.equal(false);
-      expect(notificationFactory.weakError).to.have.been.calledWith('Note', 'Your device loses its Internet connection. Try later!');
+      expect(notificationFactory.weakError).to.have.been.calledWith('Note', 'Your device has lost Internet connection. Try later!');
     });
 
     it('"send" fn should successfully send an email even if only bcc is used', function() {

@@ -543,7 +543,7 @@ angular.module('linagora.esn.unifiedinbox')
       }
 
       if (!Offline.state || Offline.state === 'down') {
-        notificationFactory.weakError('Note', 'Your device loses its Internet connection. Try later!');
+        notificationFactory.weakError('Note', 'Your device has lost Internet connection. Try later!');
 
         return false;
       }
