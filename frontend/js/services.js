@@ -464,7 +464,7 @@ angular.module('linagora.esn.unifiedinbox')
 
   .factory('Composition', function($q, $timeout, draftService, emailSendingService, notificationFactory, Offline,
                                    backgroundAction, emailBodyService, waitUntilMessageIsComplete, newComposerService,
-                                   DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
+                                   inboxFilteredList, DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
 
     function prepareEmail(email) {
       var clone = angular.copy(email = email || {});
@@ -507,6 +507,7 @@ angular.module('linagora.esn.unifiedinbox')
             return newEmailstate;
           })
           .then(function(newEmailstate) {
+            inboxFilteredList.removeFromList([self.draft.originalEmailState.id]);
             self.draft = draftService.startDraft(prepareEmail(newEmailstate));
 
             return newEmailstate;

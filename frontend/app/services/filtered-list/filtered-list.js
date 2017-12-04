@@ -80,11 +80,11 @@
       function removeFromList(removeIdList) {
         var removedlist = [];
 
-        removeIdList.forEach(function(item) {
-          if (itemsById[item]) {
-            removedlist.push(itemsById[item]);
-            items.splice(itemsById[item], 1);
-            delete itemsById.item;
+        removeIdList.forEach(function(itemId) {
+          if (itemsById[itemId]) {
+            removedlist.push(itemsById[itemId]);
+            _.remove(items, function(item) { return item.id === itemId; });
+            delete itemsById[itemId];
           }
         });
 

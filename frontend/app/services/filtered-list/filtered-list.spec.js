@@ -227,21 +227,52 @@ describe('The inboxFilteredList factory', function() {
 
   describe('The removeFromList function', function() {
 
-    it('should render element list removed if id match', function() {
+    it('should remove one element from the rendered list', function() {
       var messages = [
         newMessage({ isUnread: true, date: 1 }),
         newMessage({ isUnread: true, date: 0 }),
-        newMessage({ isUnread: true, date: -1 })
+        newMessage({ isUnread: true, date: -1 }),
+        newMessage({ isUnread: true, date: -2 })
       ];
 
       inboxFilteredList.addAll(messages);
       $rootScope.$digest();
 
-      var removeIdList = ['id1', 'id2'],
-          removeFromList = inboxFilteredList.removeFromList(removeIdList);
+      inboxFilteredList.removeFromList([messages[2].id]);
+      $rootScope.$digest();
 
-      expect(removeFromList[0]).to.deep.equal(messages[0]);
-      expect(removeFromList[1]).to.deep.equal(messages[1]);
+      expect(inboxFilteredList.list()).to.deep.equal([messages[0], messages[1], messages[3]]);
+    });
+
+    it('should remove all elements from the rendered list', function() {
+      var messages = [
+        newMessage({ isUnread: true, date: 1 }),
+        newMessage({ isUnread: true, date: 0 })
+      ];
+
+      inboxFilteredList.addAll(messages);
+      $rootScope.$digest();
+
+      inboxFilteredList.removeFromList([messages[0].id, messages[1].id]);
+      $rootScope.$digest();
+
+      expect(inboxFilteredList.list()).to.deep.equal([]);
+    });
+
+    it('should return the list of emails that have been removed', function() {
+      var messages = [
+        newMessage({ isUnread: true, date: 1 }),
+        newMessage({ isUnread: true, date: 0 }),
+        newMessage({ isUnread: true, date: -1 }),
+        newMessage({ isUnread: true, date: -2 })
+      ];
+
+      inboxFilteredList.addAll(messages);
+      $rootScope.$digest();
+
+      var removedItems = inboxFilteredList.removeFromList([messages[1].id, messages[3].id]);
+
+      expect(removedItems).to.deep.equal([messages[1], messages[3]]);
     });
 
   });
