@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .service('inboxSharedMailboxesService', function($q, _, inboxConfig, esnUserConfigurationService,
-                                                     INBOX_MODULE_NAME, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_SHAREDMAILBOXES_NAMESPACE_TYPE) {
+                                                     INBOX_MODULE_NAME, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_SHAREDMAILBOXES_NAMESPACE_TYPE, INBOX_MAILBOXES_NON_SHAREABLE) {
       var hiddenSharedMaiboxesConfig;
 
       function isSharedMailbox(mailbox) {
@@ -65,11 +65,22 @@
           });
       }
 
+      function isShareableMailbox(mailbox) {
+        var mailboxRole = mailbox.role.value;
+
+        if (mailboxRole !== null) {
+          return !_.contains(INBOX_MAILBOXES_NON_SHAREABLE, mailboxRole.toLowerCase());
+        }
+
+        return true;
+      }
+
       return {
         isShared: isSharedMailbox,
         getHiddenMaiboxesConfig: getHiddenMaiboxesConfig,
         hideNewMailboxes: _hideMailboxes.bind(null, _appendMissingMailboxes),
-        setHiddenMailboxes: _hideMailboxes.bind(null, _overwriteMailboxesList)
+        setHiddenMailboxes: _hideMailboxes.bind(null, _overwriteMailboxesList),
+        isShareableMailbox: isShareableMailbox
       };
     });
 

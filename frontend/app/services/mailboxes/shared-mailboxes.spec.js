@@ -220,6 +220,26 @@
 
     });
 
+    describe('The isShareableMailbox function', function() {
+
+      it('should return true if mailbox is allow to be share', function() {
+        var mailboxAllow = { role: { value: 'inbox' }};
+
+        var result = inboxSharedMailboxesService.isShareableMailbox(mailboxAllow);
+
+        expect(result).to.equal(true);
+      });
+
+      it('should return false if mailbox is NOT allow to be share', function() {
+        var mailboxNotAllow = { role: { value: 'trash' }};
+
+        var result = inboxSharedMailboxesService.isShareableMailbox(mailboxNotAllow);
+
+        expect(result).to.equal(false);
+      });
+
+    });
+
   });
 
 })();
