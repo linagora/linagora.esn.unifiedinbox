@@ -134,7 +134,7 @@
     }
 
     function addSharedUsers() {
-      return inboxMailboxesService.updateMailbox(self.originalMailbox, self.mailbox);
+      return inboxMailboxesService.shareMailbox(self.mailbox);
     }
 
     function isOwner() {
