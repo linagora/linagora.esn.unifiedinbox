@@ -4,11 +4,12 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxFolderSettingsController', inboxFolderSettingsController);
 
-  function inboxFolderSettingsController($scope, inboxJmapItemService) {
+  function inboxFolderSettingsController($scope, inboxJmapItemService, inboxSharedMailboxesService) {
     var self = this;
 
     self.emptyTrash = emptyTrash;
     self.markAllAsRead = markAllAsRead;
+    self.isShareableMailbox = isShareableMailbox;
     $scope.mailbox = self.mailbox;
 
     /////
@@ -21,6 +22,10 @@
 
     function markAllAsRead(mailboxId) {
       inboxJmapItemService.markAllAsRead(mailboxId);
+    }
+
+    function isShareableMailbox(mailbox) {
+      return inboxSharedMailboxesService.isShareableMailbox(mailbox);
     }
   }
 })();

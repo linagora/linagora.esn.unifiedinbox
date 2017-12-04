@@ -6,7 +6,7 @@
 var expect = chai.expect;
 
 describe('The inboxFolderSettings controller', function() {
-  var $rootScope, scope, $controller, mailbox, inboxJmapItemService;
+  var $rootScope, scope, $controller, mailbox, inboxJmapItemService, inboxSharedMailboxesService;
 
   beforeEach(function() {
     angular.mock.module('linagora.esn.unifiedinbox', 'jadeTemplates');
@@ -21,17 +21,19 @@ describe('The inboxFolderSettings controller', function() {
       totalMessages: 10
     };
 
-    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxJmapItemService_) {
+    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxJmapItemService_, _inboxSharedMailboxesService_) {
       $rootScope = _$rootScope_;
       $controller = _$controller_;
       scope = $rootScope.$new();
       inboxJmapItemService = _inboxJmapItemService_;
+      inboxSharedMailboxesService = _inboxSharedMailboxesService_;
     });
 
     scope.mailbox = mailbox;
 
     inboxJmapItemService.emptyMailbox = sinon.spy();
     inboxJmapItemService.markAllAsRead = sinon.spy();
+    inboxSharedMailboxesService.isShareableMailbox = sinon.spy();
   });
 
   function initController() {
@@ -59,5 +61,13 @@ describe('The inboxFolderSettings controller', function() {
     controller.markAllAsRead(mailbox.id);
 
     expect(inboxJmapItemService.markAllAsRead).to.have.been.calledWith(mailbox.id);
+  });
+
+  it('should call "inboxSharedMailboxesService" with the given "mailboxRole" by the isShareableMailbox function', function() {
+    var controller = initController();
+
+    controller.isShareableMailbox(mailbox);
+
+    expect(inboxSharedMailboxesService.isShareableMailbox).to.have.been.calledWith(mailbox);
   });
 });
