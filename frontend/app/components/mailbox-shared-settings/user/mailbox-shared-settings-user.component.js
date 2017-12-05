@@ -5,9 +5,9 @@
     .component('inboxMailboxSharedSettingsUser', {
       bindings: {
         user: '<',
-        onUserRemoved: '=',
+        onUserRemoved: '=?',
         delegationTypes: '=',
-        onUserRoleChanged: '=',
+        onUserRoleChanged: '=?',
         isOwner: '='
       },
       controllerAs: 'ctrl',
