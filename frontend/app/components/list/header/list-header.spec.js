@@ -207,15 +207,31 @@ describe('The inboxListGroupToggleSelection component', function() {
   });
 
   it('should clear the quickFilter input when filter is removed', function() {
-    inboxFilteringService.setQuickFilter('filter');
-
     compileDirective('<inbox-list-header />');
 
     element.find('i.clickable.mdi.mdi-magnify').click();
+    inboxFilteringService.setQuickFilter('filter');
     inboxFilteringService.clearFilters();
     $rootScope.$digest();
 
     expect(element.find('.inbox-list-header-quick-filter input').val()).to.equal('');
+  });
+
+  it('should display input if filter is not empty', function() {
+    compileDirective('<inbox-list-header />');
+
+    inboxFilteringService.setQuickFilter('filter');
+    $rootScope.$digest();
+
+    expect(element.find('.inbox-list-header-quick-filter input').length).to.equal(1);
+    expect(element.find('.inbox-list-header-quick-filter input').val()).to.equal('filter');
+  });
+
+  it('should NOT display input if filter is empty', function() {
+    compileDirective('<inbox-list-header />');
+    $rootScope.$digest();
+
+    expect(element.find('.inbox-list-header-quick-filter input').length).to.equal(0);
   });
 
 });
