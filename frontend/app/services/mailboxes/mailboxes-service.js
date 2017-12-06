@@ -8,18 +8,21 @@
       'drafts'
     ])
 
-    .factory('inboxMailboxesService', function($q, _, $state, withJmapClient, jmap, asyncJmapAction,
+    .factory('inboxMailboxesService', function($q, _, $state, $rootScope, withJmapClient, jmap, asyncJmapAction,
                                                inboxSpecialMailboxes, inboxMailboxesCache, inboxConfig, inboxSharedMailboxesService,
-                                               esnI18nService, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
+                                               esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
       var mailboxesListAlreadyFetched = false;
+
+      $rootScope.$on(INBOX_EVENTS.DRAFT_DESTROYED, function updateMailboxCounters(event, message) {
+        return updateCountersWhenMovingMessage(message);
+      });
 
       return {
         filterSystemMailboxes: filterSystemMailboxes,
         assignMailboxesList: assignMailboxesList,
         assignMailbox: assignMailbox,
         flagIsUnreadChanged: flagIsUnreadChanged,
-        moveUnreadMessages: moveUnreadMessages,
         canMoveMessage: canMoveMessage,
         getMessageListFilter: getMessageListFilter,
         createMailbox: createMailbox,
@@ -27,7 +30,7 @@
         updateMailbox: updateMailbox,
         shareMailbox: shareMailbox,
         getMailboxWithRole: getMailboxWithRole,
-        updateTotalMessages: updateTotalMessages,
+        updateCountersWhenMovingMessage: updateCountersWhenMovingMessage,
         emptyMailbox: emptyMailbox,
         markAllAsRead: markAllAsRead,
         sharedMailboxesList: sharedMailboxesList,
@@ -95,6 +98,10 @@
       }
 
       function _updateUnreadMessages(mailboxIds, adjust) {
+        if (!mailboxIds || !mailboxIds.length) {
+          return true;
+        }
+
         mailboxIds.forEach(function(id) {
           var mailbox = _findMailboxInCache(id);
 
@@ -105,6 +112,10 @@
       }
 
       function _updateTotalMessages(mailboxIds, adjust) {
+        if (!mailboxIds || !mailboxIds.length) {
+          return true;
+        }
+
         mailboxIds.forEach(function(id) {
           var mailbox = _findMailboxInCache(id);
 
@@ -245,14 +256,13 @@
         }
       }
 
-      function moveUnreadMessages(fromMailboxIds, toMailboxIds, numberOfUnreadMessage) {
-        _updateUnreadMessages(fromMailboxIds, -numberOfUnreadMessage);
-        _updateUnreadMessages(toMailboxIds, numberOfUnreadMessage);
-      }
-
-      function updateTotalMessages(fromMailboxIds, toMailboxIds, numberOfUnreadMessage) {
-        _updateTotalMessages(fromMailboxIds, -numberOfUnreadMessage);
-        _updateTotalMessages(toMailboxIds, numberOfUnreadMessage);
+      function updateCountersWhenMovingMessage(message, toMailboxIds) {
+        if (message.isUnread) {
+          _updateUnreadMessages(message.mailboxIds, -1);
+          _updateUnreadMessages(toMailboxIds, 1);
+        }
+        _updateTotalMessages(message.mailboxIds, -1);
+        _updateTotalMessages(toMailboxIds, 1);
       }
 
       function _isRestrictedMailbox(mailbox) {

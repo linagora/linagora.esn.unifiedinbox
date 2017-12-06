@@ -50,10 +50,7 @@
         var toMailboxIds = [mailbox.id],
           items = angular.isArray(itemOrItems) ? itemOrItems : [itemOrItems],
           itemsById = _.indexBy(items, function(item) {
-            if (item.isUnread) {
-              inboxMailboxesService.moveUnreadMessages(item.mailboxIds, toMailboxIds, 1);
-            }
-            inboxMailboxesService.updateTotalMessages(item.mailboxIds, toMailboxIds, 1);
+            inboxMailboxesService.updateCountersWhenMovingMessage(item, toMailboxIds);
 
             _updateItemMailboxIds(item, toMailboxIds);
 
@@ -75,12 +72,9 @@
               var failedItems = _.map(response.notUpdated, function(error, id) {
                 var item = itemsById[id];
 
-                _updateItemMailboxIds(item, item.oldMailboxIds);
+                inboxMailboxesService.updateCountersWhenMovingMessage(item, item.oldMailboxIds);
 
-                if (item.isUnread) {
-                  inboxMailboxesService.moveUnreadMessages(toMailboxIds, item.mailboxIds, 1);
-                }
-                inboxMailboxesService.updateTotalMessages(toMailboxIds, item.mailboxIds, 1);
+                _updateItemMailboxIds(item, item.oldMailboxIds);
 
                 return item;
               });

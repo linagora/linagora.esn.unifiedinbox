@@ -326,8 +326,8 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .service('draftService', function($q, asyncJmapAction, emailBodyService, _,
-                                    inboxJmapHelper, waitUntilMessageIsComplete, ATTACHMENTS_ATTRIBUTES) {
+  .service('draftService', function($q, $rootScope, asyncJmapAction, emailBodyService, _, inboxFilteredList, inboxMailboxesService,
+                                    inboxJmapHelper, waitUntilMessageIsComplete, INBOX_EVENTS, ATTACHMENTS_ATTRIBUTES) {
 
     function _keepSomeAttributes(array, attibutes) {
       return _.map(array, function(data) {
@@ -394,12 +394,14 @@ angular.module('linagora.esn.unifiedinbox')
     };
 
     Draft.prototype.destroy = function() {
-      var id = this.originalEmailState.id;
+      var originalEmailState = this.originalEmailState;
 
-      if (id) {
+      if (originalEmailState && originalEmailState.id) {
         return asyncJmapAction('Destroying a draft', function(client) {
-          return client.destroyMessage(id);
-        }, { silent: true });
+          return client.destroyMessage(originalEmailState.id);
+        }, { silent: true }).then(function() {
+          $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, originalEmailState);
+        });
       }
 
       return $q.when();
@@ -507,7 +509,6 @@ angular.module('linagora.esn.unifiedinbox')
             return newEmailstate;
           })
           .then(function(newEmailstate) {
-            inboxFilteredList.removeFromList([self.draft.originalEmailState.id]);
             self.draft = draftService.startDraft(prepareEmail(newEmailstate));
 
             return newEmailstate;

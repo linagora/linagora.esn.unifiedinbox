@@ -12,6 +12,9 @@
       $rootScope.$on(INBOX_EVENTS.FILTER_CHANGED, _buildRenderedList);
       $rootScope.$on(INBOX_EVENTS.ITEM_FLAG_CHANGED, _buildRenderedList);
       $rootScope.$on(INBOX_EVENTS.ITEM_MAILBOX_IDS_CHANGED, _buildRenderedList);
+      $rootScope.$on(INBOX_EVENTS.DRAFT_DESTROYED, function updateMailboxCounters(event, message) {
+        removeFromList([message.id]);
+      });
 
       return {
         list: list,

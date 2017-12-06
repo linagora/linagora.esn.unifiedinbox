@@ -1451,7 +1451,7 @@ describe('The Unified Inbox Angular module services', function() {
 
   describe('The draftService service', function() {
 
-    var draftService, notificationFactory, jmapClient, emailBodyService, $rootScope;
+    var draftService, notificationFactory, jmapClient, emailBodyService, $rootScope, INBOX_EVENTS;
 
     beforeEach(module(function($provide) {
       jmapClient = {};
@@ -1471,9 +1471,10 @@ describe('The Unified Inbox Angular module services', function() {
       $provide.value('emailBodyService', emailBodyService);
     }));
 
-    beforeEach(inject(function(_draftService_, _$rootScope_) {
+    beforeEach(inject(function(_draftService_, _$rootScope_, _INBOX_EVENTS_) {
       draftService = _draftService_;
       $rootScope = _$rootScope_;
+      INBOX_EVENTS = _INBOX_EVENTS_;
     }));
 
     describe('The needToBeSaved method', function() {
@@ -1975,6 +1976,22 @@ describe('The Unified Inbox Angular module services', function() {
 
         $rootScope.$digest();
         expect(jmapClient.destroyMessage).to.have.been.calledWith('the id');
+      });
+
+      it('should broadcast event after destroying message', function() {
+        var eventCatcher = sinon.spy();
+
+        jmapClient.destroyMessage = sinon.stub().returns($q.when());
+        $rootScope.$on(INBOX_EVENTS.DRAFT_DESTROYED, eventCatcher);
+
+        draftService.startDraft({
+          id: 'the id',
+          htmlBody: 'Body'
+        }).destroy();
+
+        $rootScope.$digest();
+
+        expect(eventCatcher).to.have.been.calledOnce;
       });
 
     });
