@@ -24,27 +24,39 @@
         cursor: pointer;
       }
 
-      & li.action-item a {
-        width: 30px;
-        height: 30px;
-        line-height: 35px;
-        display: inline-block;
-        text-align: center;
+      li.action-item {
 
-        & i {
-          .transition(color);
-          .transition-duration(1300ms);
+        a {
+          width: 30px;
+          height: 30px;
+          line-height: 35px;
+          display: inline-block;
+          text-align: center;
 
-          font-size: 20px;
+          i {
+            font-size: 2em;
+            vertical-align: sub;
+          }
+
+          .hover-pop(rgba(0,0,0,0.1), 50%, 250ms, 0);
         }
 
-        &:hover {
-
-          & i {
+        :not(inbox-star) a:active {
+          i {
             color: @m-black;
           }
         }
-        .hover-pop(rgba(0,0,0,0.1), 50%, 250ms, 0);
+
+        & > li.open,
+        &.open {
+          & > a {
+            & > i:before {
+              .scale(1);
+              .opacity(1);
+            }
+          }
+        }
+
       }
 
       .mdi-star {
@@ -53,6 +65,10 @@
 
       .mdi-star-outline {
         color: lighten(@m-gray, 10%);
+
+        &:hover {
+          color: @m-black;
+        }
       }
 
       .mdi-star-off {
