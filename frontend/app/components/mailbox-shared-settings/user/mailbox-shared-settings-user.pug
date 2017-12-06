@@ -14,6 +14,7 @@
       select.addDelegation.form-control(ng-model='ctrl.user.selectedShareeRight', ng-change="ctrl.onUserRoleChanged(ctrl.user.selectedShareeRight, ctrl.user.preferredEmail)")
         option(ng-repeat="delegationType in ctrl.delegationTypes" value="{{delegationType.value}}" ng-selected="delegationType.value === ctrl.user.selectedShareeRight") {{delegationType.name | esnI18n}}
 
-  .actions(ng-if="ctrl.isOwner()")
-    button.btn.btn-link.btn-icon.button(title=__('Delete'), ng-click="ctrl.onUserRemoved(ctrl.user)")
+  .actions
+    button.btn.btn-link.btn-icon.button(ng-if="ctrl.isOwner()", title=__('Delete'), ng-click="ctrl.onUserRemoved(ctrl.user)")
       i.mdi.mdi-close
+    span(ng-if="!ctrl.isOwner()") {{ctrl.delegationTypes[ctrl.user.selectedShareeRight].name | esnI18n}}

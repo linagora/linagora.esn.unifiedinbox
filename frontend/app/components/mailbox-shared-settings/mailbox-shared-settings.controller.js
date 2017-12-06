@@ -29,14 +29,16 @@
     self.sessionUser = session.user;
     self.originalMailbox = $scope.mailbox;
     self.defaultRole = inboxSharedMailboxesPermissionsService.getDefaultRole();
-    self.delegationTypes = [
-      {
+    self.delegationTypes = {
+      READ_AND_UPDATE: {
         value: INBOX_MAILBOX_SHARING_ROLES.READ_AND_UPDATE,
         name: INBOX_MAILBOX_SHARING_ROLES.READ_AND_UPDATE_LABEL_LONG
-      }, {
+      },
+      ORGANIZE: {
         value: INBOX_MAILBOX_SHARING_ROLES.ORGANIZE,
         name: INBOX_MAILBOX_SHARING_ROLES.ORGANIZE_LABEL_LONG
-      }];
+      }
+    };
 
     $onInit();
 
