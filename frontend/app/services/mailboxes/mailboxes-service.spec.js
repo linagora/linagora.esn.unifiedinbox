@@ -704,6 +704,52 @@ describe('The inboxMailboxesService factory', function() {
       $rootScope.$digest();
     });
 
+    it('should add sharedMailboxes ID in filter to exclude them', function(done) {
+      var mailboxId = '123';
+      var mailboxes = [
+        new jmap.Mailbox(jmapClient, 'inboxId', 'Inbox', { role: 'inbox' }),
+        new jmap.Mailbox(jmapClient, 'outboxId', 'Outbox', { role: 'outbox' }),
+        new jmap.Mailbox(jmapClient, 'trashId', 'Trash', { role: 'trash' })
+      ];
+
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 'sharedId1', name: 'shared1', namespace: { type: 'delegated' } },
+          { id: 'sharedId2', name: 'shared2', namespace: { type: 'delegated' } },
+          { id: 'NotShared', name: 'NotShared', namespace: { type: 'personal' } }
+        ]);
+      };
+
+      var specialMailbox = {
+        id: mailboxId,
+        filter: {
+          unprocessed: true,
+          notInMailboxes: ['inbox', 'spam'],
+          inMailboxes: ['trash']
+        }
+      };
+
+      inboxSpecialMailboxes.get = function() {
+        return specialMailbox;
+      };
+
+      inboxMailboxesService.sharedMailboxesList();
+
+      jmapClient.getMailboxes = sinon.stub().returns($q.when(mailboxes));
+
+      inboxMailboxesService.getMessageListFilter(mailboxId).then(function(filter) {
+        expect(jmapClient.getMailboxes).to.have.been.calledWith();
+
+        expect(filter).to.deep.equal({
+          notInMailboxes: ['inboxId', 'sharedId1', 'sharedId2'],
+          inMailboxes: ['trashId']
+        });
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
     it('should use empty array in filter if JMAP client fails to get mailboxes', function(done) {
       var mailboxId = '123';
       var specialMailbox = {
@@ -726,9 +772,9 @@ describe('The inboxMailboxesService factory', function() {
           notInMailboxes: [],
           inMailboxes: []
         });
-        done();
       });
 
+      done();
       $rootScope.$digest();
     });
 
