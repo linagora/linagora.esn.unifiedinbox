@@ -378,9 +378,9 @@
 
       function createMailbox(mailbox, onFailure) {
         return asyncJmapAction({
-          success: esnI18nService.translate('Created folder %s', mailbox.name),
-          progessing: esnI18nService.translate('Folder %s is being created...', mailbox.name),
-          failure: esnI18nService.translate('Failed to create folder %s', mailbox.name)
+          success: esnI18nService.translate('Folder created'),
+          progessing: esnI18nService.translate('Creating folder...'),
+          failure: esnI18nService.translate('Failed to create folder')
         }, function(client) {
           return client.createMailbox(mailbox.name, mailbox.parentId);
         }, {
@@ -397,9 +397,9 @@
           .value(); // According to JMAP spec, the X should be removed before Y if X is a descendent of Y
 
         return asyncJmapAction({
-          success: esnI18nService.translate('Deleted folder %s', mailbox.displayName),
-          progessing: esnI18nService.translate('Folder %s is being deleted...', mailbox.displayName),
-          failure: esnI18nService.translate('Failed to delete folder %s', mailbox.displayName)
+          success: esnI18nService.translate('Folder removed'),
+          progessing: esnI18nService.translate('Removing folder...'),
+          failure: esnI18nService.translate('Failed to remove folder')
         }, function(client) {
           return client.setMailboxes({ destroy: ids })
             .then(function(response) {
@@ -412,11 +412,13 @@
         });
       }
 
-      function _updateMailboxProperties(oldMailbox, propertiesToUpdate) {
+      function _updateMailboxProperties(oldMailbox, propertiesToUpdate, messages) {
+        var actionMessages = messages || {};
+
         return asyncJmapAction({
-          success: esnI18nService.translate('Folder %s is modified', oldMailbox.displayName),
-          progressing: esnI18nService.translate('Folder %s is being modified...', oldMailbox.displayName),
-          failure: esnI18nService.translate('Failed to modify folder %s', oldMailbox.displayName)
+          success: esnI18nService.translate(actionMessages.success || 'Folder updated'),
+          progressing: esnI18nService.translate(actionMessages.progressing || 'Updating folder...'),
+          failure: esnI18nService.translate(actionMessages.failure || 'Failed to update folder')
         }, function(client) {
           return client.updateMailbox(oldMailbox.id, propertiesToUpdate);
         })
@@ -434,6 +436,10 @@
       function shareMailbox(mailboxToShare) {
         return _updateMailboxProperties(mailboxToShare, {
           sharedWith: mailboxToShare.sharedWith
+        }, {
+          success: 'Sharing settings updated',
+          progressing: 'Updating sharing settings...',
+          failure: 'Failed to update sharing settings'
         });
       }
 
