@@ -444,10 +444,10 @@ angular.module('linagora.esn.unifiedinbox')
             numberOfMailboxesToDisplay = 3,
             more = numberOfDescendants - numberOfMailboxesToDisplay;
 
-        var messageFor1Folder = 'You are about to remove folder %s',
-            messageFor2To4Folders = messageFor1Folder + ' and its descendants including %s',
-            messageFor5Folders = messageFor2To4Folders + ' and %s',
-            messageForMoreFolders = messageFor2To4Folders + ' and %s more';
+        var messageFor1Folder = 'Folder %s and all the messages it contains will be deleted and you won\'t be able to recover them.',
+            messageFor2To4Folders = 'Folder %s (including folder %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
+            messageFor5Folders = 'Folder %s (including folders %s and %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
+            messageForMoreFolders = 'Folder %s (including folders %s, %s and some others) and all the messages it contains will be deleted and you won\'t be able to recover them.';
 
         if (numberOfDescendants < 1) {
           $scope.message = esnI18nService.translate(messageFor1Folder, mailbox.displayName).toString();
