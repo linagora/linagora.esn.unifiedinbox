@@ -66,7 +66,6 @@ describe('The inboxJmapItemService service', function() {
     inboxMailboxesService.emptyMailbox = sinon.spy(inboxMailboxesService.emptyMailbox);
     inboxMailboxesService.markAllAsRead = sinon.spy(inboxMailboxesService.markAllAsRead);
     inboxMailboxesService.updateFlag = sinon.spy(inboxMailboxesService.updateFlag);
-    inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
 
     inboxSelectionService.unselectAllItems = sinon.spy(inboxSelectionService.unselectAllItems);
     infiniteListService.actionRemovingElements = sinon.spy(infiniteListService.actionRemovingElements);
@@ -135,8 +134,7 @@ describe('The inboxJmapItemService service', function() {
     beforeEach(inject(function(_inboxMailboxesService_) {
       inboxMailboxesService = _inboxMailboxesService_;
 
-      inboxMailboxesService.moveUnreadMessages = sinon.spy(inboxMailboxesService.moveUnreadMessages);
-      inboxMailboxesService.updateTotalMessages = sinon.spy(inboxMailboxesService.updateTotalMessages);
+      inboxMailboxesService.updateCountersWhenMovingMessage = sinon.spy(inboxMailboxesService.updateCountersWhenMovingMessage);
       mailbox = { id: 'mailboxId', name: 'inbox', displayName: 'inbox' };
     }));
 
@@ -213,12 +211,9 @@ describe('The inboxJmapItemService service', function() {
       mockSetMessages();
 
       inboxJmapItemService.moveToMailbox([email, email2], mailbox).then(done);
-      expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledTwice;
-      expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
-      expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
-      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledTwice;
-      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
-      expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['inbox'], ['mailboxId'], 1);
+      expect(inboxMailboxesService.updateCountersWhenMovingMessage).to.have.been.calledTwice;
+      expect(inboxMailboxesService.updateCountersWhenMovingMessage).to.have.been.calledWith(email, ['mailboxId']);
+      expect(inboxMailboxesService.updateCountersWhenMovingMessage).to.have.been.calledWith(email2, ['mailboxId']);
 
       $rootScope.$digest();
     });
@@ -234,15 +229,12 @@ describe('The inboxJmapItemService service', function() {
       });
 
       inboxJmapItemService.moveToMailbox([email, email2], mailbox).catch(function() {
-        expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledOnce;
-        expect(inboxMailboxesService.moveUnreadMessages).to.have.been.calledWith(['mailboxId'], ['inbox'], 1);
-        expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledOnce;
-        expect(inboxMailboxesService.updateTotalMessages).to.have.been.calledWith(['mailboxId'], ['inbox'], 1);
+        expect(inboxMailboxesService.updateCountersWhenMovingMessage).to.have.been.calledOnce;
+        expect(inboxMailboxesService.updateCountersWhenMovingMessage).to.have.been.calledWith(email, ['inbox']);
 
         done();
       });
-      inboxMailboxesService.moveUnreadMessages.reset();
-      inboxMailboxesService.updateTotalMessages.reset();
+      inboxMailboxesService.updateCountersWhenMovingMessage.reset();
 
       $rootScope.$digest();
     });
@@ -625,7 +617,6 @@ describe('The inboxJmapItemService service', function() {
         done();
       });
       $rootScope.$digest();
-      inboxMailboxesService.updateTotalMessages.reset();
     });
 
     it('should show error toast on destroyMessages failure, and rejects the promise', function() {

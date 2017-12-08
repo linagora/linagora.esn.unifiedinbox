@@ -6,7 +6,8 @@ var expect = chai.expect;
 
 describe('The inboxMailboxesService factory', function() {
 
-  var inboxMailboxesCache, inboxMailboxesService, jmapClient, $rootScope, jmap, notificationFactory, inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY;
+  var inboxMailboxesCache, inboxMailboxesService, jmapClient, $rootScope, jmap, notificationFactory,
+    inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_EVENTS;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -27,14 +28,52 @@ describe('The inboxMailboxesService factory', function() {
     });
   }));
 
-  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_, _inboxMailboxesCache_, _jmap_, _notificationFactory_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_) {
+  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_, _inboxMailboxesCache_, _jmap_,
+                             _notificationFactory_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_, _INBOX_EVENTS_) {
     inboxMailboxesCache = _inboxMailboxesCache_;
     notificationFactory = _notificationFactory_;
     inboxMailboxesService = _inboxMailboxesService_;
     $rootScope = _$rootScope_;
     jmap = _jmap_;
     INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY = _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_;
+    INBOX_EVENTS = _INBOX_EVENTS_;
   }));
+
+  it('should update unread count when unread message destroyed', function() {
+    var unreadDraft = new jmap.Message(jmapClient, 'id1', 'blobId', 'threadId', ['mailboxId'], { isUnread: true, date: 1 }),
+        mailbox = { id: 'mailboxId', name: 'testMailbox', totalMessages: 12, unreadMessages: 4 };
+
+    inboxMailboxesCache.push(mailbox);
+
+    $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, unreadDraft);
+    $rootScope.$digest();
+
+    expect(mailbox.unreadMessages).to.equal(3);
+  });
+
+  it('should update total message count when message destroyed', function() {
+    var unreadDraft = new jmap.Message(jmapClient, 'id1', 'blobId', 'threadId', ['mailboxId'], { isUnread: true, date: 1 }),
+        mailbox = { id: 'mailboxId', name: 'testMailbox', totalMessages: 12, unreadMessages: 4 };
+
+    inboxMailboxesCache.push(mailbox);
+
+    $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, unreadDraft);
+    $rootScope.$digest();
+
+    expect(mailbox.totalMessages).to.equal(11);
+  });
+
+  it('should not update unread count when read message destroyed', function() {
+    var unreadDraft = new jmap.Message(jmapClient, 'id1', 'blobId', 'threadId', ['mailboxId'], { isUnread: false, date: 1 }),
+        mailbox = { id: 'mailboxId', name: 'testMailbox', totalMessages: 12, unreadMessages: 4 };
+
+    inboxMailboxesCache.push(mailbox);
+
+    $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, unreadDraft);
+    $rootScope.$digest();
+
+    expect(mailbox.unreadMessages).to.equal(4);
+  });
 
   describe('The filterSystemMailboxes function', function() {
 
@@ -372,10 +411,37 @@ describe('The inboxMailboxesService factory', function() {
     });
   });
 
-  describe('The moveUnreadMessages function', function() {
+  describe('The updateCountersWhenMovingMessage function', function() {
 
-    it('should decrease unread messages of from mailboxes and increase it for to mailboxes', function() {
-      var destObject = {};
+    var message, destObject;
+
+    beforeEach(function() {
+      destObject = {};
+      message = new jmap.Message({}, 'id1', 'blobId', 'threadId', [1], { isUnread: true });
+    });
+
+    it('should decrease source mailbox unread count and increase target one', function() {
+      jmapClient.getMailboxes = function() {
+        return $q.when([
+          { id: 1, unreadMessages: 1},
+          { id: 2, unreadMessages: 2}
+        ]);
+      };
+
+      inboxMailboxesService.assignMailboxesList(destObject);
+      $rootScope.$digest();
+      inboxMailboxesService.updateCountersWhenMovingMessage(message, [2]);
+      var orderedMailboxes = destObject.mailboxes
+        .sort(function(a, b) { return +a.id - +b.id; });
+
+      expect(orderedMailboxes).to.shallowDeepEqual([
+        { id: 1, unreadMessages: 0},
+        { id: 2, unreadMessages: 3}
+      ]);
+    });
+
+    it('should not decrease unread messages count of from and to mailboxes if message is read', function() {
+      message.isUnread = false;
 
       jmapClient.getMailboxes = function() {
         return $q.when([
@@ -386,23 +452,17 @@ describe('The inboxMailboxesService factory', function() {
 
       inboxMailboxesService.assignMailboxesList(destObject);
       $rootScope.$digest();
-      inboxMailboxesService.moveUnreadMessages([1], [2], 1);
+      inboxMailboxesService.updateCountersWhenMovingMessage(message, [2]);
       var orderedMailboxes = destObject.mailboxes
         .sort(function(a, b) { return +a.id - +b.id; });
 
       expect(orderedMailboxes).to.shallowDeepEqual([
-        { id: 1, unreadMessages: 0},
-        { id: 2, unreadMessages: 3}
+        { id: 1, unreadMessages: 1},
+        { id: 2, unreadMessages: 2}
       ]);
     });
 
-  });
-
-  describe('The updateTotalMessages function', function() {
-
-    it('should decrease total messages of from mailboxes and increase it for to mailboxes', function() {
-      var destObject = {};
-
+    it('should decrement total count of source mailbox and increment total count of target mailbox', function() {
       jmapClient.getMailboxes = function() {
         return $q.when([
           { id: 1, totalMessages: 1},
@@ -412,7 +472,7 @@ describe('The inboxMailboxesService factory', function() {
 
       inboxMailboxesService.assignMailboxesList(destObject);
       $rootScope.$digest();
-      inboxMailboxesService.updateTotalMessages([1], [2], 1);
+      inboxMailboxesService.updateCountersWhenMovingMessage(message, [2]);
       var orderedMailboxes = destObject.mailboxes
         .sort(function(a, b) { return +a.id - +b.id; });
 

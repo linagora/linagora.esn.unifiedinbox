@@ -146,6 +146,22 @@ describe('The inboxFilteredList factory', function() {
     expect(inboxFilteredList.list()).to.deep.equal([unreadMessageMatchingFilter]);
   });
 
+  it('should remove item from the list when draft message destroyed', function() {
+    var unreadDraft = newMessage({ isUnread: true, date: 1 });
+
+    inboxFilteredList.addAll([
+      unreadDraft
+    ]);
+    $rootScope.$digest();
+
+    expect(inboxFilteredList.list()).to.deep.equal([unreadDraft]);
+
+    $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, unreadDraft);
+    $rootScope.$digest();
+
+    expect(inboxFilteredList.list()).to.deep.equal([]);
+  });
+
   describe('The addAll function', function() {
 
     it('should render the list', function() {
