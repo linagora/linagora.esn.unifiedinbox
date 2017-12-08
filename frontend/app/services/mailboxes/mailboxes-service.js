@@ -352,12 +352,15 @@
           if (filter && filter.unprocessed) {
             return $q.all([
               rolesToIds(filter.notInMailboxes),
-              rolesToIds(filter.inMailboxes)
+              rolesToIds(filter.inMailboxes),
+              sharedMailboxesList()
             ])
               .then(function(results) {
                 delete filter.unprocessed;
 
-                filter.notInMailboxes = results[0];
+                var sharedFolderIdsNotInMailboxes = _.map(results[2], 'id');
+
+                filter.notInMailboxes = results[0].concat(sharedFolderIdsNotInMailboxes);
                 filter.inMailboxes = results[1];
 
                 return filter;
