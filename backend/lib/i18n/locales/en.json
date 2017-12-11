@@ -1,6 +1,6 @@
 {
-  "CC": "CC",
-  "BCC": "BCC",
+  "Cc": "Cc",
+  "Bcc": "Bcc",
   "Go back to mailbox": "Go back to mailbox",
   "Attachments": "Attachments",
   "Start to type here": "Start to type here",

@@ -9,10 +9,10 @@ form.form-horizontal.compose.ng-cloak(ng-submit="send()")
         label.control-label #{__('To')}
         recipients-auto-complete.inbox-recipients.recipients-to(ng-model="email.to", template="recipients-auto-complete")
       .form-group.ng-hide(ng-hide="isCollapsed")
-        label.control-label #{__('CC')}
+        label.control-label #{__('Cc')}
         recipients-auto-complete.inbox-recipients.recipients-cc(ng-model="email.cc", template="recipients-auto-complete")
       .form-group.ng-hide(ng-hide="isCollapsed")
-        label.control-label #{__('BCC')}
+        label.control-label #{__('Bcc')}
         recipients-auto-complete.inbox-recipients.recipients-bcc(ng-model="email.bcc", template="recipients-auto-complete")
     .inbox-more-recipients(ng-click="isCollapsed = !isCollapsed", ng-class="{ 'isCollapsed': isCollapsed }")
       i.mdi(ng-class="isCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'")
