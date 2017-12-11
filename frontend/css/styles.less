@@ -34,11 +34,9 @@
           text-align: center;
 
           i {
-            font-size: 2em;
+            font-size: 1.9em;
             vertical-align: sub;
           }
-
-          .hover-pop(rgba(0,0,0,0.1), 50%, 250ms, 0);
         }
 
         :not(inbox-star) a:active {
@@ -190,6 +188,12 @@ inbox-fab {
     .clickable.text-danger:hover {
       color: darken(@state-danger-text, 10%);
     }
+
+    .actions {
+      li.action-item inbox-star a {
+        .hover-pop(rgba(0, 0, 0, 0.1), 50%, 250ms, 0);
+      }
+    }
   }
 
   .listview {
@@ -202,6 +206,16 @@ inbox-fab {
     .clickable {
       &.selected {
         background-color: darken(@darkenBgColor, 2%);
+      }
+    }
+  }
+}
+
+@media (max-width: @screen-md-min) {
+  .inbox-root {
+    .actions {
+      li.action-item inbox-star a {
+        .active-pop(rgba(0, 0, 0, 0.1), 50%, 250ms, 0);
       }
     }
   }
