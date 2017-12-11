@@ -3,11 +3,13 @@ sub-header
 
 form.form-horizontal.compose.ng-cloak
 
-  .compose-header
+  .compose-from
     .fields
       .form-group.select
         label.control-label #{__('From')}
         select.form-control(ng-model="email.identity", ng-change="updateIdentity()", ng-options="ctrl.getIdentityLabel(identity) group by identity.description for identity in ctrl.identities", name="from")
+  .compose-from
+    .fields
       .form-group
         label.control-label #{__('To')}
         recipients-auto-complete.inbox-recipients(ng-click='openRecipients("to")', ng-model="email.to", template="fullscreen-recipients-auto-complete")
