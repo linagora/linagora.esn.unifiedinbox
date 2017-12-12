@@ -238,10 +238,26 @@
           }
         }
 
-        .clickable.inbox-list-item-content:hover {
+        &.dragging {
+          .inbox-preview-block {
+            &:before, &:after {
+              background-color: lighten(@accentColor, 20%);
+            }
+          }
+        }
+
+        .inbox-list-item-content:hover {
           .inbox-preview-block {
             &:before, &:after {
               background: @darkenBgColor;
+            }
+          }
+
+          &.dragging {
+            .inbox-preview-block {
+              &:before, &:after {
+                background-color: lighten(@accentColor, 20%);
+              }
             }
           }
         }
@@ -262,6 +278,33 @@
 
         @media (min-width: @screen-xl-min) {
           height: ~"calc(100vh - @{inbox-sub-header-height-md})";
+        }
+
+
+        .inbox-items-group {
+          .lv-item:hover.inbox-list-item {
+            .inbox-preview-block {
+              &:before, &:after {
+                background: lighten(@body-bg, 1%);
+              }
+            }
+
+            .inbox-list-item-content:hover {
+              .inbox-preview-block {
+                &:before, &:after {
+                  background: lighten(@body-bg, 1%);
+                }
+              }
+
+              &.dragging {
+                .inbox-preview-block {
+                  &:before, &:after {
+                    background: lighten(@body-bg, 1%);
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -296,6 +339,12 @@
             &.dragging {
               background-color: lighten(@accentColor, 20%);
               .cursor-grab;
+
+              .inbox-preview-block {
+                &:before, &:after {
+                  background-color: lighten(@accentColor, 20%);
+                }
+              }
             }
 
             &.dragging:active {
