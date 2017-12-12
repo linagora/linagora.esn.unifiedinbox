@@ -102,14 +102,14 @@ module.exports = function(grunt) {
 
   grunt.loadTasks('tasks');
 
-  grunt.loadNpmTasks('grunt-lint-pattern');
+  grunt.loadNpmTasks('@linagora/grunt-lint-pattern');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-i18n-checker');
+  grunt.loadNpmTasks('@linagora/grunt-i18n-checker');
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.loadTasks('tasks');
