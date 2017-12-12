@@ -12,10 +12,10 @@ form.form-horizontal.compose.ng-cloak
         label.control-label #{__('To')}
         recipients-auto-complete.inbox-recipients(ng-click='openRecipients("to")', ng-model="email.to", template="fullscreen-recipients-auto-complete")
       .form-group(ng-if="!isCollapsed")
-        label.control-label #{__('CC')}
+        label.control-label #{__('Cc')}
         recipients-auto-complete.inbox-recipients(ng-click='openRecipients("cc")', ng-model="email.cc", template="fullscreen-recipients-auto-complete")
       .form-group(ng-if="!isCollapsed")
-        label.control-label #{__('BCC')}
+        label.control-label #{__('Bcc')}
         recipients-auto-complete.inbox-recipients(ng-click='openRecipients("bcc")', ng-model="email.bcc", template="fullscreen-recipients-auto-complete")
     .inbox-more-recipients(ng-click="isCollapsed = !isCollapsed", ng-class="{ 'isCollapsed': isCollapsed }")
       i.mdi(ng-class="isCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'")
