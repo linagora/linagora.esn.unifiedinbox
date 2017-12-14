@@ -3,7 +3,7 @@
     .modal-dialog
       .modal-content
         .modal-header
-          button.close(type='button', data-dismiss="modal", aria-label="Close", esn-back-button="^")
+          button.close(type='button', data-dismiss="modal", aria-label="Close", ng-click="$hide()")
             span(aria-hidden="true") &times;
           h4.modal-title.ellipsis {{ ::mailbox.name }}
         .modal-body.overflow-none
@@ -18,5 +18,5 @@
                   option(value="") #{__('Unified Inbox')}
         .modal-footer.flex
           .flex-vertical-centered.flex-end
-            button.btn.btn-link.color-default(type='button', esn-back-button="^") #{__('Cancel')}
-            button.btn.btn-primary.save(esn-submit="editFolder()") #{__('Save')}
+            button.btn.btn-link.color-default(type='button', ng-click="$hide()") #{__('Cancel')}
+            button.btn.btn-primary.save(type='button', ng-click="editFolder($hide)") #{__('Save')}

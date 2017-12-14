@@ -393,51 +393,59 @@ angular.module('linagora.esn.unifiedinbox')
     inboxMailboxesService.assignMailboxesList($scope, inboxMailboxesService.filterSystemMailboxes);
   })
 
-  .controller('addFolderController', function($scope, $state, $stateParams, jmap, inboxMailboxesService, rejectWithErrorNotification, esnPreviousPage) {
+  .controller('addFolderController', function($scope, jmap, inboxMailboxesService, rejectWithErrorNotification, $modal) {
     inboxMailboxesService.assignMailboxesList($scope);
 
-    $scope.mailbox = $stateParams.mailbox ? $stateParams.mailbox : {};
-    $scope.addFolder = function() {
+    $scope.mailbox = $scope.mailbox ? $scope.mailbox : {};
+
+    $scope.addFolder = function(hide) {
       if (!$scope.mailbox.name) {
         return rejectWithErrorNotification('Please enter a valid folder name');
       }
-
-      esnPreviousPage.back('unifiedinbox');
+      hide();
 
       return inboxMailboxesService.createMailbox($scope.mailbox, {
         linkText: 'Reopen',
         action: function() {
-          $state.go('unifiedinbox.inbox.folders.add', { mailbox: $scope.mailbox });
+          $modal({
+            templateUrl: '/unifiedinbox/views/folders/add/index.html',
+            controller: 'addFolderController',
+            controllerAs: 'ctrl',
+            backdrop: 'static',
+            placement: 'center',
+            scope: $scope
+          });
         }
       });
     };
   })
 
-  .controller('editFolderController', function($scope, $stateParams, inboxMailboxesService, _,
-                                               rejectWithErrorNotification, esnPreviousPage) {
+  .controller('editFolderController', function($scope, inboxMailboxesService, _, rejectWithErrorNotification) {
     var originalMailbox;
 
     inboxMailboxesService
       .assignMailboxesList($scope)
       .then(function(mailboxes) {
-        originalMailbox = _.find(mailboxes, { id: $stateParams.mailbox });
+        originalMailbox = _.find(mailboxes, { id: $scope.mailbox.id });
         $scope.mailbox = _.clone(originalMailbox);
       });
 
-    $scope.editFolder = function() {
+    $scope.editFolder = function(hide) {
       if (!$scope.mailbox.name) {
         return rejectWithErrorNotification('Please enter a valid folder name');
       }
-
-      esnPreviousPage.back('unifiedinbox');
+      hide();
 
       return inboxMailboxesService.updateMailbox(originalMailbox, $scope.mailbox);
     };
   })
 
-  .controller('inboxDeleteFolderController', function(_, $scope, $state, $stateParams, inboxMailboxesService, esnI18nService) {
+  .controller('inboxDeleteFolderController', function(_, $scope, $state, inboxMailboxesService, esnI18nService) {
+    var newMailbox,
+        destroyMailboxesIds = [];
+
     inboxMailboxesService
-      .assignMailbox($stateParams.mailbox, $scope, true)
+      .assignMailbox($scope.mailbox.id, null, true)
       .then(function(mailbox) {
         var descendants = mailbox.descendants,
             numberOfDescendants = descendants.length,
@@ -448,6 +456,10 @@ angular.module('linagora.esn.unifiedinbox')
             messageFor2To4Folders = 'Folder %s (including folder %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
             messageFor5Folders = 'Folder %s (including folders %s and %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
             messageForMoreFolders = 'Folder %s (including folders %s, %s and some others) and all the messages it contains will be deleted and you won\'t be able to recover them.';
+
+        newMailbox = mailbox;
+        destroyMailboxesIds.push(mailbox.id);
+        destroyMailboxesIds = destroyMailboxesIds.concat(descendants.map(_.property('id')));
 
         if (numberOfDescendants < 1) {
           $scope.message = esnI18nService.translate(messageFor1Folder, mailbox.displayName).toString();
@@ -465,9 +477,11 @@ angular.module('linagora.esn.unifiedinbox')
       });
 
     this.deleteFolder = function() {
-      $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' });
+      if (_.contains(destroyMailboxesIds, $state.params.context)) {
+        $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' }, { location: 'replace' });
+      }
 
-      return inboxMailboxesService.destroyMailbox($scope.mailbox);
+      return inboxMailboxesService.destroyMailbox(newMailbox);
     };
   })
 

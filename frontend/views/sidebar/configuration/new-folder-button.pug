@@ -1,4 +1,4 @@
-.lv-item.clickable.inbox-item-with-icon.waves-effect.waves-classic(ui-sref='unifiedinbox.inbox.folders.add', title=__('New folder'), ng-click="$hide()")
+.lv-item.clickable.inbox-item-with-icon.waves-effect.waves-classic(esn-modal-launcher="/unifiedinbox/views/folders/add/index.html", controller-as="ctrl", controller="addFolderController", title=__('New folder'))
   .badge-container
     i.inbox-icon.mdi.mdi-plus
   .menu-item

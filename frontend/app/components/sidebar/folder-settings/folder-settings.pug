@@ -6,7 +6,7 @@ md-menu-item(ng-if="::ctrl.isShareableMailbox(ctrl.mailbox)", esn-modal-launcher
   md-button
     md-icon(md-menu-origin, md-svg-icon="account-multiple", aria-label="sharing settings Icon")
     | #{__('Sharing settings')}
-md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem", ui-sref="unifiedinbox.inbox.folders.edit({ mailbox: ctrl.mailbox.id })")
+md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem", esn-modal-launcher="/unifiedinbox/views/folders/edit/index.html", controller-as="ctrl", controller="editFolderController")
   md-button
     md-icon(md-menu-origin, md-svg-icon="settings", aria-label="settings Icon")
     | #{__('Folder settings')}
@@ -15,7 +15,7 @@ md-menu-item(ng-if="ctrl.mailbox.role.value === 'trash'")
     md-icon(md-menu-origin, md-svg-icon="delete-empty", aria-label="empty Icon")
     | #{__('Empty trash')}
 md-menu-divider(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem")
-md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem", ui-sref="unifiedinbox.inbox.folders.delete({ mailbox: ctrl.mailbox.id })")
+md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem", esn-modal-launcher="/unifiedinbox/views/folders/delete/index.html", controller-as="ctrl", controller="inboxDeleteFolderController")
   md-button
     md-icon(md-menu-origin, md-svg-icon="delete", aria-label="delete Icon")
     | #{__('Delete folder')}
