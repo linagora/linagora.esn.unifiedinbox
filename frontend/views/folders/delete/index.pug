@@ -10,4 +10,4 @@
           | {{ ::message }}
       .modal-footer
         button.btn.btn-link(type="button", ng-click="$hide()") #{__('Cancel')}
-        button.btn.btn-primary(type="button", ng-click="ctrl.deleteFolder(); $hide()") #{__('Delete')}
+        button.btn.btn-primary(type="submit", ng-click="ctrl.deleteFolder(); $hide()") #{__('Delete')}
