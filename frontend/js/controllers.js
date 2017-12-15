@@ -441,47 +441,40 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .controller('inboxDeleteFolderController', function(_, $scope, $state, inboxMailboxesService, esnI18nService) {
-    var newMailbox,
+    var descendants = $scope.mailbox.descendants,
+        numberOfDescendants = descendants.length,
+        numberOfMailboxesToDisplay = 3,
+        more = numberOfDescendants - numberOfMailboxesToDisplay,
         destroyMailboxesIds = [];
 
-    inboxMailboxesService
-      .assignMailbox($scope.mailbox.id, null, true)
-      .then(function(mailbox) {
-        var descendants = mailbox.descendants,
-            numberOfDescendants = descendants.length,
-            numberOfMailboxesToDisplay = 3,
-            more = numberOfDescendants - numberOfMailboxesToDisplay;
+    var messageFor1Folder = 'Folder %s and all the messages it contains will be deleted and you won\'t be able to recover them.',
+        messageFor2To4Folders = 'Folder %s (including folder %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
+        messageFor5Folders = 'Folder %s (including folders %s and %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
+        messageForMoreFolders = 'Folder %s (including folders %s, %s and some others) and all the messages it contains will be deleted and you won\'t be able to recover them.';
 
-        var messageFor1Folder = 'Folder %s and all the messages it contains will be deleted and you won\'t be able to recover them.',
-            messageFor2To4Folders = 'Folder %s (including folder %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
-            messageFor5Folders = 'Folder %s (including folders %s and %s) and all the messages it contains will be deleted and you won\'t be able to recover them.',
-            messageForMoreFolders = 'Folder %s (including folders %s, %s and some others) and all the messages it contains will be deleted and you won\'t be able to recover them.';
+    destroyMailboxesIds.push($scope.mailbox.id);
+    destroyMailboxesIds = destroyMailboxesIds.concat(descendants.map(_.property('id')));
 
-        newMailbox = mailbox;
-        destroyMailboxesIds.push(mailbox.id);
-        destroyMailboxesIds = destroyMailboxesIds.concat(descendants.map(_.property('id')));
+    if (numberOfDescendants < 1) {
+      $scope.message = esnI18nService.translate(messageFor1Folder, $scope.mailbox.displayName).toString();
+    } else {
+      var displayingDescendants = descendants.slice(0, numberOfMailboxesToDisplay).map(_.property('displayName')).join(', ');
 
-        if (numberOfDescendants < 1) {
-          $scope.message = esnI18nService.translate(messageFor1Folder, mailbox.displayName).toString();
-        } else {
-          var displayingDescendants = descendants.slice(0, numberOfMailboxesToDisplay).map(_.property('displayName')).join(', ');
-
-          if (more <= 0) {
-            $scope.message = esnI18nService.translate(messageFor2To4Folders, mailbox.displayName, displayingDescendants).toString();
-          } else if (more === 1) {
-            $scope.message = esnI18nService.translate(messageFor5Folders, mailbox.displayName, displayingDescendants, descendants[numberOfMailboxesToDisplay].displayName).toString();
-          } else {
-            $scope.message = esnI18nService.translate(messageForMoreFolders, mailbox.displayName, displayingDescendants, more).toString();
-          }
-        }
-      });
+      if (more <= 0) {
+        $scope.message = esnI18nService.translate(messageFor2To4Folders, $scope.mailbox.displayName, displayingDescendants).toString();
+      } else if (more === 1) {
+        $scope.message = esnI18nService.translate(messageFor5Folders, $scope.mailbox.displayName, displayingDescendants, descendants[numberOfMailboxesToDisplay].displayName).toString();
+      } else {
+        $scope.message = esnI18nService.translate(messageForMoreFolders, $scope.mailbox.displayName, displayingDescendants, more).toString();
+      }
+    }
 
     this.deleteFolder = function() {
       if (_.contains(destroyMailboxesIds, $state.params.context)) {
         $state.go('unifiedinbox.inbox', { type: '', account: '', context: '' }, { location: 'replace' });
       }
 
-      return inboxMailboxesService.destroyMailbox(newMailbox);
+      return inboxMailboxesService.destroyMailbox($scope.mailbox);
     };
   })
 
