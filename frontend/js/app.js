@@ -147,25 +147,6 @@ angular.module('linagora.esn.unifiedinbox', [
         },
         params: { composition: null }
       })
-      .state('unifiedinbox.inbox.folders', {
-        url: '/folders',
-        deepStateRedirect: {
-          default: 'unifiedinbox.inbox.folders.add',
-          fn: function() {
-            return { state: 'unifiedinbox.inbox.folders.add' };
-          }
-        }
-      })
-      .state('unifiedinbox.inbox.folders.add', stateOpeningModal({
-        url: '/add',
-        params: { mailbox: null }
-      }, '/unifiedinbox/views/folders/add/index', 'addFolderController'))
-      .state('unifiedinbox.inbox.folders.edit', stateOpeningModal({
-        url: '/edit/:mailbox'
-      }, '/unifiedinbox/views/folders/edit/index', 'editFolderController'))
-      .state('unifiedinbox.inbox.folders.delete', stateOpeningModal({
-        url: '/delete/:mailbox'
-      }, '/unifiedinbox/views/folders/delete/index', 'inboxDeleteFolderController'))
       .state('unifiedinbox.configuration', {
         url: '/configuration',
         deepStateRedirect: {
