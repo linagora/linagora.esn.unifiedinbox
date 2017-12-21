@@ -207,6 +207,14 @@ angular.module('linagora.esn.unifiedinbox')
 
     $scope.isCollapsed = !$scope.email || (_.isEmpty($scope.email.cc) && _.isEmpty($scope.email.bcc));
 
+    INBOX_SUMMERNOTE_OPTIONS.callbacks = {
+      onKeydown: function(e) {
+        if (e.ctrlKey && (e.keyCode === 10 || e.keyCode === 13)) {
+          $scope.send();
+        }
+      }
+    };
+
     $scope.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
     $scope.send = function() {
