@@ -56,7 +56,11 @@ angular.module('linagora.esn.unifiedinbox')
       ['style', ['style']],
       ['font', ['bold', 'italic', 'underline', 'strikethrough']],
       ['alignment', ['paragraph', 'ul', 'ol']]
-    ]
+    ],
+    keyMap: {
+      pc: {'CTRL+ENTER': ''},
+      mac: {'CMD+ENTER': ''}
+    }
   })
   .constant('INBOX_CONTROLLER_LOADING_STATES', {
     LOADING: 'LOADING',
