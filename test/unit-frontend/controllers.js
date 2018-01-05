@@ -135,13 +135,16 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
   describe('The unifiedInboxController', function() {
 
-    var INBOX_CONTROLLER_LOADING_STATES, inboxFilters, inboxFilteringService, inboxProviders;
+    var INBOX_CONTROLLER_LOADING_STATES, inboxFilters, inboxFilteringService, inboxProviders, draftsFolder;
 
-    beforeEach(inject(function(_inboxProviders_, _inboxFilteringService_, _inboxFilters_, _INBOX_CONTROLLER_LOADING_STATES_) {
+    beforeEach(inject(function(_inboxProviders_, _inboxFilteringService_, _inboxFilters_, _inboxMailboxesCache_, _INBOX_CONTROLLER_LOADING_STATES_) {
       inboxProviders = _inboxProviders_;
       inboxFilters = _inboxFilters_;
       inboxFilteringService = _inboxFilteringService_;
       INBOX_CONTROLLER_LOADING_STATES = _INBOX_CONTROLLER_LOADING_STATES_;
+      inboxMailboxesCache = _inboxMailboxesCache_;
+      draftsFolder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
+      inboxMailboxesCache.push(draftsFolder);
     }));
 
     afterEach(function() {
@@ -275,6 +278,36 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       expect(scope.infiniteScrollDisabled).to.equal(false);
       expect(scope.infiniteScrollCompleted).to.equal(true); // Because the infinite scroll is done as I'm returning one item
+    });
+
+    it('should update inboxFilteredList upon DRAFT_CREATED received, when browsing drafts folders', function() {
+      initController('unifiedInboxController');
+
+      inboxFilteredList.addAll.reset();
+      scope.loadRecentItems = function() {
+        return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
+      };
+      $stateParams.context = draftsFolder.id; // user is browsing drafts folder
+
+      scope.$emit(INBOX_EVENTS.DRAFT_CREATED);
+      scope.$digest();
+
+      expect(inboxFilteredList.addAll).to.have.been.calledOnce;
+    });
+
+    it('should only increment unread drafts counter upon DRAFT_CREATED received, when browsing from anywhere but drafts', function() {
+      initController('unifiedInboxController');
+
+      inboxFilteredList.addAll.reset();
+      scope.loadRecentItems = function() {
+        return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
+      };
+
+      scope.$emit(INBOX_EVENTS.DRAFT_CREATED);
+      scope.$digest();
+
+      expect(draftsFolder.unreadMessages).to.equal(1);
+      expect(inboxFilteredList.addAll).to.not.have.been.calledOnce;
     });
 
     it('should schedule scope.loadRecentItems at a regular interval', function(done) {

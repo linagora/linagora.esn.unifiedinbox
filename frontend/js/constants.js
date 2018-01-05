@@ -46,7 +46,8 @@ angular.module('linagora.esn.unifiedinbox')
     ITEM_FLAG_CHANGED: 'inbox:itemFlagChanged',
     ITEM_MAILBOX_IDS_CHANGED: 'inbox:itemMailboxIdsChanged',
     BADGE_LOADING_ACTIVATED: 'inbox:badgeLoadingActivated',
-    DRAFT_DESTROYED: 'inbox:draftDestroyed'
+    DRAFT_DESTROYED: 'inbox:draftDestroyed',
+    DRAFT_CREATED: 'inbox:draftCreated'
   })
   .constant('INBOX_SUMMERNOTE_OPTIONS', {
     focus: false,

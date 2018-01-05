@@ -51,6 +51,7 @@ angular.module('linagora.esn.unifiedinbox', [
   'esn.i18n',
   'esn.http',
   'esn.shortcuts',
+  'esn.promise',
   'material.components.button',
   'material.components.menu',
   'material.components.icon'

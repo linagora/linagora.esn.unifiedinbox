@@ -1851,6 +1851,12 @@ describe('The Unified Inbox Angular module services', function() {
 
     describe('The save method', function() {
 
+      var INBOX_EVENTS;
+
+      beforeEach(inject(function(_INBOX_EVENTS_) {
+        INBOX_EVENTS = _INBOX_EVENTS_;
+      }));
+
       it('should do nothing and return rejected promise if needToBeSaved returns false', function(done) {
         jmapClient.saveAsDraft = sinon.spy();
 
@@ -1954,6 +1960,23 @@ describe('The Unified Inbox Angular module services', function() {
         });
 
         $rootScope.$digest();
+      });
+
+      it('should broadcast an event when draft has been saved successfully', function() {
+        jmapClient.saveAsDraft = function() {return $q.when({});};
+
+        var draft = draftService.startDraft({}),
+            eventCatcher = sinon.spy();
+
+        draft.needToBeSaved = function() {return true;};
+
+        var unsubscriber = $rootScope.$on(INBOX_EVENTS.DRAFT_CREATED, eventCatcher);
+
+        draft.save({to: []});
+
+        $rootScope.$digest();
+        expect(eventCatcher).to.have.been.calledOnce;
+        unsubscriber();
       });
 
     });

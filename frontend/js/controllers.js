@@ -2,9 +2,9 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
-                                                 PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper,
-                                                 inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL) {
+  .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
+                                                 PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
+                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL) {
     setupPolling();
 
     inboxSelectionService.unselectAllItems();
@@ -21,6 +21,32 @@ angular.module('linagora.esn.unifiedinbox')
     $scope.inboxListModel = inboxFilteredList.asMdVirtualRepeatModel($scope.loadMoreElements);
 
     $scope.$on(INBOX_EVENTS.FILTER_CHANGED, updateFetchersInScope);
+
+    // We are currently unable to add a new message in our filteredList without calling PageAggregator.
+    // Moreover, getMessagesList call to James done here only retrieves newly created message after some time (due to ElasticSearch indexation),
+    // therefore it might require a few calls to get the new message.
+    $scope.$on(INBOX_EVENTS.DRAFT_CREATED, handleNewDraft);
+
+    function handleNewDraft(event) {
+      var scope = event.currentScope;
+
+      inboxMailboxesService.updateUnreadDraftsCount($stateParams.context, function() {
+        return esnPromiseService
+          .retry(fetchRecentlyUpdatedItems(scope), {maxRetry: 10})
+          .then(inboxFilteredList.addAll);
+      });
+    }
+
+    function fetchRecentlyUpdatedItems(scope) {
+      return function() {
+        return scope.loadRecentItems()
+          .then(failIfNoItemFound);
+      };
+    }
+
+    function failIfNoItemFound(items) {
+      return items && items.length > 0 ? $q.when(items) : $q.reject(new Error('No recent item found !'));
+    }
 
     inboxAsyncHostedMailControllerHelper(this, updateFetchersInScope);
 
