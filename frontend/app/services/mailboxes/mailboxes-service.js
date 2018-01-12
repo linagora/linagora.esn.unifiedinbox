@@ -37,7 +37,8 @@
         updateSharedMailboxCache: updateSharedMailboxCache,
         canTrashMessages: canTrashMessages,
         canMoveMessagesIntoMailbox: canMoveMessagesIntoMailbox,
-        canMoveMessagesOutOfMailbox: canMoveMessagesOutOfMailbox
+        canMoveMessagesOutOfMailbox: canMoveMessagesOutOfMailbox,
+        updateUnreadDraftsCount: updateUnreadDraftsCount
       };
 
       /////
@@ -483,6 +484,18 @@
         var index = _.findIndex(inboxMailboxesCache, { id: mailboxId });
 
         return index > -1 ? index : inboxMailboxesCache.length;
+      }
+
+      function updateUnreadDraftsCount(currentInboxListId, updateDraftsList) {
+        var draftsFolder = _.find(inboxMailboxesCache, {role: jmap.MailboxRole.DRAFTS}),
+            isBrowsingDrafts = currentInboxListId && currentInboxListId === draftsFolder.id;
+
+        updateDraftsList = updateDraftsList || $q.when();
+        if (isBrowsingDrafts) {
+          return updateDraftsList();
+        }
+
+        return $q.when(updateCountersWhenMovingMessage({isUnread: true}, draftsFolder ? [draftsFolder.id] : []));
       }
     });
 

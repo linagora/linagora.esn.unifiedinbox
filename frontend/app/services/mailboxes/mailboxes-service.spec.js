@@ -1297,4 +1297,40 @@ describe('The inboxMailboxesService factory', function() {
      });
    });
 
+   describe('The updateUnreadDraftsCount function', function() {
+
+     var draftsFolder;
+
+     beforeEach(function() {
+       draftsFolder = angular.extend(new jmap.Mailbox({}, 'id', 'name'), { role: jmap.MailboxRole.DRAFTS });
+       inboxMailboxesCache.push(draftsFolder);
+     });
+
+     it('should trigger message list update when browsing drafts when browsing drafts', function(done) {
+       var listUpdater = sinon.spy(function() { return $q.when('listUpdater');});
+
+       inboxMailboxesService.updateUnreadDraftsCount(draftsFolder.id, listUpdater)
+         .then(function(result) {
+           expect(result).to.equal('listUpdater');
+           done();
+       });
+
+       $rootScope.$digest();
+     });
+
+     it('should update unread count when NOT browsing drafts', function(done) {
+       var listUpdater = sinon.spy();
+
+       inboxMailboxesService.updateUnreadDraftsCount('missingId', listUpdater)
+         .then(function() {
+           expect(draftsFolder.unreadMessages).to.equal(1);
+           expect(listUpdater).to.not.have.been.called.once;
+           done();
+         });
+
+       $rootScope.$digest();
+     });
+
+   });
+
 });

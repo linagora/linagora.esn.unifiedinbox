@@ -383,6 +383,7 @@ angular.module('linagora.esn.unifiedinbox')
           return inboxJmapHelper.toOutboundMessage(client, copy).then(function(message) {
             return client.saveAsDraft(message).then(function(ack) {
               copy.id = ack.id;
+              $rootScope.$broadcast(INBOX_EVENTS.DRAFT_CREATED, copy);
 
               return copy;
             });
