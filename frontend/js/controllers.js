@@ -89,6 +89,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
+                                            inboxAttachmentUploadService, inboxAttachmentRegistry,
                                             DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
     var self = this,
         disableImplicitSavesAsDraft = false,
@@ -145,45 +146,15 @@ angular.module('linagora.esn.unifiedinbox')
       return composition.saveDraft();
     };
 
-    function newAttachment(client, file) {
-      var attachment = new jmap.Attachment(client, '', {
-        name: file.name,
-        size: file.size,
-        type: file.type || DEFAULT_FILE_TYPE
-      });
-
-      attachment.getFile = function() {
-        return file;
-      };
-
-      return attachment;
-    }
-
     this.upload = function(attachment) {
-      var uploader = fileUploadService.get(attachmentUploadService),
-          uploadTask = uploader.addFile(attachment.getFile()); // Do not start the upload immediately
-
-      attachment.status = 'uploading';
-      attachment.upload = {
-        progress: 0,
-        cancel: uploadTask.cancel
-      };
-      attachment.upload.promise = uploadTask.defer.promise.then(function(task) {
-        attachment.status = 'uploaded';
-        attachment.blobId = task.response.blobId;
-        attachment.url = task.response.url;
-
-        if (!disableImplicitSavesAsDraft) {
-          composition.saveDraftSilently();
-        }
-      }, function() {
-        attachment.status = 'error';
-      }, function(uploadTask) {
-        attachment.upload.progress = uploadTask.progress;
-      }).finally(_updateAttachmentStatus);
-
+      inboxAttachmentUploadService.upload(attachment)
+        .then(function() {
+          if (!disableImplicitSavesAsDraft) {
+            composition.saveDraftSilently();
+          }
+        })
+        .finally(_updateAttachmentStatus);
       _updateAttachmentStatus();
-      uploader.start(); // Start transferring data
     };
 
     this.onAttachmentsSelect = function($files) {
@@ -204,7 +175,8 @@ angular.module('linagora.esn.unifiedinbox')
               );
             }
 
-            var attachment = newAttachment(client, file);
+            // default attachment requires JMAP client instance
+            var attachment = inboxAttachmentRegistry.getDefault().fileToAttachtment(client, file);
 
             $scope.email.attachments.push(attachment);
             self.upload(attachment);
