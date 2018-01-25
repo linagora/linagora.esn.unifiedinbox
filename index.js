@@ -38,6 +38,7 @@ const angularAppFiles = [
   'services/plugins/plugins.js',
   'services/plugins/jmap/jmap-plugin.run.js',
   'services/filtered-list/filtered-list.js',
+  'services/hook/email-sending-hook.service.js',
   'components/identities/identities.js',
   'components/identities/identities.controller.js',
   'components/identities/subheader/identities-subheader.js',
