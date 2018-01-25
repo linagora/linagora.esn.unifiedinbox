@@ -22,7 +22,7 @@
       var uploader = _getUploader(attachment);
 
       if (uploader) {
-        var uploadTask = uploader.upload(attachment);
+        var uploadTask = uploader(attachment);
 
         attachment.upload.cancel = uploadTask.cancel;
         attachment.upload.promise = uploadTask.promise.then(function() {
@@ -42,7 +42,9 @@
     }
 
     function _getUploader(attachment) {
-      return inboxAttachmentRegistry.get(attachment.attachmentType);
+      var attachmentProvider = inboxAttachmentRegistry.get(attachment.attachmentType);
+
+      return attachmentProvider && attachmentProvider.upload;
     }
   }
 

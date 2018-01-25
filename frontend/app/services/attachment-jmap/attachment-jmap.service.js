@@ -16,7 +16,7 @@
       type: INBOX_ATTACHMENT_TYPE_JMAP,
       icon: null,
       upload: upload,
-      fileToAttachtment: fileToAttachtment
+      fileToAttachment: fileToAttachment
     };
 
     function upload(attachment) {
@@ -40,7 +40,7 @@
       };
     }
 
-    function fileToAttachtment(client, file) {
+    function fileToAttachment(client, file) {
       var attachment = new jmap.Attachment(client, '', {
         name: file.name,
         size: file.size,

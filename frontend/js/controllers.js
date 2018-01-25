@@ -176,7 +176,7 @@ angular.module('linagora.esn.unifiedinbox')
             }
 
             // default attachment requires JMAP client instance
-            var attachment = inboxAttachmentRegistry.getDefault().fileToAttachtment(client, file);
+            var attachment = inboxAttachmentRegistry.getDefault().fileToAttachment(client, file);
 
             $scope.email.attachments.push(attachment);
             self.upload(attachment);
