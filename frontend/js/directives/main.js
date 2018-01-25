@@ -360,12 +360,21 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('composerAttachments', function() {
+  .directive('composerAttachments', function(inboxAttachmentRegistry) {
     return {
       restrict: 'AE',
       scope: true,
-      templateUrl: '/unifiedinbox/views/attachment/composer-attachments.html'
+      templateUrl: '/unifiedinbox/views/attachment/composer-attachments.html',
+      link: link
     };
+
+    function link(scope) {
+      scope.getAttachmentIcon = function(attachment) {
+        var attachmentProvider = inboxAttachmentRegistry.get(attachment.attachmentType);
+
+        return attachmentProvider && attachmentProvider.icon;
+      };
+    }
   })
 
   .directive('composerDesktop', function($rootScope, $timeout, $compile, KEYCODES, ESN_BOX_OVERLAY_EVENTS) {
