@@ -1,0 +1,15 @@
+.modal(ng-init="$ctrl.$onInit()")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close", ng-click="$hide()")
+          span(aria-hidden="true") &times;
+        h4.modal-title #{__('Upload large files')}
+      .modal-body
+        p #{__('Cannot upload files because its size exceeds the %s limit', '{{ $ctrl.humanReadableMaxSizeUpload }}')}
+        div.attachment-list
+          div.attachment-list-item(ng-repeat="attachment in ::$ctrl.attachments track by $index")
+            span.attachment-name {{ attachment.name }}
+            span.attachment-size {{ attachment.size | bytes }}
+      .modal-footer
+        button.btn.btn-link(type="button", ng-click="$hide()") #{__('Close')}

@@ -12,6 +12,8 @@ const angularAppFiles = [
   'components/message-body/html/message-body-html.js',
   'components/message-body/html/message-body-html.controller.js',
   'components/message-body/text/message-body-text.js',
+  'components/large-attachment-alert/large-attachment-alert.service.js',
+  'components/large-attachment-alert/large-attachment-alert.controller.js',
   'services/mailboxes/permissions-service.constants.js',
   'services/mailboxes/permissions-service.js',
   'services/mailboxes/shared-mailboxes.constants.js',
