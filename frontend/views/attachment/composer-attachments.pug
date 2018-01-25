@@ -12,6 +12,7 @@
           .retry(ng-switch-when="error") #{__('Upload failed')}.
             a(href="", ng-click="ctrl.upload(attachment)") #{__('Retry')}
           .size(ng-switch-default) {{ ::attachment.size | bytes }}
+          i(ng-class='getAttachmentIcon(attachment)')
       .actions
         a.clickable
           i.mdi.mdi-close.cancel(ng-click="$event.stopPropagation(); ctrl.removeAttachment(attachment)")
