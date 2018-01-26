@@ -1,0 +1,25 @@
+.modal.full-screen(ng-init="$ctrl.$onInit()")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close", ng-click="$hide()")
+          span(aria-hidden="true") &times;
+        h4.modal-title #{__('Upload large files')}
+      .modal-body
+        p #{__('Files larger than %s must be uploaded to file services', '{{ $ctrl.humanReadableMaxSizeUpload }}')}
+        div.attachment-list
+          div.attachment-list-item(ng-repeat="attachment in ::$ctrl.attachments track by $index")
+            span.attachment-name {{ attachment.name }}
+            span.attachment-size {{ attachment.size | bytes }}
+
+        .row
+          .col-md-6
+            span #{__('Select a service to upload file:')}
+          .col-md-6
+            .select
+              select.form-control(ng-model="$ctrl.selectedProvider", name="selectedProvider", ng-options="provider as provider.name for provider in $ctrl.externalAttachmentProviders")
+      .modal-footer
+        button.btn.btn-link(type="button", ng-click="$hide()")
+          | #{__('Cancel')}
+        button.btn.btn-primary(ng-click="$ctrl.upload(); $hide()", ng-disabled="!$ctrl.selectedProvider")
+          | #{__('Upload')}

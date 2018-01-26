@@ -89,7 +89,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
-                                            inboxAttachmentUploadService, inboxAttachmentRegistry,
+                                            inboxAttachmentUploadService, inboxAttachmentRegistry, inboxLargeAttachmentAlertService,
                                             DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
     var self = this,
         disableImplicitSavesAsDraft = false,
@@ -167,12 +167,11 @@ angular.module('linagora.esn.unifiedinbox')
       return withJmapClient(function(client) {
         return inboxConfig('maxSizeUpload', DEFAULT_MAX_SIZE_UPLOAD).then(function(maxSizeUpload) {
           var humanReadableMaxSizeUpload = $filter('bytes')(maxSizeUpload);
+          var largeFiles = [];
 
           $files.forEach(function(file) {
             if (file.size > maxSizeUpload) {
-              return notificationFactory.weakError('',
-                esnI18nService.translate('File %s ignored as its size exceeds the %s limit', file.name, humanReadableMaxSizeUpload)
-              );
+              return largeFiles.push(file);
             }
 
             // default attachment requires JMAP client instance
@@ -181,6 +180,15 @@ angular.module('linagora.esn.unifiedinbox')
             $scope.email.attachments.push(attachment);
             self.upload(attachment);
           });
+
+          if (largeFiles.length > 0) {
+            inboxLargeAttachmentAlertService.show(largeFiles, humanReadableMaxSizeUpload, function(attachments) {
+              attachments.forEach(function(attachment) {
+                $scope.email.attachments.push(attachment);
+                self.upload(attachment);
+              });
+            });
+          }
         });
       });
     };
