@@ -63,7 +63,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer) {
+  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
     function sendBySmtp(email) {
       return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
@@ -81,6 +81,10 @@ angular.module('linagora.esn.unifiedinbox')
       return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.OUTBOX).then(function(outbox) {
         return client.send(message, outbox);
       });
+    }
+
+    function sendEmailWithHooks(email) {
+      return inboxEmailSendingHookService.preSending(email).then(sendEmail).then(inboxEmailSendingHookService.postSending);
     }
 
     function sendEmail(email) {
@@ -106,7 +110,7 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     return function(email) {
-      return inBackground(sendEmail(email));
+      return inBackground(sendEmailWithHooks(email));
     };
   })
 
