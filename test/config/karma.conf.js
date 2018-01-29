@@ -51,6 +51,8 @@ module.exports = function(config) {
       'frontend/components/angular-material/angular-material.min.js',
       'frontend/components/angular-material/angular-material.min.css',
 
+      'frontend/components/popper.js/dist/umd/popper-utils.js',
+      'frontend/components/popper.js/dist/umd/popper.js',
       'frontend/components/bootstrap/dist/js/bootstrap.js',
       'frontend/components/summernote/dist/summernote.js',
       'frontend/components/angular-summernote/dist/angular-summernote.js',
