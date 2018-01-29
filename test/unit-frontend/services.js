@@ -661,6 +661,42 @@ describe('The Unified Inbox Angular module services', function() {
       });
     });
 
+    describe('The getAllRecipientsExceptSender function', function() {
+      var session;
+
+      beforeEach(function() {
+        inject(function(_session_) {
+          session = _session_;
+        });
+
+        session.user = {
+          preferredEmail: 'user@example.org'
+        };
+      });
+
+      it('should return all recipients except sender', function() {
+        var email = {
+          to: [{ email: 'user@example.org' }, { email: 'email1@example.org' }],
+          cc: [{ email: 'email2@example.org'}],
+          bcc: [{ email: 'email3@example.org' }]
+        };
+
+        expect(emailSendingService.getAllRecipientsExceptSender(email))
+          .to.shallowDeepEqual([{ email: 'email1@example.org' }, { email: 'email2@example.org' }, { email: 'email3@example.org' }]);
+      });
+
+      it('should return an empty array if there is no recipient', function() {
+        var email = {
+          to: [],
+          cc: [],
+          bcc: []
+        };
+
+        expect(emailSendingService.getAllRecipientsExceptSender(email))
+          .to.shallowDeepEqual([]);
+      });
+    });
+
     describe('The getReplyAllRecipients function', function() {
       var email, sender, expectedEmail;
 

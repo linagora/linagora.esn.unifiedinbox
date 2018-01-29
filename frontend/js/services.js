@@ -205,6 +205,14 @@ angular.module('linagora.esn.unifiedinbox')
       }
     }
 
+    function getAllRecipientsExceptSender(email) {
+      var sender = session.user;
+
+      return [].concat(email.to || [], email.cc || [], email.bcc || []).filter(function(recipient) {
+        return recipient.email !== getEmailAddress(sender);
+      });
+    }
+
     function getReplyToRecipients(email) {
       var replyTo = _.reject(email.replyTo, { email: jmap.EMailer.unknown().email });
 
@@ -322,6 +330,7 @@ angular.module('linagora.esn.unifiedinbox')
       getReplyRecipients: getReplyRecipients,
       getReplyAllRecipients: getReplyAllRecipients,
       getFirstRecipient: getFirstRecipient,
+      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
       showReplyAllButton: showReplyAllButton,
       createReplyAllEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyAllRecipients, 'default', false),
       createReplyEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyRecipients, 'default', false),
