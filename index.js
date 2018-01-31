@@ -106,7 +106,7 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
   ],
   states: {
     lib: function(dependencies, callback) {
-      var inbox = require('./backend/webserver/api/inbox/router')(dependencies);
+      var inbox = require('./backend/webserver/api')(dependencies);
 
       var lib = {
         api: {
