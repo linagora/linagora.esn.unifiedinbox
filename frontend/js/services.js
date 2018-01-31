@@ -294,7 +294,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .service('draftService', function($q, $rootScope, asyncJmapAction, emailBodyService, _, inboxFilteredList, inboxMailboxesService,
+  .service('draftService', function($q, $rootScope, asyncJmapAction, emailBodyService, _, inboxMailboxesService,
                                     inboxJmapHelper, waitUntilMessageIsComplete, INBOX_EVENTS, ATTACHMENTS_ATTRIBUTES) {
 
     function _keepSomeAttributes(array, attibutes) {
@@ -385,7 +385,7 @@ angular.module('linagora.esn.unifiedinbox')
 
   .factory('Composition', function($q, $timeout, draftService, emailSendingService, notificationFactory, Offline,
                                    backgroundAction, emailBodyService, waitUntilMessageIsComplete, newComposerService,
-                                   inboxFilteredList, DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
+                                   DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
 
     function prepareEmail(email) {
       var clone = angular.copy(email = email || {});
@@ -400,6 +400,7 @@ angular.module('linagora.esn.unifiedinbox')
     function Composition(message, options) {
       this.email = prepareEmail(message);
       this.draft = options && options.fromDraft || draftService.startDraft(this.email);
+      this.postSendCallback = options && options.postSendCallback;
     }
 
     Composition.prototype._cancelDelayedDraftSave = function() {
@@ -522,7 +523,12 @@ angular.module('linagora.esn.unifiedinbox')
             return emailSendingService.sendEmail(email);
           });
       }.bind(this), _buildSendNotificationOptions(this.email))
-        .then(this.draft.destroy.bind(this.draft));
+        .then(this.draft.destroy.bind(this.draft))
+        .finally(function() {
+          if (this.postSendCallback) {
+            this.postSendCallback();
+          }
+        }.bind(this));
     };
 
     Composition.prototype.destroyDraft = function() {

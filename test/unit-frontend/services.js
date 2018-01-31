@@ -2156,6 +2156,16 @@ describe('The Unified Inbox Angular module services', function() {
       expect(notificationFactory.weakError).to.have.been.calledWith('Note', 'Your device has lost Internet connection. Try later!');
     });
 
+    it('"send" fn should notify a postSendCallback, when one exists', function(done) {
+      var email = {
+        destroy: angular.noop,
+        to: [{displayName: '1', email: '1@linagora.com'}]
+      };
+
+      new Composition(email, { postSendCallback: done }).send();
+      $timeout.flush();
+    });
+
     it('"send" fn should successfully send an email even if only bcc is used', function() {
       var email = {
         destroy: angular.noop,
