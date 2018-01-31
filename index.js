@@ -99,8 +99,70 @@ const angularJsFiles = [
   'directives/sidebar.js'
 ];
 
-const FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
+const mailtoCoreAngularModules = [
+  'esn.jmap-client-wrapper',
+  'esn.notification',
+  'esn.file',
+  'esn.box-overlay',
+  'esn.profile',
+  'esn.summernote-wrapper',
+  'esn.attendee',
+  'esn.scroll',
+  'esn.offline-wrapper',
+  'esn.lodash-wrapper',
+  'esn.desktop-utils',
+  'esn.form.helper',
+  'esn.url',
+  'esn.background',
+  'esn.configuration',
+  'esn.core',
+  'esn.async-action',
+  'esn.user',
+  'esn.session',
+  'esn.registry',
+  'esn.module-registry',
+  'esn.user-configuration',
+  'esn.datetime',
+  'esn.i18n',
+  'esn.http',
+  'esn.promise',
+  'esn.object-type',
+  'esn.domain',
+  'esn.feature-registry',
+  'esn.email-addresses-wrapper',
+  'esn.escape-html'
+];
 
+const mailtoAngularJsFiles = [
+  'constants.js',
+  'services.js',
+  'controllers.js',
+  'directives/main.js'
+];
+
+const mailtoInboxAngularAppFiles = [
+  'mailto/mailto.js',
+  'mailto/mailto.mocks.js',
+  'mailto/mailto.constants.js',
+  'mailto/mailto.config.js',
+  'mailto/mailto.run.js',
+  'services/config/config.js',
+  'services/new-composer/new-composer.js',
+  'services/jmap-helper/jmap-helper.js',
+  'services/email-body/email-body.js',
+  'services/local-timezone/local-timezone.js',
+  'services/with-jmap-client/with-jmap-client.js',
+  'services/jmap-client-provider/jmap-client-provider.js',
+  'services/generate-jwt-token/generate-jwt-token.js',
+  'services/identities/identities-service.js',
+  'services/mailboxes/mailboxes-service.js',
+  'services/mailboxes/shared-mailboxes.js',
+  'services/mailboxes/shared-mailboxes.constants.js',
+  'services/mailboxes/special-mailboxes.js',
+  'services/mailto-parser/mailto-parser.js'
+];
+
+const FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
 var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.logger', 'logger'),
@@ -109,6 +171,7 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.i18n', 'i18n'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.wrapper', 'webserver-wrapper'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.authorization', 'authorizationMW'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.assets', 'assets'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.graceperiod', 'graceperiod')
   ],
   states: {
@@ -138,9 +201,17 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
 
       webserverWrapper.injectLess('unifiedinbox', [
         path.resolve(__dirname, './frontend/app/inbox.less')
-      ], 'esn');
+      ], ['esn']);
 
       webserverWrapper.addApp('unifiedinbox', app);
+
+      webserverWrapper.requestCoreFrontendInjections('mailto', mailtoCoreAngularModules);
+      webserverWrapper.injectAngularModules('unifiedinbox', mailtoAngularJsFiles, 'linagora.esn.unifiedinbox.mailto', ['mailto'], {
+        localJsFiles: mailtoAngularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
+      });
+      webserverWrapper.injectAngularAppModules('unifiedinbox', mailtoInboxAngularAppFiles, 'linagora.esn.unifiedinbox.mailto', ['mailto'], {
+        localJsFiles: mailtoInboxAngularAppFiles.map(file => path.join(FRONTEND_JS_PATH, 'app', file))
+      });
 
       require('./backend/lib/config')(dependencies).register();
 

@@ -14,6 +14,7 @@ module.exports = function(dependencies) {
 
   application.use(express.static(FRONTEND_PATH));
   application.use('/api/inbox', auth.requiresAPILogin, require('./api')(dependencies));
+  application.use('/mailto:*', auth.requiresLogin, require('./mailto')(dependencies));
 
   return application;
 };
