@@ -191,5 +191,15 @@
   "Consultation": "Consultation",
   "Read and update messages": "Read and update messages",
   "Organize":"Organize",
-  "Consultation and organize folder":"Consultation and organize folder"
+  "Consultation and organize folder":"Consultation and organize folder",
+  "Upload": "Upload",
+  "Attach files": "Attach files",
+  "Cannot upload a file": "Cannot upload a file",
+  "Cannot upload %s files": "Cannot upload %s files",
+  "Your file cannot be uploaded because its size exceeds the %s limit": "Your file cannot be uploaded because its size exceeds the %s limit",
+  "Your files cannot be uploaded because their sizes exceed the %s limit": "Your files cannot be uploaded because their sizes exceed the %s limit",
+  "Your file is larger than %s. It will be uploaded to %s.": "Your file is larger than %s. It will be uploaded to %s.",
+  "Your files are larger than %s. They will be uploaded to %s.": "Your files are larger than %s. They will be uploaded to %s.",
+  "Select another upload service:": "Select another upload service:",
+  "OK": "OK"
 }
