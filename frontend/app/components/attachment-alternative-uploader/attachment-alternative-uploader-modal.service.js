@@ -2,9 +2,12 @@
   'use strict';
 
   angular.module('linagora.esn.unifiedinbox')
-    .factory('inboxLargeAttachmentAlertService', inboxLargeAttachmentAlertService);
+    .factory('inboxAttachmentAlternativeUploaderModal', inboxAttachmentAlternativeUploaderModal);
 
-  function inboxLargeAttachmentAlertService(
+  var MODAL_TEMPLATE = '/unifiedinbox/app/components/attachment-alternative-uploader/attachment-alternative-uploader-modal.html';
+  var ALERT_TEMPLATE = '/unifiedinbox/app/components/attachment-alternative-uploader/attachment-alternative-uploader-modal-no-uploader.html';
+
+  function inboxAttachmentAlternativeUploaderModal(
     $modal,
     inboxAttachmentRegistry,
     INBOX_ATTACHMENT_TYPE_JMAP
@@ -13,7 +16,7 @@
       show: show
     };
 
-    function show(files, humanReadableMaxSizeUpload, startUpload) {
+    function show(files, humanReadableMaxSizeUpload, onUpload) {
       var attachmentProviders = inboxAttachmentRegistry.getAll();
       var externalAttachmentProviders = Object.keys(attachmentProviders)
         .filter(function(type) {
@@ -23,11 +26,10 @@
           return attachmentProviders[type];
         });
 
-      var numberOfExternalProviders = Object.keys(externalAttachmentProviders).length;
-      var templateUrl = numberOfExternalProviders > 0 ? '/unifiedinbox/app/components/large-attachment-alert/modal.html' : '/unifiedinbox/app/components/large-attachment-alert/alert.html';
+      var templateUrl = Object.keys(externalAttachmentProviders).length > 0 ? MODAL_TEMPLATE : ALERT_TEMPLATE;
 
       var modalData = {
-        attachments: files.map(function(file) {
+        files: files.map(function(file) {
           return {
             name: file.name,
             size: file.size,
@@ -38,7 +40,7 @@
         }),
         humanReadableMaxSizeUpload: humanReadableMaxSizeUpload,
         externalAttachmentProviders: externalAttachmentProviders,
-        startUpload: startUpload
+        onUpload: onUpload
       };
 
       $modal({
@@ -46,7 +48,7 @@
         container: 'body',
         backdrop: 'static',
         placement: 'center',
-        controller: 'inboxLargeAttachmentAlertController',
+        controller: 'inboxAttachmentAlternativeUploaderModalController',
         controllerAs: '$ctrl',
         locals: {
           modalData: modalData

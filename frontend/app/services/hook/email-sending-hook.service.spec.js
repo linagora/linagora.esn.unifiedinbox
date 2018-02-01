@@ -107,6 +107,25 @@ describe('The inboxEmailSendingHookService', function() {
       $rootScope.$digest();
     });
 
+    it('should resolve the original data on success', function(done) {
+      var hook = sinon.spy(function(email) {
+        return $q.when();
+      });
+      var hook2 = sinon.spy(function(email) {
+        return $q.when();
+      });
+      var data = { key: 'value' };
+
+      inboxEmailSendingHookService.registerPostSendingHook(hook);
+      inboxEmailSendingHookService.registerPostSendingHook(hook2);
+
+      inboxEmailSendingHookService.postSending(data).then(function(resp) {
+        expect(resp).to.deep.equal(data);
+        done();
+      });
+      $rootScope.$digest();
+    });
+
     it('should reject if there is at least one rejected hook', function(done) {
       var hook = sinon.spy(function(email) {
         return $q.reject();

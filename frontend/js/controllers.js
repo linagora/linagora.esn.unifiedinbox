@@ -89,7 +89,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
-                                            inboxAttachmentUploadService, inboxAttachmentRegistry, inboxLargeAttachmentAlertService,
+                                            inboxAttachmentUploadService, inboxAttachmentRegistry, inboxAttachmentAlternativeUploaderModal,
                                             DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
     var self = this,
         disableImplicitSavesAsDraft = false,
@@ -182,8 +182,10 @@ angular.module('linagora.esn.unifiedinbox')
           });
 
           if (largeFiles.length > 0) {
-            inboxLargeAttachmentAlertService.show(largeFiles, humanReadableMaxSizeUpload, function(attachments) {
-              attachments.forEach(function(attachment) {
+            inboxAttachmentAlternativeUploaderModal.show(largeFiles, humanReadableMaxSizeUpload, function(attachmentProvider, selectedFiles) {
+              selectedFiles.forEach(function(file) {
+                var attachment = attachmentProvider.fileToAttachment(file);
+
                 $scope.email.attachments.push(attachment);
                 self.upload(attachment);
               });

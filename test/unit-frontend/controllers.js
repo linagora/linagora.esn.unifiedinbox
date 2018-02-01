@@ -543,8 +543,12 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     describe('The onAttachmentsSelect function', function() {
-
+      var inboxAttachmentAlternativeUploaderModal;
       var ctrl;
+
+      beforeEach(inject(function(_inboxAttachmentAlternativeUploaderModal_) {
+        inboxAttachmentAlternativeUploaderModal = _inboxAttachmentAlternativeUploaderModal_;
+      }));
 
       beforeEach(function() {
         fileUploadMock.addFile = function() {
@@ -696,26 +700,63 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         $rootScope.$digest();
       });
 
-      it('should notify and not add the attachment if file is larger that the default limit', function() {
-        initController('composerController').onAttachmentsSelect([{ name: 'name', size: DEFAULT_MAX_SIZE_UPLOAD + 1 }]).then(function() {
-          var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+      it('should show alternative uploader modal and not add the attachment if file is larger that the default limit', function(done) {
+        var largeFiles = [
+          { name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 },
+          { name: 'name2', size: DEFAULT_MAX_SIZE_UPLOAD + 2 }
+        ];
 
-          expect(weakErrorMocksParameters[0]).to.equal('');
-          expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
+        inboxAttachmentAlternativeUploaderModal.show = sinon.spy();
+
+        initController('composerController').onAttachmentsSelect(largeFiles).then(function() {
+          expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledOnce;
+          expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledWith(largeFiles, '20MB', sinon.match.func);
           expect(scope.email.attachments).to.deep.equal([]);
+          done();
         });
 
         $rootScope.$digest();
       });
 
-      it('should notify and not add the attachment if file is larger that a configured limit', function() {
-        config['linagora.esn.unifiedinbox.maxSizeUpload'] = 1024 * 1024; // 1MB
-        initController('composerController').onAttachmentsSelect([{ name: 'name', size: 1024 * 1024 * 2 }]).then(function() {
-          var weakErrorMocksParameters = notificationFactory.weakError.args[0];
+      it('should show alternative uploader modal and not add the attachment if file is larger that a configured limit', function(done) {
+        var maxSizeUploadConfigured = 1024 * 1024;  // 1MB
+        var largeFiles = [
+          { name: 'name1', size: maxSizeUploadConfigured + 1 },
+          { name: 'name2', size: maxSizeUploadConfigured + 2 }
+        ];
 
-          expect(weakErrorMocksParameters[0]).to.equal('');
-          expect(weakErrorMocksParameters[1].toString()).to.equal('File %s ignored as its size exceeds the %s limit');
+        config['linagora.esn.unifiedinbox.maxSizeUpload'] = maxSizeUploadConfigured;
+        inboxAttachmentAlternativeUploaderModal.show = sinon.spy();
+
+        initController('composerController').onAttachmentsSelect(largeFiles).then(function() {
+          expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledOnce;
+          expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledWith(largeFiles, '1MB', sinon.match.func);
           expect(scope.email.attachments).to.deep.equal([]);
+          done();
+        });
+
+        $rootScope.$digest();
+      });
+
+      it('should add and upload large files using alternative uploaded', function(done) {
+        var largeFiles = [
+          { name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 },
+          { name: 'name2', size: DEFAULT_MAX_SIZE_UPLOAD + 2 }
+        ];
+        var attachmentProvider = {
+          fileToAttachment: function(file) {
+            return { name: file.name, size: file.size };
+          }
+        };
+
+        inboxAttachmentAlternativeUploaderModal.show = function(files, maxSizeUpload, onUpload) {
+          onUpload(attachmentProvider, [files[0]]);
+        };
+
+        initController('composerController').onAttachmentsSelect(largeFiles).then(function() {
+          expect(scope.email.attachments).to.have.length(1);
+          expect(scope.email.attachments[0].name).to.equal(largeFiles[0].name);
+          done();
         });
 
         $rootScope.$digest();
@@ -724,20 +765,11 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     describe('The upload function', function() {
+      var inboxAttachmentUploadService;
 
-      it('should restore upload and status properties of the attachment', function() {
-        var attachment = {
-          name: 'name',
-          getFile: function() {
-            return { size: 0 };
-          }
-        };
-
-        initController('composerController').upload(attachment);
-
-        expect(attachment.upload.progress).to.equal(0);
-        expect(attachment.status).to.equal('uploading');
-      });
+      beforeEach(inject(function(_inboxAttachmentUploadService_) {
+        inboxAttachmentUploadService = _inboxAttachmentUploadService_;
+      }));
 
       it('should start the upload', function() {
         var attachment = {
@@ -747,9 +779,30 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
           }
         };
 
+        inboxAttachmentUploadService.upload = sinon.stub().returns($q.when());
+
         initController('composerController').upload(attachment);
 
-        expect(fileUploadMock.start).to.have.been.calledWith();
+        expect(inboxAttachmentUploadService.upload).to.have.been.calledWith(attachment);
+      });
+
+      it('should save draft on success', function() {
+        inboxAttachmentUploadService.upload = sinon.stub().returns($q.when());
+
+        var attachment = {
+          name: 'name',
+          getFile: function() {
+            return { size: 0 };
+          }
+        };
+        var ctrl = initController('composerController');
+
+        ctrl.initCtrl({});
+        ctrl.getComposition().saveDraftSilently = sinon.spy();
+        ctrl.upload(attachment);
+        $rootScope.$digest();
+
+        expect(ctrl.getComposition().saveDraftSilently).to.have.been.calledOnce;
       });
 
     });
