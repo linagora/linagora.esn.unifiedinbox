@@ -83,7 +83,10 @@ const angularAppFiles = [
   'services/jmap-client-provider/jmap-client-provider.js',
   'services/local-timezone/local-timezone.js',
   'services/new-composer/new-composer.js',
-  'services/with-jmap-client/with-jmap-client.js'
+  'services/with-jmap-client/with-jmap-client.js',
+  'components/preferences/general/inbox-preferences-mailto.js',
+  'components/preferences/general/inbox-preferences-mailto.controller.js',
+  'components/preferences/general/inbox-preferences-mailto.run.js'
 ];
 
 const angularJsFiles = [

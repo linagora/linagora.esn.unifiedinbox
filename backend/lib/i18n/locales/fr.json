@@ -203,5 +203,10 @@
   "Your file is larger than %s. It will be uploaded to %s.": "La taille de votre fichier est supérieure à %s. Le ficher sera téléversé vers %s.",
   "Your files are larger than %s. They will be uploaded to %s.": "La taille de vos fichiers dépasse %s. Les fichiers seront téléversés vers %s.",
   "Select another upload service:": "Sélectionner un autre service de téléversement:",
-  "OK": "OK"
+  "OK": "OK",
+  "Email Links": "Liens Email",
+  "Open email links with OpenPaaS": "Ouvrir les liens email avec OpenPaaS",
+  "In order to make sure that you can open email links, please": "Pour être certain de pouvoir ouvrir les liens email, veuillez",
+  "authorize your browser": "autoriser votre navigateur",
+  "Test": "Tester"
 }

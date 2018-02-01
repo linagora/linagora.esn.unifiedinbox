@@ -19,6 +19,7 @@ module.exports = dependencies => ({
     numberItemsPerPageOnBulkUpdateOperations: require('./number-items-per-page-on-bulk-update-operations')(dependencies),
     swipeRightAction: require('./swipe-right-action')(dependencies),
     uploadUrl: require('./upload-url')(dependencies),
-    view: require('./view')(dependencies)
+    view: require('./view')(dependencies),
+    useEmailLinks: require('./use-email-links')(dependencies)
   }
 });
