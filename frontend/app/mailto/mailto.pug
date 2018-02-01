@@ -1,0 +1,54 @@
+doctype html
+html
+  include ../../../node_modules/linagora-rse/frontend/views/commons/utils.pug
+
+  head
+    meta(charset='utf8')
+    base(href='/')
+    title OpenPaaS - New Message
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(name="theme-color", content="#0C7CD5")
+    link(rel='icon', type='image/png', href='images/logo-tiny.png')
+    link(rel='stylesheet', href='/components/bootstrap-additions/dist/bootstrap-additions.min.css')
+    link(rel='stylesheet', href='/components/mdi/css/materialdesignicons.min.css', media='all')
+    link(rel='stylesheet', href='/components/ng-tags-input/ng-tags-input.min.css')
+    link(rel='stylesheet', href='/components/roboto-fontface/css/roboto-fontface.css')
+    link(rel='stylesheet', href='/components/summernote/dist/summernote.css')
+    link(rel='stylesheet', href='/generated/css/esn/styles.css')
+
+    script(src='/components/jquery/dist/jquery.min.js')
+    script(src='/components/jquery.focus/dist/jquery.focus.min.js')
+    script(src='/components/lodash/dist/lodash.min.js')
+    script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/components/angular/angular.js')
+    script(src='/components/angular-component/dist/angular-component.min.js')
+    script(src='/components/restangular/dist/restangular.min.js')
+    script(src='/components/ng-tags-input/ng-tags-input.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.min.js')
+    script(src='/components/angular-strap/dist/angular-strap.tpl.min.js')
+    script(src='/components/angular-file-upload/dist/angular-file-upload.min.js')
+    script(src='/components/moment/min/moment.min.js')
+    script(src='/components/moment-timezone/builds/moment-timezone-with-data.min.js')
+    script(src='/components/angular-moment/angular-moment.min.js')
+    script(src='/components/angular-uuid4/angular-uuid4.min.js')
+    script(src='/components/remarkable-bootstrap-notify/bootstrap-notify.min.js')
+    script(src='/components/jmap-client/dist/jmap-client.min.js')
+    script(src='/components/dynamic-directive/dist/dynamic-directive.min.js')
+    script(src='/components/summernote/dist/summernote.min.js')
+    script(src='/components/angular-summernote/dist/angular-summernote.min.js')
+    script(src='/components/offline/offline.min.js')
+    script(src='/components/angular-feature-flags/dist/featureFlags.js')
+    script(src='/components/angular-messages/angular-messages.min.js')
+    script(src='/components/email-addresses/lib/email-addresses.min.js')
+    script(src='/components/angular-translate/angular-translate.min.js')
+
+    script(src='js/constants.js')
+
+    +injectJSAppFromModules('mailto', assets)
+    +injectJSFromModules('mailto', assets)
+
+    script(src='/graceperiod/js/constants.js')
+    script(src='/graceperiod/js/grace-period.service.js')
+    script(src='/graceperiod/js/grace-period-restangular.service.js')
+
+  body(ng-app="linagora.esn.unifiedinbox.mailto")
