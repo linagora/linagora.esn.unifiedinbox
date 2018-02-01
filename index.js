@@ -76,7 +76,14 @@ const angularAppFiles = [
   'components/shared-mailboxes/shared-mailboxes.component.js',
   'components/shared-mailboxes/shared-mailboxes.controller.js',
   'components/shared-mailboxes/subheader/shared-mailboxes-subheader.js',
-  'components/shared-mailboxes/shared-mailbox/shared-mailbox.component.js'
+  'components/shared-mailboxes/shared-mailbox/shared-mailbox.component.js',
+  'services/config/config.js',
+  'services/email-body/email-body.js',
+  'services/generate-jwt-token/generate-jwt-token.js',
+  'services/jmap-client-provider/jmap-client-provider.js',
+  'services/local-timezone/local-timezone.js',
+  'services/new-composer/new-composer.js',
+  'services/with-jmap-client/with-jmap-client.js'
 ];
 
 const angularJsFiles = [
