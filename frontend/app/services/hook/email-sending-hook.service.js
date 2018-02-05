@@ -40,7 +40,9 @@
     function postSending(data) {
       return $q.all(postSendingHooks.map(function(hook) {
         return hook(data);
-      }));
+      })).then(function() {
+        return data;
+      });
     }
   }
 })();
