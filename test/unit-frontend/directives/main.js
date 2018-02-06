@@ -429,12 +429,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       $stateParams = _$stateParams_;
     }));
 
-    it('should return false when isBoxed is called', function() {
-      compileDirective('<composer />');
-
-      expect($scope.isBoxed()).to.equal(false);
-    });
-
     it('should call state.go with the given type, the controller composition and page history replace option', function(done) {
       var directive = compileDirective('<composer />');
 
@@ -870,12 +864,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   describe('The composer-desktop directive', function() {
     beforeEach(function() {
       $scope.$updateTitle = angular.noop;
-    });
-
-    it('should return true when isBoxed is called', function() {
-      compileDirective('<composer-desktop />');
-
-      expect($scope.isBoxed()).to.equal(true);
     });
 
     it('should save draft when the composer is destroyed', function() {
