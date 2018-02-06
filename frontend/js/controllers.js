@@ -90,16 +90,16 @@ angular.module('linagora.esn.unifiedinbox')
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
                                             inboxAttachmentUploadService, inboxAttachmentProviderRegistry, inboxAttachmentAlternativeUploaderModal,
-                                            DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
+                                            DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR, INBOX_ATTACHMENT_TYPE_JMAP) {
     var self = this,
         disableImplicitSavesAsDraft = false,
         composition;
 
     function _updateAttachmentStatus() {
       $scope.attachmentStatus = {
-        number: _.filter($scope.email.attachments, { isInline: false }).length,
-        uploading: _.some($scope.email.attachments, { status: 'uploading' }),
-        error: _.some($scope.email.attachments, { status: 'error' })
+        number: _.filter($scope.email.attachments, { isInline: false, attachmentType: INBOX_ATTACHMENT_TYPE_JMAP}).length,
+        uploading: _.some($scope.email.attachments, { status: 'uploading', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP }),
+        error: _.some($scope.email.attachments, { status: 'error', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP })
       };
     }
 
