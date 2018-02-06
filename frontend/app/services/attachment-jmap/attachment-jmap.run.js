@@ -5,9 +5,9 @@
     .run(run);
 
   function run(
-    inboxAttachmentRegistry,
+    inboxAttachmentProviderRegistry,
     inboxAttachmentJmap
   ) {
-    inboxAttachmentRegistry.add(inboxAttachmentJmap);
+    inboxAttachmentProviderRegistry.add(inboxAttachmentJmap);
   }
 })(angular);

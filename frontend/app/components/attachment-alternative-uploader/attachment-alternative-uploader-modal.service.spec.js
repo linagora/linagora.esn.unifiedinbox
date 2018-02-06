@@ -5,7 +5,7 @@
 var expect = chai.expect;
 
 describe('The inboxAttachmentAlternativeUploaderModal', function() {
-  var inboxAttachmentAlternativeUploaderModal, inboxAttachmentRegistry;
+  var inboxAttachmentAlternativeUploaderModal, inboxAttachmentProviderRegistry;
   var modalOptions;
 
   beforeEach(function() {
@@ -18,9 +18,9 @@ describe('The inboxAttachmentAlternativeUploaderModal', function() {
     });
   });
 
-  beforeEach(inject(function(_inboxAttachmentAlternativeUploaderModal_, _inboxAttachmentRegistry_) {
+  beforeEach(inject(function(_inboxAttachmentAlternativeUploaderModal_, _inboxAttachmentProviderRegistry_) {
     inboxAttachmentAlternativeUploaderModal = _inboxAttachmentAlternativeUploaderModal_;
-    inboxAttachmentRegistry = _inboxAttachmentRegistry_;
+    inboxAttachmentProviderRegistry = _inboxAttachmentProviderRegistry_;
   }));
 
   describe('The show function', function() {
@@ -49,7 +49,7 @@ describe('The inboxAttachmentAlternativeUploaderModal', function() {
     });
 
     it('should open modal with modal template when there is at least 1 external attachment provider', function() {
-      inboxAttachmentRegistry.add({ type: 'Linshare' });
+      inboxAttachmentProviderRegistry.add({ type: 'Linshare' });
 
       var files = [{ name: 'file1' }, { name: 'file2' }];
       var humanReadableMaxSizeUpload = '20MB';
