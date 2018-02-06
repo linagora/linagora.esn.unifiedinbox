@@ -2,13 +2,13 @@
   'use strict';
 
   angular.module('linagora.esn.unifiedinbox')
-    .factory('inboxAttachmentRegistry', inboxAttachmentRegistry);
+    .factory('inboxAttachmentProviderRegistry', inboxAttachmentProviderRegistry);
 
-  function inboxAttachmentRegistry(
+  function inboxAttachmentProviderRegistry(
     esnRegistry,
     INBOX_ATTACHMENT_TYPE_JMAP
   ) {
-    var registry = new esnRegistry('inboxAttachmentRegistry', {
+    var registry = new esnRegistry('inboxAttachmentProviderRegistry', {
       primaryKey: 'type'
     });
 

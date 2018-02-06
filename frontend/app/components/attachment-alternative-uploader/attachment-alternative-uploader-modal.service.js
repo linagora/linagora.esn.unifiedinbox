@@ -9,7 +9,7 @@
 
   function inboxAttachmentAlternativeUploaderModal(
     $modal,
-    inboxAttachmentRegistry,
+    inboxAttachmentProviderRegistry,
     INBOX_ATTACHMENT_TYPE_JMAP
   ) {
     return {
@@ -17,7 +17,7 @@
     };
 
     function show(files, humanReadableMaxSizeUpload, onUpload) {
-      var attachmentProviders = inboxAttachmentRegistry.getAll();
+      var attachmentProviders = inboxAttachmentProviderRegistry.getAll();
       var externalAttachmentProviders = Object.keys(attachmentProviders)
         .filter(function(type) {
           return type !== INBOX_ATTACHMENT_TYPE_JMAP;

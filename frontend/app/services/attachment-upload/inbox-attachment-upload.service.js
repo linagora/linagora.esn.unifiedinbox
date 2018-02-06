@@ -6,7 +6,7 @@
 
   function inboxAttachmentUploadService(
     $q,
-    inboxAttachmentRegistry
+    inboxAttachmentProviderRegistry
   ) {
 
     return {
@@ -42,7 +42,7 @@
     }
 
     function _getUploader(attachment) {
-      var attachmentProvider = inboxAttachmentRegistry.get(attachment.attachmentType);
+      var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
 
       return attachmentProvider && attachmentProvider.upload;
     }

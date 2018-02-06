@@ -360,7 +360,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('composerAttachments', function(inboxAttachmentRegistry) {
+  .directive('composerAttachments', function(inboxAttachmentProviderRegistry) {
     return {
       restrict: 'AE',
       scope: true,
@@ -370,7 +370,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     function link(scope) {
       scope.getAttachmentIcon = function(attachment) {
-        var attachmentProvider = inboxAttachmentRegistry.get(attachment.attachmentType);
+        var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
 
         return attachmentProvider && attachmentProvider.icon;
       };
