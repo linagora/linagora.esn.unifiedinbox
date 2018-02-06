@@ -89,7 +89,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
-                                            inboxAttachmentUploadService, inboxAttachmentRegistry, inboxAttachmentAlternativeUploaderModal,
+                                            inboxAttachmentUploadService, inboxAttachmentProviderRegistry, inboxAttachmentAlternativeUploaderModal,
                                             DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
     var self = this,
         disableImplicitSavesAsDraft = false,
@@ -175,7 +175,7 @@ angular.module('linagora.esn.unifiedinbox')
             }
 
             // default attachment requires JMAP client instance
-            var attachment = inboxAttachmentRegistry.getDefault().fileToAttachment(client, file);
+            var attachment = inboxAttachmentProviderRegistry.getDefault().fileToAttachment(client, file);
 
             $scope.email.attachments.push(attachment);
             self.upload(attachment);

@@ -20,7 +20,7 @@ const angularAppFiles = [
   'services/mailboxes/shared-mailboxes.js',
   'services/mailboxes/mailboxes-service.js',
   'services/attachment-upload/inbox-attachment-upload.service.js',
-  'services/attachment-registry/attachment-registry.service.js',
+  'services/attachment-provider-registry/attachment-provider-registry.service.js',
   'services/attachment-jmap/attachment-jmap.constants.js',
   'services/attachment-jmap/attachment-jmap.run.js',
   'services/attachment-jmap/attachment-jmap.service.js',
