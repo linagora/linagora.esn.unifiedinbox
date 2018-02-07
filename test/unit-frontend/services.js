@@ -3454,9 +3454,9 @@ describe('The Unified Inbox Angular module services', function() {
       var message = {
         subject: 'subject',
         attachments: [{
-          blobId: '1'
+          status: 'uploaded'
         }, {
-          blobId: '2'
+          status: 'uploaded'
         }]
       };
 

@@ -893,14 +893,27 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         expect(scope.attachmentStatus).to.deep.equal(expectedAttachmentStatus);
       });
 
+      it('should update attachmentStatus with only JMAP attachments', function() {
+        expectedAttachmentStatus.number = 1;
+
+        initCtrl({
+          attachments: [
+            { isInline: false, attachmentType: 'jmap' },
+            { isInline: false, attachmentType: 'linshare' }
+          ]
+        });
+
+        expect(scope.attachmentStatus).to.deep.equal(expectedAttachmentStatus);
+      });
+
       it('should update attachmentStatus once the controller is initialized with an email that has attachments', function() {
         expectedAttachmentStatus.number = 2;
 
         initCtrl({
           attachments: [
-            { isInline: false },
-            { isInline: false },
-            { isInline: true }
+            { isInline: false, attachmentType: 'jmap' },
+            { isInline: false, attachmentType: 'jmap' },
+            { isInline: true, attachmentType: 'jmap' }
           ]
         });
 
