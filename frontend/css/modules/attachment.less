@@ -53,25 +53,35 @@
       }
 
       .metadata {
-        .flex-column;
-        .flex-horizontal-centered;
+        .flex-row;
         .flex-grow;
-
-        text-align: left;
         overflow: hidden;
-        margin: 0 5px;
-        font-size: 13px;
 
-        * {
-          line-height: 14px;
+        .basic-info {
+          .flex-column;
+          .flex-horizontal-centered;
+          .flex-grow;
+
+          text-align: left;
+          overflow: hidden;
+          margin: 0 5px;
+          font-size: 13px;
+
+          * {
+            line-height: 14px;
+          }
+
+          .name {
+            font-weight: bold;
+          }
+
+          .retry > a {
+            margin-left: 5px;
+          }
         }
-
-        .name {
-          font-weight: bold;
-        }
-
-        .retry > a {
-          margin-left: 5px;
+        .provider-icon {
+          .flex-column;
+          justify-content: center;
         }
       }
 
@@ -127,7 +137,6 @@
       .actions {
         .z-index-on-top(2);
       }
-
     }
   }
 }
