@@ -369,7 +369,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
 
     function link(scope) {
-      scope.getAttachmentIcon = function(attachment) {
+      scope.getAttachmentProviderIcon = function(attachment) {
         var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
 
         return attachmentProvider && attachmentProvider.icon;
