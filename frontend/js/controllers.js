@@ -89,16 +89,17 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('composerController', function($scope, $stateParams, notificationFactory,
                                             Composition, jmap, withJmapClient, fileUploadService, $filter,
                                             attachmentUploadService, _, inboxConfig, inboxIdentitiesService, esnI18nService,
-                                            DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
+                                            inboxAttachmentUploadService, inboxAttachmentProviderRegistry, inboxAttachmentAlternativeUploaderModal,
+                                            DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR, INBOX_ATTACHMENT_TYPE_JMAP) {
     var self = this,
         disableImplicitSavesAsDraft = false,
         composition;
 
     function _updateAttachmentStatus() {
       $scope.attachmentStatus = {
-        number: _.filter($scope.email.attachments, { isInline: false }).length,
-        uploading: _.some($scope.email.attachments, { status: 'uploading' }),
-        error: _.some($scope.email.attachments, { status: 'error' })
+        number: _.filter($scope.email.attachments, { isInline: false, attachmentType: INBOX_ATTACHMENT_TYPE_JMAP}).length,
+        uploading: _.some($scope.email.attachments, { status: 'uploading', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP }),
+        error: _.some($scope.email.attachments, { status: 'error', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP })
       };
     }
 
@@ -145,45 +146,15 @@ angular.module('linagora.esn.unifiedinbox')
       return composition.saveDraft();
     };
 
-    function newAttachment(client, file) {
-      var attachment = new jmap.Attachment(client, '', {
-        name: file.name,
-        size: file.size,
-        type: file.type || DEFAULT_FILE_TYPE
-      });
-
-      attachment.getFile = function() {
-        return file;
-      };
-
-      return attachment;
-    }
-
     this.upload = function(attachment) {
-      var uploader = fileUploadService.get(attachmentUploadService),
-          uploadTask = uploader.addFile(attachment.getFile()); // Do not start the upload immediately
-
-      attachment.status = 'uploading';
-      attachment.upload = {
-        progress: 0,
-        cancel: uploadTask.cancel
-      };
-      attachment.upload.promise = uploadTask.defer.promise.then(function(task) {
-        attachment.status = 'uploaded';
-        attachment.blobId = task.response.blobId;
-        attachment.url = task.response.url;
-
-        if (!disableImplicitSavesAsDraft) {
-          composition.saveDraftSilently();
-        }
-      }, function() {
-        attachment.status = 'error';
-      }, function(uploadTask) {
-        attachment.upload.progress = uploadTask.progress;
-      }).finally(_updateAttachmentStatus);
-
+      inboxAttachmentUploadService.upload(attachment)
+        .then(function() {
+          if (!disableImplicitSavesAsDraft) {
+            composition.saveDraftSilently();
+          }
+        })
+        .finally(_updateAttachmentStatus);
       _updateAttachmentStatus();
-      uploader.start(); // Start transferring data
     };
 
     this.onAttachmentsSelect = function($files) {
@@ -196,19 +167,30 @@ angular.module('linagora.esn.unifiedinbox')
       return withJmapClient(function(client) {
         return inboxConfig('maxSizeUpload', DEFAULT_MAX_SIZE_UPLOAD).then(function(maxSizeUpload) {
           var humanReadableMaxSizeUpload = $filter('bytes')(maxSizeUpload);
+          var largeFiles = [];
 
           $files.forEach(function(file) {
             if (file.size > maxSizeUpload) {
-              return notificationFactory.weakError('',
-                esnI18nService.translate('File %s ignored as its size exceeds the %s limit', file.name, humanReadableMaxSizeUpload)
-              );
+              return largeFiles.push(file);
             }
 
-            var attachment = newAttachment(client, file);
+            // default attachment requires JMAP client instance
+            var attachment = inboxAttachmentProviderRegistry.getDefault().fileToAttachment(client, file);
 
             $scope.email.attachments.push(attachment);
             self.upload(attachment);
           });
+
+          if (largeFiles.length > 0) {
+            inboxAttachmentAlternativeUploaderModal.show(largeFiles, humanReadableMaxSizeUpload, function(attachmentProvider, selectedFiles) {
+              selectedFiles.forEach(function(file) {
+                var attachment = attachmentProvider.fileToAttachment(file);
+
+                $scope.email.attachments.push(attachment);
+                self.upload(attachment);
+              });
+            });
+          }
         });
       });
     };

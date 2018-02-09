@@ -1,0 +1,26 @@
+.modal.full-screen.inbox-attachment-alternative-uploader-modal(ng-init="$ctrl.$onInit()")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label=__('Close'), ng-click="$hide()")
+          span(aria-hidden="true") &times;
+        h4.modal-title #{__('Attach files')}
+      .modal-body
+        span(ng-if="::$ctrl.files.length === 1") #{__('Your file is larger than %s. It will be uploaded to %s.', '{{ ::$ctrl.humanReadableMaxSizeUpload }}', '{{ $ctrl.selectedProvider.name }}')}
+        span(ng-if="::$ctrl.files.length > 1") #{__('Your files are larger than %s. They will be uploaded to %s.', '{{ ::$ctrl.humanReadableMaxSizeUpload }}', '{{ $ctrl.selectedProvider.name }}')}
+
+        .service-selection(ng-if="::$ctrl.showProviderSelection")
+          span #{__('Select another upload service:')}
+          .select
+            select.form-control(ng-model="$ctrl.selectedProvider", name="selectedProvider", ng-options="provider as provider.name for provider in $ctrl.externalAttachmentProviders")
+
+        .file-list
+          .file-list-item(ng-repeat="file in ::$ctrl.files track by $index")
+            span.file-name {{ file.name }}
+            span.file-size {{ file.size | bytes }}
+        
+      .modal-footer
+        button.btn.btn-link(type="button", ng-click="$hide()")
+          | #{__('Cancel')}
+        button.btn.btn-primary(ng-click="$ctrl.upload(); $hide()", ng-disabled="!$ctrl.selectedProvider")
+          | #{__('Upload')}

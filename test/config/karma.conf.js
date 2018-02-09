@@ -104,6 +104,7 @@ module.exports = function(config) {
     reporters: ['coverage', 'spec'],
     preprocessors: {
       'frontend/js/**/*.js': ['coverage'],
+      'frontend/app/**/!(*spec).js': ['coverage'],
       '**/*.pug': ['ng-jade2module']
     },
 

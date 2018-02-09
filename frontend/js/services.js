@@ -63,7 +63,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer) {
+  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
     function sendBySmtp(email) {
       return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
@@ -81,6 +81,10 @@ angular.module('linagora.esn.unifiedinbox')
       return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.OUTBOX).then(function(outbox) {
         return client.send(message, outbox);
       });
+    }
+
+    function sendEmailWithHooks(email) {
+      return inboxEmailSendingHookService.preSending(email).then(sendEmail).then(inboxEmailSendingHookService.postSending);
     }
 
     function sendEmail(email) {
@@ -106,7 +110,7 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     return function(email) {
-      return inBackground(sendEmail(email));
+      return inBackground(sendEmailWithHooks(email));
     };
   })
 
@@ -199,6 +203,14 @@ angular.module('linagora.esn.unifiedinbox')
       if (recipient) {
         return recipient.email || recipient.preferredEmail;
       }
+    }
+
+    function getAllRecipientsExceptSender(email) {
+      var sender = session.user;
+
+      return [].concat(email.to || [], email.cc || [], email.bcc || []).filter(function(recipient) {
+        return recipient.email !== getEmailAddress(sender);
+      });
     }
 
     function getReplyToRecipients(email) {
@@ -318,6 +330,7 @@ angular.module('linagora.esn.unifiedinbox')
       getReplyRecipients: getReplyRecipients,
       getReplyAllRecipients: getReplyAllRecipients,
       getFirstRecipient: getFirstRecipient,
+      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
       showReplyAllButton: showReplyAllButton,
       createReplyAllEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyAllRecipients, 'default', false),
       createReplyEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyRecipients, 'default', false),
@@ -633,7 +646,7 @@ angular.module('linagora.esn.unifiedinbox')
 
   .factory('waitUntilMessageIsComplete', function($q, _) {
     function attachmentsAreReady(message) {
-      return _.size(message.attachments) === 0 || _.every(message.attachments, 'blobId');
+      return _.size(message.attachments) === 0 || _.every(message.attachments, { status: 'uploaded' });
     }
 
     return function(message) {
