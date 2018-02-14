@@ -103,7 +103,7 @@ describe('The inboxPreferencesMailto component', function() {
     saveHandler();
     $rootScope.$digest();
 
-    expect($window.navigator.unregisterProtocolHandler).to.have.been.calledWith('mailto', sinon.match('/unifiedinbox/%s'));
+    expect($window.navigator.unregisterProtocolHandler).to.have.been.calledWith('mailto', sinon.match('/unifiedinbox/mailto?uri=%s'));
   });
 
   it('should register a mailto: protocol handler when "Authorize" button is clicked', function() {
@@ -111,7 +111,7 @@ describe('The inboxPreferencesMailto component', function() {
 
     element.find('.inbox-preferences-mailto-authorize').click();
 
-    expect($window.navigator.registerProtocolHandler).to.have.been.calledWith('mailto', sinon.match('/unifiedinbox/%s'));
+    expect($window.navigator.registerProtocolHandler).to.have.been.calledWith('mailto', sinon.match('/unifiedinbox/mailto?uri=%s'));
   });
 
 });

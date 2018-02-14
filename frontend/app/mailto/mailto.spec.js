@@ -32,8 +32,10 @@ describe('The mailto Angular application', function() {
 
     module(function($provide) {
       $provide.decorator('$location', function($delegate) {
-        $delegate.path = function() {
-          return 'mailto:testing@linagora.com';
+        $delegate.search = function() {
+          return {
+            uri: 'mailto:testing@linagora.com'
+          };
         };
 
         return $delegate;
