@@ -162,7 +162,15 @@ const mailtoInboxAngularAppFiles = [
   'services/mailboxes/shared-mailboxes.js',
   'services/mailboxes/shared-mailboxes.constants.js',
   'services/mailboxes/special-mailboxes.js',
-  'services/mailto-parser/mailto-parser.js'
+  'services/mailto-parser/mailto-parser.js',
+  'services/hook/email-sending-hook.service.js',
+  'services/attachment-upload/inbox-attachment-upload.service.js',
+  'services/attachment-provider-registry/attachment-provider-registry.service.js',
+  'services/attachment-jmap/attachment-jmap.service.js',
+  'services/attachment-jmap/attachment-jmap.constants.js',
+  'services/attachment-jmap/attachment-jmap.run.js',
+  'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.service.js',
+  'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.controller.js'
 ];
 
 const FRONTEND_JS_PATH = path.join(__dirname, 'frontend');

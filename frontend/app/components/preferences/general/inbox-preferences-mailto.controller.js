@@ -6,7 +6,7 @@
     .controller('inboxPreferencesMailtoController', function($window, session, esnUserConfigurationService, absoluteUrl,
                                                              INBOX_MODULE_NAME) {
       var self = this,
-          mailtoURL = absoluteUrl('/unifiedinbox/%s');
+          mailtoURL = absoluteUrl('/unifiedinbox/mailto?uri=%s');
 
       self.$onInit = $onInit;
       self.authorizeBrowser = authorizeBrowser;
