@@ -8,6 +8,7 @@
     'ng.deviceDetector',
     'op.dynamicDirective',
     'ngTagsInput',
+    'mgcrea.ngStrap.modal',
 
     'linagora.esn.unifiedinbox',
     'linagora.esn.graceperiod',
