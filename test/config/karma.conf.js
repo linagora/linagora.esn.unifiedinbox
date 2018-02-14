@@ -81,13 +81,16 @@ module.exports = function(config) {
       'test/unit-frontend/mocks/**/*.js',
       'test/unit-frontend/**/*.js',
       'frontend/js/app.js',
+      'frontend/app/mailto/mailto.js',
       'frontend/js/**/*.js',
       'frontend/app/**/*.js',
       'frontend/app/**/*.pug',
       'frontend/views/**/*.pug'
     ],
     exclude: [
-      'node_modules/linagora-rse/frontend/js/**/*.spec.js'
+      'node_modules/linagora-rse/frontend/js/**/*.spec.js',
+      'frontend/app/mailto/mailto.mocks.js',
+      'frontend/app/mailto/mailto.pug'
     ],
     frameworks: ['mocha'],
     colors: true,

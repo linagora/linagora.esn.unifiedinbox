@@ -201,5 +201,10 @@
   "Your file is larger than %s. It will be uploaded to %s.": "Your file is larger than %s. It will be uploaded to %s.",
   "Your files are larger than %s. They will be uploaded to %s.": "Your files are larger than %s. They will be uploaded to %s.",
   "Select another upload service:": "Select another upload service:",
-  "OK": "OK"
+  "OK": "OK",
+  "Email Links": "Email Links",
+  "Open email links with OpenPaaS": "Open email links with OpenPaaS",
+  "In order to make sure that you can open email links, please": "In order to make sure that you can open email links, please",
+  "authorize your browser": "authorize your browser",
+  "Test": "Test"
 }

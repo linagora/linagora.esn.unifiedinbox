@@ -2,51 +2,6 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .factory('inboxConfig', function(esnConfig, INBOX_MODULE_NAME) {
-    return function(key, defaultValue) {
-      return esnConfig(INBOX_MODULE_NAME + '.' + key, defaultValue);
-    };
-  })
-
-  .factory('generateJwtToken', function($http, _, httpConfigurer) {
-    return function() {
-      return $http.post(httpConfigurer.getUrl('/api/jwt/generate')).then(_.property('data'));
-    };
-  })
-
-  .service('jmapClientProvider', function($q, inboxConfig, jmap, dollarHttpTransport, dollarQPromiseProvider, generateJwtToken) {
-    var jmapClient;
-
-    function _initializeJmapClient() {
-      return $q.all([
-        generateJwtToken(),
-        inboxConfig('api'),
-        inboxConfig('downloadUrl')
-      ]).then(function(data) {
-        jmapClient = new jmap.Client(dollarHttpTransport, dollarQPromiseProvider)
-          .withAPIUrl(data[1])
-          .withDownloadUrl(data[2])
-          .withAuthenticationToken('Bearer ' + data[0]);
-
-        return jmapClient;
-      });
-    }
-
-    function get() {
-      return jmapClient ? $q.when(jmapClient) : _initializeJmapClient();
-    }
-
-    return {
-      get: get
-    };
-  })
-
-  .factory('withJmapClient', function(jmapClientProvider) {
-    return function(callback) {
-      return jmapClientProvider.get().then(callback);
-    };
-  })
-
   .factory('backgroundAction', function(asyncAction, inBackground) {
     return function(message, action, options) {
       return asyncAction(message, function() {
@@ -339,7 +294,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .service('draftService', function($q, $rootScope, asyncJmapAction, emailBodyService, _, inboxFilteredList, inboxMailboxesService,
+  .service('draftService', function($q, $rootScope, asyncJmapAction, emailBodyService, _, inboxMailboxesService,
                                     inboxJmapHelper, waitUntilMessageIsComplete, INBOX_EVENTS, ATTACHMENTS_ATTRIBUTES) {
 
     function _keepSomeAttributes(array, attibutes) {
@@ -428,59 +383,9 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .service('newComposerService', function($state, inboxJmapHelper, boxOverlayOpener, deviceDetector) {
-    var defaultTitle = 'New message';
-
-    function choseByPlatform(mobile, others) {
-      deviceDetector.isMobile() ? mobile() : others();
-    }
-
-    function newMobileComposer(email, compositionOptions) {
-      $state.go('unifiedinbox.compose', {
-        email: email,
-        compositionOptions: compositionOptions
-      });
-    }
-
-    function newBoxedComposerCustomTitle(email, compositionOptions) {
-      boxOverlayOpener.open({
-        id: email && email.id,
-        title: defaultTitle,
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html',
-        email: email,
-        compositionOptions: compositionOptions
-      });
-    }
-
-    function newBoxedDraftComposer(email) {
-      newBoxedComposerCustomTitle(email);
-    }
-
-    function open(email, compositionOptions) {
-      choseByPlatform(
-        newMobileComposer.bind(null, email, compositionOptions),
-        newBoxedComposerCustomTitle.bind(null, email, compositionOptions)
-      );
-    }
-
-    function openDraft(id) {
-      inboxJmapHelper.getMessageById(id).then(function(message) {
-        choseByPlatform(
-          newMobileComposer.bind(this, message),
-          newBoxedDraftComposer.bind(this, message)
-        );
-      });
-    }
-
-    return {
-      open: open,
-      openDraft: openDraft
-    };
-  })
-
   .factory('Composition', function($q, $timeout, draftService, emailSendingService, notificationFactory, Offline,
                                    backgroundAction, emailBodyService, waitUntilMessageIsComplete, newComposerService,
-                                   inboxFilteredList, DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
+                                   DRAFT_SAVING_DEBOUNCE_DELAY, gracePeriodService, _, inboxConfig) {
 
     function prepareEmail(email) {
       var clone = angular.copy(email = email || {});
@@ -495,6 +400,7 @@ angular.module('linagora.esn.unifiedinbox')
     function Composition(message, options) {
       this.email = prepareEmail(message);
       this.draft = options && options.fromDraft || draftService.startDraft(this.email);
+      this.postSendCallback = options && options.postSendCallback;
     }
 
     Composition.prototype._cancelDelayedDraftSave = function() {
@@ -617,7 +523,12 @@ angular.module('linagora.esn.unifiedinbox')
             return emailSendingService.sendEmail(email);
           });
       }.bind(this), _buildSendNotificationOptions(this.email))
-        .then(this.draft.destroy.bind(this.draft));
+        .then(this.draft.destroy.bind(this.draft))
+        .finally(function() {
+          if (this.postSendCallback) {
+            this.postSendCallback();
+          }
+        }.bind(this));
     };
 
     Composition.prototype.destroyDraft = function() {
@@ -657,54 +568,6 @@ angular.module('linagora.esn.unifiedinbox')
       return $q.all(message.attachments.map(function(attachment) {
         return attachment.upload.promise;
       })).then(_.constant(message));
-    };
-  })
-
-  .factory('localTimezone', function() {
-    // Explicit '' here to tell angular to use the browser timezone for
-    // Date formatting in the 'date' filter. This factory is here to be mocked in unit tests
-    // so that the formatting is consistent accross various development machines.
-    //
-    // See: https://docs.angularjs.org/api/ng/filter/date
-    return '';
-  })
-
-  .factory('emailBodyService', function($interpolate, $templateRequest, deviceDetector, localTimezone) {
-
-    function quote(email, templateName, forceRichTextTemplate) {
-      if (!templateName) {
-        templateName = 'default';
-      }
-       return _quote(email, '/unifiedinbox/views/partials/quotes/' + templateName + (forceRichTextTemplate || supportsRichtext() ? '.html' : 'Text.html'), (forceRichTextTemplate || supportsRichtext()));
-    }
-
-    function quoteOriginalEmail(email) {
-      return _quote(email, '/unifiedinbox/views/partials/quotes/original.html', true);
-    }
-
-    function htmlToText(html) {
-      return angular.element('<div />').html(html.replace(/<br\/>/g, '\n')).text();
-    }
-
-    function interpolate(email, template) {
-      return $interpolate(template)({ email: email, dateFormat: 'medium', tz: localTimezone, marker: '\x00' });
-    }
-
-    function _quote(email, template, supportRichTextTemplate) {
-      return $templateRequest(template).then(function(template) {
-       return interpolate(email, supportRichTextTemplate ? template : htmlToText(template));
-      });
-    }
-
-    function supportsRichtext() {
-      return !deviceDetector.isMobile();
-    }
-
-    return {
-      bodyProperty: supportsRichtext() ? 'htmlBody' : 'textBody',
-      quote: quote,
-      quoteOriginalEmail: quoteOriginalEmail,
-      supportsRichtext: supportsRichtext
     };
   })
 
