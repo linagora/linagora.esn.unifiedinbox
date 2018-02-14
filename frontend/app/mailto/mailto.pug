@@ -1,7 +1,5 @@
 doctype html
 html
-  include ../../../node_modules/linagora-rse/frontend/views/commons/utils.pug
-
   head
     meta(charset='utf8')
     base(href='/')
@@ -44,8 +42,10 @@ html
 
     script(src='js/constants.js')
 
-    +injectJSAppFromModules('mailto', assets)
-    +injectJSFromModules('mailto', assets)
+    each asset in assets.type('jsApp').all()
+      script(src='/' + asset.namespace + '/app/' + asset.name)
+    each asset in assets.type('js').all()
+      script(src='/' + asset.namespace + '/js/' + asset.name)
 
     script(src='/graceperiod/js/constants.js')
     script(src='/graceperiod/js/grace-period.service.js')
