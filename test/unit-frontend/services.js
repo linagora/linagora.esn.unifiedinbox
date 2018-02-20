@@ -24,7 +24,6 @@ describe('The Unified Inbox Angular module services', function() {
     isMobile = false;
     config = config || {};
 
-    $provide.value('localTimezone', 'UTC');
     $provide.value('attendeeService', attendeeService = { addProvider: angular.noop });
     $provide.value('deviceDetector', {
       isMobile: function() {

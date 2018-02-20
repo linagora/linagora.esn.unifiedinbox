@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .factory('emailBodyService', function($interpolate, $templateRequest, deviceDetector, localTimezone) {
+    .factory('emailBodyService', function($interpolate, $templateRequest, deviceDetector) {
       return {
         bodyProperty: supportsRichtext() ? 'htmlBody' : 'textBody',
         quote: quote,
@@ -30,7 +30,7 @@
       }
 
       function interpolate(email, template) {
-        return $interpolate(template)({ email: email, dateFormat: 'medium', tz: localTimezone, marker: '\x00' });
+        return $interpolate(template)({ email: email, marker: '\x00' });
       }
 
       function _quote(email, template, supportRichTextTemplate) {

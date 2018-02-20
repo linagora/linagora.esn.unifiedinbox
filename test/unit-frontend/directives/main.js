@@ -79,7 +79,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
         return $q.when([{ isDefault: true, id: 'default' }]);
       }
     });
-    $provide.value('localTimezone', 'UTC');
   }));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$stateParams_, _$templateCache_, _$httpBackend_, session,

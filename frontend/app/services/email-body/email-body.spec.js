@@ -12,7 +12,6 @@ describe('The emailBodyService factory', function() {
     angular.mock.module('linagora.esn.unifiedinbox', 'jadeTemplates', function($provide) {
       isMobile = false;
 
-      $provide.value('localTimezone', 'UTC');
       $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
       $provide.value('deviceDetector', {
         isMobile: function() { return isMobile; }
