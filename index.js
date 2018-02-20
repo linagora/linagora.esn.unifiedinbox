@@ -1,8 +1,10 @@
 'use strict';
 
-var AwesomeModule = require('awesome-module');
-var Dependency = AwesomeModule.AwesomeModuleDependency;
-var path = require('path');
+const AwesomeModule = require('awesome-module'),
+      path = require('path');
+
+const Dependency = AwesomeModule.AwesomeModuleDependency,
+      FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
 
 const angularAppFiles = [
   'components/sidebar/attachment/sidebar-attachment.component.js',
@@ -81,12 +83,27 @@ const angularAppFiles = [
   'services/email-body/email-body.js',
   'services/generate-jwt-token/generate-jwt-token.js',
   'services/jmap-client-provider/jmap-client-provider.js',
-  'services/local-timezone/local-timezone.js',
   'services/new-composer/new-composer.js',
   'services/with-jmap-client/with-jmap-client.js',
+  'services/draft/draft.js',
   'components/preferences/general/inbox-preferences-mailto.js',
   'components/preferences/general/inbox-preferences-mailto.controller.js',
-  'components/preferences/general/inbox-preferences-mailto.run.js'
+  'components/preferences/general/inbox-preferences-mailto.run.js',
+  'components/body-editor/html/body-editor-html.js',
+  'components/body-editor/html/body-editor-html.controller.js',
+  'components/body-editor/text/body-editor-text.js',
+  'components/body-editor/text/body-editor-text.controller.js',
+  'components/composer/composer.js',
+  'components/composer/composer.controller.js',
+  'components/composer/attachments/composer-attachments.js',
+  'components/composer/attachments/composer-attachments.controller.js',
+  'components/composer/boxed/composer-boxed.js',
+  'components/composer/mobile/composer-mobile.js',
+  'components/composer/mobile/composer-mobile.controller.js',
+  'components/composer/identity-selector/composer-identity-selector.js',
+  'components/composer/identity-selector/composer-identity-selector.controller.js',
+  'components/composer/attachments-selector/composer-attachments-selector.js',
+  'components/composer/attachments-selector/composer-attachments-selector.controller.js'
 ];
 
 const angularJsFiles = [
@@ -153,7 +170,6 @@ const mailtoInboxAngularAppFiles = [
   'services/new-composer/new-composer.js',
   'services/jmap-helper/jmap-helper.js',
   'services/email-body/email-body.js',
-  'services/local-timezone/local-timezone.js',
   'services/with-jmap-client/with-jmap-client.js',
   'services/jmap-client-provider/jmap-client-provider.js',
   'services/generate-jwt-token/generate-jwt-token.js',
@@ -173,8 +189,7 @@ const mailtoInboxAngularAppFiles = [
   'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.controller.js'
 ];
 
-const FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
-var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
+module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.logger', 'logger'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.esn-config', 'esn-config'),
@@ -188,11 +203,9 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
   ],
   states: {
     lib: function(dependencies, callback) {
-      var inbox = require('./backend/webserver/api')(dependencies);
-
-      var lib = {
+      const lib = {
         api: {
-          inbox: inbox
+          inbox: require('./backend/webserver/api')(dependencies)
         }
       };
 
@@ -200,8 +213,8 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
     },
 
     deploy: function(dependencies, callback) {
-      var app = require('./backend/webserver/application')(dependencies),
-          webserverWrapper = dependencies('webserver-wrapper');
+      const app = require('./backend/webserver/application')(dependencies),
+            webserverWrapper = dependencies('webserver-wrapper');
 
       webserverWrapper.injectAngularModules('unifiedinbox', angularJsFiles, 'linagora.esn.unifiedinbox', ['esn'], {
         localJsFiles: angularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
@@ -233,5 +246,3 @@ var unifiedInboxModule = new AwesomeModule('linagora.esn.unifiedinbox', {
     start: (dependencies, callback) => callback()
   }
 });
-
-module.exports = unifiedInboxModule;
