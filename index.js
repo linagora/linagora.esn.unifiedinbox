@@ -185,8 +185,24 @@ const mailtoInboxAngularAppFiles = [
   'services/attachment-jmap/attachment-jmap.service.js',
   'services/attachment-jmap/attachment-jmap.constants.js',
   'services/attachment-jmap/attachment-jmap.run.js',
+  'services/draft/draft.js',
   'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.service.js',
-  'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.controller.js'
+  'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.controller.js',
+  'components/body-editor/html/body-editor-html.js',
+  'components/body-editor/html/body-editor-html.controller.js',
+  'components/body-editor/text/body-editor-text.js',
+  'components/body-editor/text/body-editor-text.controller.js',
+  'components/composer/composer.js',
+  'components/composer/composer.controller.js',
+  'components/composer/attachments/composer-attachments.js',
+  'components/composer/attachments/composer-attachments.controller.js',
+  'components/composer/boxed/composer-boxed.js',
+  'components/composer/mobile/composer-mobile.js',
+  'components/composer/mobile/composer-mobile.controller.js',
+  'components/composer/identity-selector/composer-identity-selector.js',
+  'components/composer/identity-selector/composer-identity-selector.controller.js',
+  'components/composer/attachments-selector/composer-attachments-selector.js',
+  'components/composer/attachments-selector/composer-attachments-selector.controller.js'
 ];
 
 module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {

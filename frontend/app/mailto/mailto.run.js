@@ -6,13 +6,12 @@
     .run(function($location, $window, $timeout, sessionFactory, newComposerService, StateManager, inboxMailtoParser, INBOX_MAILTO_AUTOCLOSE_DELAY) {
       sessionFactory.fetchUser(function() {
         newComposerService.open(inboxMailtoParser($location.search().uri), {
-          postSendCallback: function() {
-            $timeout($window.close.bind($window), INBOX_MAILTO_AUTOCLOSE_DELAY);
-          }
-        }, {
           closeable: false,
           allowedStates: [],
-          initialState: StateManager.STATES.FULL_SCREEN
+          initialState: StateManager.STATES.FULL_SCREEN,
+          onSend: function() {
+            $timeout($window.close.bind($window), INBOX_MAILTO_AUTOCLOSE_DELAY);
+          }
         });
       });
     });
