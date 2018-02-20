@@ -17,40 +17,31 @@
         deviceDetector.isMobile() ? mobile() : others();
       }
 
-      function newMobileComposer(email, compositionOptions) {
+      function newMobileComposer(email) {
         $state.go('unifiedinbox.compose', {
-          email: email,
-          compositionOptions: compositionOptions
+          email: email
         });
       }
 
-      function newBoxedComposerCustomTitle(email, compositionOptions, boxConfig) {
-        boxOverlayOpener.open(angular.extend({}, boxConfig, {
+      function newBoxedComposerCustomTitle(email, boxConfig) {
+        boxOverlayOpener.open(angular.extend({}, {
           id: email && email.id,
           title: defaultTitle,
-          templateUrl: '/unifiedinbox/views/composer/box-compose.html',
-          email: email,
-          compositionOptions: compositionOptions
-        }));
+          templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
+          email: email
+        }, boxConfig));
       }
 
-      function newBoxedDraftComposer(email, boxConfig) {
-        newBoxedComposerCustomTitle(email, null, boxConfig);
-      }
-
-      function open(email, compositionOptions, boxConfig) {
+      function open(email, boxConfig) {
         choseByPlatform(
-          newMobileComposer.bind(null, email, compositionOptions),
-          newBoxedComposerCustomTitle.bind(null, email, compositionOptions, boxConfig)
+          newMobileComposer.bind(null, email),
+          newBoxedComposerCustomTitle.bind(null, email, boxConfig)
         );
       }
 
       function openDraft(id, boxConfig) {
         inboxJmapHelper.getMessageById(id).then(function(message) {
-          choseByPlatform(
-            newMobileComposer.bind(this, message),
-            newBoxedDraftComposer.bind(this, message, boxConfig)
-          );
+          open(message, boxConfig);
         });
       }
     });
