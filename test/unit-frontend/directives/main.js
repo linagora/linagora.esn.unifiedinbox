@@ -1880,7 +1880,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
     it('should resolve the emailer', function() {
       $scope.emailer = {
-        resolve: sinon.spy()
+        resolve: sinon.stub().returns($q.when({}))
       };
 
       compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
@@ -1892,11 +1892,45 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
 
       $scope.emailer = {
-        resolve: sinon.spy()
+        resolve: sinon.stub().returns($q.when({}))
       };
       $scope.$digest();
 
       expect($scope.emailer.resolve).to.have.been.calledWith();
+    });
+
+    describe('The resolveAvatar function', function() {
+
+      it('should return an emtpy object when there is no emailer available', function(done) {
+        compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
+
+        element.isolateScope().resolveAvatar().then(function(avatar) {
+          expect(avatar).to.deep.equal({});
+
+          done();
+        });
+        $scope.$digest();
+      });
+
+      it('should return the resolved avatar', function(done) {
+        $scope.emailer = {
+          resolve: sinon.stub().returns($q.when({
+            id: 'myId'
+          }))
+        };
+
+        compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
+
+        element.isolateScope().resolveAvatar().then(function(avatar) {
+          expect(avatar).to.deep.equal({
+            id: 'myId'
+          });
+
+          done();
+        });
+        $scope.$digest();
+      });
+
     });
 
   });

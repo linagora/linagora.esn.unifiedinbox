@@ -589,7 +589,7 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function searchByEmail(email) {
-      return attendeeService.getAttendeeCandidates(email, 1).then(function(results) {
+      return attendeeService.getAttendeeCandidates(email, 1, INBOX_AUTOCOMPLETE_OBJECT_TYPES).then(function(results) {
         return results.length > 0 ? results[0] : null;
       }, _.constant(null));
     }

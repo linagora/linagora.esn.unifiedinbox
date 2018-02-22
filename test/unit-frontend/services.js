@@ -2507,11 +2507,12 @@ describe('The Unified Inbox Angular module services', function() {
 
   describe('The searchService factory', function() {
 
-    var $rootScope, searchService;
+    var $rootScope, searchService, INBOX_AUTOCOMPLETE_OBJECT_TYPES;
 
-    beforeEach(inject(function(_$rootScope_, _searchService_) {
+    beforeEach(inject(function(_$rootScope_, _searchService_, _INBOX_AUTOCOMPLETE_OBJECT_TYPES_) {
       $rootScope = _$rootScope_;
       searchService = _searchService_;
+      INBOX_AUTOCOMPLETE_OBJECT_TYPES = _INBOX_AUTOCOMPLETE_OBJECT_TYPES_;
     }));
 
     describe('The searchRecipients method', function() {
@@ -2609,7 +2610,7 @@ describe('The Unified Inbox Angular module services', function() {
         attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([{ a: 'b' }]); });
 
         searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1);
+          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1, INBOX_AUTOCOMPLETE_OBJECT_TYPES);
           expect(result).to.deep.equal({ a: 'b' });
 
           done();
@@ -2621,7 +2622,7 @@ describe('The Unified Inbox Angular module services', function() {
         attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([{ a: 'b' }]); });
 
         searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1);
+          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1, INBOX_AUTOCOMPLETE_OBJECT_TYPES);
           expect(result).to.deep.equal({ a: 'b' });
         });
         $rootScope.$digest();

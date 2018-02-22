@@ -77,4 +77,77 @@ describe('The EMailer run block', function() {
     expect(emailer.name).to.equal('a');
   });
 
+  it('should define objectType and id from the found match', function() {
+    var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
+
+    searchService
+      .expects('searchByEmail')
+      .once()
+      .withExactArgs('a@a.com')
+      .returns($q.when({
+        objectType: 'user',
+        id: 'myId',
+        displayName: 'displayName',
+        photo: '/photo'
+      }));
+
+    emailer.resolve();
+    $rootScope.$digest();
+
+    expect(emailer.objectType).to.equal('user');
+    expect(emailer.id).to.equal('myId');
+  });
+
+  it('should resolve with an object suitable for esnAvatar', function(done) {
+    var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
+
+    searchService
+      .expects('searchByEmail')
+      .once()
+      .withExactArgs('a@a.com')
+      .returns($q.when({
+        objectType: 'user',
+        id: 'myId',
+        displayName: 'displayName',
+        photo: '/photo'
+      }));
+
+    emailer.resolve().then(function(avatar) {
+      expect(avatar).to.deep.equal({
+        id: 'myId',
+        url: '/photo',
+        email: 'a@a.com'
+      });
+
+      done();
+    });
+    $rootScope.$digest();
+  });
+
+  it('should set avatar.id only if the match is a user', function(done) {
+    var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
+
+    searchService
+      .expects('searchByEmail')
+      .once()
+      .withExactArgs('a@a.com')
+      .returns($q.when({
+        objectType: 'contact',
+        id: 'myId',
+        displayName: 'displayName',
+        photo: '/photo'
+      }));
+
+    emailer.resolve().then(function(avatar) {
+      expect(avatar).to.deep.equal({
+        id: false,
+        url: '/photo',
+        email: 'a@a.com'
+      });
+
+      done();
+    });
+    $rootScope.$digest();
+  });
+
 });

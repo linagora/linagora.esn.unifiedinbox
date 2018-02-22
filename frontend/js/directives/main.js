@@ -151,14 +151,19 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxEmailerAvatar', function() {
+  .directive('inboxEmailerAvatar', function($q) {
     return {
       restrict: 'E',
       controller: 'resolveEmailerController',
       scope: {
         emailer: '='
       },
-      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html'
+      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html',
+      link: function(scope) {
+        scope.resolveAvatar = function() {
+          return scope.emailer ? scope.emailer.resolve() : $q.when({});
+        };
+      }
     };
   })
 
