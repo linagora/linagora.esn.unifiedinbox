@@ -19,3 +19,8 @@
       i.mdi.mdi-folder-move
       span.label
         | #{__('Move to')}
+  .action(ng-show='ctrl.canMoveMessageToSpam()')
+    a(ng-click='ctrl.moveToSpam()', title=__('Mark as spam'))
+      i.mdi.mdi-alert-octagon
+      span.label
+        | #{__('Spam')}
