@@ -21,6 +21,6 @@ form.form-horizontal.compose.ng-cloak
 
   input.form-control.compose-subject(type="text", placeholder=__('Subject'), ng-model="$ctrl.message.subject", ng-change="$ctrl.onTitleUpdate({ $title: $ctrl.message.subject })")
 
-  inbox-body-editor-text(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", on-body-update="$ctrl.message.textBody = $body")
+  inbox-composer-body-editor-text(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", on-body-update="$ctrl.message.textBody = $body")
 
   inbox-composer-attachments(message="$ctrl.message", upload="$ctrl.upload($attachment)", remove-attachment="$ctrl.removeAttachment($attachment)")

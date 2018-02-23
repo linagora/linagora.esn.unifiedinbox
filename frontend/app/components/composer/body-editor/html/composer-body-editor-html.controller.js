@@ -3,8 +3,8 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxBodyEditorHtmlController', function($timeout, $scope, $element, $compile,
-                                                          INBOX_EVENTS, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
+    .controller('inboxComposerBodyEditorHtmlController', function($timeout, $scope, $element, $compile,
+                                                                  INBOX_EVENTS, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
       var self = this,
           summernoteIsReady = false;
 

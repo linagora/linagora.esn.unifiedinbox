@@ -4,13 +4,13 @@
 
 var expect = chai.expect;
 
-describe('The inboxBodyEditorText component', function() {
+describe('The inboxComposerBodyEditorText component', function() {
 
   var $rootScope, $timeout, $compile, autosize, element;
 
   function compileComponent() {
     element = angular.element(
-      '<inbox-body-editor-text message="message" identity="identity" on-body-update="message.textBody = $body" />'
+      '<inbox-composer-body-editor-text message="message" identity="identity" on-body-update="message.textBody = $body" />'
     );
     element.appendTo(document.body);
 

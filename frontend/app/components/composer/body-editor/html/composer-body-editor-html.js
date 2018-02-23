@@ -3,9 +3,9 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .component('inboxBodyEditorHtml', {
-      templateUrl: '/unifiedinbox/app/components/body-editor/html/body-editor-html.html',
-      controller: 'inboxBodyEditorHtmlController',
+    .component('inboxComposerBodyEditorHtml', {
+      templateUrl: '/unifiedinbox/app/components/composer/body-editor/html/composer-body-editor-html.html',
+      controller: 'inboxComposerBodyEditorHtmlController',
       bindings: {
         message: '<',
         identity: '<',

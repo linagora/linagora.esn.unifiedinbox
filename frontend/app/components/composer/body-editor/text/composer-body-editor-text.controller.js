@@ -3,9 +3,9 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxBodyEditorTextController', function($timeout, $scope, $element,
-                                                          emailBodyService, elementScrollService, autosize,
-                                                          INBOX_SIGNATURE_SEPARATOR) {
+    .controller('inboxComposerBodyEditorTextController', function($timeout, $scope, $element,
+                                                                  emailBodyService, elementScrollService, autosize,
+                                                                  INBOX_SIGNATURE_SEPARATOR) {
       var self = this;
 
       self.$onChanges = $onChanges;

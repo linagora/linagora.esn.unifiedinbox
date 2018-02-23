@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe.only('The inboxComposerController controller', function() {
+describe('The inboxComposerController controller', function() {
 
   var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory;
 
