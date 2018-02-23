@@ -4,9 +4,9 @@
 
 var expect = chai.expect;
 
-describe('The Draft factory', function() {
+describe('The InboxDraft factory', function() {
 
-  var Draft, notificationFactory, jmapClient, emailBodyService, $rootScope, INBOX_EVENTS;
+  var InboxDraft, notificationFactory, jmapClient, emailBodyService, $rootScope, INBOX_EVENTS;
 
   beforeEach(module('linagora.esn.unifiedinbox', 'jadeTemplates', function($provide) {
     jmapClient = {};
@@ -38,8 +38,8 @@ describe('The Draft factory', function() {
     });
   }));
 
-  beforeEach(inject(function(_$rootScope_, _Draft_, _INBOX_EVENTS_) {
-    Draft = _Draft_;
+  beforeEach(inject(function(_$rootScope_, _InboxDraft_, _INBOX_EVENTS_) {
+    InboxDraft = _InboxDraft_;
     $rootScope = _$rootScope_;
     INBOX_EVENTS = _INBOX_EVENTS_;
   }));
@@ -63,16 +63,16 @@ describe('The Draft factory', function() {
     }
 
     it('should reject if original and new are both undefined object', function(done) {
-      shouldReject(new Draft().needToBeSaved(), done);
+      shouldReject(new InboxDraft().needToBeSaved(), done);
     });
 
     it('should reject if original and new are both empty object', function(done) {
-      shouldReject(new Draft({}).needToBeSaved({}), done);
+      shouldReject(new InboxDraft({}).needToBeSaved({}), done);
     });
 
     it('should resolve if there is a difference in subject, making a copy of the message', function(done) {
       var message = { subject: 'yo' },
-          draft = new Draft(message);
+          draft = new InboxDraft(message);
 
       message.subject = 'lo';
 
@@ -87,13 +87,13 @@ describe('The Draft factory', function() {
         cc: [{email: 'cc@domain'}],
         bcc: [{email: 'bcc@domain'}]
       },
-          draft = new Draft(message);
+          draft = new InboxDraft(message);
 
       shouldReject(draft.needToBeSaved(message), done);
     });
 
     it('should reject if only order changes in recipients', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         to: [{email: 'to1@domain'}, {email: 'to2@domain'}],
@@ -111,7 +111,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if only name of recipient has changed', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         to: [{email: 'to@domain', name: 'before'}]
@@ -125,7 +125,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if original has one more field', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text'
       });
@@ -136,7 +136,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if new state has one more field', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo'
       });
 
@@ -147,7 +147,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if original has difference into recipients only', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         to: []
@@ -161,7 +161,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if new has difference into to recipients only', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         to: [{email: 'first@domain'}]
@@ -175,7 +175,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if an attachment is added', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text'
       });
@@ -188,7 +188,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if new has difference into attachments', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         attachments: [{blobId: '1'}]
@@ -202,7 +202,7 @@ describe('The Draft factory', function() {
     });
 
     it('should not compare attributes that are not definied in ATTACHMENTS_ATTRIBUTES', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         attachments: [{blobId: '1', name: 'name 1'}, {blobId: '2', name: 'name 2'}]
@@ -216,7 +216,7 @@ describe('The Draft factory', function() {
     });
 
     it('should compare attributes that are definied in ATTACHMENTS_ATTRIBUTES', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         attachments: [{blobId: '1', name: 'name 1'}, {blobId: '2', name: 'name 2'}]
@@ -230,7 +230,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if new has difference into cc recipients only', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         cc: [{email: 'first@domain'}]
@@ -244,7 +244,7 @@ describe('The Draft factory', function() {
     });
 
     it('should resolve if new has difference into bcc recipients only', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         bcc: [{email: 'first@domain'}]
@@ -258,7 +258,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if one has empty subject and other one has undefined', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: '',
         htmlBody: 'text'
       });
@@ -270,7 +270,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if one has space only subject and other one has undefined', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: ' ',
         htmlBody: 'text'
       });
@@ -282,7 +282,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if one has empty body and other one has undefined', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'subject',
         htmlBody: undefined
       });
@@ -294,7 +294,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if one has space only body and other one has undefined', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'subject',
         htmlBody: undefined
       });
@@ -306,7 +306,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if original has empty recipients property', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text',
         to: []
@@ -319,7 +319,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if new has empty recipients property', function(done) {
-      var draft = new Draft({
+      var draft = new InboxDraft({
         subject: 'yo',
         htmlBody: 'text'
       });
@@ -334,7 +334,7 @@ describe('The Draft factory', function() {
     it('should reject if composing an email from scratch on mobile, and body is empty', function(done) {
       emailBodyService.bodyProperty = 'textBody';
 
-      shouldReject(new Draft({
+      shouldReject(new InboxDraft({
         to: [{ email: 'a@a.com' }],
         subject: 'subject'
       }).needToBeSaved({
@@ -347,7 +347,7 @@ describe('The Draft factory', function() {
     it('should reject if composing an email from an existing draft on mobile, and body has not changed', function(done) {
       emailBodyService.bodyProperty = 'textBody';
 
-      shouldReject(new Draft({
+      shouldReject(new InboxDraft({
         to: [{ email: 'a@a.com' }],
         subject: 'subject',
         textBody: 'body'
@@ -359,7 +359,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if composing an email from scratch on desktop, and body is empty', function(done) {
-      shouldReject(new Draft({
+      shouldReject(new InboxDraft({
         to: [{ email: 'a@a.com' }],
         subject: 'subject'
       }).needToBeSaved({
@@ -370,7 +370,7 @@ describe('The Draft factory', function() {
     });
 
     it('should reject if composing an email from an existing draft on desktop, and body is empty', function(done) {
-      shouldReject(new Draft({
+      shouldReject(new InboxDraft({
         to: [{ email: 'a@a.com' }],
         subject: 'subject',
         htmlBody: '<p>body</p>'
@@ -394,7 +394,7 @@ describe('The Draft factory', function() {
     it('should do nothing and return rejected promise if needToBeSaved returns false', function(done) {
       jmapClient.saveAsDraft = sinon.spy();
 
-      new Draft({}).save({}).catch(function() {
+      new InboxDraft({}).save({}).catch(function() {
         expect(jmapClient.saveAsDraft).to.not.have.been.calledWith();
 
         done();
@@ -406,7 +406,7 @@ describe('The Draft factory', function() {
     it('should call saveAsDraft if needToBeSaved returns true', function(done) {
       jmapClient.saveAsDraft = sinon.stub().returns($q.when({}));
 
-      new Draft({ subject: 'yo' }).save({ subject: 'lo' }).then(function() {
+      new InboxDraft({ subject: 'yo' }).save({ subject: 'lo' }).then(function() {
         expect(jmapClient.saveAsDraft).to.have.been.calledWith();
 
         done();
@@ -418,7 +418,7 @@ describe('The Draft factory', function() {
     it('should call saveAsDraft with OutboundMessage filled with properties', function() {
       jmapClient.saveAsDraft = sinon.stub().returns($q.when({}));
 
-      new Draft({}).save({
+      new InboxDraft({}).save({
         subject: 'expected subject',
         htmlBody: 'expected htmlBody',
         to: [{email: 'to@domain', name: 'to'}],
@@ -441,7 +441,7 @@ describe('The Draft factory', function() {
     it('should map all recipients to name-email tuple', function() {
       jmapClient.saveAsDraft = sinon.stub().returns($q.when({}));
 
-      new Draft({}).save({
+      new InboxDraft({}).save({
         subject: 'expected subject',
         htmlBody: 'expected htmlBody',
         to: [{email: 'to@domain', name: 'to', other: 'value'}],
@@ -460,7 +460,7 @@ describe('The Draft factory', function() {
     });
 
     it('should notify when has saved successfully', function() {
-      var draft = new Draft({});
+      var draft = new InboxDraft({});
 
       jmapClient.saveAsDraft = function() {return $q.when({});};
       draft.save({ to: [{ email: 'yo@lo' }] });
@@ -471,7 +471,7 @@ describe('The Draft factory', function() {
     });
 
     it('should notify when has not saved successfully', function(done) {
-      var draft = new Draft({}),
+      var draft = new InboxDraft({}),
           err = {message: 'rejected with err'};
 
       jmapClient.saveAsDraft = function() {return $q.reject(err);};
@@ -487,7 +487,7 @@ describe('The Draft factory', function() {
     it('should broadcast an event when draft has been saved successfully', function() {
       jmapClient.saveAsDraft = function() {return $q.when({});};
 
-      var draft = new Draft({}),
+      var draft = new InboxDraft({}),
         eventCatcher = sinon.spy();
 
       draft.needToBeSaved = function() {return true;};
@@ -506,7 +506,7 @@ describe('The Draft factory', function() {
   describe('The destroy method', function() {
 
     it('should do nothing when the draft has been created from an object', function(done) {
-      new Draft({}).destroy({ silent: true }).then(done);
+      new InboxDraft({}).destroy({ silent: true }).then(done);
 
       $rootScope.$digest();
     });
@@ -514,7 +514,7 @@ describe('The Draft factory', function() {
     it('should call client.destroyMessage when the draft has an ID', function() {
       jmapClient.destroyMessage = sinon.stub().returns($q.when());
 
-      new Draft({
+      new InboxDraft({
         id: 'the id',
         htmlBody: 'Body'
       }).destroy({ silent: true });
@@ -529,7 +529,7 @@ describe('The Draft factory', function() {
       jmapClient.destroyMessage = sinon.stub().returns($q.when());
       $rootScope.$on(INBOX_EVENTS.DRAFT_DESTROYED, eventCatcher);
 
-      new Draft({
+      new InboxDraft({
         id: 'the id',
         htmlBody: 'Body'
       }).destroy({ silent: true });

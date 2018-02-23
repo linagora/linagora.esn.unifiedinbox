@@ -3,14 +3,14 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .factory('Draft', function($rootScope, $q, _, emailBodyService, asyncJmapAction, inboxJmapHelper,
-                               waitUntilMessageIsComplete, inboxConfig, gracePeriodService,
-                               INBOX_EVENTS, ATTACHMENTS_ATTRIBUTES) {
-      function Draft(original) {
+    .factory('InboxDraft', function($rootScope, $q, _, emailBodyService, asyncJmapAction, inboxJmapHelper,
+                                    waitUntilMessageIsComplete, inboxConfig, gracePeriodService,
+                                    INBOX_EVENTS, ATTACHMENTS_ATTRIBUTES) {
+      function InboxDraft(original) {
         this.original = original ? angular.copy(original) : {};
       }
 
-      Draft.prototype.needToBeSaved = function(newEmailState) {
+      InboxDraft.prototype.needToBeSaved = function(newEmailState) {
         var original = this.original,
             newest = newEmailState || {};
 
@@ -30,7 +30,7 @@
         });
       };
 
-      Draft.prototype.save = function(email, options) {
+      InboxDraft.prototype.save = function(email, options) {
         var self = this;
 
         return _areDraftsEnabled()
@@ -52,7 +52,7 @@
           });
       };
 
-      Draft.prototype.destroy = function(options) {
+      InboxDraft.prototype.destroy = function(options) {
         var self = this;
 
         return _areDraftsEnabled()
@@ -78,7 +78,7 @@
           });
       };
 
-      return Draft;
+      return InboxDraft;
 
       /////
 

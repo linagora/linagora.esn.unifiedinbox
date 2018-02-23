@@ -4,18 +4,18 @@
 
 var expect = chai.expect;
 
-describe('The inboxComposerController controller', function() {
+describe.only('The inboxComposerController controller', function() {
 
-  var $rootScope, $componentController, ctrl, Draft, sendEmail, Offline, notificationFactory;
+  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory;
 
-  function DraftMock() {
+  function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
     this.destroy = sinon.stub().returns($q.when());
   }
 
   beforeEach(module('jadeTemplates', 'linagora.esn.unifiedinbox', function($provide) {
     $provide.constant('DRAFT_SAVING_DEBOUNCE_DELAY', 0);
-    $provide.value('Draft', DraftMock);
+    $provide.value('InboxDraft', InboxDraftMock);
     $provide.value('sendEmail', sinon.stub());
     $provide.value('notificationFactory', {
       weakSuccess: sinon.spy(),
@@ -25,11 +25,11 @@ describe('The inboxComposerController controller', function() {
     });
   }));
 
-  beforeEach(inject(function(_$rootScope_, _$componentController_, _Draft_, _sendEmail_, _Offline_, _notificationFactory_) {
+  beforeEach(inject(function(_$rootScope_, _$componentController_, _InboxDraft_, _sendEmail_, _Offline_, _notificationFactory_) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
 
-    Draft = _Draft_;
+    InboxDraft = _InboxDraft_;
     sendEmail = _sendEmail_;
     Offline = _Offline_;
     notificationFactory = _notificationFactory_;
@@ -66,7 +66,7 @@ describe('The inboxComposerController controller', function() {
     it('should start the draft at init time', function() {
       ctrl.$onInit();
 
-      expect(ctrl.draft).to.be.an.instanceof(Draft);
+      expect(ctrl.draft).to.be.an.instanceof(InboxDraft);
     });
 
     it('should set isCollapsed=true when there is no message', function() {

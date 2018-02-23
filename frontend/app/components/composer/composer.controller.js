@@ -5,7 +5,7 @@
 
     .controller('inboxComposerController', function(notificationFactory, jmap, attachmentUploadService, _, emailSendingService,
                                                     emailBodyService, Offline, inboxAttachmentUploadService, waitUntilMessageIsComplete,
-                                                    backgroundAction, Draft, DRAFT_SAVING_DEBOUNCE_DELAY) {
+                                                    backgroundAction, InboxDraft, DRAFT_SAVING_DEBOUNCE_DELAY) {
       var self = this,
           skipAutoSaveOnDestroy = false;
 
@@ -20,7 +20,7 @@
       /////
 
       function $onInit() {
-        self.draft = new Draft(self.message);
+        self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
 
         self.onTitleUpdate({ $title: self.message && self.message.subject });
