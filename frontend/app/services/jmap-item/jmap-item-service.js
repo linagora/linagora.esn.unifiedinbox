@@ -19,6 +19,7 @@
         unmarkAsFlagged: unmarkAsFlagged,
         moveToTrash: moveToTrash,
         moveToSpam: moveToSpam,
+        unSpam: unSpam,
         moveToMailbox: moveToMailbox,
         moveMultipleItems: moveMultipleItems,
         downloadEML: downloadEML,
@@ -48,6 +49,10 @@
 
       function moveToSpam(itemOrItems) {
         return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.SPAM);
+      }
+
+      function unSpam(itemOrItems) {
+        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.INBOX);
       }
 
       function _updateItemMailboxIds(item, newMailboxIds) {

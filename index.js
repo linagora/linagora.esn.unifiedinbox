@@ -28,6 +28,7 @@ const angularAppFiles = [
   'components/list/group-toggle-selection/list-group-toggle-selection.controller.js',
   'components/subheader/more-button/subheader-more-button.js',
   'components/subheader/delete-button/subheader-delete-button.js',
+  'components/subheader/not-spam-button/subheader-not-spam-button.js',
   'components/subheader/mark-as-read-button/subheader-mark-as-read-button.js',
   'components/subheader/mark-as-unread-button/subheader-mark-as-unread-button.js',
   'services/models/emailer.run.js',

@@ -279,7 +279,7 @@ angular.module('linagora.esn.unifiedinbox')
       };
     }.bind(this));
 
-    ['markAsUnread', 'moveToTrash', 'moveToSpam'].forEach(function(action) {
+    ['markAsUnread', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
       this[action] = function() {
         $state.go('^');
         inboxJmapItemService[action]($scope.email);
@@ -313,6 +313,10 @@ angular.module('linagora.esn.unifiedinbox')
 
     this.canMoveMessageToSpam = function() {
       return _canActionBeDone(inboxMailboxesService.canMoveMessagesOutOfMailbox);
+    };
+
+    this.canUnSpamMessages = function() {
+      return _canActionBeDone(inboxMailboxesService.canUnSpamMessages);
     };
 
     function openAdjacentMessage(direction) {
@@ -728,7 +732,7 @@ angular.module('linagora.esn.unifiedinbox')
     self.getSelectedItems = inboxSelectionService.getSelectedItems;
     self.unselectAllItems = inboxSelectionService.unselectAllItems;
 
-    ['markAsUnread', 'markAsRead', 'unmarkAsFlagged', 'markAsFlagged', 'moveToTrash', 'moveToSpam'].forEach(function(action) {
+    ['markAsUnread', 'markAsRead', 'unmarkAsFlagged', 'markAsFlagged', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
       self[action] = function() {
         inboxJmapItemService[action](inboxSelectionService.getSelectedItems());
         inboxSelectionService.unselectAllItems();
@@ -764,5 +768,9 @@ angular.module('linagora.esn.unifiedinbox')
 
     self.canMoveMessageToSpam = function() {
       return _canActionBeDone(inboxMailboxesService.canMoveMessagesOutOfMailbox);
+    };
+
+    self.canUnSpamMessages = function() {
+      return _canActionBeDone(inboxMailboxesService.canUnSpamMessages);
     };
   });

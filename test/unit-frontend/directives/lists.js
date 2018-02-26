@@ -306,7 +306,8 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     describe('the exposed functions from inboxJmapItemService', function() {
       beforeEach(function() {
-        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
+        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged',
+          'unmarkAsFlagged', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
           inboxJmapItemService[action] = sinon.spy();
         });
       });
@@ -314,7 +315,8 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       it('should expose several functions to the element controller', function() {
         compileDirective('<inbox-message-list-item />');
 
-        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
+        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged',
+          'unmarkAsFlagged', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
           element.controller('inboxMessageListItem')[action]();
 
           expect(inboxJmapItemService[action]).to.have.been.called;
@@ -428,12 +430,19 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     describe('The can[Trash|Move|Spam]Messages functions', function() {
 
-      var $stateParams, inboxMailboxesService, serviceFunctionStub, serviceFunctionStubResult, expectedTestResult;
+      var $stateParams, inboxMailboxesService, inboxMailboxesServiceStub, serviceFunctionStubResult, expectedTestResult;
 
       beforeEach(angular.mock.inject(function(_$stateParams_, _inboxMailboxesService_) {
-        $stateParams = _$stateParams_;
         inboxMailboxesService = _inboxMailboxesService_;
+
+        $stateParams = _$stateParams_;
         $stateParams.context = null;
+
+        inboxMailboxesServiceStub = {
+          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return serviceFunctionStubResult; }),
+          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return serviceFunctionStubResult; }),
+          canUnSpamMessages: sinon.stub(inboxMailboxesService, 'canUnSpamMessages', function() { return serviceFunctionStubResult; })
+        };
       }));
 
       describe('The canTrashMessages function', function() {
@@ -448,27 +457,25 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         executeCanFunctionTests('canMoveMessageToSpam', 'canMoveMessagesOutOfMailbox');
       });
 
+      describe('The canUnSpamMessages function', function() {
+        executeCanFunctionTests('canUnSpamMessages', 'canUnSpamMessages');
+      });
+
       function canFunction(canFunctionName) {
         return element.controller('inboxMessageListItem')[canFunctionName]();
       }
 
       function executeCanFunctionTests(canFunctionName, serviceFunctionName) {
 
-        beforeEach(function() {
-          serviceFunctionStub = sinon.stub(inboxMailboxesService, serviceFunctionName, function() { return serviceFunctionStubResult; });
-        });
-
-        it('should return true when context available', function() {
+        it('should get permission from context when it is set', function() {
           $stateParams.context = '1234';
           serviceFunctionStubResult = true;
 
           compileDirective('<inbox-message-list-item />');
 
-          expectedTestResult = true;
+          canFunction(canFunctionName);
 
-          var isAllowedToPerformAction = canFunction(canFunctionName);
-
-          expect(isAllowedToPerformAction).to.equal(expectedTestResult);
+          expect(inboxMailboxesServiceStub[serviceFunctionName]).to.have.been.calledWith($stateParams.context);
         });
 
         it('should return true when neither context nor scope.email', function() {
@@ -502,11 +509,11 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
           $stateParams.context = null;
           $scope.item = { mailboxIds: ['1', '2', '3'] };
 
-          serviceFunctionStub.restore();
-          serviceFunctionStub = sinon.stub(inboxMailboxesService, serviceFunctionName);
-          serviceFunctionStub.onFirstCall().returns(true);
-          serviceFunctionStub.onSecondCall().returns(true);
-          serviceFunctionStub.onThirdCall().returns(false);
+          inboxMailboxesServiceStub[serviceFunctionName].restore();
+          inboxMailboxesServiceStub[serviceFunctionName] = sinon.stub(inboxMailboxesService, serviceFunctionName);
+          inboxMailboxesServiceStub[serviceFunctionName].onFirstCall().returns(true);
+          inboxMailboxesServiceStub[serviceFunctionName].onSecondCall().returns(true);
+          inboxMailboxesServiceStub[serviceFunctionName].onThirdCall().returns(false);
 
           compileDirective('<inbox-message-list-item />');
 
