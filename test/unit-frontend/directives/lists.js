@@ -426,71 +426,9 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     });
 
-    describe('The canTrashMessages function', function() {
+    describe('The can[Trash|Move|Spam]Messages functions', function() {
 
-      var $stateParams, inboxMailboxesService, inboxMailboxesServiceCanTrashMessagesStub, mockTrashMessageResult;
-
-      beforeEach(angular.mock.inject(function(_$stateParams_, _inboxMailboxesService_) {
-        $stateParams = _$stateParams_;
-        inboxMailboxesService = _inboxMailboxesService_;
-        $stateParams.context = null;
-      }));
-
-      beforeEach(function() {
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return mockTrashMessageResult; });
-      });
-
-      function canTrashMessages() {
-        return element.controller('inboxMessageListItem').canTrashMessages();
-      }
-
-      it('should return true when context available', function() {
-        $stateParams.context = '1234';
-        mockTrashMessageResult = true;
-
-        compileDirective('<inbox-message-list-item />');
-
-        expect(canTrashMessages()).is.true;
-      });
-
-      it('should return true when no context nor scope.email', function() {
-        $stateParams.context = null;
-        $scope.item = null;
-
-        compileDirective('<inbox-message-list-item />');
-
-        expect(canTrashMessages()).is.true;
-      });
-
-      it('should return true when all mailboxes allow moving message', function() {
-        $stateParams.context = null;
-        $scope.item = { mailboxIds: ['1', '2', '3'] };
-        mockTrashMessageResult = true;
-
-        compileDirective('<inbox-message-list-item />');
-
-        expect(canTrashMessages()).is.true;
-      });
-
-      it('should return false when one mailbox forbids moving message', function() {
-        $stateParams.context = null;
-        $scope.item = { mailboxIds: ['1', '2', '3'] };
-
-        inboxMailboxesServiceCanTrashMessagesStub.restore();
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages');
-        inboxMailboxesServiceCanTrashMessagesStub.onFirstCall().returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onSecondCall().returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onThirdCall().returns(false);
-
-        compileDirective('<inbox-message-list-item />');
-
-        expect(canTrashMessages()).is.false;
-      });
-    });
-
-    describe('The canMoveMessagesOutOfMailbox function', function() {
-
-      var $stateParams, inboxMailboxesService, inboxMailboxesServiceCanTrashMessagesStub, mockCanMoveMessageResult;
+      var $stateParams, inboxMailboxesService, serviceFunctionStub, serviceFunctionStubResult, expectedTestResult;
 
       beforeEach(angular.mock.inject(function(_$stateParams_, _inboxMailboxesService_) {
         $stateParams = _$stateParams_;
@@ -498,56 +436,87 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         $stateParams.context = null;
       }));
 
-      beforeEach(function() {
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return mockCanMoveMessageResult; });
+      describe('The canTrashMessages function', function() {
+        executeCanFunctionTests('canTrashMessages', 'canTrashMessages');
       });
 
-      function canMoveMessagesOutOfMailbox() {
-        return element.controller('inboxMessageListItem').canMoveMessagesOutOfMailbox();
+      describe('The canMoveMessagesOutOfMailbox function', function() {
+        executeCanFunctionTests('canMoveMessagesOutOfMailbox', 'canMoveMessagesOutOfMailbox');
+      });
+
+      describe('The canMoveMessageToSpam function', function() {
+        executeCanFunctionTests('canMoveMessageToSpam', 'canMoveMessagesOutOfMailbox');
+      });
+
+      function canFunction(canFunctionName) {
+        return element.controller('inboxMessageListItem')[canFunctionName]();
       }
 
-      it('should return true when context available', function() {
-        $stateParams.context = '1234';
-        mockCanMoveMessageResult = true;
+      function executeCanFunctionTests(canFunctionName, serviceFunctionName) {
 
-        compileDirective('<inbox-message-list-item />');
+        beforeEach(function() {
+          serviceFunctionStub = sinon.stub(inboxMailboxesService, serviceFunctionName, function() { return serviceFunctionStubResult; });
+        });
 
-        expect(canMoveMessagesOutOfMailbox()).is.true;
-      });
+        it('should return true when context available', function() {
+          $stateParams.context = '1234';
+          serviceFunctionStubResult = true;
 
-      it('should return true when no context nor scope.email', function() {
-        $stateParams.context = null;
-        $scope.item = null;
+          compileDirective('<inbox-message-list-item />');
 
-        compileDirective('<inbox-message-list-item />');
+          expectedTestResult = true;
 
-        expect(canMoveMessagesOutOfMailbox()).is.true;
-      });
+          var isAllowedToPerformAction = canFunction(canFunctionName);
 
-      it('should return true when all mailboxes allow moving message', function() {
-        $stateParams.context = null;
-        $scope.item = { mailboxIds: ['1', '2', '3'] };
-        mockCanMoveMessageResult = true;
+          expect(isAllowedToPerformAction).to.equal(expectedTestResult);
+        });
 
-        compileDirective('<inbox-message-list-item />');
+        it('should return true when neither context nor scope.email', function() {
+          $stateParams.context = null;
+          $scope.item = null;
 
-        expect(canMoveMessagesOutOfMailbox()).is.true;
-      });
+          compileDirective('<inbox-message-list-item />');
 
-      it('should return false when one mailbox forbids moving message', function() {
-        $stateParams.context = null;
-        $scope.item = { mailboxIds: ['1', '2', '3'] };
+          expectedTestResult = true;
 
-        inboxMailboxesServiceCanTrashMessagesStub.restore();
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox');
-        inboxMailboxesServiceCanTrashMessagesStub.onFirstCall().returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onSecondCall().returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onThirdCall().returns(false);
+          var isAllowedToPerformAction = canFunction(canFunctionName);
 
-        compileDirective('<inbox-message-list-item />');
+          expect(isAllowedToPerformAction).to.equal(expectedTestResult);
+        });
 
-        expect(canMoveMessagesOutOfMailbox()).is.false;
-      });
+        it('should return true when all mailboxes allow doing action', function() {
+          $stateParams.context = null;
+          $scope.item = { mailboxIds: ['1', '2', '3'] };
+          serviceFunctionStubResult = true;
+
+          compileDirective('<inbox-message-list-item />');
+
+          expectedTestResult = true;
+
+          var isAllowedToPerformAction = canFunction(canFunctionName);
+
+          expect(isAllowedToPerformAction).to.equal(expectedTestResult);
+        });
+
+        it('should return false when one mailbox forbids doing action', function() {
+          $stateParams.context = null;
+          $scope.item = { mailboxIds: ['1', '2', '3'] };
+
+          serviceFunctionStub.restore();
+          serviceFunctionStub = sinon.stub(inboxMailboxesService, serviceFunctionName);
+          serviceFunctionStub.onFirstCall().returns(true);
+          serviceFunctionStub.onSecondCall().returns(true);
+          serviceFunctionStub.onThirdCall().returns(false);
+
+          compileDirective('<inbox-message-list-item />');
+
+          expectedTestResult = false;
+
+          var isAllowedToPerformAction = canFunction(canFunctionName);
+
+          expect(isAllowedToPerformAction).to.equal(expectedTestResult);
+        });
+      }
     });
 
     describe('The swipe feature', function() {

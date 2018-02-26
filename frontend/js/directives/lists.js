@@ -87,7 +87,7 @@ angular.module('linagora.esn.unifiedinbox')
           }
         };
 
-        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
+        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash', 'moveToSpam'].forEach(function(action) {
           self[action] = function() {
             inboxJmapItemService[action]($scope.item);
           };
@@ -102,9 +102,11 @@ angular.module('linagora.esn.unifiedinbox')
           moveToTrash: self.moveToTrash
         });
 
-        function _canActionBeDone(mailboxId, message, checkFunction) {
-          if (mailboxId) {
-            return checkFunction(mailboxId);
+        function _canActionBeDone(checkFunction) {
+          var message = $scope.email;
+
+          if (context) {
+            return checkFunction(context);
           }
 
           // unified inbox does not have any context. In that case, we get mailbox from the selected email.
@@ -114,11 +116,15 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         self.canTrashMessages = function() {
-          return _canActionBeDone(context, $scope.email, inboxMailboxesService.canTrashMessages);
+          return _canActionBeDone(inboxMailboxesService.canTrashMessages);
         };
 
         self.canMoveMessagesOutOfMailbox = function() {
-          return _canActionBeDone(context, $scope.email, inboxMailboxesService.canMoveMessagesOutOfMailbox);
+          return _canActionBeDone(inboxMailboxesService.canMoveMessagesOutOfMailbox);
+        };
+
+        self.canMoveMessageToSpam = function() {
+          return _canActionBeDone(inboxMailboxesService.canMoveMessagesOutOfMailbox);
         };
       },
       controllerAs: 'ctrl',

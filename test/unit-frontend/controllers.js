@@ -1111,6 +1111,21 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       });
     });
 
+    describe('The moveToSpam function', function() {
+      it('should update location to parent state, then move the email to Spam', function() {
+        inboxJmapItemService.moveToSpam = sinon.spy(function() {
+          return $q.when({});
+        });
+        var controller = initController('viewEmailController');
+
+        controller.moveToSpam();
+
+        expect($state.go).to.have.been.calledWith('^');
+        scope.$digest();
+        expect(inboxJmapItemService.moveToSpam).to.have.been.called;
+      });
+    });
+
     describe('The previous function', function() {
 
       it('should do nothing if current message has no "previous" message', function() {
@@ -1163,136 +1178,93 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     });
 
-    describe('The canTrashMessages function', function() {
+    describe('The can[Trash|Move|Spam]Messages functions', function() {
 
-      var controller, testResult, inboxMailboxesServiceCanTrashMessagesStub;
+      var controller, inboxMailboxesServiceStub, serviceFunctionStubResult, expectedTestResult;
 
       beforeEach(function() {
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return testResult; });
+        inboxMailboxesServiceStub = {
+          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return serviceFunctionStubResult; }),
+          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return serviceFunctionStubResult; })
+        };
+
         controller = initController('viewEmailController');
       });
 
-      it('should return true when context is set', function() {
-        $stateParams.context = '123';
-        testResult = true;
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canTrashMessages function', function() {
+        executeCanFunctionTests('canTrashMessages', 'canTrashMessages');
       });
 
-      it('should return true when context unavailable but scope.email has mailbox', function() {
-        var testMailboxId = '1234';
-
-        scope.email = { mailboxIds: [testMailboxId] };
-        $stateParams.context = null;
-        testResult = true;
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canMoveMessagesOutOfMailbox function', function() {
+        executeCanFunctionTests('canMoveMessagesOutOfMailbox', 'canMoveMessagesOutOfMailbox');
       });
 
-      it('should return true when neither context nor scope.email available', function() {
-        scope.email = null;
-        $stateParams.context = null;
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canMoveMessageToSpam function', function() {
+        executeCanFunctionTests('canMoveMessageToSpam', 'canMoveMessagesOutOfMailbox');
       });
 
-      it('should return true when all mailboxId of email authorize trashing', function() {
-        scope.email = { mailboxIds: ['1234', '1235'] };
-        $stateParams.context = null;
-        testResult = true;
+      function executeCanFunctionTests(canFunctionName, serviceFunctionStubName) {
 
-        expect(controller.canTrashMessages()).is.true;
-      });
+        it('should return true when context is set', function() {
+          serviceFunctionStubResult = true;
+          $stateParams.context = '123';
+          scope.email = null;
+          expectedTestResult = true;
 
-      it('should return false if one mailbox forbids trashing', function() {
-        scope.email = { mailboxIds: ['1', '2', '3'] };
-        $stateParams.context = null;
-        testResult = true;
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-        inboxMailboxesServiceCanTrashMessagesStub.restore();
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canTrashMessages');
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(0).returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(1).returns(false);
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(2).returns(true);
+        it('should return true when context unavailable but scope.email has mailbox', function() {
+          serviceFunctionStubResult = true;
+          $stateParams.context = null;
+          scope.email = { mailboxIds: ['1234'] };
+          expectedTestResult = true;
 
-        expect(controller.canTrashMessages()).is.false;
-      });
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-      it('should return false if all mailboxes forbid trashing', function() {
-        scope.email = { mailboxIds: ['1234', '1235'] };
-        $stateParams.context = null;
-        testResult = false;
+        it('should return true when neither context nor scope.email available', function() {
+          scope.email = null;
+          $stateParams.context = null;
+          expectedTestResult = true;
 
-        expect(controller.canTrashMessages()).is.false;
-      });
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
+        it('should return true when all mailboxId of email authorize trashing', function() {
+          scope.email = { mailboxIds: ['1234', '1235'] };
+          $stateParams.context = null;
+          serviceFunctionStubResult = true;
+          expectedTestResult = true;
+
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
+
+        it('should return false if one mailbox forbids the action', function() {
+          scope.email = { mailboxIds: ['1', '2', '3'] };
+          $stateParams.context = null;
+
+          inboxMailboxesServiceStub[serviceFunctionStubName].restore();
+          inboxMailboxesServiceStub[serviceFunctionStubName] = sinon.stub(inboxMailboxesService, serviceFunctionStubName);
+          inboxMailboxesServiceStub[serviceFunctionStubName].onCall(0).returns(true);
+          inboxMailboxesServiceStub[serviceFunctionStubName].onCall(1).returns(false);
+          inboxMailboxesServiceStub[serviceFunctionStubName].onCall(2).returns(true);
+
+          expectedTestResult = false;
+
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
+
+        it('should return false if all mailboxes forbid trashing', function() {
+          scope.email = { mailboxIds: ['1234', '1235'] };
+          $stateParams.context = null;
+          serviceFunctionStubResult = false;
+          expectedTestResult = false;
+
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
+      }
     });
-
-    describe('The canMoveMessagesOutOfMailbox function', function() {
-
-      var controller, testResult, inboxMailboxesServiceCanTrashMessagesStub;
-
-      beforeEach(function() {
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return testResult; });
-        controller = initController('viewEmailController');
-      });
-
-      it('should return true when context is set', function() {
-        $stateParams.context = '123';
-        testResult = true;
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
-
-      it('should return true when context unavailable but scope.email has mailbox', function() {
-        var testMailboxId = '1234';
-
-        scope.email = { mailboxIds: [testMailboxId] };
-        $stateParams.context = null;
-        testResult = true;
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
-
-      it('should return true when neither context nor scope.email available', function() {
-        scope.email = null;
-        $stateParams.context = null;
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
-
-      it('should return true when all mailboxId of email authorize moving', function() {
-        scope.email = { mailboxIds: ['1234', '1235'] };
-        $stateParams.context = null;
-        testResult = true;
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
-
-      it('should return false if one mailbox forbid moving', function() {
-        scope.email = { mailboxIds: ['1', '2', '3'] };
-        $stateParams.context = null;
-        testResult = true;
-
-        inboxMailboxesServiceCanTrashMessagesStub.restore();
-        inboxMailboxesServiceCanTrashMessagesStub = sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox');
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(0).returns(true);
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(1).returns(false);
-        inboxMailboxesServiceCanTrashMessagesStub.onCall(2).returns(true);
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
-      });
-
-      it('should return false if all mailboxes forbid moving', function() {
-        scope.email = { mailboxIds: ['1234', '1235'] };
-        $stateParams.context = null;
-        testResult = false;
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
-      });
-
-    });
-
   });
 
   describe('The inboxMoveItemController controller', function() {
@@ -2405,7 +2377,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
           unmarkAsFlagged: sinon.spy(),
           markAsFlagged: sinon.spy(),
           moveMultipleItems: sinon.spy(),
-          moveToTrash: sinon.spy()
+          moveToTrash: sinon.spy(),
+          moveToSpam: sinon.spy()
         },
         inboxMailboxesService: inboxMailboxesService = {
           canMoveMessagesOutOfMailbox: sinon.spy(function() { return canDoActionMockResult; }),
@@ -2533,6 +2506,27 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     });
 
+    describe('The moveToSpam function', function() {
+
+      it('should call inboxJmapItemService.moveToSpam for all selected items', function() {
+        inboxSelectionService.toggleItemSelection(item1);
+        inboxSelectionService.toggleItemSelection(item2);
+        controller.moveToSpam();
+
+        expect(inboxJmapItemService.moveToSpam).to.have.been.calledWith([item1, item2]);
+      });
+
+      it('should unselect all items', function() {
+        inboxSelectionService.toggleItemSelection(item1);
+        inboxSelectionService.toggleItemSelection(item2);
+        controller.moveToSpam();
+
+        expect(item1.selected).to.equal(false);
+        expect(item2.selected).to.equal(false);
+      });
+
+    });
+
     describe('The move function', function() {
 
       it('should call $state.go', function() {
@@ -2543,135 +2537,91 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     });
 
-    describe('The canTrashMessages function', function() {
-      var selectedItemsMock;
+    describe('The can[Trash|Move|Spam]Messages functions', function() {
+      var selectedItemsMock, expectedTestResult;
 
       beforeEach(function() {
         inboxSelectionService.getSelectedItems = sinon.spy(function() { return selectedItemsMock;});
       });
 
-      it('should return true when context is set', function() {
-        $stateParams.context = '1234';
-        canDoActionMockResult = true;
-
-        initController();
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canTrashMessages function', function() {
+        executeCanFunctionTests('canTrashMessages');
       });
 
-      it('should return true when no context nor selectedItems', function() {
-        $stateParams.context = null;
-        selectedItemsMock = [];
-
-        initController();
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canMoveMessagesOutOfMailbox function', function() {
+        executeCanFunctionTests('canMoveMessagesOutOfMailbox');
       });
 
-      it('should return true when all selected email belong to mailboxes that allow moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
-
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = true;
-
-        initController();
-
-        expect(controller.canTrashMessages()).is.true;
+      describe('The canMoveMessageToSpam function', function() {
+        executeCanFunctionTests('canMoveMessageToSpam');
       });
 
-      it('should return false when emails belong to mailboxes that forbid moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+      function executeCanFunctionTests(canFunctionName) {
 
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = false;
+        it('should return true when context is set', function() {
+          $stateParams.context = '1234';
+          canDoActionMockResult = true;
+          expectedTestResult = true;
 
-        initController();
+          initController();
 
-        expect(controller.canTrashMessages()).is.false;
-      });
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-      it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
+        it('should return true when neither context nor selectedItems', function() {
+          $stateParams.context = null;
+          selectedItemsMock = [];
+          expectedTestResult = true;
 
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = true;
+          initController();
 
-        initController();
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-        expect(controller.canTrashMessages()).is.true;
-      });
-    });
+        it('should return true when all selected email belong to mailboxes that allow moving', function() {
+          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
 
-    describe('The canMoveMessagesOutOfMailbox function', function() {
+          selectedItemsMock = [message1, message2];
+          $stateParams.context = null;
+          canDoActionMockResult = true;
+          expectedTestResult = true;
 
-      var selectedItemsMock;
+          initController();
 
-      beforeEach(function() {
-        inboxSelectionService.getSelectedItems = sinon.spy(function() { return selectedItemsMock;});
-      });
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-      it('should return true when context is set', function() {
-        $stateParams.context = '1234';
-        canDoActionMockResult = true;
+        it('should return false when emails belong to mailboxes that forbid moving', function() {
+          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
 
-        initController();
+          selectedItemsMock = [message1, message2];
+          $stateParams.context = null;
+          canDoActionMockResult = false;
+          expectedTestResult = false;
 
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
+          initController();
 
-      it('should return true when no context nor selectedItems', function() {
-        $stateParams.context = null;
-        selectedItemsMock = [];
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-        initController();
+        it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
+          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
+              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
 
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
+          selectedItemsMock = [message1, message2];
+          $stateParams.context = null;
+          canDoActionMockResult = true;
+          expectedTestResult = true;
 
-      it('should return true when all selected email belong to mailboxes that allow moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+          initController();
 
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = true;
+          expect(controller[canFunctionName]()).to.equal(expectedTestResult);
+        });
 
-        initController();
+      }
 
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
-
-      it('should return false when emails belong to mailboxes that forbid moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
-
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = false;
-
-        initController();
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.false;
-      });
-
-      it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
-        var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
-          message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
-
-        selectedItemsMock = [message1, message2];
-        $stateParams.context = null;
-        canDoActionMockResult = true;
-
-        initController();
-
-        expect(controller.canMoveMessagesOutOfMailbox()).is.true;
-      });
     });
 
     it('should default contextSupportsAttachments to true if there\'s no type selected', function() {

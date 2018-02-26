@@ -206,5 +206,7 @@
   "Open email links with OpenPaaS": "Mở liên kết thư điện tử bằng OpenPaaS",
   "In order to make sure that you can open email links, please": "Để đảm bảo rằng bạn có thể mở liên kết thư điện tử",
   "authorize your browser": "cấp phép cho trình duyệt của bạn",
-  "Test": "Kiểm tra"
+  "Test": "Kiểm tra",
+  "Mark as spam": "Đánh dấu spam",
+  "Spam": "Spam"
 }

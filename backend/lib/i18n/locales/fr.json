@@ -208,5 +208,7 @@
   "Open email links with OpenPaaS": "Ouvrir les liens email avec OpenPaaS",
   "In order to make sure that you can open email links, please": "Pour être certain de pouvoir ouvrir les liens email, veuillez",
   "authorize your browser": "autoriser votre navigateur",
-  "Test": "Tester"
+  "Test": "Tester",
+  "Mark as spam": "Signaler comme spam",
+  "Spam": "Spam"
 }

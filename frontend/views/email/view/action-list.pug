@@ -42,6 +42,11 @@
       i.mdi.mdi-delete
       span.label
         | #{__('Delete')}
+  .action(ng-if="onSwipeRight", ng-show='ctrl.canMoveMessageToSpam()')
+    a(ng-click='ctrl.moveToSpam()', title=__('Mark as spam'))
+      i.mdi.mdi-alert-octagon
+      span.label
+        | #{__('Spam')}
   .action
     a(ng-click='ctrl.download()', title=__('Download (.eml)'), href="", target="_blank")
       i.mdi.mdi-download

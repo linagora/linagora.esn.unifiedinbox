@@ -127,6 +127,40 @@ describe('The inboxJmapItemService service', function() {
 
   });
 
+  describe('The moveToSpam function', function() {
+
+    it('should reject if we cannot load the Spam mailbox', function(done) {
+      jmapClientMock.getMailboxes = function() {
+        return $q.reject();
+      };
+
+      inboxJmapItemService.moveToSpam([]).catch(done);
+      $rootScope.$digest();
+    });
+
+    it('should move the message to the Spam mailbox', function(done) {
+      jmapClientMock.getMailboxes = function() {
+        return $q.when([new jmap.Mailbox({}, 'id_spam', 'name_spam', { role: 'spam' })]);
+      };
+
+      inboxJmapItemService.moveToSpam([
+        new jmap.Message({}, 'id', 'blobId', 'trheadId', ['id_inbox'], { subject: 'subject' })
+      ]).then(function() {
+        expect(jmapClientMock.setMessages).to.have.been.calledWith({
+          update: {
+            id: {
+              mailboxIds: ['id_spam']
+            }
+          }
+        });
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+  });
+
   describe('The moveToMailbox function', function() {
 
     var inboxMailboxesService, mailbox;

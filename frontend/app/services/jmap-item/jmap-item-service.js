@@ -18,6 +18,7 @@
         markAsFlagged: markAsFlagged,
         unmarkAsFlagged: unmarkAsFlagged,
         moveToTrash: moveToTrash,
+        moveToSpam: moveToSpam,
         moveToMailbox: moveToMailbox,
         moveMultipleItems: moveMultipleItems,
         downloadEML: downloadEML,
@@ -35,10 +36,18 @@
         }
       }
 
-      function moveToTrash(itemOrItems) {
-        return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.TRASH).then(function(mailbox) {
+      function _moveToMailboxWithRole(itemOrItems, mailboxRole) {
+        return inboxMailboxesService.getMailboxWithRole(mailboxRole).then(function(mailbox) {
           return moveMultipleItems(itemOrItems, mailbox);
         });
+      }
+
+      function moveToTrash(itemOrItems) {
+        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.TRASH);
+      }
+
+      function moveToSpam(itemOrItems) {
+        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.SPAM);
       }
 
       function _updateItemMailboxIds(item, newMailboxIds) {
