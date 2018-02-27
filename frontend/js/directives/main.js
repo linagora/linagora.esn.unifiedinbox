@@ -155,15 +155,11 @@ angular.module('linagora.esn.unifiedinbox')
     return {
       restrict: 'E',
       controller: 'resolveEmailerController',
+      controllerAs: '$ctrl',
       scope: {
         emailer: '='
       },
-      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html',
-      link: function(scope) {
-        scope.resolveAvatar = function() {
-          return scope.emailer ? scope.emailer.resolve() : $q.when({});
-        };
-      }
+      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html'
     };
   })
 

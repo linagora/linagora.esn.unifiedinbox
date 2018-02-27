@@ -698,11 +698,22 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .controller('resolveEmailerController', function($scope) {
+    var self = this;
+
+    self.resolveAvatar = resolveAvatar;
+
     $scope.$watch('emailer', function(emailer) {
       if (emailer) {
         emailer.resolve();
       }
     });
+
+    /////
+
+    function resolveAvatar() {
+      return $scope.emailer ? $scope.emailer.resolve() : $q.when({});
+
+    }
   })
 
   .controller('inboxListSubheaderController', function($state, $stateParams,
