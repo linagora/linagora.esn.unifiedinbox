@@ -1904,7 +1904,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       it('should return an emtpy object when there is no emailer available', function(done) {
         compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
 
-        element.isolateScope().resolveAvatar().then(function(avatar) {
+        element.isolateScope().$ctrl.resolveAvatar().then(function(avatar) {
           expect(avatar).to.deep.equal({});
 
           done();
@@ -1921,7 +1921,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
         compileDirective('<inbox-emailer-avatar emailer="emailer"/>');
 
-        element.isolateScope().resolveAvatar().then(function(avatar) {
+        element.isolateScope().$ctrl.resolveAvatar().then(function(avatar) {
           expect(avatar).to.deep.equal({
             id: 'myId'
           });
