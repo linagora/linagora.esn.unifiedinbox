@@ -636,15 +636,65 @@ describe('The inboxMailboxesService factory', function() {
     });
 
     it('should allow trashing drafts', function() {
+      inboxMailboxesCache.push(draftMailbox);
+
       expect(inboxMailboxesService.canTrashMessages(draftMailbox.id)).to.equal(true);
     });
 
     it('should forbid trashing from trash', function() {
-      expect(inboxMailboxesService.canTrashMessages(trashMailbox.id)).to.equal(true);
+      inboxMailboxesCache.push(trashMailbox);
+
+      expect(inboxMailboxesService.canTrashMessages(trashMailbox.id)).to.equal(false);
     });
 
     it('should allow passing draft mailbox directly', function() {
+      inboxMailboxesCache.push(draftMailbox);
+
       expect(inboxMailboxesService.canTrashMessages(draftMailbox)).to.equal(true);
+    });
+  });
+
+  describe('The canUnSpamMessages function', function() {
+
+    var spamMailbox, inboxMailbox;
+
+    beforeEach(function() {
+      spamMailbox = {
+        id: 11,
+        mayAddItems: true,
+        role: jmap.MailboxRole.SPAM,
+        name: jmap.MailboxRole.SPAM.toString()
+      };
+      inboxMailbox = {
+        id: 12,
+        mayAddItems: true,
+        role: jmap.MailboxRole.INBOX,
+        name: jmap.MailboxRole.INBOX.toString()
+      };
+    });
+
+    it('should forbid if mailbox not in cache', function() {
+      var mailbox = { id: 1 };
+
+      expect(inboxMailboxesService.canUnSpamMessages(mailbox.id)).to.equal(false);
+    });
+
+    it('should allow from Spam mailbox', function() {
+      inboxMailboxesCache.push(spamMailbox);
+
+      expect(inboxMailboxesService.canUnSpamMessages(spamMailbox.id)).to.equal(true);
+    });
+
+    it('should forbid from other mailboxes', function() {
+      inboxMailboxesCache.push(inboxMailbox);
+
+      expect(inboxMailboxesService.canUnSpamMessages(inboxMailbox.id)).to.equal(false);
+    });
+
+    it('should allow passing spam mailbox directly', function() {
+      inboxMailboxesCache.push(spamMailbox);
+
+      expect(inboxMailboxesService.canUnSpamMessages(spamMailbox)).to.equal(true);
     });
   });
 

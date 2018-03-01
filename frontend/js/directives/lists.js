@@ -87,7 +87,8 @@ angular.module('linagora.esn.unifiedinbox')
           }
         };
 
-        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash', 'moveToSpam'].forEach(function(action) {
+        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 
+          'unmarkAsFlagged', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
           self[action] = function() {
             inboxJmapItemService[action]($scope.item);
           };
@@ -125,6 +126,10 @@ angular.module('linagora.esn.unifiedinbox')
 
         self.canMoveMessageToSpam = function() {
           return _canActionBeDone(inboxMailboxesService.canMoveMessagesOutOfMailbox);
+        };
+
+        self.canUnSpamMessages = function() {
+          return _canActionBeDone(inboxMailboxesService.canUnSpamMessages);
         };
       },
       controllerAs: 'ctrl',

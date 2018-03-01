@@ -42,9 +42,14 @@
       i.mdi.mdi-delete
       span.label
         | #{__('Delete')}
+  .action(ng-if="onSwipeRight", ng-show='ctrl.canUnSpamMessages()')
+    a(ng-click='ctrl.unSpam()', title=__('Not spam'))
+      i.mdi.mdi-approval
+      span.label
+        | #{__('Not spam')}
   .action(ng-if="onSwipeRight", ng-show='ctrl.canMoveMessageToSpam()')
     a(ng-click='ctrl.moveToSpam()', title=__('Mark as spam'))
-      i.mdi.mdi-alert-octagon
+      i.mdi.mdi-alert-decagram
       span.label
         | #{__('Spam')}
   .action

@@ -36,6 +36,7 @@
         sharedMailboxesList: sharedMailboxesList,
         updateSharedMailboxCache: updateSharedMailboxCache,
         canTrashMessages: canTrashMessages,
+        canUnSpamMessages: canUnSpamMessages,
         canMoveMessagesIntoMailbox: canMoveMessagesIntoMailbox,
         canMoveMessagesOutOfMailbox: canMoveMessagesOutOfMailbox,
         updateUnreadDraftsCount: updateUnreadDraftsCount
@@ -312,6 +313,12 @@
         }
 
         return canMoveMessagesOutOfMailbox(mailbox);
+      }
+
+      function canUnSpamMessages(fromMailboxObjectOrId) {
+        var mailbox = _getMailboxFromId(fromMailboxObjectOrId);
+
+        return !!mailbox && mailbox.role === jmap.MailboxRole.SPAM;
       }
 
       function canMoveMessage(message, toMailbox) {

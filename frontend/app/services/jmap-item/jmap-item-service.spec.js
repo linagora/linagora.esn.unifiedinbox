@@ -161,6 +161,40 @@ describe('The inboxJmapItemService service', function() {
 
   });
 
+  describe('The unSpam function', function() {
+
+    it('should reject if we cannot load the INBOX mailbox', function(done) {
+      jmapClientMock.getMailboxes = function() {
+        return $q.reject();
+      };
+
+      inboxJmapItemService.unSpam([]).catch(done);
+      $rootScope.$digest();
+    });
+
+    it('should move the message to the INBOX mailbox', function(done) {
+      jmapClientMock.getMailboxes = function() {
+        return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
+      };
+
+      inboxJmapItemService.unSpam([
+        new jmap.Message({}, 'id', 'blobId', 'trheadId', ['id_spam'], { subject: 'subject' })
+      ]).then(function() {
+        expect(jmapClientMock.setMessages).to.have.been.calledWith({
+          update: {
+            id: {
+              mailboxIds: ['id_inbox']
+            }
+          }
+        });
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+  });
+
   describe('The moveToMailbox function', function() {
 
     var inboxMailboxesService, mailbox;
