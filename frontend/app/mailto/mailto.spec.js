@@ -55,11 +55,10 @@ describe('The mailto Angular application', function() {
 
     inject(function(newComposerService, StateManager) {
       expect(newComposerService.open).to.have.been.calledWith(message, {
-        postSendCallback: sinon.match.func
-      }, {
         closeable: false,
         allowedStates: [],
-        initialState: StateManager.STATES.FULL_SCREEN
+        initialState: StateManager.STATES.FULL_SCREEN,
+        onSend: sinon.match.func
       });
     });
   });
@@ -75,8 +74,8 @@ describe('The mailto Angular application', function() {
       });
       $provide.value('inboxMailtoParser', function() { return message; });
       $provide.value('newComposerService', {
-        open: function(message, compositionOptions) {
-          compositionOptions.postSendCallback();
+        open: function(message, boxOptions) {
+          boxOptions.onSend();
         }
       });
       $provide.value('sessionFactory', {

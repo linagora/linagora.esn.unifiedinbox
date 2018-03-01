@@ -12,6 +12,11 @@ describe('The newComposerService ', function() {
     angular.mock.module('linagora.esn.unifiedinbox', 'jadeTemplates', function($provide) {
       config = config || {};
 
+      $provide.value('inboxIdentitiesService', {
+        getAllIdentities: function() {
+          return $q.when([]);
+        }
+      });
       $provide.value('esnConfig', function(key, defaultValue) {
         return $q.when(angular.isDefined(config[key]) ? config[key] : defaultValue);
       });
@@ -64,8 +69,7 @@ describe('The newComposerService ', function() {
       $timeout.flush();
 
       expect($state.go).to.have.been.calledWith('unifiedinbox.compose', {
-        email: undefined,
-        compositionOptions: undefined
+        email: undefined
       });
     });
 
@@ -77,7 +81,7 @@ describe('The newComposerService ', function() {
 
       expect(boxOverlayOpener.open).to.have.been.calledWithMatch({
         title: 'New message',
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html'
+        templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html'
       });
     });
 
@@ -100,8 +104,7 @@ describe('The newComposerService ', function() {
       $rootScope.$digest();
 
       expect($state.go).to.have.been.calledWith('unifiedinbox.compose', {
-        email: { id: 'id' },
-        compositionOptions: undefined
+        email: { id: 'id' }
       });
     });
 
@@ -115,9 +118,8 @@ describe('The newComposerService ', function() {
       expect(boxOverlayOpener.open).to.have.been.calledWith({
         id: 'id',
         title: 'New message',
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html',
-        email: { id: 'id' },
-        compositionOptions: null
+        templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
+        email: { id: 'id' }
       });
     });
 
@@ -147,8 +149,7 @@ describe('The newComposerService ', function() {
       $timeout.flush();
 
       expect($state.go).to.have.been.calledWith('unifiedinbox.compose', {
-        email: {expected: 'field'},
-        compositionOptions: undefined
+        email: {expected: 'field'}
       });
     });
 
@@ -160,10 +161,9 @@ describe('The newComposerService ', function() {
 
       expect(boxOverlayOpener.open).to.have.been.calledWith({
         id: '1234',
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html',
+        templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
         email: { id: '1234', subject: 'object' },
-        title: 'New message',
-        compositionOptions: undefined
+        title: 'New message'
       });
     });
 
@@ -176,36 +176,34 @@ describe('The newComposerService ', function() {
       expect(boxOverlayOpener.open).to.have.been.calledWith({
         id: '1234',
         title: 'New message',
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html',
-        email: { id: '1234', subject: 'object' },
-        compositionOptions: undefined
+        templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
+        email: { id: '1234', subject: 'object' }
       });
     });
 
-    it('should forward the compositionOptions when "open" is called and is on mobile', function() {
+    it('should not forward the boxOptions when "open" is called and is on mobile', function() {
       deviceDetector.isMobile = sinon.stub().returns(true);
 
-      newComposerService.open({expected: 'field'}, {expected: 'options'});
+      newComposerService.open({expected: 'field'}, { expected: 'options' });
       $timeout.flush();
 
       expect($state.go).to.have.been.calledWith('unifiedinbox.compose', {
-        email: {expected: 'field'},
-        compositionOptions: {expected: 'options'}
+        email: {expected: 'field'}
       });
     });
 
-    it('should forward the compositionOptions when "open" is called and is not on mobile', function() {
+    it('should forward the boxOptions when "open" is called and is not on mobile', function() {
       deviceDetector.isMobile = sinon.stub().returns(false);
       boxOverlayOpener.open = sinon.spy();
 
-      newComposerService.open({id: '1234', subject: 'object'}, {expected: 'options'});
+      newComposerService.open({ id: '1234', subject: 'object' }, { expected: 'options' });
 
       expect(boxOverlayOpener.open).to.have.been.calledWith({
         id: '1234',
-        templateUrl: '/unifiedinbox/views/composer/box-compose.html',
+        templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
         email: {id: '1234', subject: 'object'},
-        compositionOptions: {expected: 'options'},
-        title: 'New message'
+        title: 'New message',
+        expected: 'options'
       });
     });
 

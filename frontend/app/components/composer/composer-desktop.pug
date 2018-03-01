@@ -1,0 +1,30 @@
+form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
+
+  inbox-composer-identity-selector(identity="$ctrl.message.identity", on-identity-update="$ctrl.message.identity = $identity")
+
+  .compose-to
+    .fields
+      .form-group
+        label.control-label #{__('To')}
+        recipients-auto-complete.inbox-recipients.recipients-to(ng-model="$ctrl.message.to", template="recipients-auto-complete")
+      .form-group.ng-hide(ng-hide="$ctrl.isCollapsed")
+        label.control-label #{__('Cc')}
+        recipients-auto-complete.inbox-recipients.recipients-cc(ng-model="$ctrl.message.cc", template="recipients-auto-complete")
+      .form-group.ng-hide(ng-hide="$ctrl.isCollapsed")
+        label.control-label #{__('Bcc')}
+        recipients-auto-complete.inbox-recipients.recipients-bcc(ng-model="$ctrl.message.bcc", template="recipients-auto-complete")
+    .inbox-more-recipients(ng-click="$ctrl.isCollapsed = !$ctrl.isCollapsed", ng-class="{ 'isCollapsed': $ctrl.isCollapsed }")
+      i.mdi(ng-class="$ctrl.isCollapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'")
+
+  input.form-control.compose-subject(type="text", placeholder=__('Subject'), ng-model="$ctrl.message.subject", ng-change="$ctrl.onTitleUpdate({ $title: $ctrl.message.subject })")
+
+  inbox-composer-body-editor-html(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", send="$ctrl.send()", upload="$ctrl.upload($attachment)", remove-attachment="$ctrl.removeAttachment($attachment)", on-body-update="$ctrl.message.htmlBody = $body")
+
+  .compose-footer.flex-space-between
+    button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", ng-click="$ctrl.destroyDraft()", type="button", title=__('Delete'))
+      i.mdi.mdi-delete
+
+    .compose-right-footer
+      inbox-composer-attachments-selector(attachments="$ctrl.message.attachments", upload="$ctrl.upload($attachment)", on-attachments-update="$ctrl.message.attachments = $attachments")
+      button.btn.btn-primary(type="submit", value="submit", ng-disabled="$ctrl.isSendingMessage") #{__('Send')}
+        i.mdi.mdi-send

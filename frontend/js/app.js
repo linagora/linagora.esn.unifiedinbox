@@ -133,20 +133,10 @@ angular.module('linagora.esn.unifiedinbox', [
         url: '/compose',
         views: {
           'main@unifiedinbox': {
-            template: '<composer />'
+            template: '<inbox-composer-mobile />'
           }
         },
-        params: { email: {}, compositionOptions: {}, composition: null }
-      })
-      .state('unifiedinbox.compose.recipients', {
-        url: '/:recipientsType',
-        views: {
-          'main@unifiedinbox': {
-            templateUrl: '/unifiedinbox/views/composer/fullscreen-edit-form/index',
-            controller: 'recipientsFullscreenEditFormController'
-          }
-        },
-        params: { composition: null }
+        params: { email: {} }
       })
       .state('unifiedinbox.configuration', {
         url: '/configuration',
