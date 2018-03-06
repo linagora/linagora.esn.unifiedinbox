@@ -539,7 +539,7 @@ angular.module('linagora.esn.unifiedinbox')
     }
   })
 
-  .controller('resolveEmailerController', function($scope) {
+  .controller('resolveEmailerController', function($scope, $q) {
     var self = this;
 
     self.resolveAvatar = resolveAvatar;
