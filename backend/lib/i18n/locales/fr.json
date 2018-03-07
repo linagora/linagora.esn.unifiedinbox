@@ -211,5 +211,6 @@
   "Test": "Tester",
   "Mark as spam": "Signaler comme spam",
   "Spam": "Spam",
-  "Not spam": "Non spam"
+  "Not spam": "Non spam",
+  "Request a read receipt": "Demander une confirmation de lecture"
 }

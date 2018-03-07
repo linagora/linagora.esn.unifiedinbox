@@ -16,7 +16,7 @@
       self.removeAttachment = removeAttachment;
       self.send = send;
       self.destroyDraft = destroyDraft;
-
+      self.toggleReadReceiptRequest = toggleReadReceiptRequest;
       /////
 
       function $onInit() {
@@ -47,6 +47,10 @@
         self.saveDraft();
       }
 
+      function toggleReadReceiptRequest() {
+        self.hasRequestedReadReceipt = !self.hasRequestedReadReceipt;
+      }
+
       function send() {
         self.isSendingMessage = true;
 
@@ -54,6 +58,9 @@
           _closeComposer();
 
           emailSendingService.removeDuplicateRecipients(self.message);
+          if (self.hasRequestedReadReceipt) {
+            emailSendingService.addReadReceiptRequest(self.message);
+          }
 
           return backgroundAction({
             progressing: 'Your message is being sent...',
