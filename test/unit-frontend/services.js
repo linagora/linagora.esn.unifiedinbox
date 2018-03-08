@@ -369,6 +369,25 @@ describe('The Unified Inbox Angular module services', function() {
       });
     });
 
+    describe('The addReadReceiptRequest function', function() {
+
+      it('should add a message header', function() {
+        email = {};
+        emailSendingService.addReadReceiptRequest(email);
+
+        expect(email.headers['Disposition-Notification-To']).to.equal('user@linagora.com');
+      });
+
+      it('should add an additional header', function() {
+        email = { headers: {'Content-Transfer-Encoding': '7bit' }};
+        emailSendingService.addReadReceiptRequest(email);
+
+        expect(email.headers).to.include.keys('Disposition-Notification-To', 'Content-Transfer-Encoding');
+        expect(email.headers['Disposition-Notification-To']).to.equal('user@linagora.com');
+      });
+
+    });
+
     describe('The prefixSubject function', function() {
 
       it('should prefix the subject with the required prefix if it does not already exist in the subject', function() {

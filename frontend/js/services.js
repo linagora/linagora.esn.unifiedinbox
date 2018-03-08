@@ -110,6 +110,13 @@ angular.module('linagora.esn.unifiedinbox')
       email.bcc = (email.bcc || []).filter(notIn(email.to)).filter(notIn(email.cc));
     }
 
+    function addReadReceiptRequest(message) {
+      var senderAddress = getEmailAddress(session.user);
+
+      message.headers = message.headers || {};
+      message.headers['Disposition-Notification-To'] = senderAddress;
+    }
+
     function countRecipients(email) {
       if (!email) {
         return 0;
@@ -279,6 +286,7 @@ angular.module('linagora.esn.unifiedinbox')
     return {
       emailsAreValid: emailsAreValid,
       removeDuplicateRecipients: removeDuplicateRecipients,
+      addReadReceiptRequest: addReadReceiptRequest,
       noRecipient: noRecipient,
       sendEmail: sendEmail,
       prefixSubject: prefixSubject,

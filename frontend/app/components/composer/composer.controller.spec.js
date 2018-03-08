@@ -1,6 +1,6 @@
 'use strict';
 
-/* global chai: false, sinon: false */
+/* global chai: false, sinon: false, angular: false */
 
 var expect = chai.expect;
 
@@ -51,6 +51,13 @@ describe('The inboxComposerController controller', function() {
       onHide: sinon.spy(),
       onShow: sinon.spy(),
       onTitleUpdate: sinon.spy()
+    });
+    angular.mock.inject(function(session) {
+      session.user = {
+        firstname: 'user',
+        lastname: 'using',
+        preferredEmail: 'user@linagora.com'
+      };
     });
   });
 
@@ -440,6 +447,38 @@ describe('The inboxComposerController controller', function() {
       $rootScope.$digest();
 
       expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'You have been disconnected. Please check if the message was sent before retrying');
+    });
+
+    it('should add an MDN header when read receipt has been requested', function() {
+      ctrl.message = {
+        to: [{ email: 'A@A.com' }],
+        textBody: 'Body'
+      };
+      ctrl.$onInit();
+      ctrl.toggleReadReceiptRequest();
+      ctrl.send();
+      $rootScope.$digest();
+
+      expect(sendEmail).to.have.been.calledWith(sinon.match({
+        textBody: 'Body',
+        headers: { 'Disposition-Notification-To': 'user@linagora.com' }
+      }));
+    });
+
+    it('should NOT any header when no read receipt were requested', function() {
+      ctrl.message = {
+        to: [{ email: 'A@A.com' }],
+        headers: {name: 'value'},
+        textBody: 'Body'
+      };
+
+      sendMessage();
+
+      var missingReceiptHeaderMatcher = sinon.match(function(message) {
+        return !(message.headers && 'Disposition-Notification-To' in message.headers);
+      }, 'missingReceiptRequestHeaderInMessage');
+
+      expect(sendEmail).to.have.been.calledWith(missingReceiptHeaderMatcher.and(sinon.match({textBody: 'Body'})));
     });
 
   });

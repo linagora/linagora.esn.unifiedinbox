@@ -12,5 +12,15 @@ block right
       i.mdi.mdi-send.mdi-margin-left
     button.send.btn.btn-link.btn-icon.visible-xs(ng-click='$ctrl.send()', ng-disabled="$ctrl.isSendingMessage")
       i.mdi.mdi-send
-    button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", action-list="/unifiedinbox/views/composer/more-button.html")
-      i.mdi.mdi-dots-vertical
+    md-menu-bar
+      md-menu
+        button.btn.btn-link.btn-icon(type="button", ng-click="$mdMenu.open()", title=__('More'))
+          i.mdi.mdi-dots-vertical
+        md-menu-content.dm-icon(width="3")
+          md-menu-item.md-indent(type="checkbox", ng-model="$ctrl.hasRequestedReadReceipt")
+            | #{__('Request a read receipt')}
+          md-menu-divider(feature-flag="linagora.esn.unifiedinbox.drafts")
+          md-menu-item.md-indent(feature-flag="linagora.esn.unifiedinbox.drafts")
+            md-icon(md-svg-icon="delete", aria-label="delete Icon")
+            md-button(ng-click="$ctrl.destroyDraft()")
+              | #{__('Delete')}
