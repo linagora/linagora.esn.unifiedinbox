@@ -36,11 +36,11 @@ angular.module('linagora.esn.unifiedinbox')
 
   .filter('nl2br', function() {
     return function(text) {
-      if (!angular.isDefined(text)) {
-        return;
+      if (text && text.trim) {
+        return text.trim().replace(/([^>\r\n]?)(\r\n|\r|\n)/gm, '$1<br/>');
       }
 
-      return text.trim().replace(/([^>\r\n]?)(\r\n|\r|\n)/gm, '$1<br/>');
+      return text;
     };
   })
 

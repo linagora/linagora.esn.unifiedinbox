@@ -75,8 +75,16 @@ describe('The Unified Inbox Angular module filters', function() {
   describe('The nl2br filter', function() {
     var emailTextBody;
 
-    it('should do nothing if textBody is not defined', function() {
+    it('should return nothing if textBody is not defined', function() {
       expect($filter('nl2br')()).to.be.undefined;
+    });
+
+    it('should return original input if it is falsy', function() {
+      expect($filter('nl2br')(null)).to.equal(null);
+    });
+
+    it('should return original input if it is not a string (has no trim method)', function() {
+      expect($filter('nl2br')(true)).to.equal(true);
     });
 
     it('should replace each new line by <br/> tag', function() {
