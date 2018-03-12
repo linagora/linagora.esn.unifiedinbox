@@ -388,6 +388,34 @@ describe('The Unified Inbox Angular module services', function() {
 
     });
 
+    describe('The getReadReceiptRequest function', function() {
+
+      it('should return false when email is undefined', function() {
+        email = {};
+
+        expect(emailSendingService.getReadReceiptRequest(email)).to.equal(false);
+      });
+
+      it('should return false for email.headers  is undefined', function() {
+        email = {
+          headers: {}
+        };
+
+        expect(emailSendingService.getReadReceiptRequest(email)).to.equal(false);
+      });
+
+      it('should return email sender when Disposition-Notification-To is not empty', function() {
+        email = {
+          headers: {
+            'Disposition-Notification-To': 'test@test.com'
+          }
+        };
+
+        expect(emailSendingService.getReadReceiptRequest(email)).to.equal('test@test.com');
+      });
+
+    });
+
     describe('The prefixSubject function', function() {
 
       it('should prefix the subject with the required prefix if it does not already exist in the subject', function() {

@@ -211,5 +211,13 @@
   "Spam": "Spam",
   "Not spam": "Not spam",
   "Request a read receipt": "Request a read receipt",
-  "Storage": "Storage"
+  "Storage": "Storage",
+  "Read: %s": "Read: %s",
+  "To: %s": "To: %s",
+  "Subject: %s": "Subject: %s",
+  "Message was displayed on %s": "Message was displayed on %s",
+  "Could not send the read receipt.": "Could not send the read receipt.",
+  "A read receipt has been requested.": "A read receipt has been requested.",
+  "A read receipt has been sent.": "A read receipt has been sent.",
+  "Send the read receipt": "Send the read receipt"
 }

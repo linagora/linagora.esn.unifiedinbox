@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxJmapItemService service', function() {
 
-  var $rootScope, jmap, inboxJmapItemService, newComposerService, emailSendingService, quoteEmail, jmapClientMock,
+  var $rootScope, _, jmap, inboxJmapItemService, newComposerService, emailSendingService, quoteEmail, jmapClientMock,
       notificationFactory, counter, infiniteListService, inboxSelectionService, INFINITE_LIST_EVENTS, INBOX_EVENTS,
       inboxConfigMock, inboxMailboxesService, inboxFilteredList;
 
@@ -45,11 +45,12 @@ describe('The inboxJmapItemService service', function() {
     });
   }));
 
-  beforeEach(inject(function(_$rootScope_, _jmap_, _inboxJmapItemService_, _notificationFactory_,
+  beforeEach(inject(function(_$rootScope_, _jmap_, ___, _inboxJmapItemService_, _notificationFactory_,
                              _infiniteListService_, _inboxSelectionService_, _INFINITE_LIST_EVENTS_, _INBOX_EVENTS_,
                              _inboxMailboxesService_, _inboxMailboxesCache_, _inboxFilteredList_) {
     $rootScope = _$rootScope_;
     jmap = _jmap_;
+    _ = ___;
     inboxJmapItemService = _inboxJmapItemService_;
     notificationFactory = _notificationFactory_;
     infiniteListService = _infiniteListService_;
@@ -874,6 +875,89 @@ describe('The inboxJmapItemService service', function() {
         expect(notificationFactory.weakError).to.have.been.calledOnce;
         done();
       });
+      $rootScope.$digest();
+    });
+
+  });
+
+  describe('The ackReceipt function', function() {
+    function mockSendMDN(listOfRequestIDs) {
+      listOfRequestIDs = listOfRequestIDs || {};
+      jmapClientMock.setMessages = sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock, ({ MDNSent: listOfRequestIDs.successful || {}, MDNNotSent: listOfRequestIDs.rejected || {} })));
+      });
+    }
+
+    it('should notify when sending acknowledgment has failed', function(done) {
+      var message = newEmail();
+
+      mockSendMDN({ rejected: { id1: { type: 'invalidArguments' }} });
+      inboxJmapItemService.ackReceipt(message)
+        .catch(function() {
+        expect(notificationFactory.weakError).to.have.been.calledWith('Error');
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should call setMessages with the correct command, and resolve when setMessages succeeds', function(done) {
+      var fixedIds = function() { return 'reqId1';};
+
+      mockSendMDN();
+      inboxJmapItemService.ackReceipt(newEmail(), fixedIds).then(function() {
+        expect(jmapClientMock.setMessages).to.have.been.calledWith(sinon.match({
+          sendMDN: {
+            reqId1: {
+              disposition: {
+                actionMode: 'manual-action',
+                sendingMode: 'MDN-sent-manually',
+                type: 'displayed'
+              },
+              messageId: 'id1',
+              subject: 'Read: %s',
+              textBody: 'To: %s\nSubject: %s\nMessage was displayed on %s'
+            }
+          }
+        }));
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should fail when sender\'s email not provided', function(done) {
+      var fixedIds = function() { return 'reqId1';};
+
+      mockSendMDN();
+      inboxJmapItemService.ackReceipt(_.extend(newEmail(), { from: {} }), fixedIds)
+        .catch(function(e) {
+          expect(e.message).to.have.string('Cannot build acknowledgement for provided message:');
+          done();
+        });
+      $rootScope.$digest();
+    });
+
+    it('should fail when message id is not set', function(done) {
+      var fixedIds = function() { return 'reqId1';};
+
+      mockSendMDN();
+      inboxJmapItemService.ackReceipt(_.extend(newEmail(), { id: '' }), fixedIds)
+        .catch(function(e) {
+          expect(e.message).to.have.string('Cannot build acknowledgement for provided message:');
+          done();
+        });
+      $rootScope.$digest();
+    });
+
+    it('should fail when requestId provider fails', function(done) {
+      var failingIdProvider = function() {};
+
+      mockSendMDN();
+      inboxJmapItemService.ackReceipt(newEmail(), failingIdProvider)
+        .catch(function(e) {
+          expect(e.message).to.have.string('Could not create an identifier for sendMDN request ');
+          done();
+        });
       $rootScope.$digest();
     });
 

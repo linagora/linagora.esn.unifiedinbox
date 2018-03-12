@@ -213,5 +213,13 @@
   "Spam": "Spam",
   "Not spam": "Non spam",
   "Request a read receipt": "Demander une confirmation de lecture",
-  "Storage": "Utilisation"
+  "Storage": "Utilisation",
+  "Read: %s": "Lu: %s",
+  "To: %s": "À: %s",
+  "Subject: %s": "Objet: %s",
+  "Message was displayed on %s": "Le message a été affiché le %s",
+  "Could not send the read receipt.": "Impossible d'envoyer l'accusé de lecture.",
+  "A read receipt has been requested.": "Une confirmation de lecture a été demandée.",
+  "A read receipt has been sent.": "La confirmation de lecture a été envoyée.",
+  "Send the read receipt": "Envoyer l'accusé de lecture"
 }
