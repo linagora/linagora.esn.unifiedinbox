@@ -69,7 +69,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper) {
+  .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP) {
 
     /**
      * Add the following logic when sending an email: Check for an invalid email used as a recipient
@@ -244,7 +244,7 @@ angular.module('linagora.esn.unifiedinbox')
         });
 
       newHeaders['References'] = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
-      
+
       return newHeaders;
 
     }
@@ -264,7 +264,13 @@ angular.module('linagora.esn.unifiedinbox')
               headers: _getParentRelatedHeaders(message)
             };
 
-        includeAttachments && (newEmail.attachments = message.attachments);
+        if (includeAttachments && message.attachments) {
+          newEmail.attachments = message.attachments;
+          newEmail.attachments.forEach(function(attachment) {
+            attachment.attachmentType = INBOX_ATTACHMENT_TYPE_JMAP;
+            attachment.status = 'uploaded';
+          });
+        }
 
         // We do not automatically quote the message if we're using a plain text editor and the message
         // has a HTML body. In this case the "Edit Quoted Mail" button will show

@@ -1151,6 +1151,11 @@ describe('The Unified Inbox Angular module services', function() {
 
     describe('The createForwardEmailObject function', function(done) {
       var email, sender, expectedAnswer;
+      var INBOX_ATTACHMENT_TYPE_JMAP;
+
+      beforeEach(inject(function(_INBOX_ATTACHMENT_TYPE_JMAP_) {
+        INBOX_ATTACHMENT_TYPE_JMAP = _INBOX_ATTACHMENT_TYPE_JMAP_;
+      }));
 
       it('should create a forward email object, quoting the original message on desktop', function() {
         email = {
@@ -1242,15 +1247,19 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should include attachments in the forwarded email', function() {
+      it('should include attachments in the forwarded email and mark status as uploaded', function(done) {
         email = {
-          attachments: [{attachment: 'A'}, {attachment: 'B'}]
+          attachments: [{ attachment: 'A' }, { attachment: 'B' }]
         };
 
         mockGetMessages(email);
         emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
-          expect(email.attachments).to.shallowDeepEqual([{attachment: 'A'}, {attachment: 'B'}]);
-        }).then(done, done);
+          expect(email.attachments).to.shallowDeepEqual([
+            { attachment: 'A', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP },
+            { attachment: 'B', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP}
+          ]);
+          done();
+        }).catch(done);
 
         $rootScope.$digest();
       });
