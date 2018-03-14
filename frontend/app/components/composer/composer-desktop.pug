@@ -24,7 +24,8 @@ form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
     button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", ng-click="$ctrl.destroyDraft()", type="button", title=__('Delete'))
       i.mdi.mdi-delete
 
-    .compose-right-footer
+    .compose-right-footer.flex-row
+      div(dynamic-directive='inboxComposerExtraButtons')
       md-menu-bar
         md-menu
           button.btn.btn-link.btn-icon(type="button", ng-click="$mdMenu.open()", title=__('More'))
