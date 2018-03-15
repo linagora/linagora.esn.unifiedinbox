@@ -27,7 +27,9 @@
         setFlag: setFlag,
         emptyMailbox: emptyMailbox,
         markAllAsRead: markAllAsRead,
-        setAllFlag: setAllFlag
+        setAllFlag: setAllFlag,
+        getVacationActivated: getVacationActivated,
+        disableVacation: disableVacation
       };
 
       /////
@@ -395,6 +397,23 @@
                 });
               });
           });
+      }
+
+      function getVacationActivated() {
+        return withJmapClient(function(client) {
+          return client.getVacationResponse().then(function(vacation) {
+            return vacation.isActivated;
+          });
+        });
+      }
+
+      function disableVacation() {
+        return asyncJmapAction('Modification of vacation settings', function(client) {
+          return client.setVacationResponse(new jmap.VacationResponse(client, { isEnabled: false }))
+            .then(function() {
+              $rootScope.$broadcast(INBOX_EVENTS.VACATION_STATUS);
+            });
+        });
       }
     });
 

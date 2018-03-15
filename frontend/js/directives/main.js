@@ -440,41 +440,6 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxVacationIndicator', function($rootScope, withJmapClient, asyncJmapAction, jmap, INBOX_EVENTS) {
-    return {
-      restrict: 'E',
-      scope: true,
-      controller: function($scope) {
-        function _updateVacationStatus() {
-          withJmapClient(function(client) {
-            client.getVacationResponse().then(function(vacation) {
-              $rootScope.inbox.vacationActivated = vacation.isActivated;
-            });
-          });
-        }
-
-        this.disableVacation = function() {
-          $rootScope.inbox.vacationActivated = false;
-
-          return asyncJmapAction('Modification of vacation settings', function(client) {
-            return client.setVacationResponse(new jmap.VacationResponse(client, { isEnabled: false }))
-              .then(function() {
-                $rootScope.$broadcast(INBOX_EVENTS.VACATION_STATUS);
-              });
-          }).catch(function() {
-            $rootScope.inbox.vacationActivated = true;
-          });
-        };
-
-        $scope.$on(INBOX_EVENTS.VACATION_STATUS, _updateVacationStatus);
-
-        _updateVacationStatus();
-      },
-      controllerAs: 'ctrl',
-      templateUrl: '/unifiedinbox/views/partials/inbox-vacation-indicator.html'
-    };
-  })
-
   .directive('inboxEmptyContainerMessage', function($stateParams, inboxFilteringService, inboxPlugins) {
     return {
       restrict: 'E',

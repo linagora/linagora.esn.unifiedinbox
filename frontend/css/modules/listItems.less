@@ -73,15 +73,27 @@
       height: ~"calc(100vh - @{header-height-xl} - @{inbox-sub-header-height-xl})";
     }
 
-    &.is-vacation-activated {
-      height: ~"calc(100vh - @{header-height} - @{inbox-sub-header-height} - @{sub-header-vacation-height})";
+    &.is-vacation-activated, &.is-quota-activated {
+      height: ~"calc(100vh - @{header-height} - @{inbox-sub-header-height} - @{banner-height})";
 
       @media (min-width: @screen-md-min) {
-      	height: ~"calc(100vh - @{header-height-md} - @{inbox-sub-header-height-md} - @{sub-header-vacation-height})";
+      	height: ~"calc(100vh - @{header-height-md} - @{inbox-sub-header-height-md} - @{banner-height-md})";
       }
 
       @media (min-width: @screen-xl-min) {
-      	height: ~"calc(100vh - @{header-height-xl} - @{inbox-sub-header-height-xl} - @{sub-header-vacation-height})";
+      	height: ~"calc(100vh - @{header-height-xl} - @{inbox-sub-header-height-xl} - @{banner-height-xl})";
+      }
+    }
+
+    &.is-vacation-activated.is-quota-activated {
+      height: ~"calc(100vh - @{header-height} - @{inbox-sub-header-height} - @{banner-height} - @{banner-height})";
+
+      @media (min-width: @screen-md-min) {
+        height: ~"calc(100vh - @{header-height-md} - @{inbox-sub-header-height-md} - @{banner-height-md} - @{banner-height-md})";
+      }
+
+      @media (min-width: @screen-xl-min) {
+        height: ~"calc(100vh - @{header-height-xl} - @{inbox-sub-header-height-xl} - @{banner-height-xl} - @{banner-height-xl})";
       }
     }
   }
@@ -272,14 +284,13 @@
       .inbox-infinite-list {
         height: ~"calc(100vh - @{inbox-sub-header-height})";
 
-        @media (min-width: @screen-md-min) {
-          height: ~"calc(100vh - @{inbox-sub-header-height-md})";
+        &.is-vacation-activated, &.is-quota-activated {
+          height: ~"calc(100vh - @{inbox-sub-header-height} - @{banner-height})";
         }
 
-        @media (min-width: @screen-xl-min) {
-          height: ~"calc(100vh - @{inbox-sub-header-height-md})";
+        &.is-vacation-activated.is-quota-activated {
+          height: ~"calc(100vh - @{inbox-sub-header-height} - @{banner-height} - @{banner-height})";
         }
-
 
         .inbox-items-group {
           .lv-item:hover.inbox-list-item {

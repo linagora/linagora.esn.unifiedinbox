@@ -109,7 +109,9 @@ const angularAppFiles = [
   'components/composer/attachments-selector/composer-attachments-selector.js',
   'components/composer/attachments-selector/composer-attachments-selector.controller.js',
   'components/read-receipt/read-receipt.component.js',
-  'components/read-receipt/read-receipt.controller.js'
+  'components/read-receipt/read-receipt.controller.js',
+  'components/banner/vacation-banner/vacation-banner.component.js',
+  'components/banner/vacation-banner/vacation-banner.controller.js'
 ];
 
 const angularJsFiles = [
@@ -211,7 +213,9 @@ const mailtoInboxAngularAppFiles = [
   'components/composer/attachments-selector/composer-attachments-selector.js',
   'components/composer/attachments-selector/composer-attachments-selector.controller.js',
   'components/read-receipt/read-receipt.component.js',
-  'components/read-receipt/read-receipt.controller.js'
+  'components/read-receipt/read-receipt.controller.js',
+  'components/banner/vacation-banner/vacation-banner.component.js',
+  'components/banner/vacation-banner/vacation-banner.controller.js'
 ];
 
 module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {

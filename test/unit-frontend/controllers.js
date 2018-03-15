@@ -10,7 +10,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       jmapClient, jmap, notificationFactory, Offline = {},
       newComposerService = {}, $state, $modal, $hide, navigateTo, inboxPlugins, inboxFilteredList,
       inboxMailboxesService, inboxJmapItemService, _, fileUploadMock, config, moment, inboxMailboxesCache,
-      touchscreenDetectorService, esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService;
+      touchscreenDetectorService, esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
+      inboxUserQuotaService;
   var JMAP_GET_MESSAGES_VIEW, INBOX_EVENTS, DEFAULT_MAX_SIZE_UPLOAD, INFINITE_LIST_POLLING_INTERVAL;
 
   beforeEach(function() {
@@ -37,7 +38,14 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     angular.mock.module('esn.previous-page');
 
     module('linagora.esn.unifiedinbox', function($provide) {
-      jmapClient = {};
+      jmapClient = {
+        getVacationResponse: function() {
+          return $q.when(new jmap.SetResponse(jmapClient));
+        },
+        getMailboxes: function() {
+          return $q.when(new jmap.SetResponse(jmapClient));
+        }
+      };
       config = {};
       inboxFilterDescendantMailboxesFilter = sinon.spy();
       config['linagora.esn.unifiedinbox.uploadUrl'] = 'http://jmap';
@@ -132,16 +140,19 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
   describe('The unifiedInboxController', function() {
 
-    var INBOX_CONTROLLER_LOADING_STATES, inboxFilters, inboxFilteringService, inboxProviders, draftsFolder;
+    var INBOX_CONTROLLER_LOADING_STATES, inboxFilters, inboxFilteringService, inboxProviders, folder;
 
-    beforeEach(inject(function(_inboxProviders_, _inboxFilteringService_, _inboxFilters_, _inboxMailboxesCache_, _INBOX_CONTROLLER_LOADING_STATES_) {
+    beforeEach(inject(function(_inboxProviders_, _inboxFilteringService_, _inboxFilters_, _inboxMailboxesCache_, _INBOX_CONTROLLER_LOADING_STATES_, _inboxJmapItemService_, _inboxUserQuotaService_) {
       inboxProviders = _inboxProviders_;
       inboxFilters = _inboxFilters_;
       inboxFilteringService = _inboxFilteringService_;
       INBOX_CONTROLLER_LOADING_STATES = _INBOX_CONTROLLER_LOADING_STATES_;
       inboxMailboxesCache = _inboxMailboxesCache_;
-      draftsFolder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
-      inboxMailboxesCache.push(draftsFolder);
+      inboxJmapItemService = _inboxJmapItemService_;
+      inboxUserQuotaService = _inboxUserQuotaService_;
+
+      inboxJmapItemService.getVacationActivated = sinon.spy(inboxJmapItemService.getVacationActivated);
+      inboxUserQuotaService.getUserOverQuotaStatus = sinon.spy(inboxUserQuotaService.getUserOverQuotaStatus);
     }));
 
     afterEach(function() {
@@ -175,6 +186,9 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should call our inbox provider as expected', function() {
+      folder = _.assign(new jmap.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmap.MailboxRole.INBOX});
+      inboxMailboxesCache.push(folder);
+
       jmapClient.getMailboxes = sinon.spy(function() {
         return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
       });
@@ -194,13 +208,16 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should forward filters to our jmap provider', function() {
+      folder = _.assign(new jmap.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmap.MailboxRole.INBOX});
+      inboxMailboxesCache.push(folder);
+
       _.find(inboxFilters, { id: 'isUnread' }).checked = true; // This simulated the selection of isUnread
 
       jmapClient.getMessageList = sinon.stub().returns($q.when(new jmap.MessageList(jmapClient, { messageIds: [1] })));
       jmapClient.getMessages = sinon.stub().returns($q.when([]));
-      jmapClient.getMailboxes = function() {
+      jmapClient.getMailboxes = sinon.spy(function() {
         return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
-      };
+      });
 
       $rootScope.$digest();
       initController('unifiedInboxController');
@@ -278,13 +295,16 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should update inboxFilteredList upon DRAFT_CREATED received, when browsing drafts folders', function() {
+      folder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
+      inboxMailboxesCache.push(folder);
+
       initController('unifiedInboxController');
 
       inboxFilteredList.addAll.reset();
       scope.loadRecentItems = function() {
         return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
       };
-      $stateParams.context = draftsFolder.id; // user is browsing drafts folder
+      $stateParams.context = folder.id; // user is browsing drafts folder
 
       scope.$emit(INBOX_EVENTS.DRAFT_CREATED);
       scope.$digest();
@@ -293,6 +313,9 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should only increment unread drafts counter upon DRAFT_CREATED received, when browsing from anywhere but drafts', function() {
+      folder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
+      inboxMailboxesCache.push(folder);
+
       initController('unifiedInboxController');
 
       inboxFilteredList.addAll.reset();
@@ -303,7 +326,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       scope.$emit(INBOX_EVENTS.DRAFT_CREATED);
       scope.$digest();
 
-      expect(draftsFolder.unreadMessages).to.equal(1);
+      expect(folder.unreadMessages).to.equal(1);
       expect(inboxFilteredList.addAll).to.not.have.been.calledOnce;
     });
 
@@ -333,6 +356,26 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       $interval.flush(INFINITE_LIST_POLLING_INTERVAL + 1);
 
       expect(scope.loadRecentItems).to.have.not.been.calledWith();
+    });
+
+    it('should call _getVacationActivated', function() {
+      jmapClient.getVacationResponse = function() {
+        return $q.when({ isActivated: true });
+      };
+
+      initController('unifiedInboxController');
+
+      expect(inboxJmapItemService.getVacationActivated).to.have.been.called;
+    });
+
+    it('should call _getQuotaStatus', function() {
+      inboxUserQuotaService.getUserOverQuotaStatus = sinon.spy(function() {
+        return $q.when({ major: true });
+      });
+
+      initController('unifiedInboxController');
+
+      expect(inboxUserQuotaService.getUserOverQuotaStatus).to.have.been.called;
     });
 
   });

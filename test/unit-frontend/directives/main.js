@@ -11,7 +11,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       iFrameResize = angular.noop, elementScrollService, $stateParams, $dropdown,
       isMobile, searchService, windowMock, fakeNotification,
       sendEmailFakePromise, inboxConfigMock, inboxJmapItemService, _, INBOX_EVENTS,
-      notificationFactory, $httpBackend;
+      $httpBackend;
 
   beforeEach(function() {
     angular.module('esn.iframe-resizer-wrapper', []);
@@ -81,7 +81,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   }));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$stateParams_, _$templateCache_, _$httpBackend_, session,
-                             _inboxJmapItemService_, _inboxPlugins_, ___, _INBOX_EVENTS_, _notificationFactory_) {
+                             _inboxJmapItemService_, _inboxPlugins_, ___, _INBOX_EVENTS_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
@@ -92,7 +92,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     inboxPlugins = _inboxPlugins_;
     _ = ___;
     INBOX_EVENTS = _INBOX_EVENTS_;
-    notificationFactory = _notificationFactory_;
 
     // in the mailbox-display we put a folder-settings component which use an icon provider that load this icon set
     // if this icon provider is moved somewhere else, this test will have to be moved as well probable.
@@ -1089,112 +1088,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
         $scope.$digest();
       });
 
-    });
-
-  });
-
-  describe('The inboxVacationIndicator directive', function() {
-    beforeEach(function() {
-      notificationFactory.weakSuccess = sinon.spy();
-      notificationFactory.weakError = sinon.spy();
-      notificationFactory.strongInfo = sinon.spy();
-    });
-
-    it('should display the message when vacation is activated', function() {
-      jmapClient.getVacationResponse = function() {
-        return $q.when({ isActivated: true });
-      };
-
-      compileDirective('<inbox-vacation-indicator />');
-
-      expect(element.find('.inbox-vacation-indicator')).to.have.length(1);
-    });
-
-    it('should not display the message when vacation is disabled', function() {
-      jmapClient.getVacationResponse = function() {
-        return $q.when({ isActivated: false });
-      };
-
-      compileDirective('<inbox-vacation-indicator />');
-
-      expect(element.find('.inbox-vacation-indicator')).to.have.length(0);
-    });
-
-    it('should not display the message when we cannot fetch the vacation status', function() {
-      jmapClient.getVacationResponse = function() {
-        return $q.reject();
-      };
-
-      compileDirective('<inbox-vacation-indicator />');
-
-      expect(element.find('.inbox-vacation-indicator')).to.have.length(0);
-    });
-
-    it('should provide a button that removes the message and disables the vacation when clicked', function() {
-      var isActivated = true;
-
-      jmapClient.getVacationResponse = function() {
-        return $q.when({ isActivated: isActivated });
-      };
-      jmapClient.setVacationResponse = sinon.spy(function(vacation) {
-        expect(vacation).to.shallowDeepEqual({
-          isEnabled: false
-        });
-        isActivated = false;
-
-        return $q.when();
-      });
-
-      compileDirective('<inbox-vacation-indicator />').find('.inbox-disable-vacation').click();
-
-      expect(jmapClient.setVacationResponse).to.have.been.calledWith();
-      expect(element.find('.inbox-vacation-indicator')).to.have.length(0);
-      expect(notificationFactory.weakSuccess).to.have.been.calledWith('', 'Modification of vacation settings succeeded');
-    });
-
-    it('should broadcast VACATION_STATUS when vacation is set successfully', function(done) {
-      jmapClient.getVacationResponse = function() {
-        return $q.when({ isActivated: true });
-      };
-      jmapClient.setVacationResponse = sinon.spy(function() {
-        return $q.when();
-      });
-
-      compileDirective('<inbox-vacation-indicator />');
-
-      $rootScope.$on(INBOX_EVENTS.VACATION_STATUS, done.bind(this, null));
-
-      element.find('.inbox-disable-vacation').click();
-    });
-
-    it('should listen on VACATION_STATUS to update vacationActivated correspondingly', function() {
-      var isActivated = true;
-
-      jmapClient.getVacationResponse = sinon.spy(function() {
-        return $q.when({ isActivated: isActivated });
-      });
-
-      element = compileDirective('<inbox-vacation-indicator />');
-
-      expect(jmapClient.getVacationResponse).to.have.been.calledOnce;
-      $rootScope.$broadcast(INBOX_EVENTS.VACATION_STATUS);
-
-      expect(jmapClient.getVacationResponse).to.have.been.calledTwice;
-      expect($rootScope.inbox.vacationActivated).to.equal(isActivated);
-    });
-
-    it('should show the message if vacation cannot be disabled', function() {
-      jmapClient.getVacationResponse = function() {
-        return $q.when({ isActivated: true });
-      };
-      jmapClient.setVacationResponse = function() {
-        return $q.reject();
-      };
-
-      compileDirective('<inbox-vacation-indicator />').find('.inbox-disable-vacation').click();
-
-      expect(element.find('.inbox-vacation-indicator')).to.have.length(1);
-      expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Modification of vacation settings failed');
     });
 
   });

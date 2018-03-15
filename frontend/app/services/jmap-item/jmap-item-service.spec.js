@@ -24,6 +24,12 @@ describe('The inboxJmapItemService service', function() {
       getMessageList: sinon.spy(function() {
         return $q.when(new jmap.SetResponse(jmapClientMock));
       }),
+      getVacationResponse: sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock));
+      }),
+      setVacationResponse: sinon.spy(function() {
+        return $q.when(new jmap.SetResponse(jmapClientMock));
+      }),
       downloadUrl: 'http://fakeurl/',
       _defaultHeaders: sinon.spy(function() { return {}; }),
       transport: { post: sinon.spy(function() {
@@ -71,7 +77,12 @@ describe('The inboxJmapItemService service', function() {
     inboxSelectionService.unselectAllItems = sinon.spy(inboxSelectionService.unselectAllItems);
     infiniteListService.actionRemovingElements = sinon.spy(infiniteListService.actionRemovingElements);
     inboxJmapItemService.setFlag = sinon.spy(inboxJmapItemService.setFlag);
+    inboxJmapItemService.getVacationActivated = sinon.spy(inboxJmapItemService.getVacationActivated);
+    inboxJmapItemService.disableVacation = sinon.spy(inboxJmapItemService.disableVacation);
+
     notificationFactory.weakError = sinon.spy(notificationFactory.weakError);
+    notificationFactory.weakSuccess = sinon.spy(notificationFactory.weakSuccess);
+    notificationFactory.strongInfo = sinon.spy(notificationFactory.strongInfo);
   }));
 
   function newEmail(isUnread, isFlagged) {
@@ -958,6 +969,77 @@ describe('The inboxJmapItemService service', function() {
           expect(e.message).to.have.string('Could not create an identifier for sendMDN request ');
           done();
         });
+      $rootScope.$digest();
+    });
+
+  });
+
+describe('The getVacationActivated function', function() {
+
+    it('should call getVacationResponse and return vacation status', function(done) {
+      jmapClientMock.getVacationResponse = sinon.spy(function() {
+        return $q.when({ isActivated: true });
+      });
+
+      inboxJmapItemService.getVacationActivated().then(function(result) {
+        expect(result).to.have.been.to.deep.true;
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+  });
+
+  describe('The disableVacation function', function() {
+    it('should call setVacationResponse and disable the vacation', function() {
+      var isActivated = true;
+
+      jmapClientMock.getVacationResponse = sinon.spy(function() {
+        return $q.when({ isActivated: isActivated });
+      });
+      jmapClientMock.setVacationResponse = sinon.spy(function(vacation) {
+        expect(vacation).to.shallowDeepEqual({
+          isEnabled: false
+        });
+        isActivated = false;
+
+        return $q.when();
+      });
+
+      inboxJmapItemService.disableVacation();
+
+      $rootScope.$digest();
+
+      expect(notificationFactory.weakSuccess).to.have.been.calledWith('', 'Modification of vacation settings succeeded');
+    });
+
+    it('should call disableVacation and reject if error', function() {
+      jmapClientMock.getVacationResponse = sinon.spy(function() {
+        return $q.when({ isActivated: true });
+      });
+      jmapClientMock.setVacationResponse = function() {
+        return $q.reject();
+      };
+
+      inboxJmapItemService.disableVacation();
+
+      $rootScope.$digest();
+
+      expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Modification of vacation settings failed');
+    });
+
+    it('should broadcast VACATION_STATUS when vacation is set successfully', function(done) {
+      jmapClientMock.getVacationResponse = sinon.spy(function() {
+        return $q.when({ isActivated: true });
+      });
+      jmapClientMock.setVacationResponse = sinon.spy(function() {
+        return $q.when();
+      });
+
+      inboxJmapItemService.disableVacation();
+
+      $rootScope.$on(INBOX_EVENTS.VACATION_STATUS, done.bind(this, null));
+
       $rootScope.$digest();
     });
 
