@@ -117,6 +117,14 @@ angular.module('linagora.esn.unifiedinbox')
       message.headers['Disposition-Notification-To'] = senderAddress;
     }
 
+    function getReadReceiptRequest(message) {
+      if (!message || !message.headers || !message.headers['Disposition-Notification-To']) {
+        return false;
+      }
+
+      return message.headers['Disposition-Notification-To'];
+    }
+
     function countRecipients(email) {
       if (!email) {
         return 0;
@@ -226,7 +234,7 @@ angular.module('linagora.esn.unifiedinbox')
         return;
       }
       var quotedId = message.headers['Message-ID'];
-      var parentReferences = message.headers['References'] || '';
+      var parentReferences = message.headers.References || '';
       var newHeaders = {};
 
       if (quotedId) {
@@ -243,10 +251,9 @@ angular.module('linagora.esn.unifiedinbox')
           return l;
         });
 
-      newHeaders['References'] = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
+      newHeaders.References = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
 
       return newHeaders;
-
     }
 
     function _createQuotedEmail(subjectPrefix, recipients, templateName, includeAttachments, messageId, sender) {
@@ -293,6 +300,7 @@ angular.module('linagora.esn.unifiedinbox')
       emailsAreValid: emailsAreValid,
       removeDuplicateRecipients: removeDuplicateRecipients,
       addReadReceiptRequest: addReadReceiptRequest,
+      getReadReceiptRequest: getReadReceiptRequest,
       noRecipient: noRecipient,
       sendEmail: sendEmail,
       prefixSubject: prefixSubject,

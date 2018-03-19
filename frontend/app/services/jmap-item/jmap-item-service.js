@@ -6,13 +6,14 @@
     .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService, backgroundAction,
                                               withJmapClient,
                                               jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, notificationFactory, _, esnI18nService,
-                                              INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE, inboxFilteredList, inboxConfig, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS,
+                                              INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE, inboxFilteredList, inboxConfig, uuid4, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS,
                                               INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS) {
 
       return {
         reply: reply,
         replyAll: replyAll,
         forward: forward,
+        ackReceipt: ackReceipt,
         markAsUnread: markAsUnread,
         markAsRead: markAsRead,
         markAsFlagged: markAsFlagged,
@@ -212,6 +213,56 @@
       function forward(message) {
         emailSendingService.createForwardEmailObject(message.id, session.user).then(function(forwardMessage) {
           newComposerService.open(forwardMessage);
+        });
+      }
+
+      function createReadReceiptRequest(idProvider, message) {
+        var sendMDNRequestData = {}, mdnRequestId;
+
+        if (typeof idProvider !== 'function') {
+          return $q.reject(new Error('Missing request id provider for sending MDN acks'));
+        }
+        if (!message || !message.id || !message.from || !message.from.email) {
+          return $q.reject(new Error('Cannot build acknowledgement for provided message: ' + JSON.stringify(message)));
+        }
+        mdnRequestId = idProvider();
+        if (!mdnRequestId) {
+          return $q.reject(new Error('Could not create an identifier for sendMDN request '));
+        }
+        sendMDNRequestData[mdnRequestId] = {
+          messageId: message.id,
+          subject: esnI18nService.translate('Read: %s', message.subject).toString(),
+          textBody:
+            esnI18nService.translate('To: %s', message.from.email) + '\n' +
+            esnI18nService.translate('Subject: %s', message.subject || '') +
+            '\n' + esnI18nService.translate('Message was displayed on %s', new Date(Date.now()).toString()),
+          reportingUA: 'OpenPaaS Unified Inbox',
+          disposition: {
+            actionMode: 'manual-action',
+            sendingMode: 'MDN-sent-manually',
+            type: 'displayed'
+          }
+        };
+
+        return $q.when({
+          sendMDN: sendMDNRequestData
+        });
+      }
+
+      function ackReceipt(message, requestIDProvider) {
+        var idProvider = typeof requestIDProvider !== 'function' ? uuid4.generate : requestIDProvider;
+
+        return asyncJmapAction({
+          success: 'A read receipt has been sent.',
+          failure: 'Could not send the read receipt.'
+        }, function(client) {
+          return createReadReceiptRequest(idProvider, message)
+            .then(client.setMessages)
+            .then(function(response) {
+              if (!_.isEmpty(response.MDNNotSent)) {
+                return $q.reject(new Error('Could not send the read receipt.'));
+              }
+            });
         });
       }
 

@@ -211,5 +211,13 @@
   "Spam": "Spam",
   "Not spam": "Không phải spam",
   "Request a read receipt": "Yêu cầu trạng thái đọc của thư",
-  "Storage": "Dã qua sử dụng lưu trữ"
+  "Storage": "Dã qua sử dụng lưu trữ",
+  "Read: %s": "Đọc: %s",
+  "To: %s": "Đến: %s",
+  "Subject: %s": "Chủ đề: %s",
+  "Message was displayed on %s": "Thư đã được hiện thị trên %s",
+  "Could not send the read receipt.": "Không gửi được yêu cầu trạng thái đọc.",
+  "A read receipt has been requested.": "Nhận được yêu cầu trạng thái đọc của thư.",
+  "A read receipt has been sent.": "Đã gửi yêu cầu trạng thái đọc của thư.",
+  "Send the read receipt": "Gửi trạng thái đọc"
 }
