@@ -229,49 +229,38 @@ angular.module('linagora.esn.unifiedinbox')
       return email;
     }
 
-    function _getParentRelatedHeaders(message) {
-      if (!message.headers) {
+    function _addReferenceToOriginalMessage(referencedMessageIdsHeaderName, parentMessage) {
+      if (!parentMessage.headers || !referencedMessageIdsHeaderName) {
         return;
       }
-      var quotedId = message.headers['Message-ID'];
-      var parentReferences = message.headers.References || '';
-      var newHeaders = {};
+      var quotedId = parentMessage.headers['Message-ID'],
+          parentReferences = parentMessage.headers.References || '',
+          parentReferencesAsArray = parentReferences && parentReferences.split(' ')
+            .map(Function.prototype.call, String.prototype.trim).filter(Boolean),
+          newHeaders = { References: [].concat(parentReferencesAsArray, [quotedId]).filter(Boolean).join(' ') };
 
-      if (quotedId) {
-        newHeaders['In-Reply-To'] = quotedId;
-      }
-
-      // append quoted message id to the References collection
-      var refsColl = parentReferences && parentReferences
-        .split(' ')
-        .map(function(l) {
-          return l.replace(/\n$/, '');
-        })
-        .filter(function(l) {
-          return l;
-        });
-
-      newHeaders.References = [].concat(refsColl, [quotedId]).filter(Boolean).join(' ');
+      newHeaders[referencedMessageIdsHeaderName] = parentMessage.headers['Message-ID'];
 
       return newHeaders;
     }
 
-    function _createQuotedEmail(subjectPrefix, recipients, templateName, includeAttachments, messageId, sender) {
+    function _createQuotedEmail(opts, messageId, sender) {
+
       return inboxJmapHelper.getMessageById(messageId).then(function(message) {
-        var newRecipients = recipients ? recipients(message, sender) : {},
+        var newRecipients = opts.recipients ? opts.recipients(message, sender) : {},
             newEmail = {
               from: getEmailAddress(sender),
               to: newRecipients.to || [],
               cc: newRecipients.cc || [],
               bcc: newRecipients.bcc || [],
-              subject: prefixSubject(message.subject, subjectPrefix),
+              subject: prefixSubject(message.subject, opts.subjectPrefix),
               quoted: message,
               isQuoting: false,
-              quoteTemplate: templateName,
-              headers: _getParentRelatedHeaders(message)
+              quoteTemplate: opts.templateName || 'default',
+              headers: _addReferenceToOriginalMessage(opts.referenceIdHeader, message)
             };
 
-        if (includeAttachments && message.attachments) {
+        if (opts.includeAttachments && message.attachments) {
           newEmail.attachments = message.attachments;
           newEmail.attachments.forEach(function(attachment) {
             attachment.attachmentType = INBOX_ATTACHMENT_TYPE_JMAP;
@@ -282,19 +271,38 @@ angular.module('linagora.esn.unifiedinbox')
         // We do not automatically quote the message if we're using a plain text editor and the message
         // has a HTML body. In this case the "Edit Quoted Mail" button will show
         if (!emailBodyService.supportsRichtext() && message.htmlBody) {
-          return emailBodyService.quote(newEmail, templateName, true).then(function(body) {
+          return emailBodyService.quote(newEmail, opts.templateName, true).then(function(body) {
             newEmail.quoted.htmlBody = body;
 
             return newEmail;
           });
         }
 
-        return emailBodyService.quote(newEmail, templateName)
+        return emailBodyService.quote(newEmail, opts.templateName)
           .then(function(body) {
             return _enrichWithQuote(newEmail, body);
           });
       });
     }
+
+    var referencingEmailOptions = {
+      reply: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyRecipients,
+        referenceIdHeader: 'In-Reply-To'
+      },
+      forward: {
+        subjectPrefix: 'Fwd: ',
+        templateName: 'forward',
+        includeAttachments: true,
+        referenceIdHeader: 'X-Forwarded-Message-Id'
+      },
+      replyAll: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyAllRecipients,
+        referenceIdHeader: 'In-Reply-To'
+      }
+    };
 
     return {
       emailsAreValid: emailsAreValid,
@@ -309,9 +317,9 @@ angular.module('linagora.esn.unifiedinbox')
       getFirstRecipient: getFirstRecipient,
       getAllRecipientsExceptSender: getAllRecipientsExceptSender,
       showReplyAllButton: showReplyAllButton,
-      createReplyAllEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyAllRecipients, 'default', false),
-      createReplyEmailObject: _createQuotedEmail.bind(null, 'Re: ', getReplyRecipients, 'default', false),
-      createForwardEmailObject: _createQuotedEmail.bind(null, 'Fwd: ', null, 'forward', true),
+      createReplyAllEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.replyAll),
+      createReplyEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.reply),
+      createForwardEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.forward),
       countRecipients: countRecipients
     };
   })
