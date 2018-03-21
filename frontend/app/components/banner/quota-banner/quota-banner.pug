@@ -1,0 +1,4 @@
+.inbox-banner.inbox-banner-quota(ng-if="$ctrl.quotaLevel")
+  .flex-grow.all-centered
+    span(ng-if="$ctrl.quotaLevel === 'critical'") #{__("You're out of storage space and will soon be unable to send or receive emails.")}
+    span(ng-if="$ctrl.quotaLevel === 'major'") #{__("You're out of storage space and unable to send or receive emails.")}

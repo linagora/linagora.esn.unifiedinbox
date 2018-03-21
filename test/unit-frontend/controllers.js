@@ -152,7 +152,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       inboxUserQuotaService = _inboxUserQuotaService_;
 
       inboxJmapItemService.getVacationActivated = sinon.spy(inboxJmapItemService.getVacationActivated);
-      inboxUserQuotaService.getUserOverQuotaStatus = sinon.spy(inboxUserQuotaService.getUserOverQuotaStatus);
+      inboxUserQuotaService.getUserQuotaInfo = sinon.spy(inboxUserQuotaService.getUserQuotaInfo);
     }));
 
     afterEach(function() {
@@ -358,7 +358,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       expect(scope.loadRecentItems).to.have.not.been.calledWith();
     });
 
-    it('should call _getVacationActivated', function() {
+    it('should call _getVacationActivated  and return vacation activated', function() {
       jmapClient.getVacationResponse = function() {
         return $q.when({ isActivated: true });
       };
@@ -368,14 +368,14 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       expect(inboxJmapItemService.getVacationActivated).to.have.been.called;
     });
 
-    it('should call _getQuotaStatus', function() {
-      inboxUserQuotaService.getUserOverQuotaStatus = sinon.spy(function() {
-        return $q.when({ major: true });
+    it('should call _getQuotaStatus and return quota activated', function() {
+      inboxUserQuotaService.getUserQuotaInfo = sinon.spy(function() {
+        return $q.when({ quotaLevel: 'major' });
       });
 
       initController('unifiedInboxController');
 
-      expect(inboxUserQuotaService.getUserOverQuotaStatus).to.have.been.called;
+      expect(inboxUserQuotaService.getUserQuotaInfo).to.have.been.called;
     });
 
   });

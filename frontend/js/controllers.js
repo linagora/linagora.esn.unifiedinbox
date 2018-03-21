@@ -4,8 +4,8 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
-                                                 inboxMailboxesService, inboxFilteredList, inboxJmapItemService, inboxUserQuotaService, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS,
-                                                 INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, INBOX_QUOTA_BOUNCE) {
+                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, inboxJmapItemService, inboxUserQuotaService) {
+
     setupPolling();
 
     inboxSelectionService.unselectAllItems();
@@ -44,15 +44,15 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function _getQuotaStatus() {
-      inboxUserQuotaService.getUserOverQuotaStatus().then(function(overQuota) {
-        if (overQuota.major || overQuota.critical) {
+      inboxUserQuotaService.getUserQuotaInfo().then(function(quota) {
+        if (quota.quotaLevel) {
           $scope.quotaActivated = true;
         }
       });
     }
 
-    function _getVacationStatus() {
-      inboxJmapItemService.getVacationStatus().then(function(vacation) {
+    function _getVacationActivated() {
+      inboxJmapItemService.getVacationActivated().then(function(vacation) {
         $scope.vacationActivated = vacation;
       });
     }

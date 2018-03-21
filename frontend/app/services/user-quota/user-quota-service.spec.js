@@ -6,33 +6,42 @@
 
   describe('The inboxUserQuotaService service', function() {
 
-    var $rootScope, inboxUserQuotaService, mailboxesServiceMock, mockPromise;
-    var defaultQuotas = { STORAGE: {used: 120000000, max: 2000000000}, MESSAGE: {used: 3000000000, max: 4000000000 }};
-    var fakeInbox = new jmap.Mailbox({}, 'id', 'INBOX', { role: { value: 'inbox' }, quotas: {'private#...': defaultQuotas}});
+    var $rootScope, inboxUserQuotaService, mailboxesServiceMock, mockPromise, $q;
 
     beforeEach(module('linagora.esn.unifiedinbox'));
-    beforeEach(module(function($provide) {
-      mailboxesServiceMock = { getMailboxWithRole: sinon.spy(function() { return mockPromise || $q.when(fakeInbox);}) };
-      $provide.value('inboxMailboxesService', mailboxesServiceMock);
-    }));
-
-    beforeEach(inject(function(_$rootScope_, _inboxUserQuotaService_) {
-      $rootScope = _$rootScope_;
-      inboxUserQuotaService = _inboxUserQuotaService_;
-    }));
-
     beforeEach(function() {
-      mockPromise = undefined;
+    mailboxesServiceMock = { getMailboxWithRole: sinon.spy()};
+
+      module(function($provide) {
+        $provide.value('inboxMailboxesService', mailboxesServiceMock);
+      });
     });
 
-    describe('The getUserQuotaInfo function', function() {
+    beforeEach(inject(function(_$rootScope_, _inboxUserQuotaService_, _$q_) {
+      $rootScope = _$rootScope_;
+      inboxUserQuotaService = _inboxUserQuotaService_;
+      $q = _$q_;
+    }));
 
+    function mockInboxQuota(defaultQuotas) {
+      var fakeInbox = new jmap.Mailbox({}, 'id', 'INBOX', { role: { value: 'inbox' }, quotas: {'private#...': defaultQuotas}});
+
+      mailboxesServiceMock.getMailboxWithRole = sinon.spy(function() { return mockPromise || $q.when(fakeInbox);});
+      mockPromise = undefined;
+    }
+
+    describe('The getUserQuotaInfo function', function() {
       it('should return INBOX\'s first defined quota when set', function(done) {
+        var defaultQuotas = { STORAGE: {used: 120000000, max: 150000000}, MESSAGE: {used: 3000000000, max: 4000000000 }};
+
+        mockInboxQuota(defaultQuotas);
+
         inboxUserQuotaService.getUserQuotaInfo().then(function(quota) {
             expect(quota).to.deep.equal({
               usedStorage: 120000000,
-              maxStorage: 2000000000,
-              storageRatio: 6
+              maxStorage: 150000000,
+              storageRatio: 80,
+              quotaLevel: 'critical'
             });
             expect(mailboxesServiceMock.getMailboxWithRole).to.have.been.calledOnce;
             done();
@@ -41,6 +50,10 @@
       });
 
       it('should reject when missing INBOX', function(done) {
+        var defaultQuotas = { STORAGE: {used: 120000000, max: 150000000}, MESSAGE: {used: 3000000000, max: 4000000000 }};
+
+        mockInboxQuota(defaultQuotas);
+
         mockPromise = $q.when({});
         inboxUserQuotaService.getUserQuotaInfo().catch(function(e) {
           expect(mailboxesServiceMock.getMailboxWithRole).to.have.been.calledOnce;
@@ -50,7 +63,36 @@
         $rootScope.$digest();
       });
 
+      describe('User quota level property', function() {
+
+        it('should return quotaLevel critical if quota status is critical', function(done) {
+          var criticalQuotas = { STORAGE: {used: 120000000, max: 150000000}, MESSAGE: {used: 3000000000, max: 4000000000 }};
+
+          mockInboxQuota(criticalQuotas);
+
+          inboxUserQuotaService.getUserQuotaInfo().then(function(quota) {
+            expect(quota.quotaLevel).to.deep.equal('critical');
+            done();
+          });
+          $rootScope.$digest();
+        });
+
+        it('should return quotaLevel major if quota status is major', function(done) {
+          var majorQuotas = { STORAGE: {used: 120000000, max: 125000000}, MESSAGE: {used: 3000000000, max: 4000000000 }};
+
+          mockInboxQuota(majorQuotas);
+
+          inboxUserQuotaService.getUserQuotaInfo().then(function(quota) {
+            expect(quota.quotaLevel).to.deep.equal('major');
+            done();
+          });
+          $rootScope.$digest();
+        });
+
+      });
+
     });
+
   });
 
 })();

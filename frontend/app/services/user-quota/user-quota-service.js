@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .service('inboxUserQuotaService', function($q, _, jmap, inboxMailboxesService) {
+    .service('inboxUserQuotaService', function($q, _, jmap, inboxMailboxesService, INBOX_QUOTA_LEVEL_THRESHOLDS) {
 
       return {
         getUserQuotaInfo: getUserQuotaInfo
@@ -24,6 +24,15 @@
 
         if (result.maxStorage) {
           result.storageRatio = Math.round(result.usedStorage / result.maxStorage * 100.0);
+
+          var limitMajor = INBOX_QUOTA_LEVEL_THRESHOLDS.major;
+          var criticalMajor = INBOX_QUOTA_LEVEL_THRESHOLDS.critical;
+
+          if (result.storageRatio >= limitMajor) {
+            result.quotaLevel = 'major';
+          } else if (result.storageRatio >= criticalMajor) {
+            result.quotaLevel = 'critical';
+          }
         }
 
         return result;
