@@ -1292,7 +1292,7 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should set In-Reply-To/References headers', function(done) {
+      it('should set X-Forwarded-Message-Id/References headers on Forward', function(done) {
         email = {
           from: {email: 'from@linagora.com', name: 'linagora'},
           to: [{displayName: '1', email: '1@linagora.com'}],
@@ -1310,7 +1310,7 @@ describe('The Unified Inbox Angular module services', function() {
           quoted: email,
           quoteTemplate: 'forward',
           headers: {
-            'In-Reply-To': '1234567890',
+            'X-Forwarded-Message-Id': '1234567890',
             References: '1234567890'
           },
           isQuoting: true
@@ -1324,7 +1324,7 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should update In-Reply-To/References headers', function(done) {
+      it('should update X-Forwarded-Message-Id/References headers on Forward', function(done) {
         email = {
           from: {email: 'from@linagora.com', name: 'linagora'},
           to: [{displayName: '1', email: '1@linagora.com'}],
@@ -1345,7 +1345,7 @@ describe('The Unified Inbox Angular module services', function() {
           quoted: email,
           quoteTemplate: 'forward',
           headers: {
-            'In-Reply-To': '1234567890',
+            'X-Forwarded-Message-Id': '1234567890',
             References: '123 456 1234567890'
           },
           isQuoting: true
