@@ -1,4 +1,8 @@
-button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.composer.attachments", type="button", ng-file-select="$ctrl.onAttachmentsSelect($files)", data-multiple="true", ng-class="{ 'btn-with-badge': $ctrl.getAttachmentsStatus().number > 0 }")
-  .badge-container
-    .badge.composer-badge(ng-hide='$ctrl.getAttachmentsStatus().number === 0', ng-class="{ error: $ctrl.getAttachmentsStatus().error }") {{ $ctrl.getAttachmentsStatus().number | maxPlus:99 }}
-    i.mdi.mdi-paperclip(ng-class="{ uploading: $ctrl.getAttachmentsStatus().uploading }")
+esn-attachments-selector(
+  feature-flag="linagora.esn.unifiedinbox.composer.attachments",
+  attachments="$ctrl.attachments",
+  attachment-type="$ctrl.attachmentType",
+  attachment-filter="$ctrl.attachmentFilter",
+  on-attachments-update="$ctrl.onAttachmentsUpdate({ $attachments: $attachments })",
+  upload-attachments="$ctrl.uploadAttachments($files)",
+)

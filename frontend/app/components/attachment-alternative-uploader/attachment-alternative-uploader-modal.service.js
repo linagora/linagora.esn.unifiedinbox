@@ -16,7 +16,7 @@
       show: show
     };
 
-    function show(files, humanReadableMaxSizeUpload, onUpload) {
+    function show(files, humanReadableMaxSizeUpload, onUpload, onCancel) {
       var attachmentProviders = inboxAttachmentProviderRegistry.getAll();
       var externalAttachmentProviders = Object.keys(attachmentProviders)
         .filter(function(type) {
@@ -40,7 +40,8 @@
         }),
         humanReadableMaxSizeUpload: humanReadableMaxSizeUpload,
         externalAttachmentProviders: externalAttachmentProviders,
-        onUpload: onUpload
+        onUpload: onUpload,
+        onCancel: onCancel
       };
 
       $modal({
