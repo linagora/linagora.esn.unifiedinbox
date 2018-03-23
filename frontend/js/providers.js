@@ -2,17 +2,68 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .factory('inboxJmapProviderContextBuilder', function($q, inboxMailboxesService, jmap, PROVIDER_TYPES) {
-    return function(options) {
+  .factory('inboxJmapProviderContextBuilder', function($q, inboxMailboxesService, inboxJmapProviderFilterBuilder, jmap, PROVIDER_TYPES) {
+    var filterInputStrategies = {
+      advanced: function(opt) { return $q.when(inboxJmapProviderFilterBuilder(opt.advanced)); },
       // options.query is used in global search
       // In this case, build a filter with 'text' only to match all important fields
-      if (angular.isDefined(options.query)) {
-        return $q.when({ text: options.query });
+      query: function(opt) { return $q.when({text: opt.query}); }
+    };
+
+    function quickFilterQueryBuilder(opt) {
+      return inboxMailboxesService.getMessageListFilter(opt.context).then(function(mailboxFilter) {
+        return angular.extend(mailboxFilter, opt.filterByType[PROVIDER_TYPES.JMAP], { text: opt.quickFilter });
+      });
+    }
+
+    return function(options) {
+      var foundQueryType = _.find(_.keys(filterInputStrategies), _.partial(_.has, options));
+      var queryBuilder = foundQueryType && filterInputStrategies[foundQueryType] || quickFilterQueryBuilder;
+
+      return queryBuilder(options);
+    };
+  })
+
+  .factory('inboxJmapProviderFilterBuilder', function() {
+    var EXCLUDED_CRITERION = 'excluded';
+
+    return function(emailSearchOptions) {
+      function pairFrom(criterion, value) { return _.zipObject([criterion], [value]); }
+
+      function buildDefaultCriterionFilter(criterion) {
+        if (_.size(emailSearchOptions[criterion]) > 1) {
+          return {
+            operator: 'AND',
+            conditions: emailSearchOptions[criterion].map(_.partial(pairFrom, criterion))
+          };
+        }
+        return pairFrom(criterion, _.head(emailSearchOptions[criterion]));
       }
 
-      return inboxMailboxesService.getMessageListFilter(options.context).then(function(mailboxFilter) {
-        return angular.extend(mailboxFilter, options.filterByType[PROVIDER_TYPES.JMAP], { text: options.quickFilter });
-      });
+      function buildExcludedFilter() {
+        return {
+          operator: 'NOT',
+          conditions: emailSearchOptions[EXCLUDED_CRITERION].map(_.partial(pairFrom, 'text'))
+        };
+      }
+
+      function buildCriterionFilter(criterion) {
+        return criterion !== EXCLUDED_CRITERION ? buildDefaultCriterionFilter(criterion) : buildExcludedFilter();
+      }
+
+      function hasFoundCriteriaInQuery(criterion) {
+        return _.has(emailSearchOptions, criterion) &&
+          _.isArray(emailSearchOptions[criterion]) &&
+          !_.isEmpty(emailSearchOptions[criterion]);
+      }
+      var criterionFiltersCombiner = function(acc, c) { return [].concat(acc, [c]); };
+
+      var criteriaFilters = ['to', 'from', 'subject', 'cc', 'bcc', 'body', 'hasAttachment', EXCLUDED_CRITERION]
+        .filter(hasFoundCriteriaInQuery)
+        .map(buildCriterionFilter)
+        .reduce(criterionFiltersCombiner, []);
+
+      return _.size(criteriaFilters) > 1 ? { operator: 'AND', conditions: criteriaFilters} : _.head(criteriaFilters);
     };
   })
 
