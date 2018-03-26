@@ -257,7 +257,7 @@
           failure: 'Could not send the read receipt.'
         }, function(client) {
           return createReadReceiptRequest(idProvider, message)
-            .then(client.setMessages)
+            .then(client.setMessages.bind(client))
             .then(function(response) {
               if (!_.isEmpty(response.MDNNotSent)) {
                 return $q.reject(new Error('Could not send the read receipt.'));
