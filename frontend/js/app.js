@@ -199,6 +199,14 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.configuration.readreceipts', {
+        url: '/readreceipts',
+        views: {
+          'configuration@unifiedinbox.configuration': {
+            template: '<inbox-request-read-receipts />'
+          }
+        }
+      })
       .state('unifiedinbox.inbox', {
         url: '/inbox?type&account&context',
         views: {

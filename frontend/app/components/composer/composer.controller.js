@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxComposerController', function(notificationFactory, jmap, attachmentUploadService, _, emailSendingService,
+    .controller('inboxComposerController', function(notificationFactory, jmap, attachmentUploadService, _, emailSendingService, inboxRequestReceiptsService,
                                                     emailBodyService, Offline, inboxAttachmentUploadService, waitUntilMessageIsComplete,
                                                     backgroundAction, InboxDraft, DRAFT_SAVING_DEBOUNCE_DELAY) {
       var self = this,
@@ -24,6 +24,9 @@
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
 
         self.onTitleUpdate({ $title: self.message && self.message.subject });
+        inboxRequestReceiptsService.getDefaultReceipts().then(function(sendingReceiptsConfig) {
+          self.hasRequestedReadReceipt = sendingReceiptsConfig.isRequestingReadReceiptsByDefault;
+        });
       }
 
       function $onDestroy() {

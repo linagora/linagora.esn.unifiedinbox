@@ -9,6 +9,7 @@ module.exports = dependencies => ({
     downloadUrl: require('./download-url')(dependencies),
     drafts: require('./drafts')(dependencies),
     hiddenSharedMailboxes: require('./hidden-shared-mailboxes')(dependencies),
+    requestReceipts: require('./request-receipts')(dependencies),
     'identities.default': require('./identities-default')(dependencies),
     identities: require('./identities')(dependencies),
     isJmapSendingEnabled: require('./is-jmap-sending-enabled')(dependencies),

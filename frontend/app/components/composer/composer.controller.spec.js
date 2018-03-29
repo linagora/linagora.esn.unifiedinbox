@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxComposerController controller', function() {
 
-  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory;
+  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory, inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault;
 
   function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
@@ -23,9 +23,15 @@ describe('The inboxComposerController controller', function() {
         setCancelAction: sinon.spy()
       })
     });
+    $provide.value('inboxRequestReceiptsService', {
+      getDefaultReceipts: sinon.spy(function fakeDefaultReceiptsConfig() {
+        return $q.when({ isRequestingReadReceiptsByDefault: isConfiguredToSendAskReceiptsByDefault });
+      })
+    });
+
   }));
 
-  beforeEach(inject(function(_$rootScope_, _$componentController_, _InboxDraft_, _sendEmail_, _Offline_, _notificationFactory_) {
+  beforeEach(inject(function(_$rootScope_, _$componentController_, _InboxDraft_, _sendEmail_, _Offline_, _notificationFactory_, _inboxRequestReceiptsService_) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
 
@@ -33,9 +39,11 @@ describe('The inboxComposerController controller', function() {
     sendEmail = _sendEmail_;
     Offline = _Offline_;
     notificationFactory = _notificationFactory_;
+    inboxRequestReceiptsService = _inboxRequestReceiptsService_;
   }));
 
   beforeEach(function() {
+    isConfiguredToSendAskReceiptsByDefault = false;
     ctrl = $componentController('inboxComposer', {}, {
       message: {
         id: 'messageId',
@@ -458,6 +466,25 @@ describe('The inboxComposerController controller', function() {
       ctrl.toggleReadReceiptRequest();
       ctrl.send();
       $rootScope.$digest();
+
+      expect(sendEmail).to.have.been.calledWith(sinon.match({
+        textBody: 'Body',
+        headers: { 'Disposition-Notification-To': 'user@linagora.com' }
+      }));
+    });
+
+    it('should add an MDN header when read receipts are configured to be sent by default', function() {
+      ctrl.message = {
+        to: [{ email: 'A@A.com' }],
+        textBody: 'Body'
+      };
+      isConfiguredToSendAskReceiptsByDefault = true;
+      ctrl.$onInit();
+      $rootScope.$digest();
+      ctrl.send();
+      $rootScope.$digest();
+
+      expect(inboxRequestReceiptsService.getDefaultReceipts).to.have.been.calledOnce;
 
       expect(sendEmail).to.have.been.calledWith(sinon.match({
         textBody: 'Body',
