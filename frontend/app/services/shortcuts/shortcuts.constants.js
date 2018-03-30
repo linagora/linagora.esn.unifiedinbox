@@ -49,6 +49,10 @@
       DELETE_EMAIL: {
         combo: 'del',
         description: 'Move to trash'
+      },
+      SPAM_EMAIL: {
+        combo: 'j',
+        description: 'Mark as spam'
       }
     }
   });
