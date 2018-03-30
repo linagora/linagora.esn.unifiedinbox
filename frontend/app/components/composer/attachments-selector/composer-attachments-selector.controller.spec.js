@@ -9,7 +9,7 @@ describe('The inboxComposerAttachmentsSelectorController controller', function()
   var $rootScope, $componentController, ctrl, inboxAttachmentAlternativeUploaderModal;
   var DEFAULT_FILE_TYPE, DEFAULT_MAX_SIZE_UPLOAD;
 
-  beforeEach(module('jadeTemplates', 'linagora.esn.unifiedinbox', function($provide) {
+  beforeEach(module('jadeTemplates', 'linagora.esn.unifiedinbox', 'esn.attachments-selector', function($provide) {
     $provide.value('inboxConfig', function(key, defaultValue) {
       return $q.when(defaultValue);
     });
@@ -17,7 +17,9 @@ describe('The inboxComposerAttachmentsSelectorController controller', function()
       return callback({});
     });
     $provide.value('inboxAttachmentAlternativeUploaderModal', {
-      show: sinon.spy()
+      show: sinon.spy(function(x, y, callback) {
+        callback();
+      })
     });
   }));
 
@@ -34,140 +36,98 @@ describe('The inboxComposerAttachmentsSelectorController controller', function()
 
   beforeEach(function() {
     ctrl = $componentController('inboxComposerAttachmentsSelector', {}, {
-      attachments: [],
-      upload: sinon.spy(),
-      onAttachmentsUpdate: sinon.spy()
+      upload: sinon.spy()
     });
   });
 
-  describe('The onAttachmentsSelect function', function() {
+  describe('The uploadAttachments function', function() {
 
-    it('should do nothing if no files are given', function() {
-      ctrl.onAttachmentsSelect();
+    it('should do nothing if no files are given', function(done) {
+      ctrl.uploadAttachments().then(function(attachments) {
+        expect(attachments).to.deep.equal([]);
+        expect(ctrl.upload).to.have.not.been.called;
+
+        done();
+      });
+
       $rootScope.$digest();
-
-      expect(ctrl.attachments).to.deep.equal([]);
-      expect(ctrl.upload).to.have.not.been.calledWith();
     });
 
-    it('should do nothing if files is zerolength', function() {
-      ctrl.onAttachmentsSelect([]);
-      $rootScope.$digest();
+    it('should do nothing if files is zerolength', function(done) {
+      ctrl.uploadAttachments([]).then(function(attachments) {
+        expect(attachments).to.deep.equal([]);
+        expect(ctrl.upload).to.have.not.been.called;
 
-      expect(ctrl.attachments).to.deep.equal([]);
-      expect(ctrl.upload).to.have.not.been.calledWith();
+        done();
+      });
+
+      $rootScope.$digest();
     });
 
-    it('should add the attachment, with a default file type, upload it and notify caller of the change', function() {
-      ctrl.onAttachmentsSelect([{ name: 'name', size: 1 }]);
-      $rootScope.$digest();
-
-      expect(ctrl.attachments[0]).to.shallowDeepEqual({
+    it('should add the attachment, with a default file type, upload it and notify caller of the change', function(done) {
+      var expectedAttachment = {
         name: 'name',
         size: 1,
         type: DEFAULT_FILE_TYPE
-      });
-
-      expect(ctrl.upload).to.have.been.calledWith(sinon.match({ $attachment: sinon.match({ name: 'name' }) }));
-      expect(ctrl.onAttachmentsUpdate).to.have.been.calledWith(sinon.match({ $attachments: [sinon.match({ name: 'name' })] }));
-    });
-
-    it('should add the attachment if the file size is exactly the limit', function() {
-      ctrl.onAttachmentsSelect([{ name: 'name', size: DEFAULT_MAX_SIZE_UPLOAD }]);
-      $rootScope.$digest();
-
-      expect(ctrl.attachments).to.have.length(1);
-    });
-
-    it('should show alternative uploader modal and not add the attachment if file is larger that the limit', function() {
-      var largeFiles = [
-        { name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 },
-        { name: 'name2', size: DEFAULT_MAX_SIZE_UPLOAD + 2 }
-      ];
-
-      ctrl.onAttachmentsSelect(largeFiles);
-      $rootScope.$digest();
-
-      expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledWith(largeFiles, '20MB', sinon.match.func);
-      expect(ctrl.attachments).to.deep.equal([]);
-    });
-
-    it('should add and upload large files using alternative uploaded', function() {
-      var largeFiles = [{ name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 }];
-
-      inboxAttachmentAlternativeUploaderModal.show = function(files, maxSizeUpload, onUpload) {
-        onUpload({
-          fileToAttachment: function(file) {
-            return { name: file.name, size: file.size };
-          }
-        }, files);
       };
 
-      ctrl.onAttachmentsSelect(largeFiles);
+      ctrl.uploadAttachments([{ name: 'name', size: 1 }]).then(function(attachments) {
+        expect(attachments[0]).to.shallowDeepEqual(expectedAttachment);
+        expect(ctrl.upload).to.have.been.calledWith(sinon.match({ $attachment: sinon.match({ name: 'name' }) }));
+
+        done();
+      });
+
       $rootScope.$digest();
-
-      expect(ctrl.attachments).to.deep.equal(largeFiles);
-      expect(ctrl.upload).to.have.been.calledWith(sinon.match({ $attachment: sinon.match({ name: 'name1' }) }));
-      expect(ctrl.onAttachmentsUpdate).to.have.been.calledWith(sinon.match({ $attachments: [sinon.match({ name: 'name1' })] }));
     });
 
+    it('should add the attachment if the file size is exactly the limit', function(done) {
+      ctrl.uploadAttachments([{ name: 'name', size: DEFAULT_MAX_SIZE_UPLOAD }]).then(function(attachments) {
+        expect(attachments).to.have.length(1);
+
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
+    describe('on file larger than the limit', function() {
+
+      it('should show alternative uploader modal and not add the attachment if there is no alternative upload provider', function(done) {
+        var largeFiles = [
+          { name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 },
+          { name: 'name2', size: DEFAULT_MAX_SIZE_UPLOAD + 2 }
+        ];
+
+        ctrl.uploadAttachments(largeFiles).then(function(attachments) {
+          expect(inboxAttachmentAlternativeUploaderModal.show).to.have.been.calledWith(largeFiles, '20MB', sinon.match.func);
+          expect(attachments).to.deep.equal([]);
+
+          done();
+        });
+
+        $rootScope.$digest();
+      });
+
+      it('should show alternative uploader modal and add the attachment if there is alternative upload provider', function(done) {
+        var largeFiles = [{ name: 'name1', size: DEFAULT_MAX_SIZE_UPLOAD + 1 }];
+
+        inboxAttachmentAlternativeUploaderModal.show = function(files, maxSizeUpload, onUpload) {
+          onUpload({
+            fileToAttachment: function(file) {
+              return { name: file.name, size: file.size };
+            }
+          }, files);
+        };
+
+        ctrl.uploadAttachments(largeFiles).then(function(attachments) {
+          expect(attachments).to.deep.equal(largeFiles);
+          expect(ctrl.upload).to.have.been.calledWith(sinon.match({ $attachment: sinon.match({ name: 'name1' }) }));
+          done();
+        });
+
+        $rootScope.$digest();
+      });
+    });
   });
-
-  describe('the getAttachmentsStatus function', function() {
-
-    it('should return a value wuth number=0 when there is no attachments', function() {
-      expect(ctrl.getAttachmentsStatus()).to.deep.equal({
-        number: 0,
-        uploading: false,
-        error: false
-      });
-    });
-
-    it('should consider only JMAP attachments', function() {
-      ctrl.attachments.push({ isInline: false, attachmentType: 'jmap' });
-      ctrl.attachments.push({ isInline: false, attachmentType: 'linshare' });
-
-      expect(ctrl.getAttachmentsStatus()).to.deep.equal({
-        number: 1,
-        uploading: false,
-        error: false
-      });
-    });
-
-    it('should consider only non-inline attachments', function() {
-      ctrl.attachments.push({ isInline: false, attachmentType: 'jmap' });
-      ctrl.attachments.push({ isInline: false, attachmentType: 'jmap' });
-      ctrl.attachments.push({ isInline: true, attachmentType: 'jmap' });
-
-      expect(ctrl.getAttachmentsStatus()).to.deep.equal({
-        number: 2,
-        uploading: false,
-        error: false
-      });
-    });
-
-    it('should consider currently uploading attachments for uploading=true flag', function() {
-      ctrl.attachments.push({ isInline: false, attachmentType: 'jmap' });
-      ctrl.attachments.push({ isInline: false, status: 'uploading', attachmentType: 'jmap' });
-
-      expect(ctrl.getAttachmentsStatus()).to.deep.equal({
-        number: 2,
-        uploading: true,
-        error: false
-      });
-    });
-
-    it('should consider failed uploads for error=true flag', function() {
-      ctrl.attachments.push({ isInline: false, attachmentType: 'jmap' });
-      ctrl.attachments.push({ isInline: false, status: 'error', attachmentType: 'jmap' });
-
-      expect(ctrl.getAttachmentsStatus()).to.deep.equal({
-        number: 2,
-        uploading: false,
-        error: true
-      });
-    });
-
-  });
-
 });

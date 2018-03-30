@@ -55,7 +55,8 @@ angular.module('linagora.esn.unifiedinbox', [
   'material.components.button',
   'material.components.menu',
   'material.components.icon',
-  'material.components.menuBar'
+  'material.components.menuBar',
+  'esn.attachments-selector'
 ])
 
   .config(function($stateProvider, dynamicDirectiveServiceProvider, $mdIconProvider) {

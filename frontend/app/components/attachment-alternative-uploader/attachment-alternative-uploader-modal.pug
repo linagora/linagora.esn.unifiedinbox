@@ -20,7 +20,7 @@
             span.file-size {{ file.size | bytes }}
         
       .modal-footer
-        button.btn.btn-link(type="button", ng-click="$hide()")
+        button.btn.btn-link(type="button", ng-click="$ctrl.cancel(); $hide()")
           | #{__('Cancel')}
         button.btn.btn-primary(ng-click="$ctrl.upload(); $hide()", ng-disabled="!$ctrl.selectedProvider")
           | #{__('Upload')}

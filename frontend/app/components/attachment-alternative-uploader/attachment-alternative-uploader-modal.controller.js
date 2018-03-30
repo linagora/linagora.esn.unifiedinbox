@@ -11,6 +11,7 @@
 
     self.$onInit = $onInit;
     self.upload = upload;
+    self.cancel = cancel;
 
     function $onInit() {
       self.files = modalData.files;
@@ -27,6 +28,10 @@
       });
 
       modalData.onUpload(self.selectedProvider, selectedFiles);
+    }
+
+    function cancel() {
+      modalData.onCancel && modalData.onCancel();
     }
   }
 })(angular);
