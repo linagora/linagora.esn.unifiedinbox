@@ -45,6 +45,10 @@
       FORWARD_EMAIL: {
         combo: 'f',
         description: 'Forward'
+      },
+      DELETE_EMAIL: {
+        combo: 'del',
+        description: 'Move to trash'
       }
     }
   });
