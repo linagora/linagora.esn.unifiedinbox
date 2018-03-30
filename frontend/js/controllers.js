@@ -4,7 +4,8 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
-                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL) {
+                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, inboxJmapItemService, inboxUserQuotaService) {
+
     setupPolling();
 
     inboxSelectionService.unselectAllItems();
@@ -27,6 +28,11 @@ angular.module('linagora.esn.unifiedinbox')
     // therefore it might require a few calls to get the new message.
     $scope.$on(INBOX_EVENTS.DRAFT_CREATED, handleNewDraft);
 
+    _getVacationActivated();
+    _getQuotaStatus();
+
+    $scope.$on(INBOX_EVENTS.VACATION_STATUS, _getVacationActivated);
+
     function handleNewDraft(event) {
       var scope = event.currentScope;
 
@@ -34,6 +40,20 @@ angular.module('linagora.esn.unifiedinbox')
         return esnPromiseService
           .retry(fetchRecentlyUpdatedItems(scope), {maxRetry: 10})
           .then(inboxFilteredList.addAll);
+      });
+    }
+
+    function _getQuotaStatus() {
+      inboxUserQuotaService.getUserQuotaInfo().then(function(quota) {
+        if (quota.quotaLevel) {
+          $scope.quotaActivated = true;
+        }
+      });
+    }
+
+    function _getVacationActivated() {
+      inboxJmapItemService.getVacationActivated().then(function(vacation) {
+        $scope.vacationActivated = vacation;
       });
     }
 

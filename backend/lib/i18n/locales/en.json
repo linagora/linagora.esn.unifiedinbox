@@ -219,5 +219,8 @@
   "Could not send the read receipt.": "Could not send the read receipt.",
   "A read receipt has been requested.": "A read receipt has been requested.",
   "A read receipt has been sent.": "A read receipt has been sent.",
-  "Send the read receipt": "Send the read receipt"
+  "Send the read receipt": "Send the read receipt",
+  "You're out of storage space and will soon be unable to send or receive emails.": "You're out of storage space and will soon be unable to send or receive emails.",
+  "You're out of storage space and unable to send or receive emails.": "You're out of storage space and unable to send or receive emails.",
+  "Modification of vacation settings": "Modification of vacation settings"
 }

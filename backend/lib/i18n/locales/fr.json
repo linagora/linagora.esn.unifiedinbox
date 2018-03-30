@@ -221,5 +221,8 @@
   "Could not send the read receipt.": "Impossible d'envoyer l'accusé de lecture.",
   "A read receipt has been requested.": "Une confirmation de lecture a été demandée.",
   "A read receipt has been sent.": "La confirmation de lecture a été envoyée.",
-  "Send the read receipt": "Envoyer l'accusé de lecture"
+  "Send the read receipt": "Envoyer l'accusé de lecture",
+  "You're out of storage space and will soon be unable to send or receive emails.": "Vous n'avez plus d'espace de stockage et serez bientôt incapable d'envoyer ou de recevoir des emails.",
+  "You're out of storage space and unable to send or receive emails.": "Vous n'avez plus d'espace de stockage et vous ne pouvez plus envoyer ou recevoir des emails.",
+  "Modification of vacation settings": "Modification du répondeur automatique"
 }

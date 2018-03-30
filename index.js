@@ -83,6 +83,7 @@ const angularAppFiles = [
   'components/user-quota/user-quota.js',
   'components/user-quota/user-quota.controller.js',
   'services/user-quota/user-quota-service.js',
+  'services/user-quota/user-quota-service.constants.js',
   'services/config/config.js',
   'services/email-body/email-body.js',
   'services/generate-jwt-token/generate-jwt-token.js',
@@ -109,7 +110,11 @@ const angularAppFiles = [
   'components/composer/attachments-selector/composer-attachments-selector.js',
   'components/composer/attachments-selector/composer-attachments-selector.controller.js',
   'components/read-receipt/read-receipt.component.js',
-  'components/read-receipt/read-receipt.controller.js'
+  'components/read-receipt/read-receipt.controller.js',
+  'components/banner/vacation-banner/vacation-banner.component.js',
+  'components/banner/vacation-banner/vacation-banner.controller.js',
+  'components/banner/quota-banner/quota-banner.component.js',
+  'components/banner/quota-banner/quota-banner.controller.js'
 ];
 
 const angularJsFiles = [
@@ -186,6 +191,7 @@ const mailtoInboxAngularAppFiles = [
   'services/mailboxes/special-mailboxes.js',
   'services/mailto-parser/mailto-parser.js',
   'services/user-quota/user-quota-service.js',
+  'services/user-quota/user-quota-service.constants.js',
   'services/hook/email-sending-hook.service.js',
   'services/attachment-upload/inbox-attachment-upload.service.js',
   'services/attachment-provider-registry/attachment-provider-registry.service.js',
@@ -211,7 +217,11 @@ const mailtoInboxAngularAppFiles = [
   'components/composer/attachments-selector/composer-attachments-selector.js',
   'components/composer/attachments-selector/composer-attachments-selector.controller.js',
   'components/read-receipt/read-receipt.component.js',
-  'components/read-receipt/read-receipt.controller.js'
+  'components/read-receipt/read-receipt.controller.js',
+  'components/banner/vacation-banner/vacation-banner.component.js',
+  'components/banner/vacation-banner/vacation-banner.controller.js',
+  'components/banner/quota-banner/quota-banner.component.js',
+  'components/banner/quota-banner/quota-banner.controller.js'
 ];
 
 module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {

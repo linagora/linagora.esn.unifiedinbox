@@ -294,8 +294,7 @@ angular.module('linagora.esn.unifiedinbox', [
       },
       rightSidebar: {
         isVisible: false
-      },
-      vacationActivated: false
+      }
     };
   })
 
