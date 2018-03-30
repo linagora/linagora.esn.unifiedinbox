@@ -86,7 +86,8 @@ angular.module('linagora.esn.unifiedinbox')
     }
   })
 
-  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, INBOX_SHORTCUTS_NAVIGATION_CATEGORY) {
+  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper,
+                                              INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY) {
     var context = $stateParams.context;
 
     $scope.email = $stateParams.item;
@@ -182,6 +183,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     esnShortcuts.use(INBOX_SHORTCUTS_NAVIGATION_CATEGORY.shortcuts.VIEW_NEXT_EMAIL, this.next, $scope);
     esnShortcuts.use(INBOX_SHORTCUTS_NAVIGATION_CATEGORY.shortcuts.VIEW_PREVIOUS_EMAIL, this.previous, $scope);
+    esnShortcuts.use(INBOX_SHORTCUTS_ACTIONS_CATEGORY.shortcuts.DELETE_EMAIL, this.moveToTrash, $scope);
   })
 
   .controller('viewThreadController', function($scope, $stateParams, $state, withJmapClient, inboxJmapItemService, _, JMAP_GET_MESSAGES_VIEW) {
