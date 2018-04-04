@@ -222,5 +222,8 @@
   "Send the read receipt": "Gửi trạng thái đọc",
   "You're out of storage space and will soon be unable to send or receive emails.": "Bạn đã sử dụng hết dung lượng cho phép và sắp không thể tiếp tục gửi hay nhận thư",
   "You're out of storage space and unable to send or receive emails.": "Bạn đã sử dụng hết dung lượng cho phép và không thể gửi hay nhận thư",
-  "Modification of vacation settings": "Sửa đổi thiết lập kì nghỉ"
+  "Modification of vacation settings": "Sửa đổi thiết lập kì nghỉ",
+  "Always request read receipts with outgoing messages ?": "Luôn yêu cầu xác nhận đã đọc với thư gửi đi?",
+  "Receipts": "Xác nhận",
+  "Request receipts": "Yêu cầu xác nhận"
 }
