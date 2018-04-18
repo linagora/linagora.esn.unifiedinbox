@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe('The inboxComposerBoxed directive', function() {
+describe.skip('The inboxComposerBoxed directive', function() {
 
   var $compile, $rootScope, $timeout, element;
 
