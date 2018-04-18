@@ -227,5 +227,6 @@
   "Modification of vacation settings": "Modification du répondeur automatique",
   "Always request read receipts with outgoing messages ?": "Envoyer une demande d'accusé de lecture systématiquement ?",
   "Receipts": "Accusés",
-  "Request receipts": "Demande d'accusés"
+  "Request receipts": "Demande d'accusés",
+  "Enable forwarding": "Activer le transfert"
 }
