@@ -26,6 +26,7 @@ angular.module('linagora.esn.unifiedinbox')
     return function(templateUrl) {
       return newProvider({
         type: PROVIDER_TYPES.JMAP,
+        activeOn: ['unifiedinbox'],
         name: 'Emails',
         fetch: function(context) {
           function getMessages(position, dateOfMostRecentItem) {
