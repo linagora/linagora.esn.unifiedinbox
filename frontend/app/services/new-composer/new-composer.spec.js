@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe('The newComposerService ', function() {
+describe.skip('The newComposerService ', function() {
 
   var $rootScope, $state, $timeout, config, newComposerService, deviceDetector, boxOverlayOpener;
 

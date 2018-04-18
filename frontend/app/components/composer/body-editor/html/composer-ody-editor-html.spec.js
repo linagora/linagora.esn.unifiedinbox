@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe('The inboxComposerBodyEditorHtml component', function() {
+describe.skip('The inboxComposerBodyEditorHtml component', function() {
 
   var $rootScope, $compile, element;
 

@@ -67,6 +67,7 @@ module.exports = function(config) {
       'frontend/components/angular-file-saver/dist/angular-file-saver.bundle.js',
 
       { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.config.js', watched: false, included: false, served: true },
+      { pattern: 'node_modules/linagora-rse/frontend/js/modules/i18n/i18n.run.js', watched: false, included: false, served: true },
       { pattern: 'frontend/images/**/*.*', watched: false, included: false, served: true },
       { pattern: 'frontend/components/mdi/fonts/**/*.*', watched: false, included: false, served: true },
 
