@@ -8,6 +8,7 @@ module.exports = dependencies => ({
     'composer.attachments': require('./composer-attachments')(dependencies),
     downloadUrl: require('./download-url')(dependencies),
     drafts: require('./drafts')(dependencies),
+    forwarding: require('./forwarding')(dependencies),
     hiddenSharedMailboxes: require('./hidden-shared-mailboxes')(dependencies),
     requestReceipts: require('./request-receipts')(dependencies),
     'identities.default': require('./identities-default')(dependencies),

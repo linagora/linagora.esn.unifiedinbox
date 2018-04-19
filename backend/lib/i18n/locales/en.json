@@ -225,5 +225,6 @@
   "Modification of vacation settings": "Modification of vacation settings",
   "Always request read receipts with outgoing messages ?": "Always request read receipts with outgoing messages ?",
   "Receipts": "Receipts",
-  "Request receipts": "Request receipts"
+  "Request receipts": "Request receipts",
+  "Enable forwarding": "Enable forwarding"
 }
