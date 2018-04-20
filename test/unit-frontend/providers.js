@@ -406,6 +406,72 @@ describe('The Unified Inbox Angular module providers', function() {
 
   });
 
+  describe('The inboxJmapProviderFilterBuilder', function() {
+    var inboxJmapProviderFilterBuilder;
+
+    beforeEach(inject(function(_inboxJmapProviderFilterBuilder_) {
+      inboxJmapProviderFilterBuilder = _inboxJmapProviderFilterBuilder_;
+    }));
+
+    it('should build a filter on senders/from when query has one', function() {
+      var searchOpts = { from: ['MAILERDAEMON'] };
+      var expected = { from: 'MAILERDAEMON' };
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+    it('should build a filter on sender/from when query has some', function() {
+      var searchOpts = { from: ['MAILERDAEMON', 'noreply'] };
+      var expected = {operator: 'AND', conditions: [{from: 'MAILERDAEMON'}, {from: 'noreply'}]};
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+    it('should build a filter on subject when query includes some', function() {
+      var searchOpts = { subject: ['Failure', 'Error'] };
+      var expected = {operator: 'AND', conditions: [{subject: 'Failure'}, {subject: 'Error'}]};
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+    it('should build a filter with hasAttachment filter', function() {
+      var searchOpts = { from: ['noreply'], hasAttachment: [true] };
+      var expected = {operator: 'AND', conditions: [{from: 'noreply'}, {hasAttachment: true}]};
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+    it('should build a filter that excludes keywords', function() {
+      var searchOpts = { from: ['noreply'], excluded: ['spam', 'trump'] };
+      var expected = {operator: 'AND', conditions: [{from: 'noreply'}, {operator: 'NOT', conditions: [{ text: 'spam'}, {text: 'trump'}]}]};
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+    it('should build a filter on multiple conditions', function() {
+      var searchOpts = { from: ['MAILERDAEMON', 'noreply'], subject: ['Failure'], excluded: ['f_ck'], hasAttachment: [true]};
+      var expected = {operator: 'AND', conditions: [
+        {operator: 'AND', conditions: [
+          {from: 'MAILERDAEMON'},
+          {from: 'noreply'}
+        ]},
+        {subject: 'Failure'}, {hasAttachment: true},
+        {operator: 'NOT', conditions: [
+          {text: 'f_ck'}
+        ]}
+      ]};
+      var jmapFilter = inboxJmapProviderFilterBuilder(searchOpts);
+
+      expect(jmapFilter).to.deep.equal(expected);
+    });
+
+  });
+
   describe('The inboxJmapProviderContextBuilder', function() {
 
     var inboxJmapProviderContextBuilder;
