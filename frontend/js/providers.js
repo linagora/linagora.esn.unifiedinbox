@@ -72,10 +72,10 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .factory('inboxNewMessageProvider', function($q, withJmapClient, pagedJmapRequest, inboxJmapProviderContextBuilder,
-                                               newProvider, sortByDateInDescendingOrder, inboxMailboxesService, _,
+                                               SearchProvider, sortByDateInDescendingOrder, inboxMailboxesService, _,
                                                JMAP_GET_MESSAGES_LIST, ELEMENTS_PER_REQUEST, PROVIDER_TYPES) {
     return function(templateUrl) {
-      return newProvider({
+      return new SearchProvider({
         type: PROVIDER_TYPES.JMAP,
         activeOn: ['unifiedinbox'],
         name: 'Emails',
@@ -146,7 +146,8 @@ angular.module('linagora.esn.unifiedinbox')
             });
           });
         },
-        templateUrl: templateUrl
+        templateUrl: templateUrl,
+        searchTemplateUrl: '/unifiedinbox/app/components/search/search-form-template.html'
       });
     };
   })
