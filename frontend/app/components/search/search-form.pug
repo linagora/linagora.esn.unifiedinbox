@@ -1,2 +1,30 @@
 .inbox-search-form
-  span Add the inbox fields here
+
+  fieldset
+    .form-group.flex-form-group.full-width
+      .field-name.field-label #{__('From')}
+      .fg-line
+        recipients-auto-complete.inbox-recipients.recipients-from(ng-model="advanced.from", template="recipients-auto-complete")
+
+    .form-group.flex-form-group.full-width
+      .field-name.field-label #{__('To')}
+      .fg-line
+        recipients-auto-complete.inbox-recipients.recipients-to(ng-model="advanced.to", template="recipients-auto-complete")
+
+    .form-group.flex-form-group.full-width
+      .field-name.field-label #{__('Subject')}
+      .fg-line
+        input.input.form-control(type='text', ng-model="advanced.subject", autoclose="1", placeholder=__('Subject'))
+    .form-group.flex-form-group.full-width
+      .field-name.field-label #{__('Has the words')}
+      .fg-line
+        input.input.form-control(type='text', ng-model="advanced.contains", autoclose="1", placeholder=__('Has the words'))
+    .form-group.flex-form-group.full-width
+      .field-name.field-label #{__('Does not have')}
+      .fg-line
+        input.input.form-control(type='text', ng-model="advanced.excludes", autoclose="1", placeholder=__('Does not have'))
+    .checkbox.checkbox-styled
+      label
+        input(type="checkbox", ng-model='advanced.hasAttachment')
+        i.input-helper
+        span #{__('Has attachment')}
