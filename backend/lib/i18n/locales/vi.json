@@ -226,5 +226,6 @@
   "Always request read receipts with outgoing messages ?": "Luôn yêu cầu xác nhận đã đọc với thư gửi đi?",
   "Receipts": "Xác nhận",
   "Request receipts": "Yêu cầu xác nhận",
-  "Enable forwarding": "Chuyển tiếp"
+  "Allow users to configure email forwarding": "Cho phép người dùng cấu hình chuyển tiếp thư",
+  "Allow users to keep a local copy of forwarded emails": "Cho phép người dùng giữ bản sao thư chuyển tiếp"
 }

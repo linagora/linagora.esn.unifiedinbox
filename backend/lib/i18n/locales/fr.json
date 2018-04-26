@@ -228,5 +228,6 @@
   "Always request read receipts with outgoing messages ?": "Envoyer une demande d'accusé de lecture systématiquement ?",
   "Receipts": "Accusés",
   "Request receipts": "Demande d'accusés",
-  "Enable forwarding": "Activer le transfert"
+  "Allow users to configure email forwarding": "Permettre aux utilisateurs de gérer les redirections",
+  "Allow users to keep a local copy of forwarded emails": "Permettre aux utilisateurs de conserver une copie des messages transférés"
 }

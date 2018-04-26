@@ -226,5 +226,6 @@
   "Always request read receipts with outgoing messages ?": "Always request read receipts with outgoing messages ?",
   "Receipts": "Receipts",
   "Request receipts": "Request receipts",
-  "Enable forwarding": "Enable forwarding"
+  "Allow users to configure email forwarding": "Allow users to configure email forwarding",
+  "Allow users to keep a local copy of forwarded emails": "Allow users to keep a local copy of forwarded emails"
 }
