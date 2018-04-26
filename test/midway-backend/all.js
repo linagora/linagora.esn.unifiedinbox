@@ -40,8 +40,15 @@ before(function(done) {
   rse.test.apiHelpers(this.helpers, this.testEnv);
 
   const manager = this.testEnv.moduleManager.manager;
+  const nodeModulesPath = path.normalize(
+    path.join(__dirname, '../../node_modules/')
+  );
+
   const loader = manager.loaders.code(require('../../index.js'), true);
+  const nodeModulesLoader = manager.loaders.filesystem(nodeModulesPath, true);
 
   manager.appendLoader(loader);
+  manager.appendLoader(nodeModulesLoader);
+
   loader.load('linagora.esn.unifiedinbox', done);
 });
