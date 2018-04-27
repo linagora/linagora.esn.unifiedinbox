@@ -41,7 +41,14 @@
     'esn.datetime',
     'esn.i18n',
     'esn.http',
-    'esn.promise'
+    'esn.promise',
+    'ngAnimate',
+    'material.core',
+    'material.components.icon',
+    'material.components.menu',
+    'material.components.button',
+    'material.components.backdrop',
+    'material.components.menuBar'
   ]);
 
 })(angular);
