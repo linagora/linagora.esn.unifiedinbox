@@ -203,6 +203,8 @@ const mailtoInboxAngularAppFiles = [
   'services/attachment-jmap/attachment-jmap.service.js',
   'services/attachment-jmap/attachment-jmap.constants.js',
   'services/attachment-jmap/attachment-jmap.run.js',
+  'services/request-receipts/request-receipts.constants.js',
+  'services/request-receipts/request-receipts-service.js',
   'services/draft/draft.js',
   'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.service.js',
   'components/attachment-alternative-uploader/attachment-alternative-uploader-modal.controller.js',
