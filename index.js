@@ -119,7 +119,13 @@ const angularAppFiles = [
   'components/banner/vacation-banner/vacation-banner.component.js',
   'components/banner/vacation-banner/vacation-banner.controller.js',
   'components/banner/quota-banner/quota-banner.component.js',
-  'components/banner/quota-banner/quota-banner.controller.js'
+  'components/banner/quota-banner/quota-banner.controller.js',
+  'components/forwardings/inbox-forwardings.component.js',
+  'components/forwardings/inbox-forwardings.controller.js',
+  'components/forwardings/subheader/inbox-forwardings-subheader.component.js',
+  'services/common/inbox-restangular.service.js',
+  'services/forwardings/inbox-forwardings.service.js',
+  'services/forwardings/inbox-forwardings-api-client.service.js'
 ];
 
 const angularJsFiles = [

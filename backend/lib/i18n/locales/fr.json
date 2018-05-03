@@ -229,5 +229,11 @@
   "Receipts": "Accusés",
   "Request receipts": "Demande d'accusés",
   "Allow users to configure email forwarding": "Permettre aux utilisateurs de gérer les redirections",
-  "Allow users to keep a local copy of forwarded emails": "Permettre aux utilisateurs de conserver une copie des messages transférés"
+  "Allow users to keep a local copy of forwarded emails": "Permettre aux utilisateurs de conserver une copie des messages transférés",
+  "Forwardings": "Redirections",
+  "Keep local copy": "Conserver la copie",
+  "Add": "Ajouter",
+  "Remove": "Supprimer",
+  "You are not forwarding your email": "Vous ne transférez pas votre email",
+  "Error while loading forwarding settings!": "Erreur lors du chargement des redirections!"
 }
