@@ -302,7 +302,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       inboxFilteredList.addAll.reset();
       scope.loadRecentItems = function() {
-        return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
+        return $q.when([{ a: 1, provider: { types: [], options: { itemMatches: $q.when } } }]);
       };
       $stateParams.context = folder.id; // user is browsing drafts folder
 
@@ -320,7 +320,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       inboxFilteredList.addAll.reset();
       scope.loadRecentItems = function() {
-        return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
+        return $q.when([{ a: 1, provider: { types: [], options: { itemMatchesitemMatches: $q.when } } }]);
       };
 
       scope.$emit(INBOX_EVENTS.DRAFT_CREATED);
@@ -340,7 +340,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     it('should append new elements to the list', function() {
       initController('unifiedInboxController');
       scope.loadRecentItems = function() {
-        return $q.when([{ a: 1, provider: { types: [], itemMatches: $q.when } }]);
+        return $q.when([{ a: 1, provider: { types: [], options: { itemMatches: $q.when } } }]);
       };
 
       $interval.flush(INFINITE_LIST_POLLING_INTERVAL);
@@ -713,7 +713,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       $stateParams.item = {
         id: 'myId',
         provider: {
-          itemMatches: _.constant($q.when())
+          options: { itemMatches: $q.when }
         }
       };
 

@@ -212,42 +212,42 @@ describe('The Unified Inbox Angular module providers', function() {
       }
 
       it('should resolve when item matches default context and neither context nor filter is selected', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage(), jmapFilter()).then(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage(), jmapFilter()).then(done);
         $rootScope.$digest();
       });
 
       it('should resolve when item matches context and no filter is selected', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('other_mailbox'), jmapFilter('other_mailbox')).then(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('other_mailbox'), jmapFilter('other_mailbox')).then(done);
         $rootScope.$digest();
       });
 
       it('should resolve when item matches negative context and no filter is selected', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('other_mailbox'), jmapFilter('all')).then(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('other_mailbox'), jmapFilter('all')).then(done);
         $rootScope.$digest();
       });
 
       it('should resolve when item matches context and filter', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('other_mailbox', { isUnread: true }), jmapFilter('other_mailbox', { isUnread: true })).then(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('other_mailbox', { isUnread: true }), jmapFilter('other_mailbox', { isUnread: true })).then(done);
         $rootScope.$digest();
       });
 
       it('should reject when item does not match default context', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('other_mailbox'), jmapFilter()).catch(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('other_mailbox'), jmapFilter()).catch(done);
         $rootScope.$digest();
       });
 
       it('should reject when item does not match context', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('other_mailbox'), jmapFilter('id_trash')).catch(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('other_mailbox'), jmapFilter('id_trash')).catch(done);
         $rootScope.$digest();
       });
 
       it('should reject when item does not match negative context', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('id_spam'), jmapFilter('all')).catch(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('id_spam'), jmapFilter('all')).catch(done);
         $rootScope.$digest();
       });
 
       it('should reject when item does not match filter', function(done) {
-        inboxHostedMailMessagesProvider.itemMatches(newMessage('id_inbox'), jmapFilter('', { isFlagged: true })).catch(done);
+        inboxHostedMailMessagesProvider.options.itemMatches(newMessage('id_inbox'), jmapFilter('', { isFlagged: true })).catch(done);
         $rootScope.$digest();
       });
 
@@ -529,6 +529,75 @@ describe('The Unified Inbox Angular module providers', function() {
         expect(context).to.deep.equal({
           text: 'query'
         });
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should build search context when advanced query is provided', function() {
+      inboxJmapProviderContextBuilder({
+        filterByType: {},
+        query: {
+          to: [],
+          from: [{email: 'user2'}],
+          subject: 'subject',
+          contains: 'a set of keywords',
+          excluded: 'some ignored terms',
+          hasAttachment: [true]
+        }
+      }).then(function(context) {
+        expect(context).to.deep.equal({
+          operator: 'AND',
+          conditions: [
+            { from: 'user2' },
+            { subject: 'subject' },
+            { hasAttachment: true },
+            {
+              operator: 'AND',
+              conditions: [{ text: 'a' }, { text: 'set' }, { text: 'of' }, { text: 'keywords' }]
+            },
+            {
+              operator: 'NOT',
+              conditions: [{ text: 'some' }, { text: 'ignored' }, { text: 'terms' }]
+            }
+          ]
+        });
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should build empty search context when no criterion provided with query', function() {
+      inboxJmapProviderContextBuilder({
+        filterByType: {},
+        query: {
+          to: [],
+          from: [],
+          subject: undefined,
+          contains: '',
+          excluded: '',
+          hasAttachment: undefined
+        }
+      }).then(function(context) {
+        expect(context).to.deep.equal({});
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should build empty search context when no value criterion provided', function() {
+      inboxJmapProviderContextBuilder({
+        filterByType: {},
+        query: {
+          to: ['this should be an object with an email property'],
+          from: ['this should be an object with an email property'],
+          subject: ['should not be included within an array'],
+          contains: ['should not be included within an array'],
+          excluded: ['should not be included within an array'],
+          body: ['should not be included within an array']
+        }
+      }).then(function(context) {
+        expect(context).to.deep.equal({});
       });
 
       $rootScope.$digest();
