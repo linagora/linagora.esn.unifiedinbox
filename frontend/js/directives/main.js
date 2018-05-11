@@ -235,11 +235,12 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('recipientsAutoComplete', function($rootScope, emailSendingService, elementScrollService, searchService, _) {
+  .directive('recipientsAutoComplete', function($rootScope, emailSendingService, elementScrollService, searchService, emailService, _) {
     return {
       restrict: 'E',
       scope: {
-        tags: '=ngModel'
+        tags: '=ngModel',
+        excludedEmails: '='
       },
       templateUrl: '/unifiedinbox/views/composer/recipients-auto-complete.html',
       link: function(scope, element) {
@@ -300,6 +301,14 @@ angular.module('linagora.esn.unifiedinbox')
 
         scope.onTagAdding = function($tag) {
           normalizeToEMailer($tag);
+
+          if (!emailService.isValidEmail($tag.email)) {
+            return false;
+          }
+
+          if (scope.excludedEmails && scope.excludedEmails.indexOf($tag.email) > -1) {
+            return false;
+          }
 
           return !_.find(scope.tags, { email: $tag.email });
         };

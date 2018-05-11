@@ -537,6 +537,12 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       expect(elementScrollService.autoScrollDown).to.have.been.calledWith();
     });
 
+    it('should not add new tag if email is not valid', function() {
+      var scope = compileDirectiveThenGetScope();
+
+      expect(scope.onTagAdding({ email: 'invalid-email' })).to.equal(false);
+    });
+
     it('should accept to add a new tag if email does not matche the email of an existing tag', function() {
       var scope = compileDirectiveThenGetScope();
 
@@ -555,6 +561,13 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       scope.tags.push({ email: 'user3@domain' });
 
       expect(scope.onTagAdding({ email: 'user2@domain' })).to.equal(false);
+    });
+
+    it('should not add new tag if email is in excluded emails list', function() {
+      compileDirective('<div><recipients-auto-complete ng-model="model" excluded-emails="[\'email@op.org\']" template="recipients-auto-complete"></recipients-auto-complete></div>');
+      var scope = element.find('recipients-auto-complete').isolateScope();
+
+      expect(scope.onTagAdding({ email: 'email@op.org' })).to.equal(false);
     });
 
     it('should remove all fields that are not "email" or "name"', function() {
@@ -624,10 +637,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       expectTagsFromTextInput('      name1 name2   name3 name4     <email@lin.com>', [{ name: 'name1 name2   name3 name4', email: 'email@lin.com' }]);
     });
 
-    it('should make sure input is defined like this "test <email@lin.com> name2"', function() {
-       expectTagsFromTextInput('test <email@lin.com>  name2', [{name: 'test', email: 'email@lin.com'}, {name: 'name2', email: 'name2'}]);
-    });
-
     it('should make sure input is defined like this "name <email@lin.com> name2 <lin@gora.com>"', function() {
       expectTagsFromTextInput('name1 <email@lin.com>  name2 <email2@lin.com>', [{ name: 'name1', email: 'email@lin.com' }, { name: 'name2', email: 'email2@lin.com' }]);
     });
@@ -638,38 +647,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
     it('should make sure input is defined like this "name   <   email@lin.com > name2   <  email2@lin.com  >"', function() {
        expectTagsFromTextInput('name1   <   email@lin.com >    name2   <  email2@lin.com  >', [{ name: 'name1', email: 'email@lin.com' }, { name: 'name2', email: 'email2@lin.com' }]);
-    });
-
-    it('should make sure input is defined like this "<<>>"', function() {
-      expectTagsFromTextInput('<<>>', [{ name: '<', email: '<' }, { name: '>', email: '>' }]);
-    });
-
-    it('should make sure input with email is defined like this "<<lin@gora.com>>"', function() {
-      expectTagsFromTextInput('<<lin@gora.com>>', [{ name: '<lin@gora.com', email: '<lin@gora.com' }, { name: '>', email: '>' }]);
-    });
-
-    it('should make sure input is defined like this ">anything<"', function() {
-      expectTagsFromTextInput('>an7th|n8<', [{ name: '>an7th|n8<', email: '>an7th|n8<' }]);
-    });
-
-    it('should make sure input is defined like this "text >anything<"', function() {
-      expectTagsFromTextInput('text    >@n7th|n8<', [{ name: 'text    >@n7th|n8<', email: 'text    >@n7th|n8<' }]);
-    });
-
-    it('should make sure input is defined like this "text1>text2"', function() {
-      expectTagsFromTextInput('text1>text2', [{ name: 'text1>text2', email: 'text1>text2' }]);
-    });
-
-    it('should make sure input is defined like this "text1<text2"', function() {
-      expectTagsFromTextInput('text1<text2', [{ name: 'text1<text2', email: 'text1<text2' }]);
-    });
-
-    it('should make sure input is defined like this "text1 text2"', function() {
-      expectTagsFromTextInput('text1 text2', [{ name: 'text1 text2', email: 'text1 text2' }]);
-    });
-
-    it('should make sure input is defined like this "   text1 text2   "', function() {
-       expectTagsFromTextInput('   text1 text2   ', [{ name: 'text1 text2', email: 'text1 text2' }]);
     });
 
     it('should initialize the model if none given', function() {
