@@ -227,5 +227,11 @@
   "Receipts": "Xác nhận",
   "Request receipts": "Yêu cầu xác nhận",
   "Allow users to configure email forwarding": "Cho phép người dùng cấu hình chuyển tiếp thư",
-  "Allow users to keep a local copy of forwarded emails": "Cho phép người dùng giữ bản sao thư chuyển tiếp"
+  "Allow users to keep a local copy of forwarded emails": "Cho phép người dùng giữ bản sao thư chuyển tiếp",
+  "Forwardings": "Chuyển tiếp",
+  "Keep local copy": "Giữ bản sao",
+  "Add": "Thêm",
+  "Remove": "Xóa",
+  "You are not forwarding your email": "Bạn đang không chuyển tiếp thư",
+  "Error while loading forwarding settings!": "Có lỗi khi lấy thiết lập chuyển tiếp thư!"
 }

@@ -227,5 +227,11 @@
   "Receipts": "Receipts",
   "Request receipts": "Request receipts",
   "Allow users to configure email forwarding": "Allow users to configure email forwarding",
-  "Allow users to keep a local copy of forwarded emails": "Allow users to keep a local copy of forwarded emails"
+  "Allow users to keep a local copy of forwarded emails": "Allow users to keep a local copy of forwarded emails",
+  "Forwardings": "Forwardings",
+  "Keep local copy": "Keep local copy",
+  "Add": "Add",
+  "Remove": "Remove",
+  "You are not forwarding your email": "You are not forwarding your email",
+  "Error while loading forwarding settings!": "Error while loading forwarding settings!"
 }

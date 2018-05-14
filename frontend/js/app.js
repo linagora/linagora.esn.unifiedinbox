@@ -207,6 +207,14 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.configuration.forwardings', {
+        url: '/forwardings',
+        views: {
+          'configuration@unifiedinbox.configuration': {
+            template: '<inbox-forwardings />'
+          }
+        }
+      })
       .state('unifiedinbox.inbox', {
         url: '/inbox?type&account&context',
         views: {
