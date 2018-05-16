@@ -4,25 +4,26 @@
     .form-group.flex-form-group.full-width
       .field-name.field-label #{__('From')}
       .fg-line
-        recipients-auto-complete.inbox-recipients.recipients-from(ng-model="ctrl.query.from", template="recipients-auto-complete")
+        .form-control
+          recipients-auto-complete.inbox-recipients.recipients-from(ng-model="ctrl.query.from", template="recipients-auto-complete")
 
     .form-group.flex-form-group.full-width
       .field-name.field-label #{__('To')}
-      .fg-line
+      .fg-line.form-control
         recipients-auto-complete.inbox-recipients.recipients-to(ng-model="ctrl.query.to", template="recipients-auto-complete")
 
     .form-group.flex-form-group.full-width
       .field-name.field-label #{__('Subject')}
       .fg-line
-        input.input.form-control(type='text', ng-model="ctrl.query.subject", autoclose="1", placeholder=__('Subject'))
+        input.input.form-control(type='text', ng-model="ctrl.query.subject", autoclose="1")
     .form-group.flex-form-group.full-width
       .field-name.field-label #{__('Has the words')}
       .fg-line
-        input.input.form-control(type='text', ng-model="ctrl.query.contains", autoclose="1", placeholder=__('Has the words'))
+        input.input.form-control(type='text', ng-model="ctrl.query.contains", autoclose="1")
     .form-group.flex-form-group.full-width
       .field-name.field-label #{__('Does not have')}
       .fg-line
-        input.input.form-control(type='text', ng-model="ctrl.query.excluded", autoclose="1", placeholder=__('Does not have'))
+        input.input.form-control(type='text', ng-model="ctrl.query.excluded", autoclose="1")
     .checkbox.checkbox-styled
       label
         input(type="checkbox", ng-model='ctrl.query.hasAttachment')

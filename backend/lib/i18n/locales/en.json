@@ -233,5 +233,9 @@
   "Add": "Add",
   "Remove": "Remove",
   "You are not forwarding your email": "You are not forwarding your email",
-  "Error while loading forwarding settings!": "Error while loading forwarding settings!"
+  "Error while loading forwarding settings!": "Error while loading forwarding settings!",
+  "Enable forwarding": "Enable forwarding",
+  "Has the words": "Has the words",
+  "Does not have": "Does not have",
+  "Has attachment": "Has attachment"
 }
