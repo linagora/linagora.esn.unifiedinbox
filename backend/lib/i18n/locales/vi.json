@@ -233,5 +233,9 @@
   "Add": "Thêm",
   "Remove": "Xóa",
   "You are not forwarding your email": "Bạn đang không chuyển tiếp thư",
-  "Error while loading forwarding settings!": "Có lỗi khi lấy thiết lập chuyển tiếp thư!"
+  "Error while loading forwarding settings!": "Có lỗi khi lấy thiết lập chuyển tiếp thư!",
+  "Enable forwarding": "Chuyển tiếp",
+  "Has the words": "Có các từ",
+  "Does not have": "Không có",
+  "Has attachment": "Có tập tin đính kèm"
 }

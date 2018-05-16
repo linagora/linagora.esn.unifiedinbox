@@ -235,5 +235,9 @@
   "Add": "Ajouter",
   "Remove": "Supprimer",
   "You are not forwarding your email": "Vous ne transférez pas votre email",
-  "Error while loading forwarding settings!": "Erreur lors du chargement des redirections!"
+  "Error while loading forwarding settings!": "Erreur lors du chargement des redirections!",
+  "Enable forwarding": "Activer le transfert",
+  "Has the words": "Contient les mots",
+  "Does not have": "Ne contient pas",
+  "Has attachment": "Contenant une pièce jointe"
 }

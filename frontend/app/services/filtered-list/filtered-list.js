@@ -145,7 +145,7 @@
             return _providerAttributeIsCompatible([provider.account], filters.acceptedAccounts);
           })
           .then(function() {
-            return provider.itemMatches(item, filters);
+            return provider.options.itemMatches(item, filters);
           })
           .then(function() {
             if (filters.quickFilter) {

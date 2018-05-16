@@ -116,6 +116,7 @@ const angularAppFiles = [
   'components/read-receipt/request-receipts/request-receipts.js',
   'components/read-receipt/request-receipts/subheader/request-receipts-subheader.js',
   'components/read-receipt/request-receipts/request-receipts.controller.js',
+  'components/search/search-form.component.js',
   'components/banner/vacation-banner/vacation-banner.component.js',
   'components/banner/vacation-banner/vacation-banner.controller.js',
   'components/banner/quota-banner/quota-banner.component.js',

@@ -2,13 +2,7 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .factory('inboxJmapProviderContextBuilder', function($q, inboxMailboxesService, inboxJmapProviderFilterBuilder, jmap, PROVIDER_TYPES) {
-    var filterInputStrategies = {
-      advanced: function(opt) { return $q.when(inboxJmapProviderFilterBuilder(opt.advanced)); },
-      // options.query is used in global search
-      // In this case, build a filter with 'text' only to match all important fields
-      query: function(opt) { return $q.when({text: opt.query}); }
-    };
+  .factory('inboxJmapProviderContextBuilder', function(_, $q, inboxMailboxesService, inboxJmapProviderFilterBuilder, jmap, PROVIDER_TYPES) {
 
     function quickFilterQueryBuilder(opt) {
       return inboxMailboxesService.getMessageListFilter(opt.context).then(function(mailboxFilter) {
@@ -16,17 +10,71 @@ angular.module('linagora.esn.unifiedinbox')
       });
     }
 
-    return function(options) {
-      var foundQueryType = _.find(_.keys(filterInputStrategies), _.partial(_.has, options));
-      var queryBuilder = foundQueryType && filterInputStrategies[foundQueryType] || quickFilterQueryBuilder;
+    function buildAddressesFilterConditions(query) {
+      var filter = {},
+        hasEmail = function(obj) { return _.isString(obj.email); }
 
-      return queryBuilder(options);
+      if (_.isArray(query.to)) {
+        filter.to = query.to
+          .filter(hasEmail)
+          .map(function(recipient) { return recipient.email.trim(); });
+      }
+      if (_.isArray(query.from)) {
+        filter.from = query.from
+          .filter(hasEmail)
+          .map(function(sender) { return sender.email.trim(); });
+      }
+
+      return filter;
+    }
+
+    function buildKeywordsFilterConditions(query) {
+      var filterPropsAsArray = ['subject', 'contains', 'excluded', 'body']
+        .filter(function(criterion) {
+          return query[criterion] && _.isString(query[criterion]);
+        })
+        .map(function(criterion) {
+          return {
+            propName: criterion,
+            keywords: _.compact(query[criterion].split(' ').map(function(keyword) { return keyword.trim(); }))
+          };
+        });
+
+      return _.zipObject(
+        _.map(filterPropsAsArray, 'propName'),
+        _.map(filterPropsAsArray, 'keywords')
+      );
+    }
+
+    function mapToAdvancedFilter(query) {
+      var filter = {
+        hasAttachment: query.hasAttachment && [true]
+      };
+
+      filter = _.assign(filter, buildAddressesFilterConditions(query));
+      filter = _.assign(filter, buildKeywordsFilterConditions(query));
+
+      return filter;
+    }
+
+    function handleAdvancedFilters(query) {
+      return $q.when(inboxJmapProviderFilterBuilder(mapToAdvancedFilter(query)));
+    }
+
+    return function(options) {
+      if (_.isString(options.query)) {
+        // "simple" queries
+        return $q.when({text: options.query});
+      }
+      if (_.isObject(options.query)) {
+        // advanced search queries
+        return handleAdvancedFilters(options.query);
+      }
+      return quickFilterQueryBuilder(options);
     };
   })
 
-  .factory('inboxJmapProviderFilterBuilder', function() {
-    var EXCLUDED_CRITERION = 'excluded';
-
+  .factory('inboxJmapProviderFilterBuilder', function(_) {
     return function(emailSearchOptions) {
       function pairFrom(criterion, value) { return _.zipObject([criterion], [value]); }
 
@@ -40,15 +88,19 @@ angular.module('linagora.esn.unifiedinbox')
         return pairFrom(criterion, _.head(emailSearchOptions[criterion]));
       }
 
-      function buildExcludedFilter() {
+      function buildKeywordsFilter(criterion) {
         return {
-          operator: 'NOT',
-          conditions: emailSearchOptions[EXCLUDED_CRITERION].map(_.partial(pairFrom, 'text'))
+          operator: criterion === 'excluded' ? 'NOT' : 'AND',
+          conditions: emailSearchOptions[criterion].map(_.partial(pairFrom, 'text'))
         };
       }
 
       function buildCriterionFilter(criterion) {
-        return criterion !== EXCLUDED_CRITERION ? buildDefaultCriterionFilter(criterion) : buildExcludedFilter();
+        if (_.contains(['excluded', 'contains'], criterion)) {
+          return buildKeywordsFilter(criterion);
+        }
+
+        return buildDefaultCriterionFilter(criterion);
       }
 
       function hasFoundCriteriaInQuery(criterion) {
@@ -58,12 +110,12 @@ angular.module('linagora.esn.unifiedinbox')
       }
       var criterionFiltersCombiner = function(acc, c) { return [].concat(acc, [c]); };
 
-      var criteriaFilters = ['to', 'from', 'subject', 'cc', 'bcc', 'body', 'hasAttachment', EXCLUDED_CRITERION]
+      var criteriaFilters = ['to', 'from', 'subject', 'cc', 'bcc', 'body', 'hasAttachment', 'contains', 'excluded']
         .filter(hasFoundCriteriaInQuery)
         .map(buildCriterionFilter)
         .reduce(criterionFiltersCombiner, []);
 
-      return _.size(criteriaFilters) > 1 ? { operator: 'AND', conditions: criteriaFilters} : _.head(criteriaFilters);
+      return _.size(criteriaFilters) > 1 ? { operator: 'AND', conditions: criteriaFilters} : _.head(criteriaFilters) || {};
     };
   })
 
@@ -72,10 +124,10 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .factory('inboxNewMessageProvider', function($q, withJmapClient, pagedJmapRequest, inboxJmapProviderContextBuilder,
-                                               newProvider, sortByDateInDescendingOrder, inboxMailboxesService, _,
+                                               esnSearchProvider, sortByDateInDescendingOrder, inboxMailboxesService, _,
                                                JMAP_GET_MESSAGES_LIST, ELEMENTS_PER_REQUEST, PROVIDER_TYPES) {
     return function(templateUrl) {
-      return newProvider({
+      return new esnSearchProvider({
         type: PROVIDER_TYPES.JMAP,
         activeOn: ['unifiedinbox'],
         name: 'Emails',
@@ -146,7 +198,8 @@ angular.module('linagora.esn.unifiedinbox')
             });
           });
         },
-        templateUrl: templateUrl
+        templateUrl: templateUrl,
+        searchTemplateUrl: '/unifiedinbox/app/components/search/search-form-template.html'
       });
     };
   })
