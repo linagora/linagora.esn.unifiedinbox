@@ -127,10 +127,11 @@
 
           .lv-title {
             color: lighten(@text-color, 6%);
+            font-weight: 400;
           }
 
           &.bold {
-            .lv-title {
+            .lv-title .inbox-subject-inline, .inbox-from .lv-title {
               font-weight: 500;
               color: @headings-color;
             }
@@ -150,15 +151,29 @@
           .inbox-preview-inline {
             display: none;
           }
+
+          .flags-container {
+            .flex-row-reverse;
+            
+            min-width: 40px;
+            font-size: 20px;
+            margin: auto 5px auto 0;
+
+            color: lighten(@m-gray, 10%);
+          }
+
         }
 
         .inbox-list-item-date-and-indicators {
           .flex-column;
           .flex-shorthand(1);
 
-          .date-container {
-            margin-left: 5px;
+          .date-and-indicators-container {
             text-align: right;
+
+            .indicators i {
+              font-size: 18px;
+            }
           }
         }
 
@@ -388,8 +403,8 @@
             .flex-row-reverse;
 
             .inbox-from {
-              min-width: 230px;
-              max-width: 230px;
+              min-width: 200px;
+              max-width: 200px;
               margin: auto 5px auto 0;
 
               .email {
@@ -409,9 +424,15 @@
 
           .inbox-list-item-date-and-indicators {
             .flex-row-reverse;
+            .flex-vertical-centered;
 
-            .date-container {
-              min-width: 80px;
+            .date-and-indicators-container {
+              .flex-vertical-centered;
+              .flex-space-between;
+              .flex-shorthand(1, 1);
+
+              min-width: 95px;
+              max-width: 95px;
             }
           }
 

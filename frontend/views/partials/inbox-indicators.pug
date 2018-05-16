@@ -1,6 +1,8 @@
 .indicators.flex-end.esn-flex-noshrink
-  .inbox-message-indicators.flex-vertical-centered(dynamic-directive='inbox-message-indicators')
-  ul.actions
-    li.action-item
-      i.email-status-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
+  ul.actions.flex-vertical-centered
+    li.action-item.hidden-xl
+      i.flag-icon.mdi.mdi-reply(ng-if='item.isAnswered')
+      i.flag-icon.mdi.mdi-forward(ng-if='item.isForwarded')
+      i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
+      i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
     inbox-star(item='item')
