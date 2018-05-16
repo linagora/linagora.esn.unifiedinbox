@@ -9,9 +9,9 @@
             span.inbox-subject-inline(ng-class="{bold: item.isUnread}", ng-bind-html="::item.subject | esnHighlight: query") {{ ::item.subject }}
           inbox-emailer.inbox-from.lv-title(emailer="::item.from", ng-class="{bold: item.isUnread}", highlight="{{::query}}")
         .inbox-list-item-date-and-indicators(ng-class="{bold: item.isUnread}")
-          .date-container(ng-bind-html="::item.date | date: group.dateFormat | esnHighlight: query") {{ ::item.date | date: group.dateFormat }}
+          .date-and-indicators-container(ng-bind-html="::item.date | date: group.dateFormat | esnHighlight: query") {{ ::item.date | date: group.dateFormat }}
           .flex-end
-            .inbox-list-item-mailbox.ellipsis
+            .inbox-list-item-mailbox.ellipsis.flex-vertical-centered
               span(ng-repeat="mailbox in item.mailboxes track by $index", title="{{ ::mailbox.name }}")  {{ ::mailbox.name }}
             inbox-indicators(item="::item")
     .inbox-preview-block.preview(ng-bind-html="::item.preview | esnHighlight: query") {{ ::item.preview }}

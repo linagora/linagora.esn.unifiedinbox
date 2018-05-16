@@ -239,5 +239,7 @@
   "Enable forwarding": "Activer le transfert",
   "Has the words": "Contient les mots",
   "Does not have": "Ne contient pas",
-  "Has attachment": "Contenant une pièce jointe"
+  "Has attachment": "Contenant une pièce jointe",
+  "Replied" : "Répondu",
+  "Forwarded" : "Transféré"
 }

@@ -1,8 +1,8 @@
 .indicators.flex-end.esn-flex-noshrink
   ul.actions.flex-vertical-centered
-    li.action-item.hidden-xl
-      i.flag-icon.mdi.mdi-reply(ng-if='item.isAnswered')
-      i.flag-icon.mdi.mdi-forward(ng-if='item.isForwarded')
+    li.action-item(ng-class="{'hidden-xl': hiddenXl}")
+      i.flag-icon.mdi.mdi-reply(ng-if='item.isAnswered', title=__('Replied'))
+      i.flag-icon.mdi.mdi-forward(ng-if='item.isForwarded', title=__('Forwarded'))
       i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
-      i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
+      i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment', title=__('Attachments'))
     inbox-star(item='item')

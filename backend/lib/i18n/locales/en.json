@@ -237,5 +237,7 @@
   "Enable forwarding": "Enable forwarding",
   "Has the words": "Has the words",
   "Does not have": "Does not have",
-  "Has attachment": "Has attachment"
+  "Has attachment": "Has attachment",
+  "Replied" : "Replied",
+  "Forwarded" : "Forwarded"
 }
