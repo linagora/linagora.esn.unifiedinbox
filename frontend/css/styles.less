@@ -57,18 +57,16 @@
 
       .mdi-star {
         color: @primaryColor;
+        font-size: 20px;
       }
 
       .mdi-star-outline {
-        color: lighten(@m-gray, 10%);
+        color: @m-gray;
+        font-size: 20px;
 
         &:hover {
-          color: @m-black;
+          color: @primaryColor;
         }
-      }
-
-      .mdi-star-off {
-        color: @m-gray;
       }
     }
 
@@ -77,7 +75,8 @@
       margin-left: 5px;
 
       i {
-        font-size: 20px;
+        font-size: 18px;
+        color:  lighten(@text-color, 6%);
       }
     }
   }

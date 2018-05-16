@@ -127,10 +127,11 @@
 
           .lv-title {
             color: lighten(@text-color, 6%);
+            font-weight: 400;
           }
 
           &.bold {
-            .lv-title {
+            .lv-title .inbox-subject-inline, .inbox-from .lv-title {
               font-weight: 500;
               color: @headings-color;
             }
@@ -152,7 +153,7 @@
           }
 
           .flags-container {
-            .flex-row;
+            .flex-row-reverse;
             
             min-width: 40px;
             font-size: 20px;
@@ -167,9 +168,12 @@
           .flex-column;
           .flex-shorthand(1);
 
-          .date-container {
-            margin-left: 5px;
+          .date-and-indicators-container {
             text-align: right;
+
+            .indicators i {
+              font-size: 18px;
+            }
           }
         }
 
@@ -420,9 +424,15 @@
 
           .inbox-list-item-date-and-indicators {
             .flex-row-reverse;
+            .flex-vertical-centered;
 
-            .date-container {
-              min-width: 80px;
+            .date-and-indicators-container {
+              .flex-vertical-centered;
+              .flex-space-between;
+              .flex-shorthand(1, 1);
+
+              min-width: 95px;
+              max-width: 95px;
             }
           }
 

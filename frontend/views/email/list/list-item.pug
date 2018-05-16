@@ -21,10 +21,17 @@
             span.inbox-preview-inline.inbox-preview-divider(ng-if='item.subject') -
             .inbox-preview-inline.lv-small.preview(ng-if="item.preview") {{ item.preview }}
           .flags-container
-            i.flag-icon.mdi.mdi-forward.visible-lg(ng-if='item.isForwarded')
-            i.flag-icon.mdi.mdi-reply.visible-lg(ng-if='item.isAnswered')
+            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.isForwarded')
+            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.isAnswered')
           inbox-emailer.inbox-from.lv-title(emailer="item.from")
         .inbox-list-item-date-and-indicators
-          .date-container {{ item.date | inboxItemDate }}
+          .date-and-indicators-container
+            .indicators.esn-flex-noshrink.visible-xl
+              ul.actions.flex-vertical-centered
+                li.action-item
+                  i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
+                  i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment')
+            .date-container
+            span {{ item.date | inboxItemDate }}
           inbox-indicators(item="item")
     .inbox-preview-block.preview {{ item.preview }}
