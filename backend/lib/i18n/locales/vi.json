@@ -237,5 +237,7 @@
   "Enable forwarding": "Chuyển tiếp",
   "Has the words": "Có các từ",
   "Does not have": "Không có",
-  "Has attachment": "Có tập tin đính kèm"
+  "Has attachment": "Có tập tin đính kèm",
+  "Replied" : "Đã trả lời",
+  "Forwarded" : "Đã chuyển tiếp"
 }

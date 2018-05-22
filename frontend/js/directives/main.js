@@ -383,7 +383,8 @@ angular.module('linagora.esn.unifiedinbox')
       replace: true,
       templateUrl: '/unifiedinbox/views/partials/inbox-indicators.html',
       scope: {
-        item: '='
+        item: '=',
+        hiddenXl: '@'
       }
     };
   })
