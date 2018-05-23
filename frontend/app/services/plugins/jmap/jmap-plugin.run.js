@@ -10,6 +10,9 @@
         resolveContextName: function(account, context) {
           return inboxMailboxesService.assignMailbox(context, {}, true).then(_.property('name'));
         },
+        resolveContextRole: function(account, context) {
+          return inboxMailboxesService.assignMailbox(context, {}, true).then(_.property('role'));
+        },
         getEmptyContextTemplateUrl: function(account, context) {
           return inboxMailboxesService.assignMailbox(context, {}, true).then(function(mailbox) {
             if (!mailbox || mailbox.role.value) {

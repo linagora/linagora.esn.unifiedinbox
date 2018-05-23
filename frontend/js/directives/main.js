@@ -168,7 +168,8 @@ angular.module('linagora.esn.unifiedinbox')
       restrict: 'E',
       replace: true,
       scope: {
-        group: '='
+        group: '=',
+        displayInline: '@?'
       },
       templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-group.html'
     };

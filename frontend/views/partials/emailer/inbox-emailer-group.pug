@@ -1,3 +1,4 @@
-.emailer-group.flex-column
-  .emailer(ng-repeat="emailer in group")
+.emailer-group.ellipsis(ng-class="{ 'flex-column' : !displayInline }")
+  span(ng-repeat="emailer in group")
     inbox-emailer(emailer="emailer")
+    span {{ $last ? '' : ', &nbsp' }}
