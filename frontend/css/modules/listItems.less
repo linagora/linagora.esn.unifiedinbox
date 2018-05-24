@@ -139,8 +139,14 @@
         }
 
         .badge-number {
-          margin-right: 5px;
-          color: lighten(@text-color, 30%);
+          background: @lighterSecondaryTextColor;
+          min-width: 18px;
+          height: 18px;
+          z-index: 2;
+          font-size: 0.6em;
+          line-height: 18px;
+          border-radius: 8px;
+          padding: 0 2px;
         }
 
         .inbox-list-item-subject-and-from {
@@ -160,6 +166,10 @@
             margin: auto 5px auto 0;
 
             color: lighten(@m-gray, 10%);
+
+            &.thread-list {
+              min-width: 60px;
+            }
           }
 
         }
