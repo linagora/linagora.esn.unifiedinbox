@@ -81,4 +81,21 @@ describe('The JMAP plugin', function() {
 
   });
 
+  describe('The resolveContextRole function', function() {
+
+    it('should return @role', function(done) {
+      mailbox.role = {
+        value: 'inbox'
+      };
+
+      inboxPlugins.get('jmap').resolveContextRole('accountId').then(function(role) {
+        expect(role.value).to.equal('inbox');
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+  });
+
 });

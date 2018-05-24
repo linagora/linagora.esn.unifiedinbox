@@ -50,13 +50,26 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                              inboxSwipeHelper, infiniteListService, inboxMailboxesService, inboxSelectionService) {
+  .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService, inboxSwipeHelper,
+                                              infiniteListService, inboxMailboxesService, inboxSelectionService, inboxPlugins) {
     return {
       restrict: 'E',
       controller: function($scope) {
         var self = this,
-        context = $stateParams.context;
+          account = $stateParams.account,
+          context = $stateParams.context,
+          plugin = inboxPlugins.get($stateParams.type);
+
+        if (plugin) {
+          plugin.resolveContextRole(account, context).then(function(role) {
+            $scope.mailboxRole = role;
+          });
+        }
+
+        if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
+          $scope.emailRecipients = _.assign($scope.item.to, $scope.item.cc, $scope.item.bcc);
+          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+        }
 
         // need this scope value for action list
         $scope.email = $scope.item;
@@ -137,11 +150,25 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxSearchMessageListItem', function($q, $state, $stateParams, newComposerService, _, inboxJmapItemService, inboxMailboxesService) {
+  .directive('inboxSearchMessageListItem', function($q, $state, $stateParams, newComposerService, _, inboxJmapItemService, inboxMailboxesService, inboxPlugins) {
     return {
       restrict: 'E',
       controller: function($scope) {
-        var self = this;
+        var self = this,
+          account = $stateParams.account,
+          context = $stateParams.context,
+          plugin = inboxPlugins.get($stateParams.type);
+
+        if (plugin) {
+          plugin.resolveContextRole(account, context).then(function(role) {
+            $scope.mailboxRole = role;
+          });
+        }
+
+        if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
+          $scope.emailRecipients = _.assign($scope.item.to, $scope.item.cc, $scope.item.bcc);
+          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+        }
 
         $scope.email = $scope.item;
 
@@ -176,11 +203,25 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxThreadListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                             inboxSwipeHelper, infiniteListService, inboxSelectionService) {
+                                             inboxSwipeHelper, infiniteListService, inboxSelectionService, inboxPlugins) {
     return {
       restrict: 'E',
       controller: function($scope) {
-        var self = this;
+        var self = this,
+          account = $stateParams.account,
+          context = $stateParams.context,
+          plugin = inboxPlugins.get($stateParams.type);
+
+        if (plugin) {
+          plugin.resolveContextRole(account, context).then(function(role) {
+            $scope.mailboxRole = role;
+          });
+        }
+
+        if ($scope.item && $scope.item.lastEmail && $scope.item.lastEmail.to && $scope.item.lastEmail.cc && $scope.item.lastEmail.bcc) {
+          $scope.emailRecipients = _.assign($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc);
+          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+        }
 
         // need this scope value for action list
         $scope.thread = $scope.item;
