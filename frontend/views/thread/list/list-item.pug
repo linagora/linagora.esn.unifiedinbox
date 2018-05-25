@@ -14,17 +14,30 @@
         label.checkbox.clickable(ng-hide="!hovering && !item.selected")
           input(type='checkbox', ng-model="item.selected")
           i.input-helper
-      .media-body
+      .media-body(ng-class="{ bold: item.isUnread }")
         .inbox-list-item-subject-and-from
           .inbox-subject.lv-title
-            span.badge-number(ng-if="item.messageIds.length > 1", ng-class="{bold: item.isUnread}") ({{ item.messageIds.length }})
-            span.inbox-subject-inline(ng-class="{bold: item.isUnread}") {{ item.lastEmail.subject }}
+            .badge.badge-number.hidden-xl
+              span {{ item.messageIds.length }}
+            span.inbox-subject-inline {{ item.lastEmail.subject }}
             span.inbox-preview-inline.inbox-preview-divider(ng-if='item.lastEmail.subject') -
             .inbox-preview-inline.lv-small.preview(ng-if="item.lastEmail.preview") {{ item.lastEmail.preview }}
+          .flags-container.thread-list
+            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.lastEmail.isForwarded', title=__('Forwarded'))
+            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.lastEmail.isAnswered', title=__('Replied'))
+            .badge.badge-number.visible-xl
+              span {{ item.messageIds.length }}
           inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="item.lastEmail.from")
             .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && emailRecipients")
               inbox-emailer-group(group="emailRecipients", display-inline="true")
-        .inbox-list-item-date-and-indicators(ng-class="{bold: item.isUnread}")
-          .date-container {{ item.lastEmail.date | date: item.group.dateFormat }}
-          inbox-indicators(item="item.lastEmail")
+        .inbox-list-item-date-and-indicators
+          .date-and-indicators-container
+            .indicators.esn-flex-noshrink.visible-xl
+              ul.actions.flex-vertical-centered
+                li.action-item
+                  i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
+                  i.flag-icon.mdi.mdi-paperclip(ng-if='item.lastEmail.hasAttachment', title=__('Attachments'))
+            .date-container
+            span {{ item.lastEmail.date | date: item.group.dateFormat }}
+          inbox-indicators(item="item.lastEmail", hidden-xl="true")
     .inbox-preview-block.preview {{ item.lastEmail.preview }}
