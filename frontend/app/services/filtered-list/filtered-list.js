@@ -145,7 +145,9 @@
             return _providerAttributeIsCompatible([provider.account], filters.acceptedAccounts);
           })
           .then(function() {
-            return provider.options.itemMatches(item, filters);
+            return provider.options && provider.options.itemMatches ?
+              provider.options.itemMatches(item, filters) :
+              $q.reject('itemMatches is missing from search provider!');
           })
           .then(function() {
             if (filters.quickFilter) {
