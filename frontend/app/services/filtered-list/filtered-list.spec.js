@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxFilteredList factory', function() {
 
-  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, inboxHostedMailMessagesProvider, INBOX_EVENTS, counter, inboxConfigMock;
+  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, esnSearchProvider, inboxHostedMailMessagesProvider, INBOX_EVENTS, PROVIDER_TYPES, counter, inboxConfigMock;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -26,7 +26,8 @@ describe('The inboxFilteredList factory', function() {
   }));
 
   beforeEach(inject(function(_$rootScope_, _jmap_, _inboxFilteringService_, _inboxFilters_, ___, _inboxFilteredList_,
-                             _inboxHostedMailMessagesProvider_, _INBOX_EVENTS_) {
+                             _esnSearchProvider_,
+                             _inboxHostedMailMessagesProvider_, _INBOX_EVENTS_, _PROVIDER_TYPES_) {
     $rootScope = _$rootScope_;
     jmap = _jmap_;
     inboxFilteringService = _inboxFilteringService_;
@@ -34,7 +35,9 @@ describe('The inboxFilteredList factory', function() {
     _ = ___;
     inboxFilteredList = _inboxFilteredList_;
     inboxHostedMailMessagesProvider = _inboxHostedMailMessagesProvider_;
+    esnSearchProvider = _esnSearchProvider_;
     INBOX_EVENTS = _INBOX_EVENTS_;
+    PROVIDER_TYPES = _PROVIDER_TYPES_;
   }));
 
   function newMessage(options) {
@@ -160,6 +163,23 @@ describe('The inboxFilteredList factory', function() {
     $rootScope.$digest();
 
     expect(inboxFilteredList.list()).to.deep.equal([]);
+  });
+
+  it('should not throw when message\'s provider has missing itemMatches function', function() {
+    var message = new jmap.Message(jmapClient, 'id', 'blobId', 'threadId', ['id_inbox'], {}),
+      fakeProvider = function() {
+        return new esnSearchProvider({
+          types: [PROVIDER_TYPES.JMAP, PROVIDER_TYPES.SOCIAL],
+          name: 'Quacks',
+          fetch: function() { },
+          buildFetchContext: function() { },
+          templateUrl: 'tada'
+        });
+    };
+
+    message.provider = fakeProvider();
+    inboxFilteredList.addAll([message]);
+    $rootScope.$digest();
   });
 
   describe('The addAll function', function() {
