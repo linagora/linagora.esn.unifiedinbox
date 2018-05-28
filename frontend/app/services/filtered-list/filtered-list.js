@@ -7,8 +7,10 @@
                                            INBOX_EVENTS, VIRTUAL_SCROLL_DISTANCE) {
       var items = [],
           itemsById = {},
+          tautology = $q.defer(),
           renderedList = [];
 
+      tautology.resolve(true);
       $rootScope.$on(INBOX_EVENTS.FILTER_CHANGED, _buildRenderedList);
       $rootScope.$on(INBOX_EVENTS.ITEM_FLAG_CHANGED, _buildRenderedList);
       $rootScope.$on(INBOX_EVENTS.ITEM_MAILBOX_IDS_CHANGED, _buildRenderedList);
@@ -145,9 +147,10 @@
             return _providerAttributeIsCompatible([provider.account], filters.acceptedAccounts);
           })
           .then(function() {
-            return provider.options && provider.options.itemMatches ?
-              provider.options.itemMatches(item, filters) :
-              $q.reject('itemMatches is missing from search provider!');
+            if (!provider.options || !provider.options.itemMatches) {
+              return tautology;
+            }
+            return provider.options.itemMatches(item, filters);
           })
           .then(function() {
             if (filters.quickFilter) {
