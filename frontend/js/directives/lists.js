@@ -67,7 +67,7 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.emailRecipients = _.assign($scope.item.to, $scope.item.cc, $scope.item.bcc);
+          $scope.emailRecipients = _.union($scope.item.to, $scope.item.cc, $scope.item.bcc);
           $scope.emailFirstRecipient = _.first($scope.emailRecipients);
         }
 
@@ -166,7 +166,7 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.emailRecipients = _.assign($scope.item.to, $scope.item.cc, $scope.item.bcc);
+          $scope.emailRecipients = _.union($scope.item.to, $scope.item.cc, $scope.item.bcc);
           $scope.emailFirstRecipient = _.first($scope.emailRecipients);
         }
 
@@ -219,7 +219,7 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.lastEmail && $scope.item.lastEmail.to && $scope.item.lastEmail.cc && $scope.item.lastEmail.bcc) {
-          $scope.emailRecipients = _.assign($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc);
+          $scope.emailRecipients = _.union($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc);
           $scope.emailFirstRecipient = _.first($scope.emailRecipients);
         }
 
