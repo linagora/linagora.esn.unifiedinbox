@@ -70,6 +70,25 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
   describe('The inboxThreadListItem directive', function() {
 
+    it('should dedupe and sort email message recipients', function() {
+      $scope.item = {
+        lastEmail: {
+          id: 'id',
+          to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
+          cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
+          bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
+        }
+      };
+      compileDirective('<inbox-thread-list-item />');
+
+      expect($scope.emailRecipients).to.deep.equal([
+        { email: '1@linagora.com' },
+        { displayName: 'deux', email: '2@linagora.com' },
+        { displayName: '3', email: '3@linagora.com' },
+        { displayName: 'six', email: '6@linagora.com' }
+      ]);
+    });
+
     describe('the exposed functions from inboxJmapItemService', function() {
       beforeEach(function() {
         ['markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
@@ -322,6 +341,22 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
           expect(inboxJmapItemService[action]).to.have.been.called;
         });
       });
+    });
+
+    it('should dedupe and sort email message recipients', function() {
+      $scope.item = { id: 'id',
+        to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
+        cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
+        bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
+      };
+      compileDirective('<inbox-message-list-item />');
+
+      expect($scope.emailRecipients).to.deep.equal([
+        { email: '1@linagora.com' },
+        { displayName: 'deux', email: '2@linagora.com' },
+        { displayName: '3', email: '3@linagora.com' },
+        { displayName: 'six', email: '6@linagora.com' }
+      ]);
     });
 
     describe('The select function', function() {
@@ -637,6 +672,22 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
   });
 
   describe('The inboxSearchMessageListItem directive', function() {
+
+    it('should dedupe and sort email message recipients', function() {
+      $scope.item = { id: 'id',
+        to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
+        cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
+        bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
+      };
+      compileDirective('<inbox-search-message-list-item />');
+
+      expect($scope.emailRecipients).to.deep.equal([
+        { email: '1@linagora.com' },
+        { displayName: 'deux', email: '2@linagora.com' },
+        { displayName: '3', email: '3@linagora.com' },
+        { displayName: 'six', email: '6@linagora.com' }
+      ]);
+    });
 
     describe('The inboxMailboxesService.assignMailbox', function() {
 
