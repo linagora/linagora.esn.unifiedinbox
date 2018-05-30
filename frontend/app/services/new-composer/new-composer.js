@@ -3,8 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .service('newComposerService', function($state, inboxJmapHelper, boxOverlayOpener, deviceDetector) {
-      var defaultTitle = 'New message';
+    .service('newComposerService', function($state, inboxJmapHelper, boxOverlayOpener, deviceDetector, esnI18nService) {
 
       return {
         open: open,
@@ -26,7 +25,7 @@
       function newBoxedComposerCustomTitle(email, boxConfig) {
         boxOverlayOpener.open(angular.extend({}, {
           id: email && email.id,
-          title: defaultTitle,
+          title: esnI18nService.translate('New message').toString(),
           templateUrl: '/unifiedinbox/app/components/composer/boxed/composer-boxed.html',
           email: email
         }, boxConfig));
