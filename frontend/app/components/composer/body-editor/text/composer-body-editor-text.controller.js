@@ -39,7 +39,7 @@
       }
 
       function updateIdentity(identity, initializing) {
-        if (!identity || (initializing && self.message.textBody)) {
+        if (!identity || !initializing && self.message.isDraft) {
           return;
         }
 
