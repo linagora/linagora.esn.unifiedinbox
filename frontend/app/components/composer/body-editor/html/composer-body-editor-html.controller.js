@@ -49,7 +49,7 @@
       }
 
       function updateIdentity(identity, initializing) {
-        if (!summernoteIsReady || !identity || (initializing && self.message.htmlBody)) {
+        if (!summernoteIsReady || !identity || !initializing && self.message.isDraft) {
           return;
         }
 
