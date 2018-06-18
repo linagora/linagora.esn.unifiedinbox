@@ -20,6 +20,7 @@ angular.module('linagora.esn.unifiedinbox')
     $scope.loadMoreElements = infiniteScrollHelperBuilder($scope, function() { return $scope.loadNextItems(); }, inboxFilteredList.addAll);
     $scope.inboxList = inboxFilteredList.list();
     $scope.inboxListModel = inboxFilteredList.asMdVirtualRepeatModel($scope.loadMoreElements);
+    $scope.loading = false;
 
     $scope.$on(INBOX_EVENTS.FILTER_CHANGED, updateFetchersInScope);
 
@@ -72,10 +73,18 @@ angular.module('linagora.esn.unifiedinbox')
 
     /////
 
+    $scope.refresh = function() {
+      $scope.loading = true;
+      return $scope.loadRecentItems().then(inboxFilteredList.addAll)
+      .finally(function() {
+        $scope.loading = false;
+      });
+    };
+
     function setupPolling() {
       if (INFINITE_LIST_POLLING_INTERVAL > 0) {
         var poller = $interval(function() {
-          $scope.loadRecentItems().then(inboxFilteredList.addAll);
+          $scope.refresh();
         }, INFINITE_LIST_POLLING_INTERVAL);
 
         $scope.$on('$destroy', function() {
