@@ -1,1 +1,2 @@
-i.clickable.mdi.mdi-checkbox-marked-outline(ng-click="$ctrl.toggleSelection()", ng-hide="!$ctrl.hasSelectableItems()", ng-class="{ active: $ctrl.isSelected() }", title=__('Select all'))
+button.btn.btn-link.btn-icon(ng-click="$ctrl.toggleSelection()", ng-hide="!$ctrl.hasSelectableItems()", title=__('Select all'))
+  i.mdi(ng-class="{ 'mdi-checkbox-marked-outline active': $ctrl.isSelected(), 'mdi-checkbox-blank-outline': !$ctrl.isSelected()}")
