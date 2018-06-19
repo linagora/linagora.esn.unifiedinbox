@@ -81,7 +81,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       };
       compileDirective('<inbox-thread-list-item />');
 
-      expect($scope.emailRecipients).to.deep.equal([
+      expect($scope.item.emailRecipients).to.deep.equal([
         { email: '1@linagora.com' },
         { displayName: 'deux', email: '2@linagora.com' },
         { displayName: '3', email: '3@linagora.com' },
@@ -351,7 +351,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       };
       compileDirective('<inbox-message-list-item />');
 
-      expect($scope.emailRecipients).to.deep.equal([
+      expect($scope.item.emailRecipients).to.deep.equal([
         { email: '1@linagora.com' },
         { displayName: 'deux', email: '2@linagora.com' },
         { displayName: '3', email: '3@linagora.com' },
@@ -681,7 +681,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       };
       compileDirective('<inbox-search-message-list-item />');
 
-      expect($scope.emailRecipients).to.deep.equal([
+      expect($scope.item.emailRecipients).to.deep.equal([
         { email: '1@linagora.com' },
         { displayName: 'deux', email: '2@linagora.com' },
         { displayName: '3', email: '3@linagora.com' },
