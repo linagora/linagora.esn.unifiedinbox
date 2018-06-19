@@ -2,11 +2,12 @@
   .flex-vertical-centered;
 
   height: @inbox-list-header-height;
-  padding: 0 20px;
+  padding: 0 10px 0 12px;
   color: lighten(@secondaryTextColor, 20%);
 
   .clickable:not(.text-danger):not(a):not(.menu-root).mdi, .mdi {
-    font-size: 1.4em;
+    font-size: 1.6em;
+    vertical-align: sub;
 
     &.active {
       color: @primaryColor;
@@ -18,28 +19,28 @@
     }
   }
 
-  inbox-list-group-toggle-selection {
-    margin-right: 1em;
+  inbox-list-group-toggle-selection, inbox-refresh-button {
+    margin-right: 0.5em;
   }
 
   .inbox-list-header-actions {
     margin-left: auto;
     .flex-vertical-centered;
 
-    > * {
+    inbox-filter-button {
       margin-left: 1em;
     }
   }
 
-  &.searching {
-    .inbox-filter-input-field {
-      max-width: 194px;
-    }
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
   }
 }
 
-@media (min-width: @screen-md-min) {
+@media (min-width: @screen-xl-min) {
   .inbox-list-header {
-    padding: 0 10px 0 15px;
+    padding: 0 10px;
   }
 }

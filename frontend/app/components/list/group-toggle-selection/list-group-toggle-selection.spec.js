@@ -90,7 +90,7 @@ describe('The inboxListGroupToggleSelection component', function() {
   it('should be visible when initialized over at least 1 selectable item', function() {
     compileDirective('<inbox-list-group-toggle-selection />');
 
-    expect(element.find(':visible')).to.have.length(1);
+    expect(element.find('button.btn.btn-link.btn-icon:visible')).to.have.length(1);
   });
 
   it('should not be visible when initialized over no items', function() {
@@ -98,7 +98,7 @@ describe('The inboxListGroupToggleSelection component', function() {
 
     compileDirective('<inbox-list-group-toggle-selection />');
 
-    expect(element.find(':visible')).to.have.length(0);
+    expect(element.find('button.btn.btn-link.btn-icon:visible')).to.have.length(0);
   });
 
   it('should not be visible when initialized over unselectable items', function() {
@@ -106,7 +106,7 @@ describe('The inboxListGroupToggleSelection component', function() {
 
     compileDirective('<inbox-list-group-toggle-selection />');
 
-    expect(element.find(':visible')).to.have.length(0);
+    expect(element.find('button.btn.btn-link.btn-icon:visible')).to.have.length(0);
   });
 
 });

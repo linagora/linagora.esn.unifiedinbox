@@ -7,7 +7,9 @@
       templateUrl: '/unifiedinbox/app/components/list/header/list-header.html',
       bindings: {
         item: '<',
-        filters: '<'
+        filters: '<',
+        refresh: '&',
+        loading: '<'
       },
       controller: 'inboxListHeaderController'
     });
