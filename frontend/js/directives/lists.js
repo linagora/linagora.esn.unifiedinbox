@@ -67,10 +67,10 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
+          $scope.item.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
             .uniq(false, function(adr) { return adr.email; })
             .value();
-          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
         }
 
         // need this scope value for action list
@@ -168,10 +168,10 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
+          $scope.item.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
             .uniq(false, function(adr) { return adr.email; })
             .value();
-          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
         }
 
         $scope.email = $scope.item;
@@ -223,10 +223,10 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         if ($scope.item && $scope.item.lastEmail && $scope.item.lastEmail.to && $scope.item.lastEmail.cc && $scope.item.lastEmail.bcc) {
-          $scope.emailRecipients = _.chain(_.union($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc))
+          $scope.item.emailRecipients = _.chain(_.union($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc))
             .uniq(false, function(adr) { return adr.email; })
             .value();
-          $scope.emailFirstRecipient = _.first($scope.emailRecipients);
+          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
         }
 
         // need this scope value for action list
