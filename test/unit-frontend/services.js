@@ -249,7 +249,8 @@ describe('The Unified Inbox Angular module services', function() {
         session.user = {
           firstname: 'user',
           lastname: 'using',
-          preferredEmail: 'user@linagora.com'
+          preferredEmail: 'user@linagora.com',
+          emails: ['user@linagora.com']
         };
       });
     });
@@ -405,20 +406,18 @@ describe('The Unified Inbox Angular module services', function() {
         expect(emailSendingService.getReadReceiptRequest(email)).to.equal(false);
       });
 
-      function createMessageWithReadReceiptRequestFor(address) {
-        var headers = { };
-
-        headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = address;
-
-        return {
-          headers: headers
-        };
-      }
-
       it('should return email sender when Disposition-Notification-To is not empty', function() {
-        email = createMessageWithReadReceiptRequestFor('test@test.com');
+        email = { headers: [] };
+        email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'test@test.com';
 
         expect(emailSendingService.getReadReceiptRequest(email)).to.equal('test@test.com');
+      });
+
+      it('should return falsy when Disposition-Notification-To is current user', function() {
+        email = { headers: [] };
+        email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'user@linagora.com';
+
+        expect(emailSendingService.getReadReceiptRequest(email)).to.be.false;
       });
 
     });

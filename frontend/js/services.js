@@ -121,8 +121,9 @@ angular.module('linagora.esn.unifiedinbox')
       if (!message || !message.headers || !message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]) {
         return false;
       }
+      var recipient = message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
 
-      return message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
+      return session.user.emails.indexOf(recipient) < 0 && recipient;
     }
 
     function countRecipients(email) {
