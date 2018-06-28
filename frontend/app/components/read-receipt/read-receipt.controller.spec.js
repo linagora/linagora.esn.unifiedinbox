@@ -10,6 +10,7 @@ describe('The inboxReadReceiptController controller', function() {
     scope,
     inboxJmapItemService,
     emailSendingService,
+    INBOX_MESSAGE_HEADERS,
     message;
 
   beforeEach(function() {
@@ -17,19 +18,17 @@ describe('The inboxReadReceiptController controller', function() {
   });
 
   beforeEach(function() {
-    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxJmapItemService_, _emailSendingService_) {
+    angular.mock.inject(function(_$rootScope_, _$controller_, _inboxJmapItemService_, _emailSendingService_, _INBOX_MESSAGE_HEADERS_) {
       $rootScope = _$rootScope_;
       $controller = _$controller_;
       scope = $rootScope.$new();
       inboxJmapItemService = _inboxJmapItemService_;
       emailSendingService = _emailSendingService_;
+      INBOX_MESSAGE_HEADERS = _INBOX_MESSAGE_HEADERS_;
     });
 
-    message = {
-      headers: {
-        'Disposition-Notification-To': 'test@test.com'
-      }
-    };
+    message = {};
+    message[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'test@test.com';
 
     sinon.stub(inboxJmapItemService, 'ackReceipt').returns($q.when());
     sinon.stub(emailSendingService, 'getReadReceiptRequest').returns($q.when());

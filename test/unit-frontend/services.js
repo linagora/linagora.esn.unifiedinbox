@@ -229,7 +229,7 @@ describe('The Unified Inbox Angular module services', function() {
   });
 
   describe('The emailSendingService factory', function() {
-    var emailSendingService, email, $rootScope, jmapClient;
+    var emailSendingService, email, $rootScope, jmapClient, INBOX_MESSAGE_HEADERS;
 
     beforeEach(function() {
       jmapClient = {};
@@ -241,9 +241,10 @@ describe('The Unified Inbox Angular module services', function() {
         });
       });
 
-      angular.mock.inject(function(session, _emailSendingService_, _$rootScope_) {
+      angular.mock.inject(function(session, _emailSendingService_, _$rootScope_, _INBOX_MESSAGE_HEADERS_) {
         emailSendingService = _emailSendingService_;
         $rootScope = _$rootScope_;
+        INBOX_MESSAGE_HEADERS = _INBOX_MESSAGE_HEADERS_;
 
         session.user = {
           firstname: 'user',
@@ -375,15 +376,15 @@ describe('The Unified Inbox Angular module services', function() {
         email = {};
         emailSendingService.addReadReceiptRequest(email);
 
-        expect(email.headers['Disposition-Notification-To']).to.equal('user@linagora.com');
+        expect(email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]).to.equal('user@linagora.com');
       });
 
       it('should add an additional header', function() {
         email = { headers: {'Content-Transfer-Encoding': '7bit' }};
         emailSendingService.addReadReceiptRequest(email);
 
-        expect(email.headers).to.include.keys('Disposition-Notification-To', 'Content-Transfer-Encoding');
-        expect(email.headers['Disposition-Notification-To']).to.equal('user@linagora.com');
+        expect(email.headers).to.include.keys(INBOX_MESSAGE_HEADERS.READ_RECEIPT, 'Content-Transfer-Encoding');
+        expect(email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]).to.equal('user@linagora.com');
       });
 
     });
@@ -404,12 +405,18 @@ describe('The Unified Inbox Angular module services', function() {
         expect(emailSendingService.getReadReceiptRequest(email)).to.equal(false);
       });
 
-      it('should return email sender when Disposition-Notification-To is not empty', function() {
-        email = {
-          headers: {
-            'Disposition-Notification-To': 'test@test.com'
-          }
+      function createMessageWithReadReceiptRequestFor(address) {
+        var headers = { };
+
+        headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = address;
+
+        return {
+          headers: headers
         };
+      }
+
+      it('should return email sender when Disposition-Notification-To is not empty', function() {
+        email = createMessageWithReadReceiptRequestFor('test@test.com');
 
         expect(emailSendingService.getReadReceiptRequest(email)).to.equal('test@test.com');
       });

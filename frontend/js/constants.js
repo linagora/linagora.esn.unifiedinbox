@@ -34,6 +34,11 @@ angular.module('linagora.esn.unifiedinbox')
     INLINE_ATTACHMENT: '[linagora.esn.unifiedinbox.inlineAttachment]',
     CHANGE_CURRENT_LOCATION: '[linagora.esn.unifiedinbox.changeCurrentLocation]'
   })
+  .constant('INBOX_MESSAGE_HEADERS', {
+    READ_RECEIPT: 'Disposition-Notification-To',
+    REPLY_TO: 'In-Reply-To',
+    FORWARD: 'X-Forwarded-Message-Id'
+  })
   .constant('INBOX_SWIPE_DURATION', 500)
   .constant('PROVIDER_TYPES', {
     JMAP: 'jmap',

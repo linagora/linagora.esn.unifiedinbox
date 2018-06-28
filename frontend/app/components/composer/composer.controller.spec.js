@@ -291,6 +291,7 @@ describe('The inboxComposerController controller', function() {
   });
 
   describe('The send function', function() {
+    var INBOX_MESSAGE_HEADERS;
 
     function sendMessage() {
       ctrl.$onInit();
@@ -298,6 +299,10 @@ describe('The inboxComposerController controller', function() {
 
       $rootScope.$digest();
     }
+
+    beforeEach(inject(function(_INBOX_MESSAGE_HEADERS_) {
+      INBOX_MESSAGE_HEADERS = _INBOX_MESSAGE_HEADERS_;
+    }));
 
     afterEach(function() {
       Offline.state = 'up';
@@ -457,6 +462,17 @@ describe('The inboxComposerController controller', function() {
       expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'You have been disconnected. Please check if the message was sent before retrying');
     });
 
+    function validMDNHeaders() {
+      var message = {
+        textBody: 'Body',
+        headers: { }
+      };
+
+      message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'user@linagora.com';
+
+      return sinon.match(message);
+    }
+
     it('should add an MDN header when read receipt has been requested', function() {
       ctrl.message = {
         to: [{ email: 'A@A.com' }],
@@ -467,10 +483,7 @@ describe('The inboxComposerController controller', function() {
       ctrl.send();
       $rootScope.$digest();
 
-      expect(sendEmail).to.have.been.calledWith(sinon.match({
-        textBody: 'Body',
-        headers: { 'Disposition-Notification-To': 'user@linagora.com' }
-      }));
+      expect(sendEmail).to.have.been.calledWith(validMDNHeaders());
     });
 
     it('should add an MDN header when read receipts are configured to be sent by default', function() {
@@ -485,11 +498,7 @@ describe('The inboxComposerController controller', function() {
       $rootScope.$digest();
 
       expect(inboxRequestReceiptsService.getDefaultReceipts).to.have.been.calledOnce;
-
-      expect(sendEmail).to.have.been.calledWith(sinon.match({
-        textBody: 'Body',
-        headers: { 'Disposition-Notification-To': 'user@linagora.com' }
-      }));
+      expect(sendEmail).to.have.been.calledWith(validMDNHeaders());
     });
 
     it('should NOT any header when no read receipt were requested', function() {
@@ -502,7 +511,7 @@ describe('The inboxComposerController controller', function() {
       sendMessage();
 
       var missingReceiptHeaderMatcher = sinon.match(function(message) {
-        return !(message.headers && 'Disposition-Notification-To' in message.headers);
+        return !(message.headers && INBOX_MESSAGE_HEADERS.READ_RECEIPT in message.headers);
       }, 'missingReceiptRequestHeaderInMessage');
 
       expect(sendEmail).to.have.been.calledWith(missingReceiptHeaderMatcher.and(sinon.match({textBody: 'Body'})));
