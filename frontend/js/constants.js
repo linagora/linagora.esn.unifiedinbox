@@ -79,7 +79,7 @@ angular.module('linagora.esn.unifiedinbox')
       displayIn: {
         user: false,
         domain: true,
-        platform: false
+        platform: true
       }
     }
   })
