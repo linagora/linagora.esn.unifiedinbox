@@ -55,6 +55,7 @@ angular.module('linagora.esn.unifiedinbox')
     disableResizeEditor: true,
     toolbar: [
       ['style', ['style']],
+      ['color', ['color']],
       ['font', ['bold', 'italic', 'underline', 'strikethrough']],
       ['alignment', ['paragraph', 'ul', 'ol']]
     ],
