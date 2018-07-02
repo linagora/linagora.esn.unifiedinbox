@@ -1797,6 +1797,20 @@ describe('The Unified Inbox Angular module services', function() {
       $rootScope.$digest();
     });
 
+    it('should resolve when there are attachments but no upload in progress', function(done) {
+      var message = {
+        subject: 'subject',
+        attachments: [{}]
+      };
+
+      waitUntilMessageIsComplete(message).then(function(value) {
+        expect(value).to.deep.equal(message);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
     it('should resolve as soon as all attachments are done uploading', function(done) {
       var defer = $q.defer(),
           message = {
