@@ -69,7 +69,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP) {
+  .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
 
     /**
      * Add the following logic when sending an email: Check for an invalid email used as a recipient
@@ -114,15 +114,16 @@ angular.module('linagora.esn.unifiedinbox')
       var senderAddress = getEmailAddress(session.user);
 
       message.headers = message.headers || {};
-      message.headers['Disposition-Notification-To'] = senderAddress;
+      message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = senderAddress;
     }
 
     function getReadReceiptRequest(message) {
-      if (!message || !message.headers || !message.headers['Disposition-Notification-To']) {
+      if (!message || !message.headers || !message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]) {
         return false;
       }
+      var recipient = message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
 
-      return message.headers['Disposition-Notification-To'];
+      return session.user.emails.indexOf(recipient) < 0 && recipient;
     }
 
     function countRecipients(email) {
@@ -289,18 +290,18 @@ angular.module('linagora.esn.unifiedinbox')
       reply: {
         subjectPrefix: 'Re: ',
         recipients: getReplyRecipients,
-        referenceIdHeader: 'In-Reply-To'
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
       },
       forward: {
         subjectPrefix: 'Fwd: ',
         templateName: 'forward',
         includeAttachments: true,
-        referenceIdHeader: 'X-Forwarded-Message-Id'
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.FORWARD
       },
       replyAll: {
         subjectPrefix: 'Re: ',
         recipients: getReplyAllRecipients,
-        referenceIdHeader: 'In-Reply-To'
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
       }
     };
 
