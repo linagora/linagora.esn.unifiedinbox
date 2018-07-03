@@ -673,42 +673,32 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
   describe('The inboxSearchMessageListItem directive', function() {
 
+    it('should dedupe and sort email message recipients', function() {
+      $scope.item = { id: 'id',
+        to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
+        cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
+        bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
+      };
+      compileDirective('<inbox-search-message-list-item />');
+
+      expect($scope.item.emailRecipients).to.deep.equal([
+        { email: '1@linagora.com' },
+        { displayName: 'deux', email: '2@linagora.com' },
+        { displayName: '3', email: '3@linagora.com' },
+        { displayName: 'six', email: '6@linagora.com' }
+      ]);
+    });
+
     describe('The inboxMailboxesService.assignMailbox', function() {
 
-      var inboxMailboxesService, inboxPlugins;
+      var inboxMailboxesService;
 
-      beforeEach(angular.mock.inject(function(_inboxMailboxesService_, _inboxPlugins_) {
+      beforeEach(angular.mock.inject(function(_inboxMailboxesService_) {
         inboxMailboxesService = _inboxMailboxesService_;
-        inboxPlugins = _inboxPlugins_;
-
-        inboxPlugins.add({
-          type: 'jmap',
-          resolveContextRole: function() {
-            return $q.when('Sent');
-          }
-        });
       }));
 
       beforeEach(function() {
         inboxMailboxesService.assignMailbox = sinon.spy();
-      });
-
-      it('should dedupe and sort email message recipients', function() {
-        $scope.item = { id: 'id',
-          mailboxIds: ['mailboxIds'],
-          to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
-          cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
-          bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
-        };
-
-        compileDirective('<inbox-search-message-list-item />');
-
-        expect($scope.item.emailRecipients).to.deep.equal([
-          { email: '1@linagora.com' },
-          { displayName: 'deux', email: '2@linagora.com' },
-          { displayName: '3', email: '3@linagora.com' },
-          { displayName: 'six', email: '6@linagora.com' }
-        ]);
       });
 
       it('should call assignMailbox with one item', function() {
