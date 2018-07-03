@@ -294,10 +294,15 @@ angular.module('linagora.esn.unifiedinbox')
           if (!tag.email) {
             tag.name = tag.name.trim();
             tag.email = tag.name;
+          } else if (!tag.name || (tag.name && !tag.name.trim())) {
+              tag.name = tag.email;
           }
         }
 
         scope.tags = scope.tags || [];
+        scope.tags
+          .filter(function(tag) { return tag.email; })
+          .forEach(normalizeToEMailer);
         scope.search = searchService.searchRecipients;
 
         scope.onTagAdding = function($tag) {

@@ -543,6 +543,17 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       expect(scope.onTagAdding({ email: 'invalid-email' })).to.equal(false);
     });
 
+    it('should fallback to email when name is missing', function() {
+        $scope.model = [{ email: 'bob@example.com' }];
+
+        expect(compileDirectiveThenGetScope().tags).to.deep.equal([
+          {
+            email: 'bob@example.com',
+            name: 'bob@example.com'
+          }
+        ]);
+    });
+
     it('should accept to add a new tag if email does not matche the email of an existing tag', function() {
       var scope = compileDirectiveThenGetScope();
 
