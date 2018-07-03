@@ -1,43 +1,43 @@
-.inbox-thread-list-thread.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: thread.selected }")
+.inbox-thread-list-item.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: item.selected }")
   .inbox-list-item-content.clickable(
-      ng-click="esnIsDragging || ctrl.openThread(thread)",
+      ng-click="esnIsDragging || ctrl.openThread(item)",
       esn-draggable,
       inbox-draggable-list-item,
       esn-drag-message="getDragMessage($dragData)",
       esn-drag-data="getDragData()",
       esn-drag-class="dragging",
-      ng-class="{ dragging: esnIsDragging && thread.selected }"
+      ng-class="{ dragging: esnIsDragging && item.selected }"
     )
     .inbox-item-with-icon
-      .list-image.badge-container(ng-click="ctrl.select(thread, $event)", desktop-hover="hovering = hover && !esnIsDragging")
-        inbox-emailer-avatar(ng-hide="hovering || thread.selected", emailer="mailboxRole.value !== 'sent' ? thread.lastEmail.from  :  thread.emailFirstRecipient" )
-        label.checkbox.clickable(ng-hide="!hovering && !thread.selected")
-          input(type='checkbox', ng-model="thread.selected")
+      .list-image.badge-container(ng-click="ctrl.select(item, $event)", desktop-hover="hovering = hover && !esnIsDragging")
+        inbox-emailer-avatar(ng-hide="hovering || item.selected", emailer="mailboxRole.value !== 'sent' ? item.lastEmail.from  :  item.emailFirstRecipient" )
+        label.checkbox.clickable(ng-hide="!hovering && !item.selected")
+          input(type='checkbox', ng-model="item.selected")
           i.input-helper
-      .media-body(ng-class="{ bold: thread.isUnread }")
+      .media-body(ng-class="{ bold: item.isUnread }")
         .inbox-list-item-subject-and-from
           .inbox-subject.lv-title
             .badge.badge-number.hidden-xl
-              span {{ thread.messageIds.length }}
-            span.inbox-subject-inline {{ thread.lastEmail.subject }}
-            span.inbox-preview-inline.inbox-preview-divider(ng-if='thread.lastEmail.subject') -
-            .inbox-preview-inline.lv-small.preview(ng-if="thread.lastEmail.preview") {{ thread.lastEmail.preview }}
+              span {{ item.messageIds.length }}
+            span.inbox-subject-inline {{ item.lastEmail.subject }}
+            span.inbox-preview-inline.inbox-preview-divider(ng-if='item.lastEmail.subject') -
+            .inbox-preview-inline.lv-small.preview(ng-if="item.lastEmail.preview") {{ item.lastEmail.preview }}
           .flags-container.thread-list
-            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='thread.lastEmail.isForwarded', title=__('Forwarded'))
-            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='thread.lastEmail.isAnswered', title=__('Replied'))
+            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.lastEmail.isForwarded', title=__('Forwarded'))
+            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.lastEmail.isAnswered', title=__('Replied'))
             .badge.badge-number.visible-xl
-              span {{ thread.messageIds.length }}
-          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="thread.lastEmail.from")
-            .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && thread.emailRecipients")
-              inbox-emailer-group(group="thread.emailRecipients", display-inline="true")
+              span {{ item.messageIds.length }}
+          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="item.lastEmail.from")
+            .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && item.emailRecipients")
+              inbox-emailer-group(group="item.emailRecipients", display-inline="true")
         .inbox-list-item-date-and-indicators
           .date-and-indicators-container
             .indicators.esn-flex-noshrink.visible-xl
               ul.actions.flex-vertical-centered
                 li.action-item
                   i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
-                  i.flag-icon.mdi.mdi-paperclip(ng-if='thread.lastEmail.hasAttachment', title=__('Attachments'))
+                  i.flag-icon.mdi.mdi-paperclip(ng-if='item.lastEmail.hasAttachment', title=__('Attachments'))
             .date-container
-            span {{ thread.lastEmail.date | date: thread.group.dateFormat }}
-          inbox-indicators(item="thread.lastEmail", hidden-xl="true")
-    .inbox-preview-block.preview {{ thread.lastEmail.preview }}
+            span {{ item.lastEmail.date | date: item.group.dateFormat }}
+          inbox-indicators(item="item.lastEmail", hidden-xl="true")
+    .inbox-preview-block.preview {{ item.lastEmail.preview }}

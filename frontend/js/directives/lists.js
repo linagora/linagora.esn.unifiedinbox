@@ -56,7 +56,15 @@ angular.module('linagora.esn.unifiedinbox')
       restrict: 'E',
       controller: function($scope) {
         var self = this,
-        context = $stateParams.context;
+          account = $stateParams.account,
+          context = $stateParams.context,
+          plugin = inboxPlugins.get($stateParams.type);
+
+        if (plugin) {
+          plugin.resolveContextRole(account, context).then(function(role) {
+            $scope.mailboxRole = role;
+          });
+        }
 
         if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
           $scope.item.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
@@ -204,7 +212,15 @@ angular.module('linagora.esn.unifiedinbox')
       restrict: 'E',
       controller: function($scope) {
         var self = this,
-        context = $stateParams.context;
+          account = $stateParams.account,
+          context = $stateParams.context,
+          plugin = inboxPlugins.get($stateParams.type);
+
+        if (plugin) {
+          plugin.resolveContextRole(account, context).then(function(role) {
+            $scope.mailboxRole = role;
+          });
+        }
 
         if ($scope.item && $scope.item.lastEmail && $scope.item.lastEmail.to && $scope.item.lastEmail.cc && $scope.item.lastEmail.bcc) {
           $scope.item.emailRecipients = _.chain(_.union($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc))

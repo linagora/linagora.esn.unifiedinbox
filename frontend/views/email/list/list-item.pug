@@ -1,39 +1,39 @@
-.inbox-message-list-item.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: email.selected }")
+.inbox-message-list-item.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: item.selected }")
   .inbox-list-item-content.clickable(
-      ng-click="esnIsDragging || ctrl.openEmail(email)",
+      ng-click="esnIsDragging || ctrl.openEmail(item)",
       esn-draggable,
       inbox-draggable-list-item,
       esn-drag-message="getDragMessage($dragData)",
       esn-drag-data="getDragData()",
       esn-drag-class="dragging",
-      ng-class="{ dragging: esnIsDragging && email.selected }"
+      ng-class="{ dragging: esnIsDragging && item.selected }"
     )
     .inbox-item-with-icon
-      .list-image.badge-container(ng-click="ctrl.select(email, $event)", desktop-hover="hovering = hover && !esnIsDragging")
-        inbox-emailer-avatar(ng-hide="hovering || email.selected", emailer="mailboxRole.value !== 'sent' ? email.from  :  email.emailFirstRecipient" )
-        label.checkbox.clickable(ng-hide="!hovering && !email.selected")
-          input(type='checkbox', ng-model="email.selected")
+      .list-image.badge-container(ng-click="ctrl.select(item, $event)", desktop-hover="hovering = hover && !esnIsDragging")
+        inbox-emailer-avatar(ng-hide="hovering || item.selected", emailer="mailboxRole.value !== 'sent' ? item.from  :  item.emailFirstRecipient" )
+        label.checkbox.clickable(ng-hide="!hovering && !item.selected")
+          input(type='checkbox', ng-model="item.selected")
           i.input-helper
-      .media-body(ng-class="{ bold: email.isUnread }")
+      .media-body(ng-class="{ bold: item.isUnread }")
         .inbox-list-item-subject-and-from
           .inbox-subject.lv-title
-            span.inbox-subject-inline {{ email.subject }}
-            span.inbox-preview-inline.inbox-preview-divider(ng-if='email.subject') -
-            .inbox-preview-inline.lv-small.preview(ng-if="email.preview") {{ email.preview }}
+            span.inbox-subject-inline {{ item.subject }}
+            span.inbox-preview-inline.inbox-preview-divider(ng-if='item.subject') -
+            .inbox-preview-inline.lv-small.preview(ng-if="item.preview") {{ item.preview }}
           .flags-container
-            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='email.isForwarded', title=__('Forwarded'))
-            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='email.isAnswered', title=__('Replied'))
-          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="email.from")
-          .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && email.emailRecipients")
-            inbox-emailer-group(group="email.emailRecipients", display-inline="true")
+            i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.isForwarded', title=__('Forwarded'))
+            i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.isAnswered', title=__('Replied'))
+          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="item.from")
+          .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && item.emailRecipients")
+            inbox-emailer-group(group="item.emailRecipients", display-inline="true")
         .inbox-list-item-date-and-indicators
           .date-and-indicators-container
             .indicators.esn-flex-noshrink.visible-xl
               ul.actions.flex-vertical-centered
                 li.action-item
                   i.inbox-message-indicators(dynamic-directive='inbox-message-indicators')
-                  i.flag-icon.mdi.mdi-paperclip(ng-if='email.hasAttachment', title=__('Attachments'))
+                  i.flag-icon.mdi.mdi-paperclip(ng-if='item.hasAttachment', title=__('Attachments'))
             .date-container
-            span {{ email.date | inboxItemDate }}
-          inbox-indicators(item="email", hidden-xl="true")
-    .inbox-preview-block.preview {{ email.preview }}
+            span {{ item.date | inboxItemDate }}
+          inbox-indicators(item="item", hidden-xl="true")
+    .inbox-preview-block.preview {{ item.preview }}
