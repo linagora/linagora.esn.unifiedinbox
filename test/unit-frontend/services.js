@@ -2064,6 +2064,15 @@ describe('The Unified Inbox Angular module services', function() {
       expect(ctrl.state).to.equal(INBOX_CONTROLLER_LOADING_STATES.ERROR);
     });
 
+    it('should call passed handler on ERROR', function() {
+      var errorHandler = sinon.spy();
+
+      inboxAsyncHostedMailControllerHelper(ctrl, qReject, errorHandler);
+
+      $rootScope.$digest();
+      expect(errorHandler).to.have.been.calledWith('user@example.org');
+    });
+
   });
 
 });

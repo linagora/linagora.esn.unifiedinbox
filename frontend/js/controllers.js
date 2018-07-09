@@ -4,7 +4,8 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
-                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, inboxJmapItemService, inboxUserQuotaService, inboxPlugins) {
+                                                 inboxMailboxesService, inboxFilteredList, inboxJmapItemService, inboxUserQuotaService, inboxPlugins, inboxUnavailableAccountNotifier,
+                                                 ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL) {
 
     var plugin = inboxPlugins.get($stateParams.type);
 
@@ -36,6 +37,7 @@ angular.module('linagora.esn.unifiedinbox')
     // Moreover, getMessagesList call to James done here only retrieves newly created message after some time (due to ElasticSearch indexation),
     // therefore it might require a few calls to get the new message.
     $scope.$on(INBOX_EVENTS.DRAFT_CREATED, handleNewDraft);
+    $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
 
     _getVacationActivated();
     _getQuotaStatus();
@@ -50,6 +52,10 @@ angular.module('linagora.esn.unifiedinbox')
           .retry(fetchRecentlyUpdatedItems(scope), {maxRetry: 10})
           .then(inboxFilteredList.addAll);
       });
+    }
+
+    function handleUnavailableAccount(account) {
+      this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
     }
 
     function _getQuotaStatus() {
@@ -77,7 +83,7 @@ angular.module('linagora.esn.unifiedinbox')
       return items && items.length > 0 ? $q.when(items) : $q.reject(new Error('No recent item found !'));
     }
 
-    inboxAsyncHostedMailControllerHelper(this, updateFetchersInScope);
+    inboxAsyncHostedMailControllerHelper(this, updateFetchersInScope, inboxUnavailableAccountNotifier);
 
     /////
 
@@ -123,11 +129,18 @@ angular.module('linagora.esn.unifiedinbox')
     }
   })
 
-  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService, inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper,
-                                              INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY) {
+  .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService,
+    inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, inboxUnavailableAccountNotifier,
+    INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY, INBOX_EVENTS, INBOX_CONTROLLER_LOADING_STATES) {
     var context = $stateParams.context;
 
     $scope.email = $stateParams.item;
+
+    $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
+
+    function handleUnavailableAccount(account) {
+      this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
+    }
 
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxJmapHelper
@@ -147,7 +160,7 @@ angular.module('linagora.esn.unifiedinbox')
           $scope.email.loaded = true;
         })
         ;
-    });
+    }, inboxUnavailableAccountNotifier);
 
     ['markAsRead', 'markAsFlagged', 'unmarkAsFlagged'].forEach(function(action) {
       this[action] = function() {
@@ -556,15 +569,24 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxSidebarEmailController', function($scope, _, $state, $interval, inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper, session, INFINITE_LIST_POLLING_INTERVAL) {
+  .controller('inboxSidebarEmailController', function($scope, _, $interval,
+    inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper,
+    inboxUnavailableAccountNotifier, session,
+    INFINITE_LIST_POLLING_INTERVAL, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS) {
     setupFolderPolling();
 
     $scope.specialMailboxes = inboxSpecialMailboxes.list();
     $scope.emailAddress = session.user.preferredEmail;
 
+    $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
+
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxMailboxesService.assignMailboxesList($scope);
-    });
+    }, inboxUnavailableAccountNotifier);
+
+    function handleUnavailableAccount(account) {
+      this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
+    }
 
     function setupFolderPolling() {
       if (INFINITE_LIST_POLLING_INTERVAL > 0) {

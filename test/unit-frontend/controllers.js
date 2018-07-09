@@ -11,7 +11,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       newComposerService = {}, $state, $modal, $hide, navigateTo, inboxPlugins, inboxFilteredList,
       inboxMailboxesService, inboxJmapItemService, _, fileUploadMock, config, moment, inboxMailboxesCache,
       touchscreenDetectorService, esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
-      inboxUserQuotaService;
+      inboxUserQuotaService, inboxUnavailableAccountNotifier;
   var JMAP_GET_MESSAGES_VIEW, INBOX_EVENTS, DEFAULT_MAX_SIZE_UPLOAD, INFINITE_LIST_POLLING_INTERVAL;
 
   beforeEach(function() {
@@ -100,7 +100,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
   beforeEach(angular.mock.inject(function(_$rootScope_, _$controller_, _$timeout_, _$interval_, _jmap_, _inboxPlugins_, _inboxFilteredList_,
                                           _inboxMailboxesService_, ___, _JMAP_GET_MESSAGES_VIEW_,
                                           _DEFAULT_FILE_TYPE_, _moment_, _DEFAULT_MAX_SIZE_UPLOAD_, _inboxJmapItemService_,
-                                          _INBOX_EVENTS_, _inboxMailboxesCache_, _esnPreviousPage_, _inboxSelectionService_,
+                                          _INBOX_EVENTS_, _inboxMailboxesCache_, _esnPreviousPage_, _inboxSelectionService_, _inboxUnavailableAccountNotifier_,
                                           _INFINITE_LIST_POLLING_INTERVAL_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
@@ -110,6 +110,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     inboxMailboxesService = _inboxMailboxesService_;
     inboxJmapItemService = _inboxJmapItemService_;
     inboxMailboxesCache = _inboxMailboxesCache_;
+    inboxUnavailableAccountNotifier = _inboxUnavailableAccountNotifier_;
     _ = ___;
     JMAP_GET_MESSAGES_VIEW = _JMAP_GET_MESSAGES_VIEW_;
     DEFAULT_MAX_SIZE_UPLOAD = _DEFAULT_MAX_SIZE_UPLOAD_;
@@ -378,6 +379,14 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       expect(inboxUserQuotaService.getUserQuotaInfo).to.have.been.called;
     });
 
+    it('should set state to ERROR when unavailable account (remotely) detected', function() {
+      var ctrl = initController('unifiedInboxController');
+
+      inboxUnavailableAccountNotifier();
+
+      expect(ctrl.state).to.equal('ERROR');
+    });
+
   });
 
   describe('The viewEmailController', function() {
@@ -479,6 +488,14 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       controller.move();
 
       expect($state.go).to.have.been.calledWith('.move', { item: email });
+    });
+
+    it('should set state to ERROR when unavailable account (remotely) detected', function() {
+      var controller = initController('viewEmailController');
+
+      inboxUnavailableAccountNotifier();
+
+      expect(controller.state).to.equal('ERROR');
     });
 
     describe('The markAsUnread function', function() {
@@ -1796,6 +1813,14 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       initController('inboxSidebarEmailController');
 
       expect(session.user.preferredEmail).to.equal('admin@open-paas.org');
+    });
+
+    it('should set state to ERROR when unavailable account (remotely) detected', function() {
+      var controller = initController('inboxSidebarEmailController');
+
+      unavailableAccountNotifier('admin@open-paas.org');
+
+      expect(controller.state).to.equal('ERROR');
     });
 
   });
