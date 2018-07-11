@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxSidebarUserQuotaController', inboxSidebarUserQuotaController);
 
-  function inboxSidebarUserQuotaController($scope, $q, _, inboxUserQuotaService, bytesFilter) {
+  function inboxSidebarUserQuotaController($scope, $q, _, inboxUserQuotaService, bytesFilter, esnI18nService) {
     var self = this;
 
     self.$onInit = $onInit;
@@ -19,9 +19,15 @@
     }
 
     function _buildLabelFromQuotaInfo(quotaInfo) {
-      return bytesFilter(quotaInfo.usedStorage) + (quotaInfo.maxStorage ?
-        ' / ' + bytesFilter(quotaInfo.maxStorage) + ' (' + Number(quotaInfo.storageRatio).toFixed(1) + '%)' :
-        '');
+      var template = _.template('<%= usedStorageMsg %> / <%= maxStorageMsg %><%= percentRatioMsg %>');
+      var maxStorageMsg = quotaInfo.maxStorage ? bytesFilter(quotaInfo.maxStorage) : esnI18nService.translate('unlimited');
+      var percentRatioMsg = quotaInfo.maxStorage ? ' (' + Number(quotaInfo.storageRatio).toFixed(1) + '%)' : '';
+
+      return template({
+        usedStorageMsg: bytesFilter(quotaInfo.usedStorage),
+        maxStorageMsg: maxStorageMsg,
+        percentRatioMsg: percentRatioMsg
+      });
     }
 
     function getUserQuotaLabel() {

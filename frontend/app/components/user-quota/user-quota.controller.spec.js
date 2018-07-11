@@ -54,7 +54,7 @@ describe('The inboxSidebarUserQuotaController controller', function() {
     it('should only display used space when no limit', function(done) {
       fakeQuotaInfo = $q.when({ usedStorage: 1200000000 });
       ctrl.getUserQuotaLabel().then(function(label) {
-        expect(label).to.equal('1.1GB');
+        expect(label).to.equal('1.1GB / unlimited');
         done();
       });
       $rootScope.$digest();
@@ -76,7 +76,7 @@ describe('The inboxSidebarUserQuotaController controller', function() {
     it('should display used space in different units', function(done) {
       fakeQuotaInfo = $q.when({ usedStorage: 12 });
       ctrl.getUserQuotaLabel().then(function(label) {
-        expect(label).to.equal('12bytes');
+        expect(label).to.equal('12bytes / unlimited');
         done();
       });
       $rootScope.$digest();

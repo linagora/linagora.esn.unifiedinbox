@@ -213,7 +213,7 @@
   "Spam": "Spam",
   "Not spam": "Non spam",
   "Request a read receipt": "Demander une confirmation de lecture",
-  "Storage": "Utilisation",
+  "Storage quota": "Taux d'utilisation",
   "Read: %s": "Lu: %s",
   "To: %s": "À: %s",
   "Subject: %s": "Objet: %s",
@@ -241,5 +241,6 @@
   "Does not have": "Ne contient pas",
   "Has attachment": "Contenant une pièce jointe",
   "Replied" : "Répondu",
-  "Forwarded" : "Transféré"
+  "Forwarded" : "Transféré",
+  "unlimited": "unlimited"
 }
