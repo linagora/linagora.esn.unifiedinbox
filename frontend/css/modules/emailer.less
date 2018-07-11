@@ -11,35 +11,40 @@
       margin-left: 2px;
     }
   }
-}
 
-inbox-emailer-display {
-  .from, .to, .cc, .bcc, .date {
-    .flex-start;
-
-    .line-header {
-      .esn-flex-noshrink;
-
-      min-width: 40px;
-    }
+  .emailer-inline {
+    display: inline;
   }
 
-  .more {
-    &:hover {
-      color: @text-color;
-      background-color: @darkenBgColor;
+
+  inbox-emailer-display {
+    .from, .to, .cc, .bcc, .date {
+      .flex-start;
+
+      .line-header {
+        .esn-flex-noshrink;
+
+        min-width: 40px;
+      }
     }
 
-    .esn-flex-noshrink;
+    .more {
+      &:hover {
+        color: @text-color;
+        background-color: @darkenBgColor;
+      }
 
-    margin: 0 0 auto 5px;
+      .esn-flex-noshrink;
 
-    .collapsed, .expanded {
-      .flex-vertical-centered;
-    }
+      margin: 0 0 auto 5px;
 
-    .mdi {
-      font-size: 1.6em;
+      .collapsed, .expanded {
+        .flex-vertical-centered;
+      }
+
+      .mdi {
+        font-size: 1.6em;
+      }
     }
   }
 }

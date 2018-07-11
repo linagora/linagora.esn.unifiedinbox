@@ -252,5 +252,6 @@
   "Updating forwardings...": "Mise à jour des transferts...",
   "Forwardings updated": "Les transferts ont été modifiés",
   "Failed to update forwardings": "Impossible de modifier les transferts",
-  "Enable folders sharing": "Activer le partage de dossier"
+  "Enable folders sharing": "Activer le partage de dossier",
+  "Draft": "Brouillon"
 }

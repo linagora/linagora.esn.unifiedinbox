@@ -23,9 +23,11 @@
           .flags-container
             i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.isForwarded', title=__('Forwarded'))
             i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.isAnswered', title=__('Replied'))
-          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="item.from")
-          .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && item.emailRecipients")
-            inbox-emailer-group(group="item.emailRecipients", display-inline="true")
+          .inbox-from.lv-title
+            span.inbox-item-draft(ng-if="item.isDraft") #{__('Draft')}
+            span.inbox-item-draft-divider -
+            inbox-emailer(ng-if="mailboxRole.value !== 'sent'", emailer="item.from")
+            inbox-emailer-group(ng-if="mailboxRole.value === 'sent' && item.emailRecipients", group="item.emailRecipients", display-inline="true")
         .inbox-list-item-date-and-indicators
           .date-and-indicators-container
             .indicators.esn-flex-noshrink.visible-xl

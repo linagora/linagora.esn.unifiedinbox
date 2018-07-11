@@ -26,10 +26,12 @@
             i.flag-icon.mdi.mdi-forward.visible-xl(ng-if='item.lastEmail.isForwarded', title=__('Forwarded'))
             i.flag-icon.mdi.mdi-reply.visible-xl(ng-if='item.lastEmail.isAnswered', title=__('Replied'))
             .badge.badge-number.visible-xl
-              span {{ item.messageIds.length }}
-          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="item.lastEmail.from")
-            .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && item.lastEmail.emailRecipients")
-              inbox-emailer-group(group="item.lastEmail.emailRecipients", display-inline="true")
+              span {{ thread.messageIds.length }}
+          .inbox-from.lv-title
+            span.inbox-item-draft(ng-if="item.lastEmail.isDraft") #{__('Draft')}
+            span.inbox-item-draft-divider -
+            inbox-emailer(ng-if="mailboxRole.value !== 'sent'", emailer="item.lastEmail.from")
+            inbox-emailer-group(ng-if="mailboxRole.value === 'sent' && item.emailRecipients", group="item.emailRecipients", display-inline="true")
         .inbox-list-item-date-and-indicators
           .date-and-indicators-container
             .indicators.esn-flex-noshrink.visible-xl
