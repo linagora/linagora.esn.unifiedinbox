@@ -1815,14 +1815,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       expect(session.user.preferredEmail).to.equal('admin@open-paas.org');
     });
 
-    it('should set state to ERROR when unavailable account (remotely) detected', function() {
-      var controller = initController('inboxSidebarEmailController');
-
-      unavailableAccountNotifier('admin@open-paas.org');
-
-      expect(controller.state).to.equal('ERROR');
-    });
-
   });
 
   describe('The inboxListSubheaderController controller', function() {

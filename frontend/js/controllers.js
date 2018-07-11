@@ -571,22 +571,15 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('inboxSidebarEmailController', function($scope, _, $interval,
     inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper,
-    inboxUnavailableAccountNotifier, session,
-    INFINITE_LIST_POLLING_INTERVAL, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS) {
+    inboxUnavailableAccountNotifier, session, INFINITE_LIST_POLLING_INTERVAL) {
     setupFolderPolling();
 
     $scope.specialMailboxes = inboxSpecialMailboxes.list();
     $scope.emailAddress = session.user.preferredEmail;
 
-    $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
-
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxMailboxesService.assignMailboxesList($scope);
     }, inboxUnavailableAccountNotifier);
-
-    function handleUnavailableAccount(account) {
-      this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
-    }
 
     function setupFolderPolling() {
       if (INFINITE_LIST_POLLING_INTERVAL > 0) {
