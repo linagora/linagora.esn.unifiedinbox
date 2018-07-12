@@ -211,7 +211,7 @@
   "Spam": "Spam",
   "Not spam": "Không phải spam",
   "Request a read receipt": "Yêu cầu trạng thái đọc của thư",
-  "Storage": "Dung lượng sử dụng",
+  "Storage quota": "Định mức lưu trữ",
   "Read: %s": "Đọc: %s",
   "To: %s": "Đến: %s",
   "Subject: %s": "Chủ đề: %s",
@@ -239,5 +239,6 @@
   "Does not have": "Không có",
   "Has attachment": "Có tập tin đính kèm",
   "Replied" : "Đã trả lời",
-  "Forwarded" : "Đã chuyển tiếp"
+  "Forwarded" : "Đã chuyển tiếp",
+  "unlimited": "vô hạn"
 }

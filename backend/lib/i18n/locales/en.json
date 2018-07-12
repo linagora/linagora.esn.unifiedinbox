@@ -211,7 +211,7 @@
   "Spam": "Spam",
   "Not spam": "Not spam",
   "Request a read receipt": "Request a read receipt",
-  "Storage": "Storage",
+  "Storage quota": "Storage quota",
   "Read: %s": "Read: %s",
   "To: %s": "To: %s",
   "Subject: %s": "Subject: %s",
@@ -239,5 +239,6 @@
   "Does not have": "Does not have",
   "Has attachment": "Has attachment",
   "Replied" : "Replied",
-  "Forwarded" : "Forwarded"
+  "Forwarded" : "Forwarded",
+  "unlimited": "unlimited"
 }
