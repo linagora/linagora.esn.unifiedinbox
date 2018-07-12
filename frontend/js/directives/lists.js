@@ -51,27 +51,12 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService, inboxSwipeHelper,
-                                              infiniteListService, inboxMailboxesService, inboxSelectionService, inboxPlugins) {
+                                              infiniteListService, inboxMailboxesService, inboxSelectionService) {
     return {
       restrict: 'E',
       controller: function($scope) {
         var self = this,
-          account = $stateParams.account,
-          context = $stateParams.context,
-          plugin = inboxPlugins.get($stateParams.type);
-
-        if (plugin) {
-          plugin.resolveContextRole(account, context).then(function(role) {
-            $scope.mailboxRole = role;
-          });
-        }
-
-        if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.item.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
-            .uniq(false, function(adr) { return adr.email; })
-            .value();
-          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
-        }
+        context = $stateParams.context;
 
         // need this scope value for action list
         $scope.email = $scope.item;
@@ -167,13 +152,6 @@ angular.module('linagora.esn.unifiedinbox')
           });
         }
 
-        if ($scope.item && $scope.item.to && $scope.item.cc && $scope.item.bcc) {
-          $scope.item.emailRecipients = _.chain(_.union($scope.item.to, $scope.item.cc, $scope.item.bcc))
-            .uniq(false, function(adr) { return adr.email; })
-            .value();
-          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
-        }
-
         $scope.email = $scope.item;
 
         $q.all(_.map($scope.item.mailboxIds, function(mailboxId) {
@@ -212,22 +190,7 @@ angular.module('linagora.esn.unifiedinbox')
       restrict: 'E',
       controller: function($scope) {
         var self = this,
-          account = $stateParams.account,
-          context = $stateParams.context,
-          plugin = inboxPlugins.get($stateParams.type);
-
-        if (plugin) {
-          plugin.resolveContextRole(account, context).then(function(role) {
-            $scope.mailboxRole = role;
-          });
-        }
-
-        if ($scope.item && $scope.item.lastEmail && $scope.item.lastEmail.to && $scope.item.lastEmail.cc && $scope.item.lastEmail.bcc) {
-          $scope.item.emailRecipients = _.chain(_.union($scope.item.lastEmail.to, $scope.item.lastEmail.cc, $scope.item.lastEmail.bcc))
-            .uniq(false, function(adr) { return adr.email; })
-            .value();
-          $scope.item.emailFirstRecipient = _.first($scope.item.emailRecipients);
-        }
+        context = $stateParams.context;
 
         // need this scope value for action list
         $scope.thread = $scope.item;

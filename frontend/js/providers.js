@@ -126,7 +126,7 @@ angular.module('linagora.esn.unifiedinbox')
   .factory('inboxNewMessageProvider', function($q, withJmapClient, pagedJmapRequest, inboxJmapProviderContextBuilder,
                                                esnSearchProvider, sortByDateInDescendingOrder, inboxMailboxesService, _,
                                                JMAP_GET_MESSAGES_LIST, ELEMENTS_PER_REQUEST, PROVIDER_TYPES) {
-    return function(templateUrl) {
+    return function(templateUrl, emailTransform) {
       return new esnSearchProvider({
         type: PROVIDER_TYPES.JMAP,
         activeOn: ['unifiedinbox'],
@@ -151,6 +151,9 @@ angular.module('linagora.esn.unifiedinbox')
                 })
                 .then(function(messages) {
                   return messages.sort(sortByDateInDescendingOrder); // We need to sort here because the backend might return shuffled messages
+                })
+                .then(function(messages) {
+                  return emailTransform ? messages.map(emailTransform) : messages;
                 });
             });
           }
@@ -204,12 +207,12 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('inboxHostedMailMessagesProvider', function(inboxNewMessageProvider) {
-    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/message');
+  .factory('inboxHostedMailMessagesProvider', function(inboxNewMessageProvider, computeUniqueSetOfRecipients) {
+    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/message', computeUniqueSetOfRecipients);
   })
 
-  .factory('inboxSearchResultsProvider', function(inboxNewMessageProvider) {
-    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/search');
+  .factory('inboxSearchResultsProvider', function(inboxNewMessageProvider, computeUniqueSetOfRecipients) {
+    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/search', computeUniqueSetOfRecipients);
   })
 
   .factory('inboxHostedMailAttachmentProvider', function(withJmapClient, pagedJmapRequest, newProvider, ByDateElementGroupingTool,
@@ -297,5 +300,17 @@ angular.module('linagora.esn.unifiedinbox')
             return results;
           });
       };
+    };
+  })
+
+  .factory('computeUniqueSetOfRecipients', function() {
+    return function(item) {
+      if (item && item.to && item.cc && item.bcc) {
+        item.emailRecipients = _.chain(_.union(item.to, item.cc, item.bcc))
+          .uniq(false, function(adr) { return adr.email; })
+          .value();
+        item.emailFirstRecipient = _.first(item.emailRecipients);
+      }
+      return item;
     };
   });

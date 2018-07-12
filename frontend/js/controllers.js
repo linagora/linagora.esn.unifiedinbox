@@ -4,7 +4,9 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
-                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, inboxJmapItemService, inboxUserQuotaService) {
+                                                 inboxMailboxesService, inboxFilteredList, ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, inboxJmapItemService, inboxUserQuotaService, inboxPlugins) {
+
+    var plugin = inboxPlugins.get($stateParams.type);
 
     setupPolling();
 
@@ -21,6 +23,12 @@ angular.module('linagora.esn.unifiedinbox')
     $scope.inboxList = inboxFilteredList.list();
     $scope.inboxListModel = inboxFilteredList.asMdVirtualRepeatModel($scope.loadMoreElements);
     $scope.loading = false;
+
+    if (plugin) {
+      plugin.resolveContextRole($stateParams.account, $stateParams.context).then(function(role) {
+        $scope.mailboxRole = role;
+      });
+    }
 
     $scope.$on(INBOX_EVENTS.FILTER_CHANGED, updateFetchersInScope);
 
