@@ -51,6 +51,7 @@ angular.module('linagora.esn.unifiedinbox')
     ITEM_FLAG_CHANGED: 'inbox:itemFlagChanged',
     ITEM_MAILBOX_IDS_CHANGED: 'inbox:itemMailboxIdsChanged',
     BADGE_LOADING_ACTIVATED: 'inbox:badgeLoadingActivated',
+    UNAVAILABLE_ACCOUNT_DETECTED: 'inbox:unavailableAccountDetected',
     DRAFT_DESTROYED: 'inbox:draftDestroyed',
     DRAFT_CREATED: 'inbox:draftCreated'
   })

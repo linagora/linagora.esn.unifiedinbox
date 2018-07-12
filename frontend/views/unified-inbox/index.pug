@@ -4,11 +4,11 @@ sub-header(ng-if="!inbox.list.isElementOpened")
 .inbox-list-preview-pane.ui-view(name="preview-pane", noanimation)
 .inbox-list-sidebar.ui-view(name="sidebar", ng-class="{ offscreen : !inbox.rightSidebar.isVisible || inbox.list.isElementOpened }")
 
-.inbox-list(ng-switch="ctrl.state", ng-class="{ 'has-sidebar-open': inbox.rightSidebar.isVisible }")
+.inbox-list(ng-class="{ 'has-sidebar-open': inbox.rightSidebar.isVisible }")
 
-  inbox-list-account-unavailable(ng-switch-when="ERROR", account="::ctrl.account")
+  inbox-list-account-unavailable(ng-if="ctrl.state === 'ERROR' && (!inbox.list || inbox.list.length === 0)" account="::ctrl.account")
 
-  .inbox-infinite-lis-container(ng-switch-default, ng-if="!inbox.list.isElementOpened")
+  .inbox-infinite-lis-container(ng-if="!inbox.list.isElementOpened")
 
     fab-scroll-top
     inbox-list-header(item="inboxList[ctrl.topIndex]", filters="filters", refresh="refresh()", loading="loading")

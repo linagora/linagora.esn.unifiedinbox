@@ -491,8 +491,14 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('inboxAsyncHostedMailControllerHelper', function($q, session, inboxMailboxesService, INBOX_CONTROLLER_LOADING_STATES) {
-    return function(controller, action) {
+  .factory('inboxUnavailableAccountNotifier', function($rootScope, INBOX_EVENTS) {
+    return function(account) {
+      $rootScope.$broadcast(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, account);
+    };
+  })
+
+  .factory('inboxAsyncHostedMailControllerHelper', function($q, session, INBOX_CONTROLLER_LOADING_STATES) {
+    return function(controller, action, errorHandler) {
       controller.account = {
         name: session.user.preferredEmail
       };
@@ -506,6 +512,7 @@ angular.module('linagora.esn.unifiedinbox')
           return value;
         }, function(err) {
           controller.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
+          errorHandler && errorHandler(session.user.preferredEmail);
 
           return $q.reject(err);
         });
