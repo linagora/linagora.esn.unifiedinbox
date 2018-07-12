@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The Unified Inbox Angular module providers', function() {
 
   var $rootScope, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
-      jmapClient, inboxMailboxesService, inboxConfigMock, jmap, ELEMENTS_PER_REQUEST;
+      jmapClient, inboxMailboxesService, inboxConfigMock, jmap, computeUniqueSetOfRecipients, ELEMENTS_PER_REQUEST;
 
   function elements(id, length, offset) {
     var array = [], start = offset || 0;
@@ -69,7 +69,7 @@ describe('The Unified Inbox Angular module providers', function() {
 
   beforeEach(angular.mock.inject(function(_$rootScope_, _inboxProviders_, _inboxHostedMailMessagesProvider_, _inboxSearchResultsProvider_,
                                           _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _inboxMailboxesService_, _jmap_,
-                                          _ELEMENTS_PER_REQUEST_) {
+                                          _computeUniqueSetOfRecipients_, _ELEMENTS_PER_REQUEST_) {
     $rootScope = _$rootScope_;
     inboxProviders = _inboxProviders_;
     inboxHostedMailMessagesProvider = _inboxHostedMailMessagesProvider_;
@@ -78,6 +78,7 @@ describe('The Unified Inbox Angular module providers', function() {
     inboxHostedMailThreadsProvider = _inboxHostedMailThreadsProvider_;
     inboxMailboxesService = _inboxMailboxesService_;
     jmap = _jmap_;
+    computeUniqueSetOfRecipients = _computeUniqueSetOfRecipients_;
 
     ELEMENTS_PER_REQUEST = _ELEMENTS_PER_REQUEST_;
   }));
@@ -278,6 +279,29 @@ describe('The Unified Inbox Angular module providers', function() {
         done();
       });
       $rootScope.$digest();
+    });
+
+  });
+
+  describe('The computeUniqueSetOfRecipients factory', function() {
+
+    it('should dedupe and sort email message recipients', function() {
+      var item = { id: 'id',
+        to: [{email: '1@linagora.com'}, {displayName: 'deux', email: '2@linagora.com'}],
+        cc: [{displayName: '3', email: '3@linagora.com'}, {displayName: '1', email: '1@linagora.com'}],
+        bcc: [{displayName: '3', email: '3@linagora.com'}, {displayName: 'six', email: '6@linagora.com'}]
+      };
+
+      var result = computeUniqueSetOfRecipients(item);
+
+      $rootScope.$digest();
+
+      expect(result.emailRecipients).to.deep.equal([
+        { email: '1@linagora.com' },
+        { displayName: 'deux', email: '2@linagora.com' },
+        { displayName: '3', email: '3@linagora.com' },
+        { displayName: 'six', email: '6@linagora.com' }
+      ]);
     });
 
   });

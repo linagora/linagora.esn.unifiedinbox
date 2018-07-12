@@ -150,6 +150,7 @@
             if (!provider.options || !provider.options.itemMatches) {
               return tautology;
             }
+
             return provider.options.itemMatches(item, filters);
           })
           .then(function() {
