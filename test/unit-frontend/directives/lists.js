@@ -640,10 +640,18 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     describe('The inboxMailboxesService.assignMailbox', function() {
 
-      var inboxMailboxesService;
+      var inboxMailboxesService, inboxPlugins;
 
-      beforeEach(angular.mock.inject(function(_inboxMailboxesService_) {
+      beforeEach(angular.mock.inject(function(_inboxMailboxesService_, _inboxPlugins_) {
         inboxMailboxesService = _inboxMailboxesService_;
+        inboxPlugins = _inboxPlugins_;
+
+        inboxPlugins.add({
+          type: 'jmap',
+          resolveContextRole: function() {
+            return $q.when('Sent');
+          }
+        });
       }));
 
       beforeEach(function() {

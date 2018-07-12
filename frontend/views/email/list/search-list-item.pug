@@ -2,14 +2,16 @@
   .inbox-list-item-content.clickable(ng-click="ctrl.openEmail(item)")
     .inbox-item-with-icon
       .list-image.badge-container
-        inbox-emailer-avatar(emailer='::item.from')
+        inbox-emailer-avatar(emailer="::mailboxRole.value !== 'sent' ? item.from : item.emailFirstRecipient" )
       .media-body
         .inbox-list-item-subject-and-from
           .inbox-subject.lv-title
             span.inbox-subject-inline(ng-class="{bold: item.isUnread}", ng-bind-html="::item.subject | esnHighlight: query") {{ ::item.subject }}
-          inbox-emailer.inbox-from.lv-title(emailer="::item.from", ng-class="{bold: item.isUnread}", highlight="{{::query}}")
-        .inbox-list-item-date-and-indicators(ng-class="{bold: item.isUnread}")
-          .date-and-indicators-container(ng-bind-html="::item.date | date: group.dateFormat | esnHighlight: query") {{ ::item.date | date: group.dateFormat }}
+          inbox-emailer.inbox-from.lv-title(ng-if="mailboxRole.value !== 'sent'", emailer="::item.from", highlight="{{::query}}")
+          .inbox-from.lv-title(ng-if="mailboxRole.value === 'sent' && item.emailRecipients")
+            inbox-emailer-group(group="item.emailRecipients", display-inline="true", highlight="{{::query}}")
+        .inbox-list-item-date-and-indicators
+          .date-and-indicators-container(ng-bind-html="::item.date | date: group.dateFormat | esnHighlight: query", ng-class="{bold: item.isUnread}") {{ ::item.date | date: group.dateFormat }}
           .flex-end
             .inbox-list-item-mailbox.ellipsis.flex-vertical-centered
               span(ng-repeat="mailbox in item.mailboxes track by $index", title="{{ ::mailbox.name }}")  {{ ::mailbox.name }}

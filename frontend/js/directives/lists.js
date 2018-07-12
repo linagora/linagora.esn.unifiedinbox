@@ -143,8 +143,8 @@ angular.module('linagora.esn.unifiedinbox')
       controller: function($scope) {
         var self = this,
           account = $stateParams.account,
-          context = $stateParams.context,
-          plugin = inboxPlugins.get($stateParams.type);
+          context = $stateParams.context || ($scope.item && _.first($scope.item.mailboxIds)),
+          plugin = inboxPlugins.get('jmap');
 
         if (plugin) {
           plugin.resolveContextRole(account, context).then(function(role) {
