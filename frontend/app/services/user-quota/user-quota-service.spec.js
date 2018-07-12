@@ -10,7 +10,7 @@
 
     beforeEach(module('linagora.esn.unifiedinbox'));
     beforeEach(function() {
-    mailboxesServiceMock = { getMailboxWithRole: sinon.spy()};
+    mailboxesServiceMock = { getUserInbox: sinon.spy() };
 
       module(function($provide) {
         $provide.value('inboxMailboxesService', mailboxesServiceMock);
@@ -26,7 +26,7 @@
     function mockInboxQuota(defaultQuotas) {
       var fakeInbox = new jmap.Mailbox({}, 'id', 'INBOX', { role: { value: 'inbox' }, quotas: {'private#...': defaultQuotas}});
 
-      mailboxesServiceMock.getMailboxWithRole = sinon.spy(function() { return mockPromise || $q.when(fakeInbox);});
+      mailboxesServiceMock.getUserInbox = sinon.spy(function() { return mockPromise || $q.when(fakeInbox);});
       mockPromise = undefined;
     }
 
@@ -43,7 +43,7 @@
               storageRatio: 80,
               quotaLevel: 'critical'
             });
-            expect(mailboxesServiceMock.getMailboxWithRole).to.have.been.calledOnce;
+            expect(mailboxesServiceMock.getUserInbox).to.have.been.calledOnce;
             done();
           });
         $rootScope.$digest();
@@ -56,7 +56,7 @@
 
         mockPromise = $q.when({});
         inboxUserQuotaService.getUserQuotaInfo().catch(function(e) {
-          expect(mailboxesServiceMock.getMailboxWithRole).to.have.been.calledOnce;
+          expect(mailboxesServiceMock.getUserInbox).to.have.been.calledOnce;
           expect(e.message).to.equal('Could not find any quota info');
           done();
         });

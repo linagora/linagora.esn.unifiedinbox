@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .service('inboxUserQuotaService', function($q, _, jmap, inboxMailboxesService, INBOX_QUOTA_LEVEL_THRESHOLDS) {
+    .service('inboxUserQuotaService', function($q, _, inboxMailboxesService, INBOX_QUOTA_LEVEL_THRESHOLDS) {
 
       return {
         getUserQuotaInfo: getUserQuotaInfo
@@ -39,7 +39,7 @@
       }
 
       function getUserQuotaInfo() {
-        return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.INBOX)
+        return inboxMailboxesService.getUserInbox()
           .then(function(inbox) {
             if (!inbox || _.size(inbox.quotas) < 1) {
               return $q.reject(new Error('Could not find any quota info'));
