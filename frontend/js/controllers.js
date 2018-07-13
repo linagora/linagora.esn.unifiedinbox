@@ -5,7 +5,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
                                                  inboxMailboxesService, inboxFilteredList, inboxJmapItemService, inboxUserQuotaService, inboxPlugins, inboxUnavailableAccountNotifier,
-                                                 ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL) {
+                                                 ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, PROVIDER_TYPES) {
 
     var plugin = inboxPlugins.get($stateParams.type);
 
@@ -25,7 +25,7 @@ angular.module('linagora.esn.unifiedinbox')
     $scope.inboxListModel = inboxFilteredList.asMdVirtualRepeatModel($scope.loadMoreElements);
     $scope.loading = false;
 
-    if (plugin) {
+    if (plugin === PROVIDER_TYPES.JMAP) {
       plugin.resolveContextRole($stateParams.account, $stateParams.context).then(function(role) {
         $scope.mailboxRole = role;
       });
