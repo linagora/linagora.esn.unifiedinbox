@@ -1,13 +1,13 @@
 'use strict';
 
-/* global chai: false, sinon: false */
+/* global chai: false, sinon: false, _: false */
 
 var expect = chai.expect;
 
 describe('The inboxMailboxesService factory', function() {
 
   var inboxMailboxesCache, inboxMailboxesService, jmapClient, $rootScope, jmap, notificationFactory,
-    inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_EVENTS;
+    inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_ROLE_NAMESPACE_TYPES, INBOX_EVENTS;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
@@ -28,14 +28,16 @@ describe('The inboxMailboxesService factory', function() {
     });
   }));
 
-  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_, _inboxMailboxesCache_, _jmap_,
-                             _notificationFactory_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_, _INBOX_EVENTS_) {
+  beforeEach(inject(function(_inboxMailboxesService_, _$state_, _$rootScope_,
+                             _inboxMailboxesCache_, _jmap_, _notificationFactory_, _INBOX_EVENTS_,
+                              _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_, _INBOX_ROLE_NAMESPACE_TYPES_) {
     inboxMailboxesCache = _inboxMailboxesCache_;
     notificationFactory = _notificationFactory_;
     inboxMailboxesService = _inboxMailboxesService_;
     $rootScope = _$rootScope_;
     jmap = _jmap_;
     INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY = _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_;
+    INBOX_ROLE_NAMESPACE_TYPES = _INBOX_ROLE_NAMESPACE_TYPES_;
     INBOX_EVENTS = _INBOX_EVENTS_;
   }));
 
@@ -1217,6 +1219,42 @@ describe('The inboxMailboxesService factory', function() {
       };
 
       inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.DRAFTS).catch(done);
+      $rootScope.$digest();
+    });
+
+  });
+
+  describe('The getUserInbox function', function() {
+
+    var personalInbox, sharedInbox;
+
+    beforeEach(function() {
+      sharedInbox = new jmap.Mailbox({}, 'id', 'shared inbox',
+        { role: 'inbox', namespace: { type: INBOX_ROLE_NAMESPACE_TYPES.shared } });
+      personalInbox = new jmap.Mailbox({}, 'id', 'name',
+        { role: 'inbox', namespace: { type: INBOX_ROLE_NAMESPACE_TYPES.owned} });
+
+      jmapClient.getMailboxes = function() {
+        return $q.when([sharedInbox, personalInbox]);
+      };
+    });
+
+    it('should resolve with nothing if the Mailbox is not found', function(done) {
+      jmapClient.getMailboxes = _.constant($q.when([sharedInbox]));
+      inboxMailboxesService.getUserInbox().then(function(mailboxes) {
+        expect(mailboxes).to.equal(undefined);
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+
+    it('should resolve with the Mailbox if found', function(done) {
+      inboxMailboxesService.getUserInbox().then(function(inbox) {
+        expect(inbox).to.equal(personalInbox);
+
+        done();
+      });
       $rootScope.$digest();
     });
 

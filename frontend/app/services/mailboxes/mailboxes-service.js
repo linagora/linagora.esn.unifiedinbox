@@ -9,8 +9,9 @@
     ])
 
     .factory('inboxMailboxesService', function($q, _, $state, $rootScope, withJmapClient, jmap, asyncJmapAction,
-                                               inboxSpecialMailboxes, inboxMailboxesCache, inboxConfig, inboxSharedMailboxesService,
-                                               esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
+                                               inboxSpecialMailboxes, inboxMailboxesCache, inboxSharedMailboxesService,
+                                               esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES,
+                                               INBOX_ROLE_NAMESPACE_TYPES) {
 
       var mailboxesListAlreadyFetched = false;
 
@@ -29,6 +30,7 @@
         destroyMailbox: destroyMailbox,
         updateMailbox: updateMailbox,
         shareMailbox: shareMailbox,
+        getUserInbox: getUserInbox,
         getMailboxWithRole: getMailboxWithRole,
         updateCountersWhenMovingMessage: updateCountersWhenMovingMessage,
         emptyMailbox: emptyMailbox,
@@ -468,6 +470,13 @@
         return _getAllMailboxes(function(mailboxes) {
           return _.filter(mailboxes, { role: role });
         }).then(_.head);
+      }
+
+      function getUserInbox() {
+        return _getAllMailboxes(_.partialRight(_.filter, function(mailbox) {
+          return mailbox && mailbox.role === jmap.MailboxRole.INBOX &&
+            !inboxSharedMailboxesService.isShared(mailbox);
+        })).then(_.head);
       }
 
       function markAllAsRead(mailboxId) {
