@@ -9,7 +9,8 @@ module.exports = dependencies => {
   return {
     canCreate,
     canDelete,
-    validateForwarding
+    validateForwarding,
+    validateForwardingConfigurations
   };
 
   function canCreate(req, res, next) {
@@ -62,6 +63,28 @@ module.exports = dependencies => {
     if (emailAddresses.parseOneAddress(forwarding) === null) {
       return sendError(res, 400, 'forwarding is not a valid email address');
     }
+
+    next();
+  }
+
+  function validateForwardingConfigurations(req, res, next) {
+    const { forwarding, isLocalCopyEnabled } = req.body;
+
+    if (typeof forwarding === 'undefined') {
+      return sendError(res, 400, 'forwarding is required');
+    }
+
+    if (typeof isLocalCopyEnabled === 'undefined') {
+      return sendError(res, 400, 'isLocalCopyEnabled is required');
+    }
+
+    req.body = [{
+      name: 'linagora.esn.unifiedinbox',
+      configurations: [
+        { name: 'forwarding', value: forwarding },
+        { name: 'isLocalCopyEnabled', value: forwarding ? isLocalCopyEnabled : false }
+      ]
+    }];
 
     next();
   }
