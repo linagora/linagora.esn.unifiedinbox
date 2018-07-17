@@ -52,11 +52,11 @@ ng-form.p-t-25(name='form')
     .form-group.option-field.m-b-10
       .col-xs-8.field-name #{__('Allow users to configure email forwarding')}
       .col-xs-4.flex-end
-        toggle-switch(ng-model="$ctrl.configurations.forwarding.value", form="form", onchange="$ctrl.configurations.isLocalCopyEnabled.value = $ctrl.configurations.forwarding.value")
-    .form-group.option-field(ng-class="{ 'ts-disabled': !$ctrl.configurations.forwarding.value }")
+        toggle-switch(ng-model="$ctrl.forwardingConfigs.forwarding.value", form="form", onchange="$ctrl.onForwardingChange()")
+    .form-group.option-field(ng-class="{ 'ts-disabled': !$ctrl.forwardingConfigs.forwarding.value }")
       .col-xs-8.p-l-30.field-name #{__('Allow users to keep a local copy of forwarded emails')}
       .col-xs-4.flex-end
-        toggle-switch(ng-model="$ctrl.configurations.isLocalCopyEnabled.value", form="form", ng-disabled="!$ctrl.configurations.forwarding.value")
+        toggle-switch(ng-model="$ctrl.forwardingConfigs.isLocalCopyEnabled.value", form="form", onchange="$ctrl.onLocalCopyChange()", ng-disabled="!$ctrl.forwardingConfigs.forwarding.value")
     admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
     esn-form-group(label=__('Number of items per request, on bulk READ operations'))
       input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkReadOperations.value", name="numberItemsPerPageOnBulkReadOperations")
