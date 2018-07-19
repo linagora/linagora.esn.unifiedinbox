@@ -25,7 +25,7 @@ angular.module('linagora.esn.unifiedinbox')
     $scope.inboxListModel = inboxFilteredList.asMdVirtualRepeatModel($scope.loadMoreElements);
     $scope.loading = false;
 
-    if (plugin === PROVIDER_TYPES.JMAP) {
+    if (plugin && plugin.type === PROVIDER_TYPES.JMAP) {
       plugin.resolveContextRole($stateParams.account, $stateParams.context).then(function(role) {
         $scope.mailboxRole = role;
       });
