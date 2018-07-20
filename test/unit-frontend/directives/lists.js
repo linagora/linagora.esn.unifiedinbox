@@ -439,9 +439,9 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         $stateParams.context = null;
 
         inboxMailboxesServiceStub = {
-          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return serviceFunctionStubResult; }),
-          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return serviceFunctionStubResult; }),
-          canUnSpamMessages: sinon.stub(inboxMailboxesService, 'canUnSpamMessages', function() { return serviceFunctionStubResult; })
+          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages').callsFake(function() { return serviceFunctionStubResult; }),
+          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox').callsFake(function() { return serviceFunctionStubResult; }),
+          canUnSpamMessages: sinon.stub(inboxMailboxesService, 'canUnSpamMessages').callsFake(function() { return serviceFunctionStubResult; })
         };
       }));
 

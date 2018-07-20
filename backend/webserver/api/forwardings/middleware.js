@@ -2,7 +2,7 @@
 
 const emailAddresses = require('email-addresses');
 
-module.exports = (dependencies, lib) => {
+module.exports = dependencies => {
   const esnConfig = dependencies('esn-config');
   const { sendError } = require('../utils')(dependencies);
 

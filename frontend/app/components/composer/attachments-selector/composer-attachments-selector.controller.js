@@ -66,7 +66,7 @@
     }
 
     function uploadLargeFiles(files, humanReadableMaxSizeUpload) {
-      return $q(function(resolve, reject) {
+      return $q(function(resolve) {
         inboxAttachmentAlternativeUploaderModal.show(
           files,
           humanReadableMaxSizeUpload,

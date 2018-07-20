@@ -301,7 +301,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       initController('unifiedInboxController');
 
-      inboxFilteredList.addAll.reset();
+      inboxFilteredList.addAll.resetHistory();
       scope.loadRecentItems = function() {
         return $q.when([{ a: 1, provider: { types: [], options: { itemMatches: $q.when } } }]);
       };
@@ -319,7 +319,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       initController('unifiedInboxController');
 
-      inboxFilteredList.addAll.reset();
+      inboxFilteredList.addAll.resetHistory();
       scope.loadRecentItems = function() {
         return $q.when([{ a: 1, provider: { types: [], options: { itemMatchesitemMatches: $q.when } } }]);
       };
@@ -615,9 +615,9 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       beforeEach(function() {
         inboxMailboxesServiceStub = {
-          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages', function() { return serviceFunctionStubResult; }),
-          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox', function() { return serviceFunctionStubResult; }),
-          canUnSpamMessages: sinon.stub(inboxMailboxesService, 'canUnSpamMessages', function() { return serviceFunctionStubResult; })
+          canTrashMessages: sinon.stub(inboxMailboxesService, 'canTrashMessages').callsFake(function() { return serviceFunctionStubResult; }),
+          canMoveMessagesOutOfMailbox: sinon.stub(inboxMailboxesService, 'canMoveMessagesOutOfMailbox').callsFake(function() { return serviceFunctionStubResult; }),
+          canUnSpamMessages: sinon.stub(inboxMailboxesService, 'canUnSpamMessages').callsFake(function() { return serviceFunctionStubResult; })
         };
       });
 
