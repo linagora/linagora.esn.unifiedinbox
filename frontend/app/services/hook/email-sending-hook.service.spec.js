@@ -32,10 +32,10 @@ describe('The inboxEmailSendingHookService', function() {
 
   describe('The preSending function', function() {
     it('should call all the pre-hook with input email', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.when();
       });
-      var hook2 = sinon.spy(function(email) {
+      var hook2 = sinon.spy(function() {
         return $q.when();
       });
 
@@ -51,7 +51,7 @@ describe('The inboxEmailSendingHookService', function() {
     });
 
     it('should resolve the input email if all hooks are resolved', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.when();
       });
 
@@ -66,7 +66,7 @@ describe('The inboxEmailSendingHookService', function() {
     });
 
     it('should reject if there is at least one rejected hook', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.reject();
       });
 
@@ -90,10 +90,10 @@ describe('The inboxEmailSendingHookService', function() {
 
   describe('The postSending function', function() {
     it('should call all the post-hook', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.when();
       });
-      var hook2 = sinon.spy(function(email) {
+      var hook2 = sinon.spy(function() {
         return $q.when();
       });
 
@@ -108,10 +108,10 @@ describe('The inboxEmailSendingHookService', function() {
     });
 
     it('should resolve the original data on success', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.when();
       });
-      var hook2 = sinon.spy(function(email) {
+      var hook2 = sinon.spy(function() {
         return $q.when();
       });
       var data = { key: 'value' };
@@ -127,7 +127,7 @@ describe('The inboxEmailSendingHookService', function() {
     });
 
     it('should reject if there is at least one rejected hook', function(done) {
-      var hook = sinon.spy(function(email) {
+      var hook = sinon.spy(function() {
         return $q.reject();
       });
 

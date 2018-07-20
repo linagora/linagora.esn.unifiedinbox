@@ -314,7 +314,7 @@ describe('The inboxJmapItemService service', function() {
 
         done();
       });
-      inboxMailboxesService.updateCountersWhenMovingMessage.reset();
+      inboxMailboxesService.updateCountersWhenMovingMessage.resetHistory();
 
       $rootScope.$digest();
     });
@@ -808,7 +808,7 @@ describe('The inboxJmapItemService service', function() {
   describe('The download message as EML function', function() {
 
     it('should post to downloadUrl to fetch the message', function(done) {
-      var getSignedDownloadUrlMock = sinon.stub(jmap.Attachment.prototype, 'getSignedDownloadUrl', function() { return $q.when({}); });
+      var getSignedDownloadUrlMock = sinon.stub(jmap.Attachment.prototype, 'getSignedDownloadUrl').callsFake(function() { return $q.when({}); });
       var emptyMessage = new jmap.Message(jmapClientMock, 'id', 'blobId', 'threadId', ['mailboxId']);
 
       inboxJmapItemService.downloadEML(emptyMessage).then(function() {

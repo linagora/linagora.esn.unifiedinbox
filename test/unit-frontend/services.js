@@ -1572,7 +1572,7 @@ describe('The Unified Inbox Angular module services', function() {
         });
         $rootScope.$digest();
 
-        attendeeService.getAttendeeCandidates.reset();
+        attendeeService.getAttendeeCandidates.resetHistory();
         searchService.searchByEmail('me@open-paas.org').then(function(result) {
           expect(attendeeService.getAttendeeCandidates).to.have.not.been.calledWith();
           expect(result).to.deep.equal({ a: 'b' });

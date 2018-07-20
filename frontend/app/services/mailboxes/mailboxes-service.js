@@ -10,8 +10,7 @@
 
     .factory('inboxMailboxesService', function($q, _, $state, $rootScope, withJmapClient, jmap, asyncJmapAction,
                                                inboxSpecialMailboxes, inboxMailboxesCache, inboxSharedMailboxesService,
-                                               esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES,
-                                               INBOX_ROLE_NAMESPACE_TYPES) {
+                                               esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
       var mailboxesListAlreadyFetched = false;
 
