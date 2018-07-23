@@ -4,6 +4,8 @@ const express = require('express');
 
 module.exports = dependencies => {
   const router = express.Router();
+  const helperMW = dependencies('helperMW');
+  const configurationMW = dependencies('configurationMW');
   const controller = require('./controller')(dependencies);
   const middleware = require('./middleware')(dependencies);
 
@@ -12,6 +14,15 @@ module.exports = dependencies => {
     middleware.canCreate,
     middleware.validateForwarding,
     controller.create
+  );
+  router.put('/configurations',
+    helperMW.requireInQuery('scope'),
+    configurationMW.qualifyScopeQueries,
+    middleware.validateForwardingConfigurations,
+    configurationMW.validateWriteBody,
+    configurationMW.checkAuthorizedRole,
+    configurationMW.checkWritePermission,
+    controller.updateForwardingConfigurations
   );
   router.delete('/',
     middleware.canDelete,

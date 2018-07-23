@@ -8,7 +8,8 @@
     return {
       addForwarding: addForwarding,
       list: list,
-      removeForwarding: removeForwarding
+      removeForwarding: removeForwarding,
+      updateForwardingConfigurations: updateForwardingConfigurations
     };
 
     /**
@@ -38,6 +39,22 @@
      */
     function removeForwarding(forwarding) {
       return inboxRestangular.all('forwardings').customOperation('remove', '', {}, { 'Content-Type': 'application/json' }, { forwarding: forwarding });
+    }
+
+    /**
+     * Update forwarding configurations: forwarding and isLocalCopyEnabled
+     *
+     * @param {String} domainId        - Domain ID
+     * @param {Object} configurations  - Configurations will be updated
+     * @return {Promise}               - Resolve on success
+     */
+    function updateForwardingConfigurations(domainId, configurations) {
+      var params = {
+        scope: 'domain',
+        domain_id: domainId
+      };
+
+      return inboxRestangular.all('forwardings').one('configurations').customPUT(configurations, null, params);
     }
   }
 })(angular);

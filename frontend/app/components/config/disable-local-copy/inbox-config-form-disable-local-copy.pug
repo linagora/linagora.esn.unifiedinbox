@@ -1,0 +1,12 @@
+.modal(tabindex="-1", role="dialog")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title #{__('Disable local copy?')}
+      .modal-body
+        p #{__('This will disable local copy of all users in domain after save. Do you wish to continue?')}
+      .modal-footer
+        button.btn.btn-link(ng-click="$ctrl.cancelBtnClick(); $hide()")
+          | #{__('Cancel')}
+        button.btn.btn-danger(ng-click="$hide()")
+          | #{__('Disable')}

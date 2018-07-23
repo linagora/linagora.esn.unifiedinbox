@@ -42,4 +42,19 @@ describe('The inboxForwardingClient service', function() {
       $httpBackend.flush();
     });
   });
+
+  describe('The updateForwardingConfigurations function', function() {
+    it('should PUT to right endpoint to update forwarding configurations', function() {
+      var domainId = 'domain-id';
+      var configurations = {
+        forwarding: true,
+        isLocalCopyEnabled: false
+      };
+
+      $httpBackend.expectPUT(API_PATH + '/configurations?domain_id=' + domainId + '&scope=domain', configurations).respond(204);
+
+      inboxForwardingClient.updateForwardingConfigurations(domainId, configurations);
+      $httpBackend.flush();
+    });
+  });
 });

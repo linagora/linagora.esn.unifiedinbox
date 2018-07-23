@@ -242,5 +242,10 @@
   "Has attachment": "Contenant une pièce jointe",
   "Replied" : "Répondu",
   "Forwarded" : "Transféré",
-  "unlimited": "unlimited"
+  "unlimited": "unlimited",
+  "Disable forwarding?" : "Désactiver le transfert ?",
+  "This will remove forwardings of all users in domain after save. Do you wish to continue?" : "Cela supprimera les redirections de tous les utilisateurs dans le domaine après l'enregistrement. Souhaitez-vous continuer ?",
+  "Cancel" : "Annuler",
+  "Disable local copy?" : "Désactiver la copie ?",
+  "This will disable local copy of all users in domain after save. Do you wish to continue?" : "Cela désactivera la copie de redirection de tous les utilisateurs dans le domaine après l'enregistrement. Souhaitez-vous continuer ?"
 }
