@@ -12,7 +12,7 @@
     li.btn-wave(ui-sref-active="active")
       a(href="", ui-sref="unifiedinbox.configuration.readreceipts", ui-sref-opts="{ location: 'replace' }")
         | #{__('Receipts')}
-    li.btn-wave(ui-sref-active="active")
+    li.btn-wave(ng-if="$ctrl.isForwardingEnabled", ui-sref-active="active")
       a(href="", ui-sref="unifiedinbox.configuration.forwardings", ui-sref-opts="{ location: 'replace' }")
         | #{__('Forwardings')}
     li.btn-wave(ui-sref-active="active", dynamic-directive="inbox-configuration-tabs")

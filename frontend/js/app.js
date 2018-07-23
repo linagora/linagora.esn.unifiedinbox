@@ -151,7 +151,8 @@ angular.module('linagora.esn.unifiedinbox', [
         views: {
           'main@unifiedinbox': {
             templateUrl: '/unifiedinbox/views/configuration/index',
-            controller: 'inboxConfigurationIndexController'
+            controller: 'inboxConfigurationIndexController',
+            controllerAs: '$ctrl'
           }
         }
       })
@@ -212,6 +213,15 @@ angular.module('linagora.esn.unifiedinbox', [
         views: {
           'configuration@unifiedinbox.configuration': {
             template: '<inbox-forwardings />'
+          }
+        },
+        resolve: {
+          isForwardingEnabled: function($location, inboxConfig) {
+            return inboxConfig('forwarding', false).then(function(forwarding) {
+              if (!forwarding) {
+                $location.path('/unifiedinbox/configuration');
+              }
+            });
           }
         }
       })

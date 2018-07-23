@@ -1011,6 +1011,22 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       expect(scope.hasTouchscreen).to.be.false;
     });
+
+    it('should initiate isForwardingEnabled to true if forwarding feature is enabled', function() {
+      touchscreenDetectorService.hasTouchscreen = angular.noop;
+      config['linagora.esn.unifiedinbox.forwarding'] = true;
+      var controller = initController('inboxConfigurationIndexController');
+
+      expect(controller.isForwardingEnabled).to.be.true;
+    });
+
+    it('should initiate isForwardingEnabled to false if forwarding feature is disabled', function() {
+      touchscreenDetectorService.hasTouchscreen = angular.noop;
+      config['linagora.esn.unifiedinbox.forwarding'] = false;
+      var controller = initController('inboxConfigurationIndexController');
+
+      expect(controller.isForwardingEnabled).to.be.false;
+    });
   });
 
   describe('The inboxConfigurationFolderController', function() {
