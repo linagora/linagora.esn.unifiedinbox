@@ -20,6 +20,11 @@
     self.onLocalCopyChange = onLocalCopyChange;
 
     function $onInit() {
+      // only domain admin can configure forwarding configurations
+      if (self.mode !== self.availableModes.domain) {
+        return;
+      }
+
       self.forwardingConfigs = {
         forwarding: angular.copy(self.configurations.forwarding),
         isLocalCopyEnabled: angular.copy(self.configurations.isLocalCopyEnabled)

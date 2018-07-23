@@ -6,7 +6,9 @@
       templateUrl: '/unifiedinbox/app/components/config/inbox-config-form.html',
       controller: 'InboxConfigFormController',
       bindings: {
-        configurations: '<'
+        configurations: '<',
+        mode: '@',
+        availableModes: '<'
       },
       require: {
         adminModulesDisplayerController: '^adminModulesDisplayer'

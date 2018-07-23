@@ -36,6 +36,10 @@ describe('The InboxConfigFormController controller', function() {
       forwarding: {},
       isLocalCopyEnabled: {}
     };
+    controller.availableModes = {
+      domain: 'domain'
+    };
+    controller.mode = 'domain';
 
     controller.adminModulesDisplayerController = {
       registerPostSaveHandler: sinon.spy()
@@ -62,6 +66,17 @@ describe('The InboxConfigFormController controller', function() {
 
       expect(controller.adminModulesDisplayerController.registerPostSaveHandler)
         .to.have.been.calledWith(sinon.match.func);
+    });
+
+    it('should not register post save handler if not in domain mode', function() {
+      var controller = initController();
+
+      controller.mode = 'not-domain-mode';
+      controller.$onInit();
+
+      expect(controller.forwardingConfigs).to.be.undefined;
+      expect(controller.adminModulesDisplayerController.registerPostSaveHandler)
+        .to.not.have.been.called;
     });
   });
 
