@@ -5,4 +5,4 @@ block left
   .title #{__('Forwardings')}
 
 block right
-  inbox-subheader-save-button(ng-if="$ctrl.isForwardingEnabled", ng-click="$ctrl.onSave()")
+  inbox-subheader-save-button(ng-if="$ctrl.forwardings", ng-click="$ctrl.onSave()")
