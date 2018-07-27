@@ -5,7 +5,7 @@
     .component('inboxForwardingsSubheader', {
       templateUrl: '/unifiedinbox/app/components/forwardings/subheader/inbox-forwardings-subheader.html',
       bindings: {
-        isForwardingEnabled: '<',
+        forwardings: '<',
         onSave: '&'
       }
     });
