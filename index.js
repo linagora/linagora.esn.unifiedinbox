@@ -129,6 +129,8 @@ const angularAppFiles = [
   'components/forwardings/inbox-forwardings.component.js',
   'components/forwardings/inbox-forwardings.controller.js',
   'components/forwardings/subheader/inbox-forwardings-subheader.component.js',
+  'components/forwardings/form/inbox-forwardings-form.component.js',
+  'components/forwardings/form/inbox-forwardings-form.controller.js',
   'services/common/inbox-restangular.service.js',
   'services/forwardings/inbox-forwardings.service.js',
   'services/forwardings/inbox-forwardings-api-client.service.js'
