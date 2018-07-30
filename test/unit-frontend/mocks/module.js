@@ -12,3 +12,11 @@ angular.module('esn.shortcuts', [])
       use: angular.noop
     };
   });
+angular.module('linagora.esn.james', [])
+  .factory('jamesWebadminClient', function() {
+    return {
+      downloadEmlFileFromMailRepository: angular.noop,
+      listMailsInMailRepository: angular.noop,
+      getMailInMailRepository: angular.noop
+    };
+  });

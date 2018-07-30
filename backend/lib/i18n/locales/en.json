@@ -245,5 +245,6 @@
   "This will remove forwardings of all users in domain after save. Do you wish to continue?" : "This will remove forwardings of all users in domain after save. Do you wish to continue?",
   "Cancel" : "Cancel",
   "Disable local copy?" : "Disable local copy?",
-  "This will disable local copy of all users in domain after save. Do you wish to continue?" : "This will disable local copy of all users in domain after save. Do you wish to continue?"
+  "This will disable local copy of all users in domain after save. Do you wish to continue?" : "This will disable local copy of all users in domain after save. Do you wish to continue?",
+  "No quarantined email": "No quarantined email"
 }
