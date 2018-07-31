@@ -8,11 +8,11 @@
         update: update
       };
 
-      function update(updateData) {
+      function update(updateData, userEmail) {
         return $q.all(updateData.forwardingsToAdd.map(function(forwarding) {
-          return inboxForwardingClient.addForwarding(forwarding);
+          return inboxForwardingClient.addForwarding(forwarding, userEmail);
         }).concat(updateData.forwardingsToRemove.map(function(forwarding) {
-          return inboxForwardingClient.removeForwarding(forwarding);
+          return inboxForwardingClient.removeForwarding(forwarding, userEmail);
         })));
       }
     });

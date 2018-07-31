@@ -131,6 +131,9 @@ const angularAppFiles = [
   'components/forwardings/subheader/inbox-forwardings-subheader.component.js',
   'components/forwardings/form/inbox-forwardings-form.component.js',
   'components/forwardings/form/inbox-forwardings-form.controller.js',
+  'components/forwardings/user/inbox-forwardings-user.run.js',
+  'components/forwardings/user/inbox-forwardings-user.component.js',
+  'components/forwardings/user/inbox-forwardings-user.controller.js',
   'services/common/inbox-restangular.service.js',
   'services/forwardings/inbox-forwardings.service.js',
   'services/forwardings/inbox-forwardings-api-client.service.js'
@@ -254,6 +257,7 @@ module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.wrapper', 'webserver-wrapper'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.authorization', 'authorizationMW'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.authentication', 'authenticationMW'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.domain', 'domainMW'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.configuration', 'configurationMW'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.webserver.middleware.helper', 'helperMW'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.assets', 'assets'),

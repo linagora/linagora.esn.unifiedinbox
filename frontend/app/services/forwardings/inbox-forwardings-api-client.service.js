@@ -18,8 +18,8 @@
      * @param  {String} forwarding  - Forwarding email address
      * @return {Promise}            - Resolve on success
      */
-    function addForwarding(forwarding) {
-      return inboxRestangular.all('forwardings').customPUT({ forwarding: forwarding });
+    function addForwarding(forwarding, userEmail) {
+      return inboxRestangular.all('forwardings').customPUT({ forwarding: forwarding, email: userEmail});
     }
 
     /**
@@ -27,8 +27,8 @@
      *
      * @return {Promise}  - Resolve response with list of forwardings
      */
-    function list() {
-      return inboxRestangular.all('forwardings').getList();
+    function list(userEmail) {
+      return inboxRestangular.all('forwardings').customGETLIST('', {email: userEmail});
     }
 
     /**
@@ -37,8 +37,8 @@
      * @param  {String} forwarding  - Forwarding email address
      * @return {Promise}            - Resolve on success
      */
-    function removeForwarding(forwarding) {
-      return inboxRestangular.all('forwardings').customOperation('remove', '', {}, { 'Content-Type': 'application/json' }, { forwarding: forwarding });
+    function removeForwarding(forwarding, userEmail) {
+      return inboxRestangular.all('forwardings').customOperation('remove', '', {}, { 'Content-Type': 'application/json' }, { forwarding: forwarding, email: userEmail});
     }
 
     /**

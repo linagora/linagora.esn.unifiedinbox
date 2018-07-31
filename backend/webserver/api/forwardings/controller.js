@@ -13,19 +13,31 @@ module.exports = dependencies => {
   };
 
   function get(req, res) {
-    jamesModule.lib.client.listDestinationsOfForward(req.user.preferredEmail)
+    if (!req.query.email) {
+      req.query.email = req.user.preferredEmail;
+    }
+
+    jamesModule.lib.client.listDestinationsOfForward(req.query.email)
       .then(forwardings => res.status(200).json(forwardings))
       .catch(err => sendError(res, 500, 'Unable to get forwardings', err));
   }
 
   function create(req, res) {
-    jamesModule.lib.client.addDestinationsToForward(req.user.preferredEmail, [req.body.forwarding])
+    if (!req.body.email) {
+      req.body.email = req.user.preferredEmail;
+    }
+
+    jamesModule.lib.client.addDestinationsToForward(req.body.email, [req.body.forwarding])
       .then(() => res.status(204).end())
       .catch(err => sendError(res, 500, 'Unable to create forwarding', err));
   }
 
   function remove(req, res) {
-    jamesModule.lib.client.removeDestinationsOfForward(req.user.preferredEmail, [req.body.forwarding])
+    if (!req.body.email) {
+      req.body.email = req.user.preferredEmail;
+    }
+
+    jamesModule.lib.client.removeDestinationsOfForward(req.body.email, [req.body.forwarding])
       .then(() => res.status(204).end())
       .catch(err => sendError(res, 500, 'Unable to remove forwarding', err));
   }

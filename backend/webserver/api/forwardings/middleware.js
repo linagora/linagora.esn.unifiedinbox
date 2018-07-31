@@ -5,12 +5,17 @@ const emailAddresses = require('email-addresses');
 module.exports = dependencies => {
   const esnConfig = dependencies('esn-config');
   const { sendError } = require('../utils')(dependencies);
+  const domain = dependencies('domainMW');
+  const authorize = dependencies('authorizationMW');
+  const composableMw = require('composable-middleware');
 
   return {
     canCreate,
     canDelete,
     validateForwarding,
-    validateForwardingConfigurations
+    validateForwardingConfigurations,
+    canRead,
+    canUpdate
   };
 
   function canCreate(req, res, next) {
@@ -87,5 +92,27 @@ module.exports = dependencies => {
     }];
 
     next();
+  }
+
+  function canRead(req, res, next) {
+    const middlewares = [];
+
+    if (req.user.preferredEmail === req.query.email) {
+      middlewares.push(domain.loadSessionDomain, authorize.requiresDomainManager);
+    }
+
+    return composableMw(...middlewares)(req, res, next);
+  }
+
+  function canUpdate(req, res, next) {
+    const middlewares = [];
+
+    middlewares.push(canCreate, validateForwarding);
+
+    if (req.user.preferredEmail === req.body.email) {
+      middlewares.push(domain.loadSessionDomain, authorize.requiresDomainManager);
+    }
+
+    return composableMw(...middlewares)(req, res, next);
   }
 };

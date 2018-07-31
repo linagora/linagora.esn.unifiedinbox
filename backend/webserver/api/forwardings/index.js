@@ -9,11 +9,17 @@ module.exports = dependencies => {
   const controller = require('./controller')(dependencies);
   const middleware = require('./middleware')(dependencies);
 
-  router.get('/', controller.get);
+  router.get('/',
+    middleware.canRead,
+    controller.get
+  );
   router.put('/',
-    middleware.canCreate,
-    middleware.validateForwarding,
+    middleware.canUpdate,
     controller.create
+  );
+  router.delete('/',
+    middleware.canUpdate,
+    controller.remove
   );
   router.put('/configurations',
     helperMW.requireInQuery('scope'),
@@ -23,11 +29,6 @@ module.exports = dependencies => {
     configurationMW.checkAuthorizedRole,
     configurationMW.checkWritePermission,
     controller.updateForwardingConfigurations
-  );
-  router.delete('/',
-    middleware.canDelete,
-    middleware.validateForwarding,
-    controller.remove
   );
 
   return router;

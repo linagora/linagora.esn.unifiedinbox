@@ -1,0 +1,30 @@
+inbox-forwardings-user {
+    a {
+      &:extend(.dropdown-menu > li > a);
+      &:extend(.dropdown-menu.dropdown-menu-right > li > a);
+  
+      &:hover {
+        &:extend(.dropdown-menu > li > a:hover);
+      }
+    }
+  }
+  
+  .inbox-forwardings-user-dialog {
+    .modal-body {
+      overflow-y: auto;
+    }
+
+    .no-forwarding {
+      font-size: 1.2em;
+  
+      .all-centered;
+      .flex-column;
+  
+      i.mdi {
+        color: @accentColor;
+        font-size: 8em;
+        opacity: 0.7;
+      }
+    }
+  }
+  
