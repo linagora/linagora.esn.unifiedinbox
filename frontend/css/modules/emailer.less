@@ -11,30 +11,35 @@
       margin-left: 2px;
     }
   }
+}
 
-  inbox-emailer-display {
-    .from, .to, .cc, .bcc, .date {
-      .flex-start;
+inbox-emailer-display {
+  .from, .to, .cc, .bcc, .date {
+    .flex-start;
 
-      .line-header {
-        .esn-flex-noshrink;
-
-        min-width: 35px;
-      }
-    }
-
-    .more {
+    .line-header {
       .esn-flex-noshrink;
 
-      margin: 0 0 auto 5px;
+      min-width: 40px;
+    }
+  }
 
-      .collapsed, .expanded {
-        .flex-vertical-centered;
-      }
+  .more {
+    &:hover {
+      color: @text-color;
+      background-color: @darkenBgColor;
+    }
 
-      .mdi {
-        font-size: 1.6em;
-      }
+    .esn-flex-noshrink;
+
+    margin: 0 0 auto 5px;
+
+    .collapsed, .expanded {
+      .flex-vertical-centered;
+    }
+
+    .mdi {
+      font-size: 1.6em;
     }
   }
 }

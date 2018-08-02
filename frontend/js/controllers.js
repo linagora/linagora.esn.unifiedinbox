@@ -605,7 +605,7 @@ angular.module('linagora.esn.unifiedinbox')
     self.resolveAvatar = resolveAvatar;
 
     $scope.$watch('emailer', function(emailer) {
-      if (emailer) {
+      if (emailer && emailer.resolve) {
         emailer.resolve();
       }
     });

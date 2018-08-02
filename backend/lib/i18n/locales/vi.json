@@ -245,5 +245,6 @@
   "This will remove forwardings of all users in domain after save. Do you wish to continue?" : "Điều này sẽ xóa chuyển tiếp thư của tất cả người dùng trong miền sau khi lưu. Bạn có muốn tiếp tục?",
   "Cancel" : "Hủy",
   "Disable local copy?" : "Vô hiệu hóa giữ bản sao thư chuyển tiếp?",
-  "This will disable local copy of all users in domain after save. Do you wish to continue?" : "Điều này sẽ vô hiệu hóa giữ bản sao thư chuyển tiếp của tất cả người dùng trong miền sau khi lưu. Bạn có muốn tiếp tục?"
+  "This will disable local copy of all users in domain after save. Do you wish to continue?" : "Điều này sẽ vô hiệu hóa giữ bản sao thư chuyển tiếp của tất cả người dùng trong miền sau khi lưu. Bạn có muốn tiếp tục?",
+  "No quarantined email": "Không có email trong vùng cách ly"
 }
