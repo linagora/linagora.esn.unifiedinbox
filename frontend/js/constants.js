@@ -66,8 +66,8 @@ angular.module('linagora.esn.unifiedinbox')
       ['alignment', ['paragraph', 'ul', 'ol']]
     ],
     keyMap: {
-      pc: {'CTRL+ENTER': ''},
-      mac: {'CMD+ENTER': ''}
+      pc: {'CTRL+ENTER': '', 'ENTER': 'insertParagraph'},
+      mac: {'CMD+ENTER': '', 'ENTER': 'insertParagraph'}
     }
   })
   .constant('INBOX_CONTROLLER_LOADING_STATES', {
