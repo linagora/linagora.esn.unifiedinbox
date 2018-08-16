@@ -251,5 +251,6 @@
   "Set email forwardings": "Set email forwardings",
   "Updating forwardings...": "Updating forwardings...",
   "Forwardings updated": "Forwardings updated",
-  "Failed to update forwardings": "Failed to update forwardings"
+  "Failed to update forwardings": "Failed to update forwardings",
+  "Enable folders sharing": "Enable folders sharing"
 }

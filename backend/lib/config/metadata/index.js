@@ -24,6 +24,7 @@ module.exports = dependencies => ({
     swipeRightAction: require('./swipe-right-action')(dependencies),
     uploadUrl: require('./upload-url')(dependencies),
     view: require('./view')(dependencies),
-    useEmailLinks: require('./use-email-links')(dependencies)
+    useEmailLinks: require('./use-email-links')(dependencies),
+    foldersSharing: require('./folders-sharing')(dependencies)
   }
 });
