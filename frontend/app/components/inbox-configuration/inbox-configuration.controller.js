@@ -4,12 +4,17 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxConfigurationController', inboxConfigurationController);
 
-  function inboxConfigurationController($scope, touchscreenDetectorService, inboxConfig) {
+  function inboxConfigurationController($scope, touchscreenDetectorService, inboxConfig, $q, INBOX_FOLDERS_SHARING_CONFIG_KEY, INBOX_DEFAULT_FOLDERS_SHARING_CONFIG) {
     var self = this;
 
-    inboxConfig('forwarding', false).then(function(forwarding) {
-      self.isForwardingEnabled = forwarding;
+    $q.all([
+      inboxConfig('forwarding', false),
+      inboxConfig(INBOX_FOLDERS_SHARING_CONFIG_KEY, INBOX_DEFAULT_FOLDERS_SHARING_CONFIG)
+    ]).then(function(data) {
+      self.isForwardingEnabled = data[0];
+      self.isFoldersSharingEnabled = data[1];
     });
+
     $scope.hasTouchscreen = touchscreenDetectorService.hasTouchscreen();
   }
 })(angular);

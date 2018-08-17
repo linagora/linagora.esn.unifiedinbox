@@ -35,34 +35,51 @@ describe('The inboxConfigurationController', function() {
 
     return controller;
   }
+  describe('The inboxConfigurationController', function() {
+    beforeEach(function() {
+      touchscreenDetectorService.hasTouchscreen = angular.noop;
+    });
 
-  it('should initiate hasTouchscreen to true if service responds true', function() {
-    touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(true);
-    initController('inboxConfigurationController');
+    it('should initiate hasTouchscreen to true if service responds true', function() {
+      touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(true);
+      initController('inboxConfigurationController');
 
-    expect(scope.hasTouchscreen).to.be.true;
-  });
+      expect(scope.hasTouchscreen).to.be.true;
+    });
 
-  it('should initiate hasTouchscreen to false if service responds false', function() {
-    touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(false);
-    initController('inboxConfigurationController');
+    it('should initiate hasTouchscreen to false if service responds false', function() {
+      touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(false);
+      initController('inboxConfigurationController');
 
-    expect(scope.hasTouchscreen).to.be.false;
-  });
+      expect(scope.hasTouchscreen).to.be.false;
+    });
 
-  it('should initiate isForwardingEnabled to true if forwarding feature is enabled', function() {
-    touchscreenDetectorService.hasTouchscreen = angular.noop;
-    config['linagora.esn.unifiedinbox.forwarding'] = true;
-    var controller = initController('inboxConfigurationController');
+    it('should initiate isForwardingEnabled to true if forwarding feature is enabled', function() {
+      config['linagora.esn.unifiedinbox.forwarding'] = true;
+      var controller = initController('inboxConfigurationController');
 
-    expect(controller.isForwardingEnabled).to.be.true;
-  });
+      expect(controller.isForwardingEnabled).to.be.true;
+    });
 
-  it('should initiate isForwardingEnabled to false if forwarding feature is disabled', function() {
-    touchscreenDetectorService.hasTouchscreen = angular.noop;
-    config['linagora.esn.unifiedinbox.forwarding'] = false;
-    var controller = initController('inboxConfigurationController');
+    it('should initiate isForwardingEnabled to false if forwarding feature is disabled', function() {
+      config['linagora.esn.unifiedinbox.forwarding'] = false;
+      var controller = initController('inboxConfigurationController');
 
-    expect(controller.isForwardingEnabled).to.be.false;
+      expect(controller.isForwardingEnabled).to.be.false;
+    });
+
+    it('should initiate isFoldersSharingEnabled to true if folders sharing feature is enabled', function() {
+      config['linagora.esn.unifiedinbox.foldersSharing'] = true;
+      var controller = initController('inboxConfigurationController');
+
+      expect(controller.isFoldersSharingEnabled).to.be.true;
+    });
+
+    it('should initiate isFoldersSharingEnabled to false if folders sharing feature is disabled', function() {
+      config['linagora.esn.unifiedinbox.foldersSharing'] = false;
+      var controller = initController('inboxConfigurationController');
+
+      expect(controller.isFoldersSharingEnabled).to.be.false;
+    });
   });
 });

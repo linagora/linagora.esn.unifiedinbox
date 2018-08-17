@@ -8,6 +8,8 @@
       shared: 'delegated',
       owned: 'personal'
     })
-    .constant('INBOX_MAILBOXES_NON_SHAREABLE', ['drafts', 'outbox', 'sent', 'trash']);
+    .constant('INBOX_MAILBOXES_NON_SHAREABLE', ['drafts', 'outbox', 'sent', 'trash'])
+    .constant('INBOX_DEFAULT_FOLDERS_SHARING_CONFIG', false)
+    .constant('INBOX_FOLDERS_SHARING_CONFIG_KEY', 'foldersSharing');
 
 })();
