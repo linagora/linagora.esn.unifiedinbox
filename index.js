@@ -140,7 +140,9 @@ const angularAppFiles = [
   'components/quarantine/list/inbox-quarantine-email-list.component.js',
   'components/quarantine/list-item/inbox-quarantine-email-list-item.component.js',
   'services/mail-repository/inbox-mail-repository.service.js',
-  'services/mail-repository/inbox-mail-repository-email.model.js'
+  'services/mail-repository/inbox-mail-repository-email.model.js',
+  'components/inbox-configuration/inbox-configuration.controller.js',
+  'components/inbox-configuration/inbox-configuration.component.js'
 ];
 
 const angularJsFiles = [
