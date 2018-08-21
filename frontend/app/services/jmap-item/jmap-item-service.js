@@ -382,7 +382,7 @@
               .then(function(messageIds) {
                 return asyncJmapAction({
                   success: esnI18nService.translate('All messages in folder have been marked as read'),
-                  progressing: esnI18nService.translate('Marking folder messages as read ...'),
+                  progressing: esnI18nService.translate('Mark all as read in progress ...'),
                   failure: esnI18nService.translate('Failed to mark folder messages as read')
                 }, function() {
                   return inboxConfig('numberItemsPerPageOnBulkUpdateOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS)
