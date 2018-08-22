@@ -241,6 +241,14 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.configuration.filters.new', {
+        url: '/new',
+        views: {
+          'configuration@unifiedinbox.configuration': {
+            template: '<inbox-configuration-new-filter />'
+          }
+        }
+      })
       .state('unifiedinbox.inbox', {
         url: '/inbox?type&account&context',
         views: {
