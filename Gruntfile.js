@@ -77,7 +77,16 @@ module.exports = function(grunt) {
           }],
           verifyOptions: {
             defaultLocale: 'en',
-            locales: ['en', 'fr', 'vi']
+            locales: ['en', 'fr', 'vi'],
+            rules: [
+              'all-keys-translated',
+              'all-locales-present',
+              'default-locale-translate',
+              'key-trimmed',
+              'no-duplicate-among-modules',
+              'no-duplicate-with-core',
+              'valid-json-file'
+            ]
           }
         }
       }
@@ -116,7 +125,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('i18n', 'Check the translation files', ['i18n_checker']);
   grunt.registerTask('pug-linter', 'Check the pug/jade files', ['puglint:all']);
-  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'pug-linter'/* Too complicated for now :( , 'i18n' */]);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'pug-linter', 'i18n']);
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'jscs:quick', 'lint_pattern:quick']);
   grunt.registerTask('test-midway-backend', ['splitfiles:midway']);
   grunt.registerTask('test-unit-backend', 'Test backend code', ['mochacli:backend']);
