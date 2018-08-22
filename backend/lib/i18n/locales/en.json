@@ -246,5 +246,10 @@
   "Cancel" : "Cancel",
   "Disable local copy?" : "Disable local copy?",
   "This will disable local copy of all users in domain after save. Do you wish to continue?" : "This will disable local copy of all users in domain after save. Do you wish to continue?",
-  "No quarantined email": "No quarantined email"
+  "No quarantined email": "No quarantined email",
+  "Set email forwardings for %s": "Set email forwardings for %s",
+  "Set email forwardings": "Set email forwardings",
+  "Updating forwardings...": "Updating forwardings...",
+  "Forwardings updated": "Forwardings updated",
+  "Failed to update forwardings": "Failed to update forwardings"
 }

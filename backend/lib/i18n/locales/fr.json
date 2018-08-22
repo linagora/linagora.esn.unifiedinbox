@@ -248,5 +248,10 @@
   "Cancel" : "Annuler",
   "Disable local copy?" : "Désactiver la copie ?",
   "This will disable local copy of all users in domain after save. Do you wish to continue?" : "Cela désactivera la copie de redirection de tous les utilisateurs dans le domaine après l'enregistrement. Souhaitez-vous continuer ?",
-  "No quarantined email": "Pas d'email en quarantaine"
+  "No quarantined email": "Pas d'email en quarantaine",
+  "Set email forwardings for %s": "Modifier les redirections de %s",
+  "Set email forwardings" :"Modifier les redirections",
+  "Updating forwardings...": "Mise à jour des transferts...",
+  "Forwardings updated": "Les transferts ont été modifiés",
+  "Failed to update forwardings": "Impossible de modifier les transferts"
 }
