@@ -1762,20 +1762,26 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
   describe('The inboxSidebarEmailController', function() {
 
-    var inboxSpecialMailboxes;
-    var session;
+    var inboxSpecialMailboxes, session, inboxSharedMailboxesService;
 
-    beforeEach(inject(function(_inboxSpecialMailboxes_, _session_) {
+    beforeEach(inject(function(_inboxSpecialMailboxes_, _session_, _inboxSharedMailboxesService_) {
       inboxSpecialMailboxes = _inboxSpecialMailboxes_;
       session = _session_;
+      inboxSharedMailboxesService = _inboxSharedMailboxesService_;
 
       inboxMailboxesService.assignMailboxesList = sinon.spy(function() { return $q.when(); });
-
+      inboxSharedMailboxesService.isEnabled = sinon.spy(function() { return $q.when(); });
     }));
     it('should call the inboxMailboxesService.assignMailboxesList function', function() {
       initController('inboxSidebarEmailController');
 
-      expect(inboxMailboxesService.assignMailboxesList).to.have.been.calledWith(scope);
+      expect(inboxMailboxesService.assignMailboxesList).to.have.been.called;
+    });
+
+    it('should call the inboxSharedMailboxesService.isEnabled function', function() {
+      initController('inboxSidebarEmailController');
+
+      expect(inboxSharedMailboxesService.isEnabled).to.have.been.called;
     });
 
     it('should assign specialMailboxes from inboxSpecialMailboxes service', function() {

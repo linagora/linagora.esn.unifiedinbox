@@ -567,7 +567,7 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('inboxSidebarEmailController', function($scope, _, $interval,
     inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper,
-    inboxUnavailableAccountNotifier, session, INFINITE_LIST_POLLING_INTERVAL) {
+    inboxUnavailableAccountNotifier, session, inboxSharedMailboxesService, $filter, INFINITE_LIST_POLLING_INTERVAL) {
     setupFolderPolling();
 
     $scope.specialMailboxes = inboxSpecialMailboxes.list();
@@ -575,7 +575,13 @@ angular.module('linagora.esn.unifiedinbox')
 
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxMailboxesService.assignMailboxesList($scope);
-    }, inboxUnavailableAccountNotifier);
+    }, inboxUnavailableAccountNotifier).then(function() {
+        $scope.displayMyFolders = $filter('filter', $scope.mailboxes, { role: { value: '!' }, namespace: { type: 'Personal' }}).length > 0;
+        inboxSharedMailboxesService.isEnabled()
+          .then(function(isFoldersSharingEnabled) {
+            $scope.displaySharedFolders = $filter('inboxFilterVisibleSharedMailboxes', $scope.mailboxes).length > 0 && isFoldersSharingEnabled;
+          });
+       });
 
     function setupFolderPolling() {
       if (INFINITE_LIST_POLLING_INTERVAL > 0) {

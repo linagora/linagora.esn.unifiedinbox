@@ -2,7 +2,7 @@ md-menu-item
   md-button(ng-disabled="ctrl.mailbox.unreadMessages === 0", ng-click="ctrl.markAllAsRead(ctrl.mailbox.id)")
     md-icon(md-menu-origin, md-svg-icon="email-open", aria-label="email open Icon")
     | #{__('Mark all as read')}
-md-menu-item(ng-if="::ctrl.isShareableMailbox(ctrl.mailbox)", esn-modal-launcher="/unifiedinbox/app/components/mailbox-shared-settings/mailbox-shared-settings.html", controller-as="ctrl", controller="InboxMailboxSharedSettingsController")
+md-menu-item(ng-if="::ctrl.isFoldersSharingEnabled && ctrl.isShareableMailbox(ctrl.mailbox)", esn-modal-launcher="/unifiedinbox/app/components/mailbox-shared-settings/mailbox-shared-settings.html", controller-as="ctrl", controller="InboxMailboxSharedSettingsController")
   md-button
     md-icon(md-menu-origin, md-svg-icon="account-multiple", aria-label="sharing settings Icon")
     | #{__('Sharing settings')}

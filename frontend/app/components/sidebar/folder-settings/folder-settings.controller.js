@@ -14,6 +14,11 @@
 
     /////
 
+    inboxSharedMailboxesService.isEnabled()
+      .then(function(isFoldersSharingEnabled) {
+        self.isFoldersSharingEnabled = isFoldersSharingEnabled;
+      });
+
     function emptyTrash(mailboxId) {
       if (mailboxId) {
         inboxJmapItemService.emptyMailbox(mailboxId);
