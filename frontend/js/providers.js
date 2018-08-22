@@ -128,6 +128,7 @@ angular.module('linagora.esn.unifiedinbox')
                                                JMAP_GET_MESSAGES_LIST, ELEMENTS_PER_REQUEST, PROVIDER_TYPES) {
     return function(templateUrl, emailTransform) {
       return new esnSearchProvider({
+        uid: 'op.inbox.emails',
         type: PROVIDER_TYPES.JMAP,
         activeOn: ['unifiedinbox'],
         name: 'Emails',
