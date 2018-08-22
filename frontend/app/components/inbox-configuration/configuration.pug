@@ -15,6 +15,9 @@
     li.btn-wave(ng-if="$ctrl.isForwardingEnabled", ui-sref-active="active")
       a(href="", ui-sref="unifiedinbox.configuration.forwardings", ui-sref-opts="{ location: 'replace' }")
         | #{__('Forwardings')}
+    li.btn-wave(ng-if="$ctrl.isForwardingEnabled", ui-sref-active="active")
+      a(href="", ui-sref="unifiedinbox.configuration.filters", ui-sref-opts="{ location: 'replace' }")
+        | #{__('Filters')}
     li.btn-wave(ui-sref-active="active", dynamic-directive="inbox-configuration-tabs")
 
   ui-view.configuration-content(name="configuration", noanimation)

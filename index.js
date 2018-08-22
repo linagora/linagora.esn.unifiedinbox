@@ -138,8 +138,11 @@ const angularAppFiles = [
   'services/common/inbox-restangular.service.js',
   'services/forwardings/inbox-forwardings.service.js',
   'services/forwardings/inbox-forwardings-api-client.service.js',
-  'components/inbox-configuration/inbox-configuration.controller.js',
-  'components/inbox-configuration/inbox-configuration.component.js'
+  'components/inbox-configuration/configuration.controller.js',
+  'components/inbox-configuration/configuration.component.js',
+  'components/inbox-configuration/filters/subheader/filters-subheader.js',
+  'components/inbox-configuration/filters/configuration-filters.controller.js',
+  'components/inbox-configuration/filters/configuration-filters.component.js'
 ];
 
 const angularJsFiles = [
