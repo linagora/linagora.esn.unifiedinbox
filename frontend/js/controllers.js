@@ -302,15 +302,6 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxConfigurationIndexController', function($scope, touchscreenDetectorService, inboxConfig) {
-    var self = this;
-
-    inboxConfig('forwarding', false).then(function(forwarding) {
-      self.isForwardingEnabled = forwarding;
-    });
-    $scope.hasTouchscreen = touchscreenDetectorService.hasTouchscreen();
-  })
-
   .controller('inboxConfigurationFolderController', function($scope, inboxMailboxesService) {
     inboxMailboxesService.assignMailboxesList($scope, inboxMailboxesService.filterSystemMailboxes);
   })

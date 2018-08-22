@@ -10,7 +10,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       jmapClient, jmap, notificationFactory, Offline = {},
       newComposerService = {}, $state, $modal, $hide, navigateTo, inboxPlugins, inboxFilteredList,
       inboxMailboxesService, inboxJmapItemService, _, fileUploadMock, config, moment, inboxMailboxesCache,
-      touchscreenDetectorService, esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
+      esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
       inboxUserQuotaService, inboxUnavailableAccountNotifier;
   var JMAP_GET_MESSAGES_VIEW, INBOX_EVENTS, DEFAULT_MAX_SIZE_UPLOAD, INFINITE_LIST_POLLING_INTERVAL;
 
@@ -82,7 +82,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       $provide.value('filter', { filter: 'condition' });
       $provide.value('searchService', { searchByEmail: function() { return $q.when(); }});
       $provide.value('navigateTo', navigateTo = sinon.spy());
-      $provide.value('touchscreenDetectorService', touchscreenDetectorService = {});
       $provide.value('inboxFilterDescendantMailboxesFilter', inboxFilterDescendantMailboxesFilter);
       $provide.decorator('inboxFilteredList', function($delegate) {
         $delegate.addAll = sinon.spy($delegate.addAll);
@@ -994,39 +993,6 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       expect($state.go).to.have.been.calledWith('.move', { item: thread });
     });
 
-  });
-
-  describe('The inboxConfigurationIndexController', function() {
-
-    it('should initiate hasTouchscreen to true if service responds true', function() {
-      touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(true);
-      initController('inboxConfigurationIndexController');
-
-      expect(scope.hasTouchscreen).to.be.true;
-    });
-
-    it('should initiate hasTouchscreen to false if service responds false', function() {
-      touchscreenDetectorService.hasTouchscreen = sinon.stub().returns(false);
-      initController('inboxConfigurationIndexController');
-
-      expect(scope.hasTouchscreen).to.be.false;
-    });
-
-    it('should initiate isForwardingEnabled to true if forwarding feature is enabled', function() {
-      touchscreenDetectorService.hasTouchscreen = angular.noop;
-      config['linagora.esn.unifiedinbox.forwarding'] = true;
-      var controller = initController('inboxConfigurationIndexController');
-
-      expect(controller.isForwardingEnabled).to.be.true;
-    });
-
-    it('should initiate isForwardingEnabled to false if forwarding feature is disabled', function() {
-      touchscreenDetectorService.hasTouchscreen = angular.noop;
-      config['linagora.esn.unifiedinbox.forwarding'] = false;
-      var controller = initController('inboxConfigurationIndexController');
-
-      expect(controller.isForwardingEnabled).to.be.false;
-    });
   });
 
   describe('The inboxConfigurationFolderController', function() {

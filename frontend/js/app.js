@@ -151,9 +151,7 @@ angular.module('linagora.esn.unifiedinbox', [
         },
         views: {
           'main@unifiedinbox': {
-            templateUrl: '/unifiedinbox/views/configuration/index',
-            controller: 'inboxConfigurationIndexController',
-            controllerAs: '$ctrl'
+            template: '<inbox-configuration />'
           }
         }
       })
