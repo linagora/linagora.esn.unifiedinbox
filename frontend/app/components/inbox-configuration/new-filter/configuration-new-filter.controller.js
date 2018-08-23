@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxConfigurationNewFilterController', inboxConfigurationNewFilterController);
 
-  function inboxConfigurationNewFilterController(_, inboxMailboxesService) {
+  function inboxConfigurationNewFilterController(_, inboxMailboxesService, inboxMailboxesFilterService) {
     var self = this;
 
     self.newFilter = {};
@@ -20,6 +20,8 @@
     }
 
     function saveFilter() {
+      inboxMailboxesFilterService.addFilter(self.newFilter);
+      inboxMailboxesFilterService.setFilters();
     }
 
     function hideMoreResults() {
