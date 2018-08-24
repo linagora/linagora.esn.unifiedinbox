@@ -251,5 +251,7 @@
   "Forwardings updated": "Đã cập nhật chuyển tiếp thư",
   "Failed to update forwardings": "Cập nhật chuyển tiếp thư thất bại",
   "Enable folders sharing": "Bật chia sẻ thư mục",
-  "Draft": "Bản nháp"
+  "Draft": "Bản nháp",
+  "New filter": "Bộ lọc mới",
+  "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top": "Bạn có thể tạo ra tập luật để lọc thư đến trong OpenPaaS. Với từng luật, bạn có thể tùy chỉnh điều kiện kích hoạt và hành động tương ứng. Luật sẽ được xử lý tuần tự theo danh sách dưới đây, bắt đầu từ trên xuống"
 }
