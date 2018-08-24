@@ -92,6 +92,32 @@ module.exports = function(grunt) {
       }
     },
 
+    swagger_generate: {
+      options: {
+        baseDir: __dirname,
+        swaggerOutputFile: 'doc/REST_API/swagger/swagger.json',
+        info: {
+          title: 'OpenPaaS Unifiedinbox Module',
+          description: 'OpenPaaS Unifiedinbox Module API',
+          version: '0.1'
+        },
+        host: 'localhost:8080',
+        securityDefinitions: {
+          auth: {
+            type: 'oauth2',
+            description: 'OAuth2 security scheme for the OpenPaaS API',
+            flow: 'password',
+            tokenUrl: 'localhost:8080/oauth/token',
+            scopes: {}
+          }
+        },
+        paths: [
+          'backend/webserver/api/*.js',
+          'doc/REST_API/swagger/*/*.js'
+        ]
+      }
+    },
+
     puglint: {
       all: {
         options: {
@@ -119,6 +145,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('@linagora/grunt-i18n-checker');
+  grunt.loadNpmTasks('grunt-swagger-generate');
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.loadTasks('tasks');
@@ -133,4 +160,5 @@ module.exports = function(grunt) {
   grunt.registerTask('test-frontend', 'Test frontend code', ['test-unit-frontend']);
   grunt.registerTask('test', ['linters', 'test-frontend', 'test-unit-backend', 'test-midway-backend']);
   grunt.registerTask('default', ['test']);
+  grunt.registerTask('swagger-generate', 'Grunt plugin for swagger generate', ['swagger_generate']);
 };

@@ -7,6 +7,9 @@ describe('The forwarding middlewares', function() {
     esnConfigModule = {};
 
     this.moduleHelpers.addDep('esn-config', esnConfigModule);
+    this.moduleHelpers.addDep('domainMW', {});
+    this.moduleHelpers.addDep('authorizationMW', {});
+    this.moduleHelpers.addDep('usersMW', {});
 
     this.loadModule = () => require(`${this.moduleHelpers.backendPath}/webserver/api/forwardings/middleware`)(this.moduleHelpers.dependencies);
   });

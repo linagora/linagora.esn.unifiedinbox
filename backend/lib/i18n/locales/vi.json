@@ -246,5 +246,10 @@
   "Cancel" : "Hủy",
   "Disable local copy?" : "Vô hiệu hóa giữ bản sao thư chuyển tiếp?",
   "This will disable local copy of all users in domain after save. Do you wish to continue?" : "Điều này sẽ vô hiệu hóa giữ bản sao thư chuyển tiếp của tất cả người dùng trong miền sau khi lưu. Bạn có muốn tiếp tục?",
-  "No quarantined email": "Không có email trong vùng cách ly"
+  "No quarantined email": "Không có email trong vùng cách ly",
+  "Set email forwardings for %s": "Thiết lập chuyển tiếp thư cho %s",
+  "Set email forwardings" :"Thiết lập chuyển tiếp thư",
+  "Updating forwardings...": "Đang cập nhật...",
+  "Forwardings updated": "Đã cập nhật chuyển tiếp thư",
+  "Failed to update forwardings": "Cập nhật chuyển tiếp thư thất bại"
 }

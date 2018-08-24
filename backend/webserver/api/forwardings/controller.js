@@ -7,13 +7,22 @@ module.exports = dependencies => {
 
   return {
     get,
+    getOfTargetUser,
     create,
+    createForTargetUser,
     remove,
+    removeOfTargetUser,
     updateForwardingConfigurations
   };
 
   function get(req, res) {
     jamesModule.lib.client.listDestinationsOfForward(req.user.preferredEmail)
+      .then(forwardings => res.status(200).json(forwardings))
+      .catch(err => sendError(res, 500, 'Unable to get forwardings', err));
+  }
+
+  function getOfTargetUser(req, res) {
+    jamesModule.lib.client.listDestinationsOfForward(req.targetUser.preferredEmail)
       .then(forwardings => res.status(200).json(forwardings))
       .catch(err => sendError(res, 500, 'Unable to get forwardings', err));
   }
@@ -24,8 +33,20 @@ module.exports = dependencies => {
       .catch(err => sendError(res, 500, 'Unable to create forwarding', err));
   }
 
+  function createForTargetUser(req, res) {
+    jamesModule.lib.client.addDestinationsToForward(req.targetUser.preferredEmail, [req.body.forwarding])
+      .then(() => res.status(204).end())
+      .catch(err => sendError(res, 500, 'Unable to create forwarding', err));
+  }
+
   function remove(req, res) {
     jamesModule.lib.client.removeDestinationsOfForward(req.user.preferredEmail, [req.body.forwarding])
+      .then(() => res.status(204).end())
+      .catch(err => sendError(res, 500, 'Unable to remove forwarding', err));
+  }
+
+  function removeOfTargetUser(req, res) {
+    jamesModule.lib.client.removeDestinationsOfForward(req.targetUser.preferredEmail, [req.body.forwarding])
       .then(() => res.status(204).end())
       .catch(err => sendError(res, 500, 'Unable to remove forwarding', err));
   }
