@@ -185,6 +185,19 @@ angular.module('linagora.esn.unifiedinbox')
           return fetcher;
         },
         buildFetchContext: inboxJmapProviderContextBuilder,
+        cleanQuery: function(query) {
+          if (query && query.advanced) {
+            if (_.isArray(query.advanced.from) && _.isEmpty(query.advanced.from)) {
+              delete query.advanced.from;
+            }
+
+            if (_.isArray(query.advanced.to) && _.isEmpty(query.advanced.to)) {
+              delete query.advanced.to;
+            }
+          }
+
+          return query;
+        },
         itemMatches: function(item, filters) {
           return $q(function(resolve, reject) {
             var context = filters.context,
