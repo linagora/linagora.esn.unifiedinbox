@@ -177,6 +177,19 @@ inbox-fab {
     .clickable:not(.text-danger):not(a):not(.menu-root):hover {
       color: @text-color;
       background-color: @darkenBgColor;
+
+      &.droptarget {
+        background-color: lighten(@accentColor, 20%);
+        .cursor-grab;
+
+        .menu-item .menu-item-after:after {
+          background-color: lighten(@accentColor, 20%);
+        }
+
+        &:active{
+          .cursor-grabbing;
+        }
+      }
     }
     .clickable.text-danger:hover {
       color: darken(@state-danger-text, 10%);
