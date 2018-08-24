@@ -25,6 +25,7 @@ module.exports = dependencies => {
    *         $ref: "#/responses/cm_403"
    */
   router.get('/',
+    middleware.canGet,
     controller.get
   );
   /**

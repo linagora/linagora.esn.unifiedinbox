@@ -11,6 +11,7 @@ module.exports = dependencies => {
   const { loadTargetUser } = dependencies('usersMW');
 
   return {
+    canGet,
     canGetForTargetUser,
     canCreate,
     canCreateForTargetUser,
@@ -19,6 +20,10 @@ module.exports = dependencies => {
     validateForwarding,
     validateForwardingConfigurations
   };
+
+  function canGet(req, res, next) {
+    return requireForwardingEnabled(req, res, next);
+  }
 
   function canGetForTargetUser(req, res, next) {
     return composableMw(
