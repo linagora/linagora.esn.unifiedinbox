@@ -34,6 +34,7 @@ describe('The inboxFolderSettings controller', function() {
     inboxJmapItemService.emptyMailbox = sinon.spy();
     inboxJmapItemService.markAllAsRead = sinon.spy();
     inboxSharedMailboxesService.isShareableMailbox = sinon.spy();
+    inboxSharedMailboxesService.isEnabled = sinon.spy(function() { return $q.when(); });
   });
 
   function initController() {
@@ -45,6 +46,12 @@ describe('The inboxFolderSettings controller', function() {
 
     return controller;
   }
+
+  it('should call the inboxSharedMailboxesService.isEnabled function', function() {
+    initController('inboxSidebarEmailController');
+
+    expect(inboxSharedMailboxesService.isEnabled).to.have.been.called;
+  });
 
   it('should call "inboxJmapItemService" with the given "mailboxId" when clicked in emptyTrash', function() {
     var controller = initController();

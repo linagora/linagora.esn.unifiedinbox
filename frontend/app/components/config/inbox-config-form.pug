@@ -6,6 +6,12 @@ ng-form.p-t-25(name='form')
       input.form-control(type="url", ng-model="$ctrl.configurations.uploadUrl.value", name="uploadUrl")
     esn-form-group(label=__('Download API'))
       input.form-control(type="url", ng-model="$ctrl.configurations.downloadUrl.value", name="downloadUrl")
+    esn-form-group(label=__('Number of items per request, on bulk READ operations'))
+      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkReadOperations.value", name="numberItemsPerPageOnBulkReadOperations")
+    esn-form-group(label=__('Number of items per request, on bulk DELETE operations'))
+      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkDeleteOperations.value", name="numberItemsPerPageOnBulkDeleteOperations")
+    esn-form-group(label=__('Number of items per request, on bulk UPDATE operations'))
+      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkUpdateOperations.value", name="numberItemsPerPageOnBulkUpdateOperations")
     .form-group.option-field
       .col-xs-4.field-name #{__('Swipe right action')}
       .col-xs-8.flex-space-between
@@ -49,6 +55,7 @@ ng-form.p-t-25(name='form')
       .col-xs-8.field-name #{__('Enable attachments')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations['composer.attachments'].value", form="form")
+    admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
     div(ng-if="$ctrl.mode === $ctrl.availableModes.domain")
       .form-group.option-field.m-b-10
         .col-xs-8.field-name #{__('Allow users to configure email forwarding')}
@@ -58,10 +65,7 @@ ng-form.p-t-25(name='form')
         .col-xs-8.p-l-30.field-name #{__('Allow users to keep a local copy of forwarded emails')}
         .col-xs-4.flex-end
           toggle-switch(ng-model="$ctrl.forwardingConfigs.isLocalCopyEnabled.value", form="form", onchange="$ctrl.onLocalCopyChange()", ng-disabled="!$ctrl.forwardingConfigs.forwarding.value")
-    admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
-    esn-form-group(label=__('Number of items per request, on bulk READ operations'))
-      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkReadOperations.value", name="numberItemsPerPageOnBulkReadOperations")
-    esn-form-group(label=__('Number of items per request, on bulk DELETE operations'))
-      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkDeleteOperations.value", name="numberItemsPerPageOnBulkDeleteOperations")
-    esn-form-group(label=__('Number of items per request, on bulk UPDATE operations'))
-      input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkUpdateOperations.value", name="numberItemsPerPageOnBulkUpdateOperations")
+    .form-group.option-field
+      .col-xs-8.field-name #{__('Enable folders sharing')}
+      .col-xs-4.flex-end
+        toggle-switch(ng-model="$ctrl.configurations.foldersSharing.value", form="form")

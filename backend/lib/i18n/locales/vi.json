@@ -251,5 +251,6 @@
   "Set email forwardings" :"Thiết lập chuyển tiếp thư",
   "Updating forwardings...": "Đang cập nhật...",
   "Forwardings updated": "Đã cập nhật chuyển tiếp thư",
-  "Failed to update forwardings": "Cập nhật chuyển tiếp thư thất bại"
+  "Failed to update forwardings": "Cập nhật chuyển tiếp thư thất bại",
+  "Enable folders sharing": "Bật chia sẻ thư mục"
 }

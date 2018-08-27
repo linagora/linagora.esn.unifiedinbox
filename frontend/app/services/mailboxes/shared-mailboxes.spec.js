@@ -6,15 +6,20 @@
 
   describe('The inboxSharedMailboxesService service', function() {
 
-    var $rootScope, inboxSharedMailboxesService, inboxConfigMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, configHiddenSharedCalls, esnUserConfigurationServiceMock;
+    var $rootScope, inboxSharedMailboxesService, inboxConfigMock, configHiddenSharedCalls, configFoldersSharingCalls, esnUserConfigurationServiceMock, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_FOLDERS_SHARING_CONFIG_KEY;
 
     beforeEach(module('linagora.esn.unifiedinbox'));
     beforeEach(module(function($provide) {
       inboxConfigMock = {};
       configHiddenSharedCalls = 0;
+      configFoldersSharingCalls = 0;
       $provide.value('inboxConfig', function(key, defaultValue) {
         if (key === INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY) {
           configHiddenSharedCalls++;
+        }
+
+        if (key === INBOX_FOLDERS_SHARING_CONFIG_KEY) {
+          configFoldersSharingCalls++;
         }
 
         return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
@@ -24,10 +29,11 @@
       $provide.value('esnUserConfigurationService', esnUserConfigurationServiceMock);
     }));
 
-    beforeEach(inject(function(_$rootScope_, _inboxSharedMailboxesService_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_) {
+    beforeEach(inject(function(_$rootScope_, _inboxSharedMailboxesService_, _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_, _INBOX_FOLDERS_SHARING_CONFIG_KEY_) {
       $rootScope = _$rootScope_;
       inboxSharedMailboxesService = _inboxSharedMailboxesService_;
       INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY = _INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY_;
+      INBOX_FOLDERS_SHARING_CONFIG_KEY = _INBOX_FOLDERS_SHARING_CONFIG_KEY_;
     }));
 
     describe('The isSharedMailbox function', function() {
@@ -238,6 +244,33 @@
         expect(result).to.equal(false);
       });
 
+    });
+
+    describe('The isEnabled function', function() {
+
+      it('should get config through inboxConfig', function(done) {
+        var fakeHiddenConfig = { 1: true };
+
+        inboxConfigMock[INBOX_FOLDERS_SHARING_CONFIG_KEY] = fakeHiddenConfig;
+        inboxSharedMailboxesService.isEnabled()
+          .then(function(config) {
+            expect(config).to.deep.equal(fakeHiddenConfig);
+            done();
+          });
+        $rootScope.$digest();
+      });
+
+      it('should delegate only once when called twice', function(done) {
+        inboxSharedMailboxesService.isEnabled()
+          .then(function() {
+            return inboxSharedMailboxesService.isEnabled();
+          })
+          .then(function() {
+            expect(configFoldersSharingCalls).to.equal(1);
+            done();
+          });
+        $rootScope.$digest();
+      });
     });
 
   });

@@ -6,7 +6,7 @@
     li.btn-wave(ui-sref-active="active")
       a(href="", ui-sref="unifiedinbox.configuration.identities", ui-sref-opts="{ location: 'replace' }")
         | #{__('Identity')}
-    li.btn-wave(ui-sref-active="active")
+    li.btn-wave(ng-if="$ctrl.isFoldersSharingEnabled", ui-sref-active="active")
       a(href="", ui-sref="unifiedinbox.configuration.shared", ui-sref-opts="{ location: 'replace' }")
         | #{__('Shared folders')}
     li.btn-wave(ui-sref-active="active")

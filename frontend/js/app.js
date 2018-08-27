@@ -197,6 +197,15 @@ angular.module('linagora.esn.unifiedinbox', [
           'configuration@unifiedinbox.configuration': {
             template: '<inbox-shared-mailboxes />'
           }
+        },
+        resolve: {
+          isFoldersSharingEnabled: function($location, inboxConfig) {
+            return inboxConfig('foldersSharing', false).then(function(foldersSharing) {
+              if (!foldersSharing) {
+                $location.path('/unifiedinbox/configuration');
+              }
+            });
+          }
         }
       })
       .state('unifiedinbox.configuration.readreceipts', {

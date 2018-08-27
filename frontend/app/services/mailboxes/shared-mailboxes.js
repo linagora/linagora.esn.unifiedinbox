@@ -4,8 +4,10 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .service('inboxSharedMailboxesService', function($q, _, inboxConfig, esnUserConfigurationService,
-                                                     INBOX_MODULE_NAME, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_ROLE_NAMESPACE_TYPES, INBOX_MAILBOXES_NON_SHAREABLE) {
+                                                     INBOX_MODULE_NAME, INBOX_HIDDEN_SHAREDMAILBOXES_CONFIG_KEY, INBOX_ROLE_NAMESPACE_TYPES,
+                                                     INBOX_MAILBOXES_NON_SHAREABLE, INBOX_DEFAULT_FOLDERS_SHARING_CONFIG, INBOX_FOLDERS_SHARING_CONFIG_KEY) {
       var hiddenSharedMaiboxesConfig;
+      var foldersSharingConfig = null;
 
       function isSharedMailbox(mailbox) {
         if (!mailbox || !mailbox.namespace || !mailbox.namespace.type) {
@@ -75,9 +77,23 @@
         return true;
       }
 
+      function isEnabled() {
+        if (foldersSharingConfig === null) {
+          return inboxConfig(INBOX_FOLDERS_SHARING_CONFIG_KEY, INBOX_DEFAULT_FOLDERS_SHARING_CONFIG)
+            .then(function(results) {
+              foldersSharingConfig = results;
+
+              return foldersSharingConfig;
+            });
+        }
+
+        return $q.when(foldersSharingConfig);
+      }
+
       return {
         isShared: isSharedMailbox,
         getHiddenMaiboxesConfig: getHiddenMaiboxesConfig,
+        isEnabled: isEnabled,
         hideNewMailboxes: _hideMailboxes.bind(null, _appendMissingMailboxes),
         setHiddenMailboxes: _hideMailboxes.bind(null, _overwriteMailboxesList),
         isShareableMailbox: isShareableMailbox

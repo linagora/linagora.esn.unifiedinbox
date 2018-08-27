@@ -251,5 +251,6 @@
   "Set email forwardings" :"Modifier les redirections",
   "Updating forwardings...": "Mise à jour des transferts...",
   "Forwardings updated": "Les transferts ont été modifiés",
-  "Failed to update forwardings": "Impossible de modifier les transferts"
+  "Failed to update forwardings": "Impossible de modifier les transferts",
+  "Enable folders sharing": "Activer le partage de dossier"
 }
