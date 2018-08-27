@@ -4,4 +4,4 @@ frontend/components
 npm-debug.log
 tmp/
 package-lock.json
-doc/REST_API/swagger/swagger.json
+doc/REST_API/swagger/unifiedinbox-swagger.json
