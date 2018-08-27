@@ -252,5 +252,6 @@
   "Updating forwardings...": "Updating forwardings...",
   "Forwardings updated": "Forwardings updated",
   "Failed to update forwardings": "Failed to update forwardings",
-  "Enable folders sharing": "Enable folders sharing"
+  "Enable folders sharing": "Enable folders sharing",
+  "Draft": "Draft"
 }
