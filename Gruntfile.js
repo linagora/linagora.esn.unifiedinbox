@@ -95,7 +95,7 @@ module.exports = function(grunt) {
     swagger_generate: {
       options: {
         baseDir: __dirname,
-        swaggerOutputFile: 'doc/REST_API/swagger/swagger.json',
+        swaggerOutputFile: 'doc/REST_API/swagger/unifiedinbox-swagger.json',
         info: {
           title: 'OpenPaaS Unifiedinbox Module',
           description: 'OpenPaaS Unifiedinbox Module API',
@@ -105,7 +105,7 @@ module.exports = function(grunt) {
         securityDefinitions: {
           auth: {
             type: 'oauth2',
-            description: 'OAuth2 security scheme for the OpenPaaS API',
+            description: 'OAuth2 security scheme for the OpenPaaS Unifiedinbox Module API',
             flow: 'password',
             tokenUrl: 'localhost:8080/oauth/token',
             scopes: {}
@@ -113,7 +113,8 @@ module.exports = function(grunt) {
         },
         paths: [
           'backend/webserver/api/*.js',
-          'doc/REST_API/swagger/*/*.js'
+          'doc/REST_API/swagger/*/*.js',
+          'node_modules/linagora-rse/doc/REST_API/swagger/*/*.js'
         ]
       }
     },

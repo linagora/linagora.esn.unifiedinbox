@@ -31,7 +31,7 @@ swagger:
    - grunt swagger-generate
   artifacts:
     paths:
-     - ./doc/REST_API/swagger/swagger.json
+     - ./doc/REST_API/swagger/unifiedinbox-swagger.json
 
 deploy-swagger:
   stage: deploy-swagger
@@ -45,8 +45,8 @@ deploy-swagger:
   only:
     - master
   script:
-    - perl -i -pe's/"host":"localhost:8080"/"schemes":["https"],"host":"demo.open-paas.org"/' ./doc/REST_API/swagger/swagger.json
-    - cp ./doc/REST_API/swagger/swagger.json /var/www/html
+    - perl -i -pe's/"host":"localhost:8080"/"schemes":["https"],"host":"demo.open-paas.org"/' ./doc/REST_API/swagger/unifiedinbox-swagger.json
+    - cp ./doc/REST_API/swagger/unifiedinbox-swagger.json /var/www/html
 
 deploy_dev:
   stage: deploy_dev
