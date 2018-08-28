@@ -2,7 +2,20 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .factory('inboxJmapProviderContextBuilder', function(_, $q, inboxMailboxesService, inboxJmapProviderFilterBuilder, jmap, PROVIDER_TYPES) {
+  .factory('inboxJmapProviderContextBuilder', function(_, $q, inboxMailboxesService, inboxJmapProviderFilterBuilder, PROVIDER_TYPES) {
+    return function(options) {
+      if (options.query && !_.isEmpty(options.query.advanced) && _.isObject(options.query.advanced)) {
+        // advanced search queries
+        return handleAdvancedFilters(options.query.advanced);
+      }
+
+      if (options.query && !_.isEmpty(options.query.text) && _.isString(options.query.text)) {
+        // "simple" queries
+        return $q.when({text: options.query.text});
+      }
+
+      return quickFilterQueryBuilder(options);
+    };
 
     function quickFilterQueryBuilder(opt) {
       return inboxMailboxesService.getMessageListFilter(opt.context).then(function(mailboxFilter) {
@@ -60,18 +73,6 @@ angular.module('linagora.esn.unifiedinbox')
     function handleAdvancedFilters(query) {
       return $q.when(inboxJmapProviderFilterBuilder(mapToAdvancedFilter(query)));
     }
-
-    return function(options) {
-      if (_.isString(options.query)) {
-        // "simple" queries
-        return $q.when({text: options.query});
-      }
-      if (_.isObject(options.query)) {
-        // advanced search queries
-        return handleAdvancedFilters(options.query);
-      }
-      return quickFilterQueryBuilder(options);
-    };
   })
 
   .factory('inboxJmapProviderFilterBuilder', function(_) {
@@ -184,6 +185,19 @@ angular.module('linagora.esn.unifiedinbox')
           return fetcher;
         },
         buildFetchContext: inboxJmapProviderContextBuilder,
+        cleanQuery: function(query) {
+          if (query && query.advanced) {
+            if (_.isArray(query.advanced.from) && _.isEmpty(query.advanced.from)) {
+              delete query.advanced.from;
+            }
+
+            if (_.isArray(query.advanced.to) && _.isEmpty(query.advanced.to)) {
+              delete query.advanced.to;
+            }
+          }
+
+          return query;
+        },
         itemMatches: function(item, filters) {
           return $q(function(resolve, reject) {
             var context = filters.context,

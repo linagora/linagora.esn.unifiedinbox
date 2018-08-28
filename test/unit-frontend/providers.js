@@ -549,7 +549,7 @@ describe('The Unified Inbox Angular module providers', function() {
     });
 
     it('should build search context when query is passed as an option', function() {
-      inboxJmapProviderContextBuilder({ query: 'query' }).then(function(context) {
+      inboxJmapProviderContextBuilder({query: {text: 'query'}}).then(function(context) {
         expect(context).to.deep.equal({
           text: 'query'
         });
@@ -562,12 +562,14 @@ describe('The Unified Inbox Angular module providers', function() {
       inboxJmapProviderContextBuilder({
         filterByType: {},
         query: {
-          to: [],
-          from: [{email: 'user2'}],
-          subject: 'subject',
-          contains: 'a set of keywords',
-          excluded: 'some ignored terms',
-          hasAttachment: [true]
+          advanced: {
+            to: [],
+            from: [{email: 'user2'}],
+            subject: 'subject',
+            contains: 'a set of keywords',
+            excluded: 'some ignored terms',
+            hasAttachment: [true]
+          }
         }
       }).then(function(context) {
         expect(context).to.deep.equal({
@@ -595,12 +597,14 @@ describe('The Unified Inbox Angular module providers', function() {
       inboxJmapProviderContextBuilder({
         filterByType: {},
         query: {
-          to: [],
-          from: [],
-          subject: undefined,
-          contains: '',
-          excluded: '',
-          hasAttachment: undefined
+          advanced: {
+            to: [],
+            from: [],
+            subject: undefined,
+            contains: '',
+            excluded: '',
+            hasAttachment: undefined
+          }
         }
       }).then(function(context) {
         expect(context).to.deep.equal({});
@@ -613,12 +617,14 @@ describe('The Unified Inbox Angular module providers', function() {
       inboxJmapProviderContextBuilder({
         filterByType: {},
         query: {
-          to: ['this should be an object with an email property'],
-          from: ['this should be an object with an email property'],
-          subject: ['should not be included within an array'],
-          contains: ['should not be included within an array'],
-          excluded: ['should not be included within an array'],
-          body: ['should not be included within an array']
+            advanced: {
+            to: ['this should be an object with an email property'],
+            from: ['this should be an object with an email property'],
+            subject: ['should not be included within an array'],
+            contains: ['should not be included within an array'],
+            excluded: ['should not be included within an array'],
+            body: ['should not be included within an array']
+          }
         }
       }).then(function(context) {
         expect(context).to.deep.equal({});
