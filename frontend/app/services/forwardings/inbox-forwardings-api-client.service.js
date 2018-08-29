@@ -7,13 +7,16 @@
   function inboxForwardingClient(inboxRestangular) {
     return {
       addForwarding: addForwarding,
+      addUserForwarding: addUserForwarding,
       list: list,
+      listUserForwardings: listUserForwardings,
       removeForwarding: removeForwarding,
+      removeUserForwarding: removeUserForwarding,
       updateForwardingConfigurations: updateForwardingConfigurations
     };
 
     /**
-     * Add new forwarding.
+     * Add new forwarding for current user.
      *
      * @param  {String} forwarding  - Forwarding email address
      * @return {Promise}            - Resolve on success
@@ -23,22 +26,58 @@
     }
 
     /**
-     * List forwardings.
+     * Add new forwarding for a specific user.
      *
-     * @return {Promise}  - Resolve response with list of forwardings
+     * @param  {String} forwarding  - Forwarding email address
+     * @param  {String} userId      - User ID
+     * @param  {String} domainId    - Domain ID
+     * @return {Promise}            - Resolve on success
+     */
+    function addUserForwarding(forwarding, userId, domainId) {
+      return inboxRestangular.one('forwardings/users', userId)
+        .customPUT({ forwarding: forwarding }, null, { domain_id: domainId });
+    }
+
+    /**
+     * List forwardings of current user.
+     *
+     * @return {Promise}            - Resolve response with list of forwardings
      */
     function list() {
       return inboxRestangular.all('forwardings').getList();
     }
 
     /**
-     * Remove forwarding.
+     * List forwardings of a specific user.
+     *
+     * @param  {String} userId      - User ID
+     * @param  {String} domainId    - Domain ID
+     * @return {Promise}            - Resolve response with list of forwardings
+     */
+    function listUserForwardings(userId, domainId) {
+      return inboxRestangular.one('forwardings/users', userId).getList(null, { domain_id: domainId });
+    }
+
+    /**
+     * Remove forwarding if current user.
      *
      * @param  {String} forwarding  - Forwarding email address
      * @return {Promise}            - Resolve on success
      */
     function removeForwarding(forwarding) {
       return inboxRestangular.all('forwardings').customOperation('remove', '', {}, { 'Content-Type': 'application/json' }, { forwarding: forwarding });
+    }
+
+    /**
+     * Remove forwarding of a specific user.
+     *
+     * @param  {String} forwarding  - Forwarding email address
+     * @param  {String} userId      - User ID
+     * @param  {String} domainId    - Domain ID
+     * @return {Promise}            - Resolve on success
+     */
+    function removeUserForwarding(forwarding, userId, domainId) {
+      return inboxRestangular.one('forwardings/users', userId).customOperation('remove', '', { domain_id: domainId }, { 'Content-Type': 'application/json' }, { forwarding: forwarding });
     }
 
     /**
