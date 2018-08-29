@@ -169,6 +169,7 @@ describe('The inboxFilteredList factory', function() {
     var message = new jmap.Message(jmapClient, 'id', 'blobId', 'threadId', ['id_inbox'], {}),
       fakeProvider = function() {
         return new esnSearchProvider({
+          uid: '123',
           types: [PROVIDER_TYPES.JMAP, PROVIDER_TYPES.SOCIAL],
           name: 'Quacks',
           fetch: function() { },

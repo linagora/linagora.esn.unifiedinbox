@@ -135,13 +135,6 @@ const angularAppFiles = [
   'services/common/inbox-restangular.service.js',
   'services/forwardings/inbox-forwardings.service.js',
   'services/forwardings/inbox-forwardings-api-client.service.js',
-  'components/quarantine/inbox-quarantine.run.js',
-  'components/quarantine/inbox-quarantine-email.constant.js',
-  'components/quarantine/list/inbox-quarantine-email-list.controller.js',
-  'components/quarantine/list/inbox-quarantine-email-list.component.js',
-  'components/quarantine/list-item/inbox-quarantine-email-list-item.component.js',
-  'services/mail-repository/inbox-mail-repository.service.js',
-  'services/mail-repository/inbox-mail-repository-email.model.js',
   'components/inbox-configuration/inbox-configuration.controller.js',
   'components/inbox-configuration/inbox-configuration.component.js'
 ];
