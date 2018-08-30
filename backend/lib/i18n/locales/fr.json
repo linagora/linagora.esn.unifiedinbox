@@ -253,5 +253,8 @@
   "Enable folders sharing": "Activer le partage de dossier",
   "Draft": "Brouillon",
   "New filter": "Nouveau filtre",
-  "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top": "Vous pouvez créer des règles qui indiqueront à OpenPaaS comment traiter les mails reçus. Vous pouvez choisir la condition de déclenchement de la règle ainsi que l'action à effectuer. Les règles sont exécutées dans l'ordre où elles apparaissent en commençant par celle du haut."
+  "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top": "Vous pouvez créer des règles qui indiqueront à OpenPaaS comment traiter les mails reçus. Vous pouvez choisir la condition de déclenchement de la règle ainsi que l'action à effectuer. Les règles sont exécutées dans l'ordre où elles apparaissent en commençant par celle du haut.",
+  "When %s then %s": "Si %s, alors %s",
+  "email is from %s": "l'email provient de %s",
+  "move to destination folder %s": "le déplacer dans le dossier %s"
 }

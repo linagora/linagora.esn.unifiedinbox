@@ -143,10 +143,13 @@ const angularAppFiles = [
   'components/inbox-configuration/filters/subheader/filters-subheader.js',
   'components/inbox-configuration/filters/configuration-filters.controller.js',
   'components/inbox-configuration/filters/configuration-filters.component.js',
+  'components/inbox-configuration/filters/filter-card/configuration-filter-card.controller.js',
+  'components/inbox-configuration/filters/filter-card/configuration-filter-card.component.js',
   'components/inbox-configuration/new-filter/subheader/new-filter-subheader.js',
   'components/inbox-configuration/new-filter/configuration-new-filter.controller.js',
   'components/inbox-configuration/new-filter/configuration-new-filter.component.js',
-  'services/mailboxes-filter/mailboxes-filter-service.js'
+  'services/mailboxes-filter/mailboxes-filter-service.js',
+  'services/mailboxes-filter/mailboxes-filter-service.constants.js'
 ];
 
 const angularJsFiles = [

@@ -8,13 +8,20 @@ sub-header
 
     esn-form-group(label=__('if a message'))
       .select
-        select.form-control(ng-model="$ctrl.newFilter.when")
-          option #{__('is from')}
-      recipients-auto-complete(ng-class='{ "no-more-results": $ctrl.hideMoreResults() }' ng-model="$ctrl.newFilter.from", template="recipients-auto-complete")
+        select.form-control(
+          ng-model="$ctrl.newFilter.when"
+          ng-options="condition as condition.val for condition in $ctrl.conditionsOptions")
+      recipients-auto-complete(
+        ng-class='{ "no-more-results": $ctrl.hideMoreResults() }'
+        ng-model="$ctrl.newFilter.from"
+        template="recipients-auto-complete")
 
     esn-form-group(label=__('then'))
       .select
-        select.form-control(ng-model="$ctrl.newFilter.then")
-          option #{__('move to folder')}
+        select.form-control(
+          ng-model="$ctrl.newFilter.then"
+          ng-options="action as action.val for action in $ctrl.actionOptions")
       .select
-        select.form-control(ng-options="mailbox as mailbox.name for mailbox in $ctrl.mailboxes track by mailbox.id" ng-model='$ctrl.newFilter.moveTo')
+        select.form-control(
+          ng-options="mailbox as mailbox.name for mailbox in $ctrl.mailboxes track by mailbox.id"
+          ng-model='$ctrl.newFilter.moveTo')

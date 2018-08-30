@@ -253,5 +253,8 @@
   "Enable folders sharing": "Enable folders sharing",
   "Draft": "Draft",
   "New filter": "New filter",
-  "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top": "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top"
+  "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top": "You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top",
+  "When %s then %s": "When %s then %s",
+  "email is from %s": "email is from %s",
+  "move to destination folder %s": "move to destination folder %s"
 }
