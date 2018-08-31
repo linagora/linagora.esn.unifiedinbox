@@ -13,7 +13,6 @@
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
     "chai-shallow-deep-equal": "1.4.6",
-    "composable-middleware": "0.3.0",
     "eslint": "5.2.0",
     "eslint-config-airbnb-base": "8.0.0",
     "eslint-config-linagora-esn": "1.1.1",
@@ -63,6 +62,7 @@
   },
   "dependencies": {
     "awesome-module": "1.1.0",
+    "composable-middleware": "0.3.0",
     "ejs": "2.6.1",
     "email-addresses": "3.0.1",
     "express": "4.16.3",
