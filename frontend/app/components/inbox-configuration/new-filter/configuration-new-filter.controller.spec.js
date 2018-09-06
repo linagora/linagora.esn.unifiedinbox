@@ -5,26 +5,33 @@
 var expect = chai.expect;
 
 describe('The inboxConfigurationNewFilterController', function() {
-  var $controller, $scope, $rootScope, $compile, $timeout, inboxMailboxesService;
+  var $controller, $scope, $state, $rootScope, inboxMailboxesService, inboxMailboxesFilterService;
 
   beforeEach(function() {
+    module('jadeTemplates');
     module('linagora.esn.unifiedinbox', function($provide) {
       $provide.value('inboxMailboxesService', {
         assignMailboxesList: angular.noop
       });
 
-      $provide.value('inboxMailboxesFilterService', {
+      inboxMailboxesFilterService = {
         addFilter: angular.noop,
         setFilters: angular.noop
-      });
+      };
+
+      $provide.value('inboxMailboxesFilterService', inboxMailboxesFilterService);
     });
   });
 
-  beforeEach(inject(function(_$controller_, _$rootScope_, _$compile_, _$timeout_, _inboxMailboxesService_) {
+  beforeEach(inject(function(
+    _$controller_,
+    _$rootScope_,
+    _$state_,
+    _inboxMailboxesService_
+  ) {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
-    $compile = _$compile_;
-    $timeout = _$timeout_;
+    $state = _$state_;
     inboxMailboxesService = _inboxMailboxesService_;
   }));
 
@@ -36,17 +43,6 @@ describe('The inboxConfigurationNewFilterController', function() {
     $scope.$digest();
 
     return controller;
-  }
-
-  function compileComponent(el) {
-    var element = angular.element(el);
-
-    element.appendTo(document.body);
-
-    $compile(element)($rootScope.$new());
-    $timeout.flush();
-
-    return element;
   }
 
   describe('$onInit', function() {
@@ -61,11 +57,65 @@ describe('The inboxConfigurationNewFilterController', function() {
     });
   });
 
-  describe.skip('saving filters', function() { // Deactivating the tests for now
-    it('should save the new filter', function() {
-      var el = compileComponent('<inbox-configuration-new-filter></inbox-configuration-new-filter>');
+  describe('saving filters', function() {
+    it('should add the new filter to the list', function() {
+      var controller = initController();
 
-      el.find('button')[0].click();
+      sinon.spy($state, 'go');
+      sinon.spy(inboxMailboxesFilterService, 'addFilter');
+      sinon.stub(inboxMailboxesFilterService, 'setFilters').returns($q.when());
+
+      controller.newFilter = {
+        name: 'My filter',
+        when: {key: 'from'},
+        from: [{email: 'admin@open-paas.org'}],
+        then: {key: 'MoveTo'},
+        moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
+      };
+
+      controller.saveFilter();
+
+      expect(inboxMailboxesFilterService.addFilter).to.have.been
+        .calledWith('from', 'My filter', 'admin@open-paas.org',
+          {action: 'MoveTo', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+    });
+
+    it('should set the filter and then redirect', function(done) {
+      sinon.spy($state, 'go');
+      inboxMailboxesFilterService.setFilters = sinon.stub().returns($q.when());
+
+      var controller = initController();
+
+      controller.newFilter = {
+        name: 'My filter',
+        when: {key: 'from'},
+        from: [{email: 'admin@open-paas.org'}],
+        then: {key: 'MoveTo'},
+        moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
+      };
+
+      controller.saveFilter().then(function() {
+        expect(inboxMailboxesFilterService.setFilters).to.have.been.called;
+        expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
+
+        done();
+      });
+      $rootScope.$digest();
+    });
+  });
+
+  describe('hideMoreResults', function() {
+    it('should return true when the filter contains one email', function() {
+      var controller = $controller('inboxConfigurationNewFilterController');
+
+      controller.newFilter.from = undefined;
+      expect(controller.hideMoreResults()).to.be.false;
+
+      controller.newFilter.from = [];
+      expect(controller.hideMoreResults()).to.be.false;
+
+      controller.newFilter.from = [undefined];
+      expect(controller.hideMoreResults()).to.be.true;
     });
   });
 });

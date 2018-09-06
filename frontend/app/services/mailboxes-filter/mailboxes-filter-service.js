@@ -121,12 +121,10 @@
           case JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY:
             var text = '';
 
-            var mailboxIdx = _.findIndex(self.mailboxes, function(item) {
-              return String(item.id) === String(filter.action.appendIn.mailboxIds[0]);
-            });
+            var mailbox = _.find(self.mailboxes, {id: filter.action.appendIn.mailboxIds[0]});
 
-            if (mailboxIdx >= 0) {
-              text = '<b>' + $sanitize(self.mailboxes[mailboxIdx].name) + '</b>';
+            if (mailbox) {
+              text = '<b>' + $sanitize(mailbox.name) + '</b>';
             }
             message = esnI18nService.translate(message, text).toString();
             break;
