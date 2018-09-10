@@ -249,6 +249,18 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.configuration.filters.edit', {
+        url: '/edit/{id}',
+        views: {
+          'configuration@unifiedinbox.configuration': {
+            templateProvider: function($timeout, $stateParams) {
+              return $timeout(function () {
+                return '<inbox-configuration-new-filter edit-filter-id="' + $stateParams.id + '" />';
+              }, 0);
+            }
+          }
+        }
+      })
       .state('unifiedinbox.inbox', {
         url: '/inbox?type&account&context',
         views: {
