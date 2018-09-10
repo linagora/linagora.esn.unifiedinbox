@@ -103,9 +103,8 @@
         {action: self.newFilter.then.key, mailboxId: self.newFilter.moveTo.id}
       );
 
-      return inboxMailboxesFilterService.setFilters().then(function() {
-        $state.go('unifiedinbox.configuration.filters');
-      });
+      inboxMailboxesFilterService.setFilters();
+      $state.go('unifiedinbox.configuration.filters');
     }
 
     function _getJmapFilterOptions(jmapFilterSection) {
