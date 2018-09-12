@@ -1211,7 +1211,7 @@ describe('The Unified Inbox Angular module services', function() {
           'Date: 12:00:00 14:00<br/>' +
           'From: from@linagora.com<br/>' +
           'To: first &lt;first@linagora.com&gt;, second &lt;second@linagora.com&gt;<br/>' +
-          'CC: third &lt;third@linagora.com&gt;' +
+          'Cc: third &lt;third@linagora.com&gt;' +
           '</cite>' +
           '<blockquote><p>my body</p></blockquote>',
           quoted: email,
@@ -1242,7 +1242,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: 'sender@linagora.com',
           subject: 'Fwd: my subject',
           quoted: {
-            htmlBody: '<p><br/></p><cite>------- Forwarded message -------<br/>Subject: my subject<br/>Date: 12:00:00 14:00<br/>From: from@linagora.com<br/>To: first <first@linagora.com>, second <second@linagora.com><br/>CC: third <third@linagora.com></cite><blockquote><p>my body</p></blockquote>'
+            htmlBody: '<p><br/></p><cite>------- Forwarded message -------<br/>Subject: my subject<br/>Date: 12:00:00 14:00<br/>From: from@linagora.com<br/>To: first <first@linagora.com>, second <second@linagora.com><br/>Cc: third <third@linagora.com></cite><blockquote><p>my body</p></blockquote>'
           },
           quoteTemplate: 'forward',
           isQuoting: false

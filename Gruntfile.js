@@ -72,7 +72,9 @@ module.exports = function(grunt) {
             templateSrc: [
               'frontend/app/**/*.pug',
               'frontend/views/**/*.pug'
-            ],
+            ]
+          }, {
+            localeDir: 'node_modules/linagora-rse/backend/i18n/locales',
             core: true
           }],
           verifyOptions: {
@@ -81,10 +83,10 @@ module.exports = function(grunt) {
             rules: [
               'all-keys-translated',
               'all-locales-present',
-              'default-locale-translate',
               'key-trimmed',
               'no-duplicate-among-modules',
               'no-duplicate-with-core',
+              'no-untranslated-key',
               'valid-json-file'
             ]
           }

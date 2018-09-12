@@ -8,18 +8,18 @@
       .to
         label.line-header(ng-switch="previewEmailerGroup")
           span(ng-switch-when="To") #{__('To')}:
-          span(ng-switch-when="CC") #{__('CC')}:
-          span(ng-switch-when="BCC") #{__('BCC')}:
+          span(ng-switch-when="CC") #{__('Cc')}:
+          span(ng-switch-when="BCC") #{__('Bcc')}:
         inbox-emailer(emailer="previewEmailer", hide-email="true")
     .expanded(ng-switch-when="false")
       .to(ng-if="(email.to && email.to.length)")
         label.line-header #{__('To')}:
         inbox-emailer-group(group="email.to")
       .cc(ng-if="(email.cc && email.cc.length)")
-        label.line-header #{__('CC')}:
+        label.line-header #{__('Cc')}:
         inbox-emailer-group(group="email.cc")
       .bcc(ng-if="(email.bcc && email.bcc.length)")
-        label.line-header #{__('BCC')}:
+        label.line-header #{__('Bcc')}:
         inbox-emailer-group(group="email.bcc")
 
   .more.clickable(ng-show="showMoreButton", ng-switch="collapsed", ng-click="$event.stopPropagation(); collapsed = !collapsed")
