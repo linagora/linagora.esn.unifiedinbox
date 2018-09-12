@@ -1,0 +1,8 @@
+extends /modules/subheader/responsive-subheader.pug
+
+block left
+  inbox-subheader-close-button(ui-sref="unifiedinbox.configuration.filters")
+  .title #{__('New filter')}
+
+block right
+  inbox-subheader-save-button(ng-click="$ctrl.onSave()")
