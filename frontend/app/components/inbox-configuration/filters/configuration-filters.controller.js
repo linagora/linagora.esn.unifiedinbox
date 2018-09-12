@@ -8,14 +8,15 @@
     var self = this;
 
     self.$onInit = $onInit;
+    self.filtersList = [];
 
     /////
 
     function $onInit() {
-      self.filtersList = [];
-      inboxMailboxesFilterService.getFilters().then(function(filters) {
+      return inboxMailboxesFilterService.getFilters().then(function(filters) {
         self.filtersList = filters;
       });
     }
   }
 })(angular);
+

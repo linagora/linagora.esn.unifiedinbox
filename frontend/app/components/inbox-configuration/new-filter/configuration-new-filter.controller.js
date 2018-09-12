@@ -37,7 +37,7 @@
           mailboxId: self.newFilter.moveTo.id
         });
 
-      inboxMailboxesFilterService.setFilters().then(function() {
+      return inboxMailboxesFilterService.setFilters().then(function() {
         $state.go('unifiedinbox.configuration.filters');
       });
     }
