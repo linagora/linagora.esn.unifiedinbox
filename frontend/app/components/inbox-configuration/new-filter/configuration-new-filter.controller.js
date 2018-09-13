@@ -4,7 +4,6 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxConfigurationNewFilterController', inboxConfigurationNewFilterController);
 
-
   function inboxConfigurationNewFilterController(
     $state,
     _,
@@ -37,7 +36,11 @@
 
     self.$onInit = $onInit;
     self.hideMoreResults = hideMoreResults;
+    self.initEditForm = initEditForm;
     self.saveFilter = saveFilter;
+
+    self._initFromField = _initFromField;
+    self._initMoveToField = _initMoveToField;
 
     /////
 
@@ -50,7 +53,7 @@
       self.newFilter.then = _initActionOptions();
 
       if (self.editFilterId) {
-        initEditForm();
+        self.initEditForm();
       }
     }
 
@@ -62,8 +65,13 @@
      * Will init the for when in edit mode
      */
     function initEditForm() {
-      inboxMailboxesFilterService.getFilters().then(function() {
-        var filter = inboxMailboxesFilterService.filtersIds[self.editFilterId];
+      return inboxMailboxesFilterService.getFilters().then(function() {
+        var filter = _getOrDefault(inboxMailboxesFilterService.filtersIds, self.editFilterId);
+
+        if (!filter) {
+          return;
+        }
+
         var filterAction = Object.keys(filter.action)[0];
 
         self.newFilter = {
@@ -74,7 +82,7 @@
 
         switch (filter.condition.field) {
           case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            _initFromFied(filter);
+            _initFromField(filter);
             break;
         }
 
@@ -129,7 +137,7 @@
       return _.find(self.actionOptions, {key: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY});
     }
 
-    function _initFromFied(filter) {
+    function _initFromField(filter) {
       userAPI.getUsersByEmail(filter.condition.value).then(function(response) {
         if (response.data && response.data[0]) {
           var email = _getOrDefault(response.data[0], 'preferredEmail', filter.condition.value);
