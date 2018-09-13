@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('linagora.esn.unifiedinbox')
-    .controller('inboxConfigurationNewFilterController', inboxConfigurationNewFilterController);
+    .controller('inboxConfigurationFilterDefinitionController', inboxConfigurationFilterDefinitionController);
 
-  function inboxConfigurationNewFilterController(
+  function inboxConfigurationFilterDefinitionController(
     $state,
     _,
     inboxMailboxesService,
@@ -61,9 +61,6 @@
       return _.has(self.newFilter, 'from') && !_.isEmpty(self.newFilter.from);
     }
 
-    /**
-     * Will init the for when in edit mode
-     */
     function initEditForm() {
       return inboxMailboxesFilterService.getFilters().then(function() {
         var filter = _getOrDefault(inboxMailboxesFilterService.filtersIds, self.editFilterId);
@@ -111,9 +108,6 @@
       });
     }
 
-    /**
-     * Inits options available to the user for conditions and actions.
-     */
     function _getJmapFilterOptions(jmapFilterSection) {
       function _transformFilterOption(item) {
         return {

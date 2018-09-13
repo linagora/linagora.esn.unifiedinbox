@@ -4,7 +4,7 @@
 
 var expect = chai.expect;
 
-describe('The inboxConfigurationNewFilterController', function() {
+describe('The inboxConfigurationFilterDefinitionController', function() {
   var $controller, $scope, $state, $rootScope, inboxMailboxesService, inboxMailboxesFilterService, JMAP_FILTER, userAPI;
 
   beforeEach(function() {
@@ -65,7 +65,7 @@ describe('The inboxConfigurationNewFilterController', function() {
   function initController() {
     $scope = $rootScope.$new();
 
-    var controller = $controller('inboxConfigurationNewFilterController');
+    var controller = $controller('inboxConfigurationFilterDefinitionController');
 
     $scope.$digest();
 
@@ -191,7 +191,7 @@ describe('The inboxConfigurationNewFilterController', function() {
 
   describe('hideMoreResults', function() {
     it('should return true when the filter contains one email', function() {
-      var controller = $controller('inboxConfigurationNewFilterController');
+      var controller = $controller('inboxConfigurationFilterDefinitionController');
 
       controller.newFilter.from = undefined;
       expect(controller.hideMoreResults()).to.be.false;
@@ -219,7 +219,7 @@ describe('The inboxConfigurationNewFilterController', function() {
 
       var controller = initController();
 
-      controller.$onInit(); // Initialize the models
+      controller.$onInit();
 
       controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
       controller.initEditForm().then(function() {
@@ -258,7 +258,7 @@ describe('The inboxConfigurationNewFilterController', function() {
 
         var controller = initController();
 
-        controller.$onInit(); // Initialize the models
+        controller.$onInit();
 
         controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
         controller.initEditForm().then(function() {
@@ -301,7 +301,7 @@ describe('The inboxConfigurationNewFilterController', function() {
 
         var controller = initController();
 
-        controller.$onInit(); // Initialize the models
+        controller.$onInit();
 
         controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
         controller.initEditForm().then(function() {

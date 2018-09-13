@@ -1,7 +1,7 @@
 sub-header
-  inbox-new-filter-subheader(on-save='$ctrl.saveFilter()')
+  inbox-filter-definition-subheader(on-save='$ctrl.saveFilter()')
 
-.inbox-configuration-new-filter
+.inbox-configuration-filter-definition
   form(name="form", esn-submit="$ctrl.saveFilter()")
     esn-form-group(label=__('Filter name'))
       input.form-control(required, auto-focus, ng-model="$ctrl.newFilter.name", name="filter name")
@@ -23,5 +23,5 @@ sub-header
           ng-options="action as action.val for action in $ctrl.actionOptions")
       .select
         select.form-control(
-          ng-options="mailbox as mailbox.name for mailbox in $ctrl.mailboxes track by mailbox.id"
+          ng-options="mailbox as mailbox.qualifiedName for mailbox in $ctrl.mailboxes track by mailbox.id"
           ng-model='$ctrl.newFilter.moveTo')
