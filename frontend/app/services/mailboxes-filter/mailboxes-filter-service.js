@@ -26,6 +26,7 @@
         getFilters: getFilters,
         setFilters: setFilters,
         addFilter: addFilter,
+        editFilter: editFilter,
         getFilterSummary: getFilterSummary,
         filters: self.filters,
         filtersIds: self.filtersIds
@@ -49,24 +50,25 @@
        *                ```
        */
       function addFilter(type, name, conditionValue, actionDefinition) {
-        var filter;
+        var filter = _filterOf(type, name, conditionValue, actionDefinition);
 
-        switch (type) {
-          case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.from
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
-            break;
-        }
-
-        switch (actionDefinition.action) {
-          case JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY:
-            filter.then.moveTo.mailboxId(String(actionDefinition.mailboxId));
-            break;
-        }
-
-        filter = filter.toJSONObject();
         self.filters.push(filter);
         self.filtersIds[filter.id] = filter;
+      }
+
+      function editFilter(id, type, name, conditionValue, actionDefinition) {
+        var idx = _.findIndex(self.filters, {id: id});
+
+        if (idx < 0) {
+          return false;
+        }
+
+        var filter = _filterOf(type, name, conditionValue, actionDefinition);
+
+        self.filters[idx] = filter;
+        self.filtersIds[filter.id] = filter;
+
+        return true;
       }
 
       function getFilters() {
@@ -131,6 +133,25 @@
         }
 
         return message;
+      }
+
+      function _filterOf(type, name, conditionValue, actionDefinition) {
+        var filter;
+
+        switch (type) {
+          case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
+            filter = new jmap.FilterRule(null, name).when.from
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            break;
+        }
+
+        switch (actionDefinition.action) {
+          case JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY:
+            filter.then.moveTo.mailboxId(String(actionDefinition.mailboxId));
+            break;
+        }
+
+        return filter.toJSONObject();
       }
     });
 

@@ -1,4 +1,4 @@
-.clickable.inbox-identity.card.flex-colum
+.clickable.inbox-identity.card.flex-colum(ui-sref='unifiedinbox.configuration.filters.edit({id: $ctrl.filter.id})')
   .inbox-identity-header.flex-vertical-centered
     .inbox-identity-description.ellipsis {{ $ctrl.filter.name }}
   .inbox-identity-body(ng-bind-html="$ctrl.getFilterSummary()")
