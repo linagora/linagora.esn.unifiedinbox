@@ -1,4 +1,8 @@
 .clickable.inbox-identity.card.flex-colum(ui-sref='unifiedinbox.configuration.filters.edit({id: $ctrl.filter.id})')
   .inbox-identity-header.flex-vertical-centered
     .inbox-identity-description.ellipsis {{ $ctrl.filter.name }}
-  .inbox-identity-body(ng-bind-html="$ctrl.getFilterSummary()")
+  .flex-space-between
+    .left-container.flex-vertical-centered.inbox-identity-body(ng-bind-html="$ctrl.getFilterSummary()")
+    .right-container.flex-vertical-centered.esn-flex-noshrink
+      button.btn.btn-link.btn-icon(ng-click="$event.preventDefault(); $event.stopPropagation(); $ctrl.deleteFilter();")
+        i.mdi.mdi-delete

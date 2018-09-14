@@ -165,7 +165,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
       });
     });
 
-    it('should set the filter and then redirect', function(done) {
+    it('should set the filter and then redirect', function() {
       sinon.spy($state, 'go');
       inboxMailboxesFilterService.setFilters = sinon.stub().returns($q.when());
 
@@ -179,13 +179,9 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
         moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
       };
 
-      controller.saveFilter().then(function() {
-        expect(inboxMailboxesFilterService.setFilters).to.have.been.called;
-        expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
-
-        done();
-      });
-      $rootScope.$digest();
+      controller.saveFilter();
+      expect(inboxMailboxesFilterService.setFilters).to.have.been.called;
+      expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
     });
   });
 
@@ -285,6 +281,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
         inboxMailboxesService.assignMailboxesList = function(object) {
           object.mailboxes = mailboxes;
+
           return $q.when();
         };
 
@@ -305,7 +302,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
         controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
         controller.initEditForm().then(function() {
-          console.error(JSON.stringify(controller.newFilter));
           expect(controller.newFilter).to.deep.eql({
             name: 'My filter',
             when: {key: 'condition2', val: 'conditionMessage2'},

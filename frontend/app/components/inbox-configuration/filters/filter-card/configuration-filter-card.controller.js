@@ -13,10 +13,11 @@
     /////
 
     function deleteFilter() {
+      inboxMailboxesFilterService.deleteFilter(self.filter.id);
     }
 
     function getFilterSummary() {
-      return inboxMailboxesFilterService.getFilterSummary(self.filter.id);
+      return inboxMailboxesFilterService.getFilterSummary(self.filter);
     }
   }
 })(angular);

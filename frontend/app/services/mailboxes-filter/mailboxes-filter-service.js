@@ -5,6 +5,7 @@
     .factory('inboxMailboxesFilterService', function(
       $q,
       $sanitize,
+      $rootScope,
       _,
       esnI18nService,
       inboxMailboxesService,
@@ -23,13 +24,18 @@
       getFilters();
 
       return {
-        getFilters: getFilters,
-        setFilters: setFilters,
         addFilter: addFilter,
+        deleteFilter: deleteFilter,
         editFilter: editFilter,
         getFilterSummary: getFilterSummary,
-        filters: self.filters,
-        filtersIds: self.filtersIds
+        getFilters: getFilters,
+        setFilters: setFilters,
+        get filters() {
+          return self.filters;
+        },
+        get filtersIds() {
+          return self.filtersIds;
+        }
       };
 
       /////
@@ -54,6 +60,8 @@
 
         self.filters.push(filter);
         self.filtersIds[filter.id] = filter;
+
+        _notifyChanged();
       }
 
       function editFilter(id, type, name, conditionValue, actionDefinition) {
@@ -68,7 +76,35 @@
         self.filters[idx] = filter;
         self.filtersIds[filter.id] = filter;
 
+        _notifyChanged();
+
         return true;
+      }
+
+      function deleteFilter(filterId) {
+        var newFilters = _.filter(self.filters, function(item) {
+          return String(item.id) !== String(filterId);
+        });
+
+        if (newFilters.length === self.filters.length) {
+          return false;
+        }
+
+        _setFiltersOnServer(newFilters).then(function() {
+          self.filters = newFilters;
+          delete self.filtersIds[filterId];
+          _notifyChanged();
+        }).catch(function() {
+          // Handle error ?
+        });
+
+        return true;
+      }
+
+      function getFilterSummary(filter) {
+        return esnI18nService.translate('When %s then %s',
+          _getJMapConditionText(filter),
+          _getJMapActionText(filter)).toString();
       }
 
       function getFilters() {
@@ -86,17 +122,13 @@
       }
 
       function setFilters() {
-        return asyncJmapAction({success: 'Filters set', failure: 'Error setting filters'}, function(client) {
-          return client.setFilter(self.filters);
+        return _setFiltersOnServer(self.filters).then(function() {
+          _notifyChanged();
         });
       }
 
-      function getFilterSummary(id) {
-        var filter = self.filtersIds[id];
-
-        return esnI18nService.translate('When %s then %s',
-          _getJMapConditionText(filter),
-          _getJMapActionText(filter)).toString();
+      function _notifyChanged() {
+        $rootScope.$broadcast('filters-list-changed');
       }
 
       function _getJMapConditionText(filter) {
@@ -106,7 +138,8 @@
 
         switch (filter.condition.field) {
           case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            var text = '<b>' + $sanitize(filter.condition.value) + '</b>';
+            // &shy; is a soft hyphen (and invisible char), it forces the browser to respect the preceding space
+            var text = '&shy;<b>' + $sanitize(filter.condition.value) + '</b>';
 
             message = esnI18nService.translate(message, text).toString();
             break;
@@ -126,13 +159,20 @@
             var mailbox = _.find(self.mailboxes, {id: filter.action.appendIn.mailboxIds[0]});
 
             if (mailbox) {
-              text = '<b>' + $sanitize(mailbox.name) + '</b>';
+              // &shy; is a soft hyphen (and invisible char), it forces the browser to respect the preceding space
+              text = '&shy;<b>' + $sanitize(mailbox.qualifiedName) + '</b>';
             }
             message = esnI18nService.translate(message, text).toString();
             break;
         }
 
         return message;
+      }
+
+      function _setFiltersOnServer(filters) {
+        return asyncJmapAction({success: 'Filters set', failure: 'Error setting filters'}, function(client) {
+          return client.setFilter(filters);
+        });
       }
 
       function _filterOf(type, name, conditionValue, actionDefinition) {
