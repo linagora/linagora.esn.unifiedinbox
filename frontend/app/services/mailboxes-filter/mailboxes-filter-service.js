@@ -102,9 +102,10 @@
       }
 
       function getFilterSummary(filter) {
-        return esnI18nService.translate('When %s then %s',
-          _getJMapConditionText(filter),
-          _getJMapActionText(filter)).toString();
+        return esnI18nService.translate('If a message').toString() + ' ' +
+          _getJMapConditionText(filter) + ' ' +
+          esnI18nService.translate('then').toString() + ' ' +
+          _getJMapActionText(filter);
       }
 
       function getFilters() {
@@ -149,7 +150,8 @@
           case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
             // &#65279; is a zero width non-breaking space (and invisible char),
             // it forces the browser to respect the preceding space
-            text = '&#65279;<b>"' + $sanitize(filter.condition.value) + '"</b>&#65279;';
+            text = esnI18nService.translate('"%s"', $sanitize(filter.condition.value)).toString();
+            text = '&#65279;<b>' + text + '</b>&#65279;';
 
             return esnI18nService.translate(message, text).toString();
         }

@@ -269,7 +269,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('When email is from &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message is from &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
 
@@ -285,7 +285,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('When email is intended for &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message is addressed to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
 
@@ -301,7 +301,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('When &#65279;<b>admin@open-paas.org</b>&#65279; is an hidden recipient of the email then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message is cc\'d to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
 
@@ -317,7 +317,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('When &#65279;<b>admin@open-paas.org</b>&#65279; is a recipient or an hidden recipient of the email then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message is addressed or cc\'d to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
 
@@ -333,7 +333,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('When email has subject &#65279;<b>"admin@open-paas.org"</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message has subject &#65279;<b>"admin@open-paas.org"</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
   });

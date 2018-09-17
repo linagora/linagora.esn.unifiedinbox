@@ -6,23 +6,23 @@
       CONDITIONS: {
         FROM: {
           JMAP_KEY: 'from',
-          HUMAN_REPRESENTATION: 'email is from %s'
+          HUMAN_REPRESENTATION: 'is from %s'
         },
         TO: {
           JMAP_KEY: 'to',
-          HUMAN_REPRESENTATION: 'email is intended for %s'
+          HUMAN_REPRESENTATION: 'is addressed to %s'
         },
         CC: {
           JMAP_KEY: 'cc',
-          HUMAN_REPRESENTATION: '%s is an hidden recipient of the email'
+          HUMAN_REPRESENTATION: 'is cc\'d to %s'
         },
         RECIPIENT: {
           JMAP_KEY: 'recipient',
-          HUMAN_REPRESENTATION: '%s is a recipient or an hidden recipient of the email'
+          HUMAN_REPRESENTATION: 'is addressed or cc\'d to %s'
         },
         SUBJECT: {
           JMAP_KEY: 'subject',
-          HUMAN_REPRESENTATION: 'email has subject %s'
+          HUMAN_REPRESENTATION: 'has subject %s'
         }
       },
       CONDITIONS_MAPPING: {

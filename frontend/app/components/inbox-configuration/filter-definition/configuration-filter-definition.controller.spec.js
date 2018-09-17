@@ -85,11 +85,11 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
       controller.$onInit();
 
       expect(controller.conditionsOptions).to.deep.eql([
-        {key: 'from', val: 'email is from '},
-        {key: 'to', val: 'email is intended for '},
-        {key: 'cc', val: ' is an hidden recipient of the email'},
-        {key: 'recipient', val: ' is a recipient or an hidden recipient of the email'},
-        {key: 'subject', val: 'email has subject '},
+        {key: 'from', val: 'is from '},
+        {key: 'to', val: 'is addressed to '},
+        {key: 'cc', val: 'is cc\'d to '},
+        {key: 'recipient', val: 'is addressed or cc\'d to '},
+        {key: 'subject', val: 'has subject '},
         {key: 'condition2', val: 'conditionMessage2'},
         {key: 'condition3', val: 'conditionMessage3'}
       ]);
@@ -356,48 +356,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
         controller.initEditForm().then(function() {
           expect(controller.newFilter).to.deep.eql({
             name: 'My filter',
-            when: {key: JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, val: 'email is from '},
-            then: {key: 'action2', val: 'actionMessage2'},
-            stakeholders: [{
-              email: 'open-paas.org',
-              name: 'admin admin'
-            }]
-          });
-
-          done();
-        });
-
-        $rootScope.$digest();
-      });
-      it('should initilize the model when condition is JMAP_FILTER.CONDITIONS.CC.JMAP_KEY', function(done) {
-        userAPI.getUsersByEmail.withArgs('open-paas.org').returns($q.when({
-          data: [{
-            preferredEmail: 'open-paas.org',
-            firstname: 'admin',
-            lastname: 'admin'
-          }]
-        }));
-        inboxMailboxesFilterService.getFilters = sinon.stub().returns($q.when());
-        inboxMailboxesFilterService.filtersIds = {
-          '3ec75e00-414e-4c7d-8a16-1c4fea55131a': {
-            name: 'My filter',
-            condition: {
-              field: JMAP_FILTER.CONDITIONS.CC.JMAP_KEY,
-              value: 'open-paas.org'
-            },
-            action: {action2: {}}
-          }
-        };
-
-        var controller = initController();
-
-        controller.$onInit();
-
-        controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
-        controller.initEditForm().then(function() {
-          expect(controller.newFilter).to.deep.eql({
-            name: 'My filter',
-            when: {key: JMAP_FILTER.CONDITIONS.CC.JMAP_KEY, val: ' is an hidden recipient of the email'},
+            when: {key: JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, val: 'is from '},
             then: {key: 'action2', val: 'actionMessage2'},
             stakeholders: [{
               email: 'open-paas.org',
@@ -438,7 +397,48 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
         controller.initEditForm().then(function() {
           expect(controller.newFilter).to.deep.eql({
             name: 'My filter',
-            when: {key: JMAP_FILTER.CONDITIONS.TO.JMAP_KEY, val: 'email is intended for '},
+            when: {key: JMAP_FILTER.CONDITIONS.TO.JMAP_KEY, val: 'is addressed to '},
+            then: {key: 'action2', val: 'actionMessage2'},
+            stakeholders: [{
+              email: 'open-paas.org',
+              name: 'admin admin'
+            }]
+          });
+
+          done();
+        });
+
+        $rootScope.$digest();
+      });
+      it('should initilize the model when condition is JMAP_FILTER.CONDITIONS.CC.JMAP_KEY', function(done) {
+        userAPI.getUsersByEmail.withArgs('open-paas.org').returns($q.when({
+          data: [{
+            preferredEmail: 'open-paas.org',
+            firstname: 'admin',
+            lastname: 'admin'
+          }]
+        }));
+        inboxMailboxesFilterService.getFilters = sinon.stub().returns($q.when());
+        inboxMailboxesFilterService.filtersIds = {
+          '3ec75e00-414e-4c7d-8a16-1c4fea55131a': {
+            name: 'My filter',
+            condition: {
+              field: JMAP_FILTER.CONDITIONS.CC.JMAP_KEY,
+              value: 'open-paas.org'
+            },
+            action: {action2: {}}
+          }
+        };
+
+        var controller = initController();
+
+        controller.$onInit();
+
+        controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
+        controller.initEditForm().then(function() {
+          expect(controller.newFilter).to.deep.eql({
+            name: 'My filter',
+            when: {key: JMAP_FILTER.CONDITIONS.CC.JMAP_KEY, val: 'is cc\'d to '},
             then: {key: 'action2', val: 'actionMessage2'},
             stakeholders: [{
               email: 'open-paas.org',
@@ -478,7 +478,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             name: 'My filter',
             when: {
               key: JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY,
-              val: ' is a recipient or an hidden recipient of the email'
+              val: 'is addressed or cc\'d to '
             },
             then: {key: 'action2', val: 'actionMessage2'},
             stakeholders: [{
@@ -522,7 +522,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             name: 'My filter',
             when: {
               key: JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY,
-              val: 'email has subject '
+              val: 'has subject '
             },
             then: {key: 'action2', val: 'actionMessage2'},
             subject: 'email subject'
