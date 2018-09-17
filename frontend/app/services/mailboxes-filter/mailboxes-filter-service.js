@@ -132,17 +132,26 @@
       }
 
       function _getJMapConditionText(filter) {
-        var message = JMAP_FILTER.CONDITIONS[
-          JMAP_FILTER.CONDITIONS_MAPPING[filter.condition.field]]
+        var text, message = JMAP_FILTER
+          .CONDITIONS[JMAP_FILTER.CONDITIONS_MAPPING[filter.condition.field]]
           .HUMAN_REPRESENTATION;
 
         switch (filter.condition.field) {
           case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            // &shy; is a soft hyphen (and invisible char), it forces the browser to respect the preceding space
-            var text = '&shy;<b>' + $sanitize(filter.condition.value) + '</b>';
+          case JMAP_FILTER.CONDITIONS.TO.JMAP_KEY:
+          case JMAP_FILTER.CONDITIONS.CC.JMAP_KEY:
+          case JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY:
+            // &#65279; is a zero width non-breaking space (and invisible char),
+            // it forces the browser to respect the preceding space
+            text = '&#65279;<b>' + $sanitize(filter.condition.value) + '</b>&#65279;';
 
-            message = esnI18nService.translate(message, text).toString();
-            break;
+            return esnI18nService.translate(message, text).toString();
+          case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
+            // &#65279; is a zero width non-breaking space (and invisible char),
+            // it forces the browser to respect the preceding space
+            text = '&#65279;<b>"' + $sanitize(filter.condition.value) + '"</b>&#65279;';
+
+            return esnI18nService.translate(message, text).toString();
         }
 
         return message;
@@ -159,8 +168,9 @@
             var mailbox = _.find(self.mailboxes, {id: filter.action.appendIn.mailboxIds[0]});
 
             if (mailbox) {
-              // &shy; is a soft hyphen (and invisible char), it forces the browser to respect the preceding space
-              text = '&shy;<b>' + $sanitize(mailbox.qualifiedName) + '</b>';
+              // &#65279; is a zero width non-breaking space (and invisible char)
+              // it forces the browser to respect the preceding space
+              text = '&#65279;<b>' + $sanitize(mailbox.qualifiedName) + '</b>&#65279;';
             }
             message = esnI18nService.translate(message, text).toString();
             break;
@@ -183,6 +193,21 @@
             filter = new jmap.FilterRule(null, name).when.from
               .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
             break;
+          case JMAP_FILTER.CONDITIONS.TO.JMAP_KEY:
+            filter = new jmap.FilterRule(null, name).when.to
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            break;
+          case JMAP_FILTER.CONDITIONS.CC.JMAP_KEY:
+            filter = new jmap.FilterRule(null, name).when.cc
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            break;
+          case JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY:
+            filter = new jmap.FilterRule(null, name).when.recipient
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            break;
+          case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
+            filter = new jmap.FilterRule(null, name).when.subject
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
         }
 
         switch (actionDefinition.action) {

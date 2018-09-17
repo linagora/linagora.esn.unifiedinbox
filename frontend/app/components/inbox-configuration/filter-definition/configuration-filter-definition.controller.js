@@ -36,11 +36,14 @@
 
     self.$onInit = $onInit;
     self.hideMoreResults = hideMoreResults;
+    self.hideRecipientsAutoComplete = hideRecipientsAutoComplete;
     self.initEditForm = initEditForm;
     self.saveFilter = saveFilter;
 
-    self._initFromField = _initFromField;
+    self._initStakeholdersField = _initStakeholdersField;
     self._initMoveToField = _initMoveToField;
+
+    self.JMAP_FILTER = JMAP_FILTER;
 
     /////
 
@@ -58,7 +61,14 @@
     }
 
     function hideMoreResults() {
-      return _.has(self.newFilter, 'from') && !_.isEmpty(self.newFilter.from);
+      return _.has(self.newFilter, 'stakeholders') && !_.isEmpty(self.newFilter.stakeholders);
+    }
+
+    function hideRecipientsAutoComplete() {
+      return (self.newFilter.when.key !== JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY) &&
+        (self.newFilter.when.key !== JMAP_FILTER.CONDITIONS.TO.JMAP_KEY) &&
+        (self.newFilter.when.key !== JMAP_FILTER.CONDITIONS.CC.JMAP_KEY) &&
+        (self.newFilter.when.key !== JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY);
     }
 
     function initEditForm() {
@@ -79,8 +89,13 @@
 
         switch (filter.condition.field) {
           case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            _initFromField(filter);
+          case JMAP_FILTER.CONDITIONS.TO.JMAP_KEY:
+          case JMAP_FILTER.CONDITIONS.CC.JMAP_KEY:
+          case JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY:
+            _initStakeholdersField(filter);
             break;
+          case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
+            self.newFilter.subject = filter.condition.value;
         }
 
         switch (filterAction) {
@@ -96,10 +111,24 @@
         _.partial(inboxMailboxesFilterService.editFilter, self.editFilterId) :
         inboxMailboxesFilterService.addFilter;
 
+      var conditionValue;
+
+      switch (self.newFilter.when.key) {
+        case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
+        case JMAP_FILTER.CONDITIONS.TO.JMAP_KEY:
+        case JMAP_FILTER.CONDITIONS.CC.JMAP_KEY:
+        case JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY:
+          conditionValue = self.newFilter.stakeholders[0].email;
+          break;
+        case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
+          conditionValue = self.newFilter.subject;
+          break;
+      }
+
       fn(
         self.newFilter.when.key,
         self.newFilter.name,
-        self.newFilter.from[0].email,
+        conditionValue,
         {action: self.newFilter.then.key, mailboxId: self.newFilter.moveTo.id}
       );
 
@@ -130,18 +159,27 @@
       return _.find(self.actionOptions, {key: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY});
     }
 
-    function _initFromField(filter) {
-      userAPI.getUsersByEmail(filter.condition.value).then(function(response) {
+    function _initStakeholdersField(filter) {
+      return userAPI.getUsersByEmail(filter.condition.value).then(function(response) {
         if (response.data && response.data[0]) {
           var email = _getOrDefault(response.data[0], 'preferredEmail', filter.condition.value);
           var name = _getOrDefault(response.data[0], 'firstname', filter.condition.value) +
             ' ' + _getOrDefault(response.data[0], 'lastname', '');
 
-          self.newFilter.from = [{
+          self.newFilter.stakeholders = [{
             email: email,
             name: name
           }];
+
+          return self.newFilter.stakeholders;
         }
+      }).catch(function() {
+        self.newFilter.stakeholders = [{
+          email: filter.condition.value,
+          name: filter.condition.value
+        }];
+
+        return self.newFilter.stakeholders;
       });
     }
 
