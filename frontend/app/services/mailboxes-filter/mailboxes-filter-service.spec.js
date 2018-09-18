@@ -65,7 +65,7 @@ describe('The inboxMailboxesFilterService factory', function() {
   }
 
   describe('addFilter', function() {
-    it('should add a new filter', function() {
+    it('should add a new filter', function(done) {
       inboxMailboxesFilterService.addFilter(
         JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
           action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
@@ -87,11 +87,74 @@ describe('The inboxMailboxesFilterService factory', function() {
         }
       };
 
+      $rootScope.$on('filters-list-changed', function() {
+        expect(inboxMailboxesFilterService.filters.length).to.equal(1);
+        expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
+        expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
+        expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
+          .to.deep.eql(expected);
+
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+  });
+
+  describe('editFilter', function() {
+    beforeEach(function() {
+      inboxMailboxesFilterService.addFilter(
+        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+        });
+
+      $rootScope.$digest();
+    });
+
+    it('should edit an existing filter', function(done) {
+      var expected = {
+        id: '1',
+        name: 'My filter',
+        condition: {
+          field: 'from',
+          comparator: 'exactly-equals',
+          value: 'admin@open-paas.org'
+        },
+        action: {
+          appendIn: {
+            mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']
+          }
+        }
+      };
+
       expect(inboxMailboxesFilterService.filters.length).to.equal(1);
       expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
       expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
       expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
         .to.deep.eql(expected);
+
+      inboxMailboxesFilterService.editFilter('1',
+        JMAP_FILTER.CONDITIONS.CC.JMAP_KEY, 'My filter 2', 'test@test.test', {
+          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+        });
+
+      expected.name = 'My filter 2';
+      expected.condition.field = 'cc';
+      expected.condition.value = 'test@test.test';
+
+      $rootScope.$on('filters-list-changed', function() {
+        expect(inboxMailboxesFilterService.filters.length).to.equal(1);
+        expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
+        expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
+        expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
+          .to.deep.eql(expected);
+
+        done();
+      });
+
+      $rootScope.$digest();
     });
   });
 
@@ -110,6 +173,8 @@ describe('The inboxMailboxesFilterService factory', function() {
           action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
           mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
         });
+
+      $rootScope.$digest();
     });
 
     it('should should retrun false when trying to delete an inexistant filter', function() {
@@ -193,69 +258,6 @@ describe('The inboxMailboxesFilterService factory', function() {
     });
   });
 
-  describe('setFilters', function() {
-    it('should query the backend', function() {
-      inboxMailboxesFilterService.addFilter(
-        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter 1', 'admin@open-paas.org', {
-          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
-          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
-        });
-
-      inboxMailboxesFilterService.addFilter(
-        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter 2', 'admin@open-paas.org', {
-          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
-          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
-        });
-
-      var filter1 = {
-        id: inboxMailboxesFilterService.filters[0].id,
-        name: 'My filter 1',
-        condition: {
-          field: 'from',
-          comparator: 'exactly-equals',
-          value: 'admin@open-paas.org'
-        },
-        action: {
-          appendIn: {
-            mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']
-          }
-        }
-      };
-
-      var filter2 = {
-        id: inboxMailboxesFilterService.filters[1].id,
-        name: 'My filter 2',
-        condition: {
-          field: 'from',
-          comparator: 'exactly-equals',
-          value: 'admin@open-paas.org'
-        },
-        action: {
-          appendIn: {
-            mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']
-          }
-        }
-      };
-
-      inboxMailboxesFilterService.setFilters();
-
-      expect(asyncJmapAction).to.have.been.calledWith({success: 'Filters set', failure: 'Error setting filters'});
-      expect(jmapClient.setFilter).to.have.been.calledWith([filter1, filter2]);
-    });
-
-    it('should notify as soon as backend as responded', function(done) {
-      var spy = sinon.spy();
-
-      $rootScope.$on('filters-list-changed', spy);
-      inboxMailboxesFilterService.setFilters().then(function() {
-        expect(spy).to.have.been.called;
-        done();
-      });
-
-      $rootScope.$digest();
-    });
-  });
-
   describe('getFilterSummary', function() {
     context('when condition is JMAP_FILTER.CONDITIONS.FROM', function() {
       it('should correctly translate the filter', function() {
@@ -264,6 +266,8 @@ describe('The inboxMailboxesFilterService factory', function() {
             action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
             mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
           });
+
+        $rootScope.$digest();
 
         var filter = inboxMailboxesFilterService.filters[0];
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
@@ -281,6 +285,8 @@ describe('The inboxMailboxesFilterService factory', function() {
             mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
           });
 
+        $rootScope.$digest();
+
         var filter = inboxMailboxesFilterService.filters[0];
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
@@ -296,6 +302,8 @@ describe('The inboxMailboxesFilterService factory', function() {
             action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
             mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
           });
+
+        $rootScope.$digest();
 
         var filter = inboxMailboxesFilterService.filters[0];
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
@@ -313,6 +321,8 @@ describe('The inboxMailboxesFilterService factory', function() {
             mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
           });
 
+        $rootScope.$digest();
+
         var filter = inboxMailboxesFilterService.filters[0];
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
@@ -328,6 +338,8 @@ describe('The inboxMailboxesFilterService factory', function() {
             action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
             mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
           });
+
+        $rootScope.$digest();
 
         var filter = inboxMailboxesFilterService.filters[0];
         var target = inboxMailboxesFilterService.getFilterSummary(filter);

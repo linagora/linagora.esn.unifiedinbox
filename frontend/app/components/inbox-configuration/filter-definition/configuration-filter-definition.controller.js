@@ -132,7 +132,6 @@
         {action: self.newFilter.then.key, mailboxId: self.newFilter.moveTo.id}
       );
 
-      inboxMailboxesFilterService.setFilters();
       $state.go('unifiedinbox.configuration.filters');
     }
 
