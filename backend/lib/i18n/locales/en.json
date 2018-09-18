@@ -259,5 +259,8 @@
   "move to destination folder %s": "move to destination folder %s",
   "Filter name": "Filter name",
   "if a message": "if a message",
-  "then": "then"
+  "then": "then",
+  "Name or email adress..." : "Name or email adress...",
+  "No rule": "No rule",
+  "Did you know you can create rules using the floating action button? Give it a try!": "Did you know you can create rules using the floating action button? Give it a try!"
 }

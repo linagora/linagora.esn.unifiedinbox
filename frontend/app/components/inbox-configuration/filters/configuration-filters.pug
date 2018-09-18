@@ -2,7 +2,15 @@ sub-header
   inbox-filters-subheader
 
 .inbox-configuration-filters
-  | #{__('You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top')}
+  p #{__('You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top')}
   inbox-configuration-filter-card(ng-repeat="filter in $ctrl.filtersList track by filter.id", filter="filter")
+  .inbox-list(ng-if="$ctrl.filtersList.length === 0")
+    .inbox-empty-container-message
+      .message
+        .inbox-empty-icon.mdi.mdi-format-list-bulleted
+        .message #{__('No rule')}
+        .message.inbox-dnd-info-message.all-centered.hidden-xs
+          i.mdi.mdi-lightbulb-outline
+          span #{__('Did you know you can create rules using the floating action button? Give it a try!')}
 
 fab(icon="create" ui-sref="unifiedinbox.configuration.filters.new")

@@ -241,7 +241,8 @@ angular.module('linagora.esn.unifiedinbox')
       restrict: 'E',
       scope: {
         tags: '=ngModel',
-        excludedEmails: '='
+        excludedEmails: '=',
+        addClass: '=?'
       },
       templateUrl: '/unifiedinbox/views/composer/recipients-auto-complete.html',
       link: function(scope, element) {
