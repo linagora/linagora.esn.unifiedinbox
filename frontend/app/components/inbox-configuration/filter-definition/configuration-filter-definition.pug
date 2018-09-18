@@ -6,18 +6,27 @@ sub-header
     esn-form-group(label=__('Filter name'))
       input.form-control(required, auto-focus, ng-model="$ctrl.newFilter.name", name="filter name")
 
-    esn-form-group.nomargin(label=__('if a message'))
+    // When
+    esn-form-group.nomargin(label=__('If a message'))
       .select
         select.form-control(
           ng-model="$ctrl.newFilter.when"
           ng-options="condition as condition.val for condition in $ctrl.conditionsOptions")
-    .form-group
+    // Message is from, to, cc or recipents (cc or to)
+    .form-group(ng-class='{"ng-hide": $ctrl.hideRecipientsAutoComplete()}')
       recipients-auto-complete.fg-line(
-        ng-class='{ "no-more-results": $ctrl.hideMoreResults() }'
-        ng-model="$ctrl.newFilter.from"
+        ng-class='{"no-more-results": $ctrl.hideMoreResults()}'
+        ng-model="$ctrl.newFilter.stakeholders"
         template="recipients-auto-complete"
         add-class="{ 'form-control' : true }")
+    .form-group(ng-class='{"ng-hide":$ctrl.newFilter.when.key !== $ctrl.JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY}')
+      .fg-line
+        input.form-control(
+          type="text"
+          placeholder=__('Subject')
+          ng-model="$ctrl.newFilter.subject")
 
+    // Then
     esn-form-group.nomargin(label=__('then'))
       .select
         select.form-control(

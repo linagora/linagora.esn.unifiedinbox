@@ -257,18 +257,84 @@ describe('The inboxMailboxesFilterService factory', function() {
   });
 
   describe('getFilterSummary', function() {
-    it('should correctly translate the filter', function() {
-      inboxMailboxesFilterService.addFilter(
-        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
-          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
-          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
-        });
+    context('when condition is JMAP_FILTER.CONDITIONS.FROM', function() {
+      it('should correctly translate the filter', function() {
+        inboxMailboxesFilterService.addFilter(
+          JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+            action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+            mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+          });
 
-      var filter = inboxMailboxesFilterService.filters[0];
-      var target = inboxMailboxesFilterService.getFilterSummary(filter);
+        var filter = inboxMailboxesFilterService.filters[0];
+        var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
-      expect(target).to
-        .eql('When email is from &shy;<b>admin@open-paas.org</b> then move to destination folder &shy;<b>INBOX</b>');
+        expect(target).to
+          .eql('If a message is from &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+      });
+    });
+
+    context('when condition is JMAP_FILTER.CONDITIONS.TO', function() {
+      it('should correctly translate the filter', function() {
+        inboxMailboxesFilterService.addFilter(
+          JMAP_FILTER.CONDITIONS.TO.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+            action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+            mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+          });
+
+        var filter = inboxMailboxesFilterService.filters[0];
+        var target = inboxMailboxesFilterService.getFilterSummary(filter);
+
+        expect(target).to
+          .eql('If a message is addressed to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+      });
+    });
+
+    context('when condition is JMAP_FILTER.CONDITIONS.CC', function() {
+      it('should correctly translate the filter', function() {
+        inboxMailboxesFilterService.addFilter(
+          JMAP_FILTER.CONDITIONS.CC.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+            action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+            mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+          });
+
+        var filter = inboxMailboxesFilterService.filters[0];
+        var target = inboxMailboxesFilterService.getFilterSummary(filter);
+
+        expect(target).to
+          .eql('If a message is cc\'d to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+      });
+    });
+
+    context('when condition is JMAP_FILTER.CONDITIONS.RECIPIENT', function() {
+      it('should correctly translate the filter', function() {
+        inboxMailboxesFilterService.addFilter(
+          JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+            action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+            mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+          });
+
+        var filter = inboxMailboxesFilterService.filters[0];
+        var target = inboxMailboxesFilterService.getFilterSummary(filter);
+
+        expect(target).to
+          .eql('If a message is addressed or cc\'d to &#65279;<b>admin@open-paas.org</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+      });
+    });
+
+    context('when condition is JMAP_FILTER.CONDITIONS.SUBJECT', function() {
+      it('should correctly translate the filter', function() {
+        inboxMailboxesFilterService.addFilter(
+          JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+            action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+            mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+          });
+
+        var filter = inboxMailboxesFilterService.filters[0];
+        var target = inboxMailboxesFilterService.getFilterSummary(filter);
+
+        expect(target).to
+          .eql('If a message has subject &#65279;<b>"admin@open-paas.org"</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+      });
     });
   });
 });

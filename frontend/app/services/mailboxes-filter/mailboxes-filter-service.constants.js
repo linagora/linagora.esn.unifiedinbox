@@ -6,11 +6,31 @@
       CONDITIONS: {
         FROM: {
           JMAP_KEY: 'from',
-          HUMAN_REPRESENTATION: 'email is from %s'
+          HUMAN_REPRESENTATION: 'is from %s'
+        },
+        TO: {
+          JMAP_KEY: 'to',
+          HUMAN_REPRESENTATION: 'is addressed to %s'
+        },
+        CC: {
+          JMAP_KEY: 'cc',
+          HUMAN_REPRESENTATION: 'is cc\'d to %s'
+        },
+        RECIPIENT: {
+          JMAP_KEY: 'recipient',
+          HUMAN_REPRESENTATION: 'is addressed or cc\'d to %s'
+        },
+        SUBJECT: {
+          JMAP_KEY: 'subject',
+          HUMAN_REPRESENTATION: 'has subject %s'
         }
       },
       CONDITIONS_MAPPING: {
-        from: 'FROM'
+        from: 'FROM',
+        to: 'TO',
+        cc: 'CC',
+        recipient: 'RECIPIENT',
+        subject: 'SUBJECT'
       },
       ACTIONS: {
         MOVE_TO: {
