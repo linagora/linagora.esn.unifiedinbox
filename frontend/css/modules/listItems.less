@@ -8,12 +8,11 @@
 
 .inbox-root {
   .inbox-list {
-    .transition(@transition-sidebar);
 
     .inbox-empty-container-message {
       .all-centered;
 
-      height: 70vh;
+      height: 67vh;
       color: @secondaryTextColor;
       font-size: 1.4em;
       text-align: center;
@@ -52,6 +51,10 @@
 
     &.offscreen {
       display: none;
+    }
+
+    &.has-sidebar-close {
+      .transition(@transition-sidebar);
     }
 
     &.has-sidebar-open {
