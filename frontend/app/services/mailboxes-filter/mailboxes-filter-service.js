@@ -29,7 +29,6 @@
         editFilter: editFilter,
         getFilterSummary: getFilterSummary,
         getFilters: getFilters,
-        setFilters: setFilters,
         get filters() {
           return self.filters;
         },
@@ -58,10 +57,13 @@
       function addFilter(type, name, conditionValue, actionDefinition) {
         var filter = _filterOf(type, name, conditionValue, actionDefinition);
 
-        self.filters.push(filter);
-        self.filtersIds[filter.id] = filter;
-
-        _notifyChanged();
+        _setFiltersOnServer([].concat(self.filters, [filter])).then(function() {
+          self.filters.push(filter);
+          self.filtersIds[filter.id] = filter;
+          _notifyChanged();
+        }).catch(function() {
+          // handle error?
+        });
       }
 
       function editFilter(id, type, name, conditionValue, actionDefinition) {
@@ -72,11 +74,18 @@
         }
 
         var filter = _filterOf(type, name, conditionValue, actionDefinition);
+        var newFilterList = angular.copy(self.filters);
 
-        self.filters[idx] = filter;
-        self.filtersIds[filter.id] = filter;
+        filter.id = self.filters[idx].id;
+        newFilterList[idx] = filter;
 
-        _notifyChanged();
+        _setFiltersOnServer(newFilterList).then(function() {
+          self.filters[idx] = filter;
+          self.filtersIds[filter.id] = filter;
+          _notifyChanged();
+        }).catch(function() {
+          // handle error?
+        });
 
         return true;
       }
@@ -119,12 +128,6 @@
 
             return self.filters;
           });
-        });
-      }
-
-      function setFilters() {
-        return _setFiltersOnServer(self.filters).then(function() {
-          _notifyChanged();
         });
       }
 

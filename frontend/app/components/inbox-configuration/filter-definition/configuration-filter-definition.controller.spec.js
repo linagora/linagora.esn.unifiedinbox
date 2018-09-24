@@ -20,7 +20,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
       inboxMailboxesFilterService = {
         addFilter: angular.noop,
-        setFilters: angular.noop,
         editFilter: angular.noop
       };
 
@@ -122,7 +121,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
           sinon.spy($state, 'go');
           sinon.spy(inboxMailboxesFilterService, 'addFilter');
-          sinon.stub(inboxMailboxesFilterService, 'setFilters').returns($q.when());
 
           controller.newFilter = {
             name: 'My filter',
@@ -167,7 +165,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
           sinon.spy($state, 'go');
           sinon.spy(inboxMailboxesFilterService, 'addFilter');
-          sinon.stub(inboxMailboxesFilterService, 'setFilters').returns($q.when());
 
           controller.newFilter = {
             name: 'My filter',
@@ -195,7 +192,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
           sinon.spy($state, 'go');
           sinon.spy(inboxMailboxesFilterService, 'editFilter');
-          sinon.stub(inboxMailboxesFilterService, 'setFilters').returns($q.when());
 
           controller.newFilter = {
             name: 'My filter',
@@ -242,7 +238,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
 
           sinon.spy($state, 'go');
           sinon.spy(inboxMailboxesFilterService, 'editFilter');
-          sinon.stub(inboxMailboxesFilterService, 'setFilters').returns($q.when());
 
           controller.newFilter = {
             name: 'My filter',
@@ -261,9 +256,8 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
       });
     });
 
-    it('should set the filter and then redirect', function() {
+    it('should redirect', function() {
       sinon.spy($state, 'go');
-      inboxMailboxesFilterService.setFilters = sinon.stub().returns($q.when());
 
       var controller = initController();
 
@@ -276,7 +270,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
       };
 
       controller.saveFilter();
-      expect(inboxMailboxesFilterService.setFilters).to.have.been.called;
       expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
     });
   });
