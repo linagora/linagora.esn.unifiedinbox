@@ -149,7 +149,11 @@ const angularAppFiles = [
   'components/inbox-configuration/filter-definition/configuration-filter-definition.controller.js',
   'components/inbox-configuration/filter-definition/configuration-filter-definition.component.js',
   'services/mailboxes-filter/mailboxes-filter-service.js',
-  'services/mailboxes-filter/mailboxes-filter-service.constants.js'
+  'services/mailboxes-filter/mailboxes-filter-service.constants.js',
+  'components/sidebar/unifiedinbox-button/unifiedinbox-button.component.js',
+  'components/sidebar/social-networks/social-networks.controller.js',
+  'components/sidebar/social-networks/social-networks.component.js',
+  'components/sidebar/social-networks-settings/social-networks-settings.component.js'
 ];
 
 const angularJsFiles = [
