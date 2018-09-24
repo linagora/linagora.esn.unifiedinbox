@@ -17,7 +17,7 @@
     }
 
     function hasSidebarSocialNetworksGotInjections() {
-      return dynamicDirectiveService.getInjections('inbox-sidebar', {}).length > 0;
+      return dynamicDirectiveService.getInjections('inbox-sidebar-social-networks-item', {}).length > 0;
     }
   }
 })(angular);
