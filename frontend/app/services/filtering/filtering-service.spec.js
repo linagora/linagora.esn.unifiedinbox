@@ -62,13 +62,13 @@ describe('The inboxFilteringService service', function() {
     });
 
     it('should return true if 1 filter is checked', function() {
-      checkFilter('isSocial');
+      checkFilter('isFlagged');
 
       expect(service.isFilteringActive()).to.equal(true);
     });
 
     it('should return true if more than 1 filter is checked', function() {
-      checkFilter('isSocial');
+      checkFilter('isFlagged');
       checkFilter('isUnread');
 
       expect(service.isFilteringActive()).to.equal(true);
@@ -108,9 +108,9 @@ describe('The inboxFilteringService service', function() {
     });
 
     it('should return matching filters only if a type is selected', function() {
-      service.setProviderFilters({ types: ['social'] });
+      service.setProviderFilters({ types: ['jmap'] });
 
-      expect(service.getAvailableFilters()).to.deep.equal(_.filter(filters, { type: 'social' }));
+      expect(service.getAvailableFilters()).to.deep.equal(_.filter(filters, { type: 'jmap' }));
     });
 
     it('should uncheck non-matching filters', function() {
@@ -132,8 +132,7 @@ describe('The inboxFilteringService service', function() {
         acceptedTypes: null,
         acceptedAccounts: undefined,
         filterByType: {
-          jmap: {},
-          social: {}
+          jmap: {}
         },
         context: undefined,
         quickFilter: null
@@ -152,8 +151,7 @@ describe('The inboxFilteringService service', function() {
         acceptedTypes: ['jmap'],
         acceptedAccounts: ['accountId'],
         filterByType: {
-          jmap: {},
-          social: {}
+          jmap: {}
         },
         context: 'mailboxId',
         quickFilter: null
@@ -167,7 +165,7 @@ describe('The inboxFilteringService service', function() {
         context: 'mailboxId'
       });
       _.find(filters, { id: 'isUnread' }).checked = true;
-      _.find(filters, { id: 'isSocial' }).checked = true;
+      _.find(filters, { id: 'isFlagged' }).checked = true;
 
       expect(service.getAllProviderFilters()).to.deep.equal({
         acceptedIds: null,
@@ -175,10 +173,8 @@ describe('The inboxFilteringService service', function() {
         acceptedAccounts: ['accountId'],
         filterByType: {
           jmap: {
-            isUnread: true
-          },
-          social: {
-            isSocial: true
+            isUnread: true,
+            isFlagged: true
           }
         },
         context: 'mailboxId',

@@ -22,12 +22,6 @@
           displayName: 'With attachments',
           type: PROVIDER_TYPES.JMAP,
           isGlobal: true
-        },
-        {
-          id: 'isSocial',
-          displayName: 'Social',
-          type: PROVIDER_TYPES.SOCIAL,
-          isGlobal: true
         }
       ];
 
