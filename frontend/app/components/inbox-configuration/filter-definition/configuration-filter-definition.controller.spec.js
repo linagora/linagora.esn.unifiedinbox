@@ -594,6 +594,23 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
       $rootScope.$digest();
     });
 
+    it('should fill self.newFilter.stakeholders when API user returns no response', function(done) {
+      var target = initController();
+
+      userAPI.getUsersByEmail = sinon.stub().returns($q.when({}));
+
+      target._initStakeholdersField({condition: {value: 'admin@open-paas.org'}}).then(function() {
+        expect(target.newFilter.stakeholders).to.deep.eql([{
+          email: 'admin@open-paas.org',
+          name: 'admin@open-paas.org'
+        }]);
+
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
     it('should fill self.newFilter.stakeholders when API user returns an error', function(done) {
       var target = initController();
 
