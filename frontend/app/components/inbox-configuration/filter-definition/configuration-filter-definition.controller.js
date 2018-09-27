@@ -160,18 +160,25 @@
 
     function _initStakeholdersField(filter) {
       return userAPI.getUsersByEmail(filter.condition.value).then(function(response) {
-        if (response.data && response.data[0]) {
-          var email = _getOrDefault(response.data[0], 'preferredEmail', filter.condition.value);
-          var name = _getOrDefault(response.data[0], 'firstname', filter.condition.value) +
-            ' ' + _getOrDefault(response.data[0], 'lastname', '');
-
+        if (!response.data || !response.data[0]) {
           self.newFilter.stakeholders = [{
-            email: email,
-            name: name
+            email: filter.condition.value,
+            name: filter.condition.value
           }];
 
           return self.newFilter.stakeholders;
         }
+
+        var email = _getOrDefault(response.data[0], 'preferredEmail', filter.condition.value);
+        var name = _getOrDefault(response.data[0], 'firstname', filter.condition.value) +
+          ' ' + _getOrDefault(response.data[0], 'lastname', '');
+
+        self.newFilter.stakeholders = [{
+          email: email,
+          name: name
+        }];
+
+        return self.newFilter.stakeholders;
       }).catch(function() {
         self.newFilter.stakeholders = [{
           email: filter.condition.value,
