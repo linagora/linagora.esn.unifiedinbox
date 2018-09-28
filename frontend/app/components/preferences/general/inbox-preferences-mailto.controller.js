@@ -23,7 +23,7 @@
           });
 
         self.parent.registerSaveHandler(function() {
-          esnUserConfigurationService.set([{ name: 'useEmailLinks', value: self.useEmailLinks }], INBOX_MODULE_NAME)
+          return esnUserConfigurationService.set([{ name: 'useEmailLinks', value: self.useEmailLinks }], INBOX_MODULE_NAME)
             .then(function() {
               if (!self.useEmailLinks) {
                 $window.navigator.unregisterProtocolHandler('mailto', mailtoURL);
