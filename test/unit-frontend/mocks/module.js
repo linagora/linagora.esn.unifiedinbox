@@ -20,3 +20,4 @@ angular.module('linagora.esn.james', [])
       getMailInMailRepository: angular.noop
     };
   });
+angular.module('ngCookies', []);
