@@ -12,7 +12,7 @@ sub-header
         input.form-control(ng-model="$ctrl.identity.email", name="email", ng-disabled="$ctrl.identity.isDefault")
       esn-form-group(label=__('Reply to address'))
         input.form-control(ng-model="$ctrl.identity.replyTo", name="replyTo", ng-disabled="$ctrl.identity.isDefault")
-      .form-group#inbox-identity-form-signature
+      .form-group.inbox-identity-form-signature
         label.fg-label
           | #{__('Signature')}
         .esn-summernote

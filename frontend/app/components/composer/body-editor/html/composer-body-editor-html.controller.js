@@ -8,7 +8,7 @@
       $scope,
       $element,
       $compile,
-      $sce,
+      $filter,
       INBOX_EVENTS,
       INBOX_SUMMERNOTE_OPTIONS,
       INBOX_SIGNATURE_SEPARATOR
@@ -76,7 +76,7 @@
             }
           }
 
-          signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $sce.trustAsHtml(identity.textSignature));
+          signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.textSignature));
         } else {
           signatureElement.remove();
         }

@@ -3,12 +3,11 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxIdentityController', function($sce, inboxIdentitiesService, asyncAction) {
+    .controller('inboxIdentityController', function(inboxIdentitiesService, asyncAction) {
       var self = this;
 
       self.$onInit = $onInit;
       self.removeIdentity = removeIdentity;
-      self.getSignature = getSignature;
 
       /////
 
@@ -16,10 +15,6 @@
         inboxIdentitiesService.getIdentity(self.identityId).then(function(identity) {
           self.identity = identity;
         });
-      }
-
-      function getSignature() {
-        return $sce.trustAsHtml(self.identity.textSignature);
       }
 
       function removeIdentity() {
