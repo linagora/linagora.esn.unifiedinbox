@@ -418,7 +418,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxFilterButton', function($rootScope, _, INBOX_EVENTS) {
+  .directive('inboxFilterButton', function($rootScope, _, esnI18nService, INBOX_EVENTS) {
     return {
       restrict: 'E',
       templateUrl: '/unifiedinbox/views/filter/filter-button.html',
@@ -432,10 +432,11 @@ angular.module('linagora.esn.unifiedinbox')
 
         function updateDropdownList() {
           var checkedItems = _.filter($scope.filters, { checked: true });
+          var numberFilterSelected = esnI18nService.translate('%s selected', checkedItems.length).toString();
 
           if (checkedItems.length > 0) {
             $scope.dropdownList.filtered = true;
-            $scope.dropdownList.placeholder = (checkedItems.length === 1) ? checkedItems[0].displayName : checkedItems.length + ' selected';
+            $scope.dropdownList.placeholder = (checkedItems.length === 1) ? checkedItems[0].displayName : numberFilterSelected;
           } else {
             $scope.dropdownList.filtered = false;
             $scope.dropdownList.placeholder = defaultPlaceholder;
