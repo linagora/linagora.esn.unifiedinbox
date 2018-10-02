@@ -1,11 +1,11 @@
-image: linagora/node-test-base:8
+image: node:8
 
 stages:
   - test
   - swagger
   - deploy-swagger
   - deploy_dev
-  
+
 test:
   stage: test
   tags:
@@ -17,8 +17,8 @@ test:
     - rabbitmq:3.6
   script:
    - npm i
-   - bower i --allow-root
-   - grunt
+   - ./node_modules/bower/bin/bower i --allow-root
+   - ./node_modules/grunt/bin/grunt
 
 swagger:
   stage: swagger
@@ -28,7 +28,7 @@ swagger:
   script:
    - npm i
    - npm prune
-   - grunt swagger-generate
+   - ./node_modules/grunt/bin/grunt swagger-generate
   artifacts:
     paths:
      - ./doc/REST_API/swagger/unifiedinbox-swagger.json
