@@ -168,7 +168,7 @@ const angularJsFiles = [
   'directives/subheaders.js',
   'directives/lists.js',
   'directives/sidebar.js',
-  "directives/dragula-disable-scroll-on.component.js"
+  "directives/dragula-disable-scroll-on.js"
 ];
 
 const mailtoCoreAngularModules = [
