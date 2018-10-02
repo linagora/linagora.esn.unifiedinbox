@@ -4,11 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxConfigurationFiltersController', inboxConfigurationFiltersController);
 
-  function inboxConfigurationFiltersController(
-    $scope,
-    inboxMailboxesFilterService,
-    dragulaService
-  ) {
+  function inboxConfigurationFiltersController($scope, inboxMailboxesFilterService) {
     var self = this;
 
     self.$onInit = $onInit;
@@ -20,15 +16,6 @@
     function $onInit() {
       self.refreshFilters();
       $scope.$on('filters-list-changed', self.refreshFilters);
-      $scope.$on('filter-bag.drop-model', function() {
-        inboxMailboxesFilterService.filters = self.filtersList;
-      });
-
-      dragulaService.options($scope, 'filter-bag', {
-        moves: function(el, container, handle) {
-          return handle.className.match(/.*dragger.*/) || handle.parentElement.className.match(/.*dragger.*/);
-        }
-      });
     }
 
     function refreshFilters() {

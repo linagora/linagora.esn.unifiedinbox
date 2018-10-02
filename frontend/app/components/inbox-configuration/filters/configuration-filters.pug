@@ -3,8 +3,7 @@ sub-header
 
 .inbox-configuration-filters
   p #{__('You can create rules that will tell OpenPaaS how to handle incoming messages. You choose both the condition that trigger a rule and the actions the rule will take. Rules will run in order shown in the list below, starting with the rule at the top')}
-  div(dragula='"filter-bag"' dragula-model="$ctrl.filtersList" dragula-disable-scroll-on='filter-bag')
-    inbox-configuration-filter-card(ng-repeat="filter in $ctrl.filtersList track by filter.id" filter="filter")
+  inbox-configuration-filter-card(ng-repeat="filter in $ctrl.filtersList track by filter.id", filter="filter")
   .inbox-list(ng-if="$ctrl.filtersList.length === 0")
     .inbox-empty-container-message
       .message

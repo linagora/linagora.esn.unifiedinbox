@@ -4,8 +4,7 @@ const AwesomeModule = require('awesome-module'),
       path = require('path');
 
 const Dependency = AwesomeModule.AwesomeModuleDependency,
-      FRONTEND_JS_PATH = path.join(__dirname, 'frontend'),
-      FRONTEND_COMPONENTS_PATH = '../components/';
+      FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
 
 const angularAppFiles = [
   'components/sidebar/attachment/sidebar-attachment.component.js',
@@ -167,8 +166,7 @@ const angularJsFiles = [
   'directives/main.js',
   'directives/subheaders.js',
   'directives/lists.js',
-  'directives/sidebar.js',
-  "directives/dragula-disable-scroll-on.js"
+  'directives/sidebar.js'
 ];
 
 const mailtoCoreAngularModules = [
@@ -298,9 +296,6 @@ module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {
     deploy: function(dependencies, callback) {
       const app = require('./backend/webserver/application')(dependencies),
             webserverWrapper = dependencies('webserver-wrapper');
-
-      webserverWrapper.injectJS('unifiedinbox', path.join(FRONTEND_COMPONENTS_PATH, 'angularjs-dragula/dist/angularjs-dragula.js'), ['esn']);
-      webserverWrapper.injectCSS('unifiedinbox', path.join(FRONTEND_COMPONENTS_PATH, 'angularjs-dragula/dist/dragula.css'), ['esn']);
 
       webserverWrapper.injectAngularModules('unifiedinbox', angularJsFiles, 'linagora.esn.unifiedinbox', ['esn'], {
         localJsFiles: angularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))

@@ -57,8 +57,7 @@ angular.module('linagora.esn.unifiedinbox', [
   'material.components.icon',
   'material.components.menuBar',
   'esn.attachments-selector',
-  'linagora.esn.james',
-  angularDragula(angular)
+  'linagora.esn.james'
 ])
 
   .config(function($stateProvider, dynamicDirectiveServiceProvider, $mdIconProvider) {

@@ -5,20 +5,14 @@
 var expect = chai.expect;
 
 describe('The inboxConfigurationFiltersController', function() {
-  var $q, $controller, $scope, $rootScope, inboxMailboxesFilterService, touchscreenDetectorService;
+  var $q, $controller, $scope, $rootScope, inboxMailboxesFilterService;
 
   beforeEach(function() {
     module('jadeTemplates');
     module('linagora.esn.unifiedinbox', function($provide) {
       inboxMailboxesFilterService = {};
-      touchscreenDetectorService = {
-        hasTouchscreen: function() {
-          return false;
-        }
-      };
 
       $provide.value('inboxMailboxesFilterService', inboxMailboxesFilterService);
-      $provide.value('touchscreenDetectorService', touchscreenDetectorService);
     });
   });
 
@@ -54,50 +48,6 @@ describe('The inboxConfigurationFiltersController', function() {
 
       expect(target.refreshFilters).to.have.been.called;
       expect($scope.$on).to.have.been.calledWith('filters-list-changed', target.refreshFilters);
-    });
-
-    context('when dragging filters', function() {
-      it('should set the inboxMailboxesFilterService filters', function() {
-        var filter1 = {
-          id: '116e2454-3d55-4fe3-948c-95a7e2e92abe',
-          name: 'My filter 1',
-          condition: {
-            field: 'from',
-            comparator: 'exactly-equals',
-            value: 'admin@open-paas.org'
-          },
-          action: {
-            appendIn: {
-              mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']
-            }
-          }
-        };
-
-        var filter2 = {
-          id: 'a2d71896-b5c3-479e-a88f-e72706641a42',
-          name: 'My filter 2',
-          condition: {
-            field: 'from',
-            comparator: 'exactly-equals',
-            value: 'admin@open-paas.org'
-          },
-          action: {
-            appendIn: {
-              mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']
-            }
-          }
-        };
-
-        var target = initController();
-
-        target.$onInit();
-        target.filtersList = [filter1, filter2];
-
-        $rootScope.$broadcast('filter-bag.drop-model');
-        $rootScope.$digest();
-
-        expect(inboxMailboxesFilterService.filters).to.deep.eql([filter1, filter2]);
-      });
     });
   });
 

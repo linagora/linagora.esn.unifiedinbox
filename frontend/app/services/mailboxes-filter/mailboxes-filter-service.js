@@ -30,13 +30,10 @@
         getFilterSummary: getFilterSummary,
         getFilters: getFilters,
         get filters() {
-          return angular.copy(self.filters);
-        },
-        set filters(value) {
-          _setFilters(value);
+          return self.filters;
         },
         get filtersIds() {
-          return angular.copy(self.filtersIds);
+          return self.filtersIds;
         }
       };
 
@@ -123,28 +120,14 @@
       function getFilters() {
         return withJmapClient(function(client) {
           return client.getFilter().then(function(result) {
-            _setFiltersLocally(result);
+            self.filters.length = 0;
+            _.forEach(result, function(item) {
+              self.filters.push(item);
+              self.filtersIds[item.id] = item;
+            });
 
-            return angular.copy(self.filters);
+            return self.filters;
           });
-        });
-      }
-
-      function _setFilters(filters) {
-        return _setFiltersOnServer(filters).then(function() {
-          _setFiltersLocally(filters);
-          _notifyChanged();
-        }).catch(function() {
-          // Handle error?
-        });
-      }
-
-      function _setFiltersLocally(filters) {
-        self.filters = angular.copy(filters);
-        self.filtersIds = {};
-
-        _.forEach(filters, function(item) {
-          self.filtersIds[item.id] = item;
         });
       }
 
