@@ -467,7 +467,7 @@ describe('The InboxDraft factory', function() {
 
       $rootScope.$digest();
 
-      expect(notificationFactory.weakSuccess).to.have.been.calledWithExactly('', 'Saving your email as draft succeeded');
+      expect(notificationFactory.weakSuccess).to.have.been.calledWithExactly('Success', 'Saving your email as draft succeeded');
     });
 
     it('should notify when has not saved successfully', function(done) {

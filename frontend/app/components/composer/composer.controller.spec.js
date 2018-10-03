@@ -439,7 +439,7 @@ describe('The inboxComposerController controller', function() {
     it('should notify on success', function() {
       sendMessage();
 
-      expect(notificationFactory.weakSuccess).to.have.been.calledWith('', 'Message sent');
+      expect(notificationFactory.weakSuccess).to.have.been.calledWith('Success', 'Message sent');
     });
 
     it('should notify on failure', function() {
