@@ -1010,7 +1010,7 @@ describe('The getVacationActivated function', function() {
 
       $rootScope.$digest();
 
-      expect(notificationFactory.weakSuccess).to.have.been.calledWith('', 'Modification of vacation settings succeeded');
+      expect(notificationFactory.weakSuccess).to.have.been.calledWith('Success', 'Modification of vacation settings succeeded');
     });
 
     it('should call disableVacation and reject if error', function() {

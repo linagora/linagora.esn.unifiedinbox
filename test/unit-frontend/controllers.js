@@ -1512,7 +1512,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
         expect(esnPreviousPage.back).to.have.been.calledWith('unifiedinbox');
         expect(jmapClient.setVacationResponse).to.have.been.calledWith();
-        expect(notificationFactory.weakSuccess.args[0][0]).to.equal('');
+        expect(notificationFactory.weakSuccess.args[0][0]).to.equal('Success');
         expect(notificationFactory.weakSuccess.args[0][1].toString()).to.equal('Vacation settings saved');
       });
 
