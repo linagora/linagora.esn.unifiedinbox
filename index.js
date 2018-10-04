@@ -1,10 +1,13 @@
 'use strict';
 
+const glob = require('glob-all');
+
 const AwesomeModule = require('awesome-module'),
       path = require('path');
 
 const Dependency = AwesomeModule.AwesomeModuleDependency,
-      FRONTEND_JS_PATH = path.join(__dirname, 'frontend');
+      FRONTEND_JS_PATH = path.join(__dirname, 'frontend/app/');
+const APP_ENTRY_POINT = path.join(FRONTEND_JS_PATH, 'app.js');
 
 const angularAppFiles = [
   'components/sidebar/attachment/sidebar-attachment.component.js',
@@ -294,29 +297,27 @@ module.exports = new AwesomeModule('linagora.esn.unifiedinbox', {
     },
 
     deploy: function(dependencies, callback) {
-      const app = require('./backend/webserver/application')(dependencies),
-            webserverWrapper = dependencies('webserver-wrapper');
+      const app = require('./backend/webserver/application')(dependencies);
+      const webserverWrapper = dependencies('webserver-wrapper');
+      const frontendFullPathModules = [APP_ENTRY_POINT].concat(
+        glob.sync([
+          `${FRONTEND_JS_PATH}**/!(*spec).js`,
+          `!${FRONTEND_JS_PATH}/mailto/**`,
+          `!${APP_ENTRY_POINT}`
+        ])
+      );
+      const frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH, ''));
 
-      webserverWrapper.injectAngularModules('unifiedinbox', angularJsFiles, 'linagora.esn.unifiedinbox', ['esn'], {
-        localJsFiles: angularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
-      });
-
-      webserverWrapper.injectAngularAppModules('unifiedinbox', angularAppFiles, 'linagora.esn.unifiedinbox', ['esn'], {
-        localJsFiles: angularAppFiles.map(file => path.join(FRONTEND_JS_PATH, 'app', file))
-      });
-
-      webserverWrapper.injectLess('unifiedinbox', [
-        path.resolve(__dirname, './frontend/app/inbox.less')
-      ], ['esn']);
-
+      webserverWrapper.injectAngularAppModules('unifiedinbox', frontendUriModules, 'linagora.esn.unifiedinbox', ['esn'], { localJsFiles: frontendFullPathModules });
+      webserverWrapper.injectLess('unifiedinbox', [path.resolve(__dirname, './frontend/app/inbox.less')], ['esn']);
       webserverWrapper.addApp('unifiedinbox', app);
 
       webserverWrapper.requestCoreFrontendInjections('mailto', mailtoCoreAngularModules);
       webserverWrapper.injectAngularModules('unifiedinbox', mailtoAngularJsFiles, 'linagora.esn.unifiedinbox.mailto', ['mailto'], {
-        localJsFiles: mailtoAngularJsFiles.map(file => path.join(FRONTEND_JS_PATH, 'js', file))
+        localJsFiles: mailtoAngularJsFiles.map(file => path.join(FRONTEND_JS_PATH, file))
       });
       webserverWrapper.injectAngularAppModules('unifiedinbox', mailtoInboxAngularAppFiles, 'linagora.esn.unifiedinbox.mailto', ['mailto'], {
-        localJsFiles: mailtoInboxAngularAppFiles.map(file => path.join(FRONTEND_JS_PATH, 'app', file))
+        localJsFiles: mailtoInboxAngularAppFiles.map(file => path.join(FRONTEND_JS_PATH, file))
       });
 
       require('./backend/lib/config')(dependencies).register();
