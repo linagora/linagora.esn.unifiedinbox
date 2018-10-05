@@ -25,7 +25,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     function buildAddressesFilterConditions(query) {
       var filter = {},
-        hasEmail = function(obj) { return _.isString(obj.email); }
+        hasEmail = function(obj) { return _.isString(obj.email); };
 
       if (_.isArray(query.to)) {
         filter.to = query.to
@@ -86,6 +86,7 @@ angular.module('linagora.esn.unifiedinbox')
             conditions: emailSearchOptions[criterion].map(_.partial(pairFrom, criterion))
           };
         }
+
         return pairFrom(criterion, _.head(emailSearchOptions[criterion]));
       }
 
@@ -318,7 +319,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('computeUniqueSetOfRecipients', function() {
+  .factory('computeUniqueSetOfRecipients', function(_) {
     return function(item) {
       if (item && item.to && item.cc && item.bcc) {
         item.emailRecipients = _.chain(_.union(item.to, item.cc, item.bcc))
@@ -326,6 +327,7 @@ angular.module('linagora.esn.unifiedinbox')
           .value();
         item.emailFirstRecipient = _.first(item.emailRecipients);
       }
+
       return item;
     };
   });

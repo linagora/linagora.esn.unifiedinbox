@@ -69,7 +69,7 @@ function setDocument(newDocument) {
       event.preventDefault();
       parent.postMessage('[linagora.esn.unifiedinbox.changeCurrentLocation]' + element.href, '*');
     };
-  });   
+  });
 }
 
 function replaceInlineImageUrl(cidAndUrl) {

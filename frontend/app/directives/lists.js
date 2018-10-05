@@ -87,7 +87,7 @@ angular.module('linagora.esn.unifiedinbox')
           }
         };
 
-        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged', 
+        ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged',
           'unmarkAsFlagged', 'moveToTrash', 'moveToSpam', 'unSpam'].forEach(function(action) {
           self[action] = function() {
             inboxJmapItemService[action]($scope.item);
@@ -185,12 +185,11 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxThreadListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                             inboxSwipeHelper, infiniteListService, inboxSelectionService, inboxPlugins) {
+                                             inboxSwipeHelper, inboxSelectionService) {
     return {
       restrict: 'E',
       controller: function($scope) {
-        var self = this,
-        context = $stateParams.context;
+        var self = this;
 
         // need this scope value for action list
         $scope.thread = $scope.item;

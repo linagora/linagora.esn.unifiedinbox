@@ -151,7 +151,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxEmailerAvatar', function($q) {
+  .directive('inboxEmailerAvatar', function() {
     return {
       restrict: 'E',
       controller: 'resolveEmailerController',
