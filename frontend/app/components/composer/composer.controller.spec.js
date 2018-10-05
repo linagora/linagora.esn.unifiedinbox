@@ -21,6 +21,9 @@ describe('The inboxComposerController controller', function() {
       weakSuccess: sinon.spy(),
       weakError: sinon.stub().returns({
         setCancelAction: sinon.spy()
+      }),
+      strongError: sinon.stub().returns({
+        setCancelAction: sinon.spy()
       })
     });
     $provide.value('inboxRequestReceiptsService', {
@@ -447,7 +450,7 @@ describe('The inboxComposerController controller', function() {
 
       sendMessage();
 
-      expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'Your message cannot be sent');
+      expect(notificationFactory.strongError).to.have.been.calledWith('Error', 'Your message cannot be sent');
     });
 
     it('should notify on failure with a custom error message if the network connection is down', function() {
@@ -459,7 +462,7 @@ describe('The inboxComposerController controller', function() {
 
       $rootScope.$digest();
 
-      expect(notificationFactory.weakError).to.have.been.calledWith('Error', 'You have been disconnected. Please check if the message was sent before retrying');
+      expect(notificationFactory.strongError).to.have.been.calledWith('Error', 'You have been disconnected. Please check if the message was sent before retrying');
     });
 
     function validMDNHeaders() {
