@@ -83,9 +83,8 @@ module.exports = function(config) {
 
       'test/unit-frontend/mocks/**/*.js',
       'test/unit-frontend/**/*.js',
-      'frontend/js/app.js',
+      'frontend/app/app.js',
       'frontend/app/mailto/mailto.js',
-      'frontend/js/**/*.js',
       'frontend/app/**/*.js',
       'frontend/app/**/*.pug',
       'frontend/views/**/*.pug'

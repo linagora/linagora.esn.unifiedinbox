@@ -54,7 +54,7 @@ angular.module('linagora.esn.unifiedinbox')
       });
     }
 
-    function handleUnavailableAccount(account) {
+    function handleUnavailableAccount() {
       this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
     }
 
@@ -89,6 +89,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     $scope.refresh = function() {
       $scope.loading = true;
+
       return $scope.loadRecentItems().then(inboxFilteredList.addAll)
       .finally(function() {
         $scope.loading = false;
@@ -138,7 +139,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
 
-    function handleUnavailableAccount(account) {
+    function handleUnavailableAccount() {
       this.state = INBOX_CONTROLLER_LOADING_STATES.ERROR;
     }
 

@@ -254,7 +254,7 @@ angular.module('linagora.esn.unifiedinbox', [
         views: {
           'configuration@unifiedinbox.configuration': {
             templateProvider: function($timeout, $stateParams) {
-              return $timeout(function () {
+              return $timeout(function() {
                 return '<inbox-configuration-filter-definition edit-filter-id="' + $stateParams.id + '" />';
               }, 0);
             }
