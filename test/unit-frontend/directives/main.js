@@ -14,10 +14,8 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       $httpBackend;
 
   beforeEach(function() {
-    module('esn.i18n', function($translateProvider) {
-      $translateProvider.useInterpolation('esnI18nInterpolator');
-    });
     angular.module('esn.iframe-resizer-wrapper', []);
+
     angular.mock.module('esn.ui');
     angular.mock.module('esn.core');
     angular.mock.module('esn.session');
