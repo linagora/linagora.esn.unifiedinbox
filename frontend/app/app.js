@@ -57,7 +57,8 @@ angular.module('linagora.esn.unifiedinbox', [
   'material.components.icon',
   'material.components.menuBar',
   'esn.attachments-selector',
-  'linagora.esn.james'
+  'linagora.esn.james',
+  angularDragula(angular) // eslint-disable-line no-undef
 ])
 
   .config(function($stateProvider, dynamicDirectiveServiceProvider, $mdIconProvider) {
