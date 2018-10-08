@@ -121,7 +121,7 @@ describe('The inboxMessageBodyHtml component', function() {
       var document = new XMLSerializer().serializeToString(event.target.contentDocument);
       var iFrameContent = loadImagesAsyncFilter($rootScope.message.htmlBody, []);
 
-      expect(document).to.include('/unifiedinbox/js/helpers/iframe-new-document-handler.js');
+      expect(document).to.include('/unifiedinbox/app/helpers/iframe-new-document-handler.js');
 
       event.target.contentWindow.postMessage('[linagora.esn.unifiedinbox.changeDocument]' + iFrameContent, '*');
 
