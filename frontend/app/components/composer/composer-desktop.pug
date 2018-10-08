@@ -18,7 +18,7 @@ form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
 
   input.form-control.compose-subject(type="text", placeholder=__('Subject'), ng-model="$ctrl.message.subject", ng-change="$ctrl.onTitleUpdate({ $title: $ctrl.message.subject })")
 
-  inbox-composer-body-editor-html(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", send="$ctrl.send()", upload="$ctrl.upload($attachment)", remove-attachment="$ctrl.removeAttachment($attachment)", on-body-update="$ctrl.message.htmlBody = $body")
+  inbox-composer-body-editor-html.esn-summernote(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", send="$ctrl.send()", upload="$ctrl.upload($attachment)", remove-attachment="$ctrl.removeAttachment($attachment)", on-body-update="$ctrl.message.htmlBody = $body")
 
   .compose-footer.flex-space-between
     button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", ng-click="$ctrl.destroyDraft()", type="button", title=__('Delete'))

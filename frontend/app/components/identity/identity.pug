@@ -11,4 +11,4 @@
     .inbox-identity-reply-to.flex-vertical-centered.ellipsis
       i.mdi.mdi-reply
       | {{ $ctrl.identity.replyTo }}
-    .inbox-identity-signature.ellipsis(ng-if="$ctrl.identity.textSignature") {{ $ctrl.identity.textSignature }}
+    div(ng-if="$ctrl.identity.textSignature" ng-bind-html="$ctrl.identity.textSignature | sanitizeStylisedHtml")

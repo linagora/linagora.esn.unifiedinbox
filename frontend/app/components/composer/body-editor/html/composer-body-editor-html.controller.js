@@ -3,8 +3,16 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxComposerBodyEditorHtmlController', function($timeout, $scope, $element, $compile,
-                                                                  INBOX_EVENTS, INBOX_SUMMERNOTE_OPTIONS, INBOX_SIGNATURE_SEPARATOR) {
+    .controller('inboxComposerBodyEditorHtmlController', function(
+      $timeout,
+      $scope,
+      $element,
+      $compile,
+      $filter,
+      INBOX_EVENTS,
+      INBOX_SUMMERNOTE_OPTIONS,
+      INBOX_SIGNATURE_SEPARATOR
+    ) {
       var self = this,
           summernoteIsReady = false;
 
@@ -54,12 +62,12 @@
         }
 
         var editable = $element.find('.note-editable'),
-            signatureElement = editable.find('> pre.openpaas-signature'),
+            signatureElement = editable.find('> div.openpaas-signature'),
             citeElement = editable.find('> cite');
 
         if (identity.textSignature) {
           if (!signatureElement.length) {
-            signatureElement = angular.element('<pre class="openpaas-signature"></pre>');
+            signatureElement = angular.element('<div class="openpaas-signature"></div>');
 
             if (citeElement.length) {
               signatureElement.insertBefore(citeElement.get(0));
@@ -68,7 +76,7 @@
             }
           }
 
-          signatureElement.text(INBOX_SIGNATURE_SEPARATOR + identity.textSignature);
+          signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.textSignature));
         } else {
           signatureElement.remove();
         }

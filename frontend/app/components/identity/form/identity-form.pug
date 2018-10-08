@@ -12,7 +12,11 @@ sub-header
         input.form-control(ng-model="$ctrl.identity.email", name="email", ng-disabled="$ctrl.identity.isDefault")
       esn-form-group(label=__('Reply to address'))
         input.form-control(ng-model="$ctrl.identity.replyTo", name="replyTo", ng-disabled="$ctrl.identity.isDefault")
-      .form-group.fg-float.full-width
-        .fg-line
-          textarea.form-control(auto-focus="$ctrl.identity.isDefault", auto-size-dynamic="true", ng-model="$ctrl.identity.textSignature", name="textSignature")
-        label.fg-label #{__('Signature')}
+      .form-group.inbox-identity-form-signature
+        label.fg-label
+          | #{__('Signature')}
+        .esn-summernote
+          summernote.compose-body(
+            ng-model="$ctrl.identity.textSignature",
+            config="$ctrl.summernoteOptions",
+          )

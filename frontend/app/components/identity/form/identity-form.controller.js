@@ -3,11 +3,18 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxIdentityFormController', function(_, $state, inboxIdentitiesService, asyncAction) {
+    .controller('inboxIdentityFormController', function(
+      _,
+      $state,
+      inboxIdentitiesService,
+      asyncAction,
+      INBOX_SUMMERNOTE_OPTIONS
+    ) {
       var self = this;
 
       self.$onInit = $onInit;
       self.saveIdentity = saveIdentity;
+      self.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
       /////
 
