@@ -80,6 +80,7 @@
               .then(_quoteOriginalEmailIfNeeded)
               .then(emailSendingService.sendEmail.bind(emailSendingService, self.message));
           }, {
+            persist: true,
             onFailure: {
               linkText: 'Reopen the composer',
               action: self.onShow
