@@ -6,7 +6,8 @@ var expect = chai.expect;
 
 describe('The inboxComposerController controller', function() {
 
-  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory, inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault;
+  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
+    inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault;
 
   function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
@@ -61,7 +62,9 @@ describe('The inboxComposerController controller', function() {
       onDiscard: sinon.spy(),
       onHide: sinon.spy(),
       onShow: sinon.spy(),
-      onTitleUpdate: sinon.spy()
+      onTitleUpdate: sinon.spy(),
+      onTryClose: sinon.spy(),
+      forceClose: sinon.spy()
     });
     angular.mock.inject(function(session) {
       session.user = {
@@ -153,11 +156,11 @@ describe('The inboxComposerController controller', function() {
 
   });
 
-  describe('The $onDestroy function', function() {
+  describe('The tryClose function', function() {
 
     it('should save the draft', function(done) {
       ctrl.$onInit();
-      ctrl.$onDestroy();
+      ctrl.tryClose();
 
       shortCircuitDebounce(function() {
         expect(ctrl.draft.save).to.have.been.calledWith();
@@ -167,7 +170,7 @@ describe('The inboxComposerController controller', function() {
     it('should not save the draft if the composer is destroyed after send', function(done) {
       ctrl.$onInit();
       ctrl.send();
-      ctrl.$onDestroy();
+      ctrl.tryClose();
 
       shortCircuitDebounce(function() {
         expect(ctrl.draft.save).to.have.not.been.calledWith();
@@ -177,7 +180,7 @@ describe('The inboxComposerController controller', function() {
     it('should not save the draft if the composer is destroyed after destroying the draft', function(done) {
       ctrl.$onInit();
       ctrl.destroyDraft();
-      ctrl.$onDestroy();
+      ctrl.tryClose();
 
       shortCircuitDebounce(function() {
         expect(ctrl.draft.save).to.have.not.been.calledWith();
@@ -193,7 +196,17 @@ describe('The inboxComposerController controller', function() {
       ctrl.saveDraft();
 
       shortCircuitDebounce(function() {
-        expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, { silent: true });
+        var options = {
+          persist: true,
+          silent: true,
+          onFailure: {
+            linkText: 'Reopen the composer',
+            action: ctrl.onShow
+          },
+          onClose: ctrl.forceClose
+        };
+
+        expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, options);
       }, done);
     });
 
@@ -281,13 +294,22 @@ describe('The inboxComposerController controller', function() {
 
     it('should save the draft', function(done) {
       var attachment = {};
+      var options = {
+        persist: true,
+        silent: true,
+        onFailure: {
+          linkText: 'Reopen the composer',
+          action: ctrl.onShow
+        },
+        onClose: ctrl.forceClose
+      };
 
       ctrl.message.attachments = [attachment];
       ctrl.$onInit();
       ctrl.removeAttachment(attachment);
 
       shortCircuitDebounce(function() {
-        expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, { silent: true });
+        expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, options);
       }, done);
     });
 
