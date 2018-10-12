@@ -51,7 +51,7 @@ describe('The Identities API', function() {
       request(app)
         .get('/api/inbox/identities/default')
         .auth('user1@lng.net', 'secret')
-        .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":""}')
+        .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":"","mobileSignature":""}')
         .end(done);
     });
 
@@ -60,7 +60,7 @@ describe('The Identities API', function() {
         .get('/api/inbox/identities/default')
         .set('Accept-Language', 'fr')
         .auth('user1@lng.net', 'secret')
-        .expect(200, '{"id":"default","isDefault":true,"description":"Mon identité par défaut","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":""}')
+        .expect(200, '{"id":"default","isDefault":true,"description":"Mon identité par défaut","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":"","mobileSignature":""}')
         .end(done);
     });
 
@@ -110,7 +110,8 @@ describe('The Identities API', function() {
             {
               name: 'identities.default',
               value: {
-                textSignature: 'Overriden signature'
+                textSignature: 'Overriden signature',
+                mobileSignature: 'Overriden signature'
               }
             }
           ]
@@ -119,12 +120,12 @@ describe('The Identities API', function() {
         request(app)
           .get('/api/inbox/identities/default')
           .auth('user1@lng.net', 'secret')
-          .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":"Overriden signature"}')
+          .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"a user1","email":"user1@lng.net","replyTo":"user1@lng.net","textSignature":"Overriden signature","mobileSignature":"Overriden signature"}')
           .end(() => {
             request(app)
               .get('/api/inbox/identities/default')
               .auth('user2@lng.net', 'secret')
-              .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"b user2","email":"user2@lng.net","replyTo":"user2@lng.net","textSignature":""}')
+              .expect(200, '{"id":"default","isDefault":true,"description":"My default identity","name":"b user2","email":"user2@lng.net","replyTo":"user2@lng.net","textSignature":"","mobileSignature":""}')
               .end(done);
           });
       });

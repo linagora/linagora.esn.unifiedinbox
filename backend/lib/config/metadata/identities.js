@@ -26,7 +26,11 @@ module.exports = dependencies => {
       },
       textSignature: {
         type: 'string',
-        minLength: 1
+        minLength: 0
+      },
+      mobileSignature: {
+        type: 'string',
+        minLength: 0
       }
     },
     required: ['id', 'description', 'name', 'email', 'replyTo', 'textSignature']

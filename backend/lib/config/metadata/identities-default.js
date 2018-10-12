@@ -6,7 +6,11 @@ module.exports = dependencies => {
     properties: {
       textSignature: {
         type: 'string',
-        minLength: 1
+        minLength: 0
+      },
+      mobileSignature: {
+        type: 'string',
+        minLength: 0
       }
     },
     required: ['textSignature']

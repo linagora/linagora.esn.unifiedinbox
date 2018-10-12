@@ -77,7 +77,8 @@
           return {
             name: 'identities.default',
             value: {
-              textSignature: identity.textSignature
+              textSignature: identity.textSignature,
+              mobileSignature: identity.mobileSignature
             }
           };
         }

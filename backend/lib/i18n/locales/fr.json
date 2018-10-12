@@ -195,6 +195,8 @@
   "Show attachments": "Afficher les pièces jointes",
   "Show emails with attachments": "Afficher les emails avec pièces jointes",
   "Signature": "Signature",
+  "Mobile signature": "Signature mobile",
+  "Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.": "La signature mobile sera utilisée sur la version mobile d'OpenPaaS. Elle ne peut être que textuelle.",
   "Social": "Social",
   "Social networks": "Réseaux sociaux",
   "Some items could not be moved to \"%s\"": "Certains éléments n'ont pas pu être déplacés vers \"% s \"",

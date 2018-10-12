@@ -12,3 +12,4 @@
       i.mdi.mdi-reply
       | {{ $ctrl.identity.replyTo }}
     div(ng-if="$ctrl.identity.textSignature" ng-bind-html="$ctrl.identity.textSignature | sanitizeStylisedHtml")
+    .inbox-identity-signature.ellipsis(ng-if="$ctrl.identity.mobileSignature") {{ $ctrl.identity.mobileSignature }}
