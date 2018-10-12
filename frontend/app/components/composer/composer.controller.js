@@ -3,14 +3,14 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxComposerController', function(notificationFactory, jmap, attachmentUploadService, _, emailSendingService, inboxRequestReceiptsService,
+    .controller('inboxComposerController', function($q, notificationFactory, jmap, attachmentUploadService, _, emailSendingService, inboxRequestReceiptsService,
                                                     emailBodyService, Offline, inboxAttachmentUploadService, waitUntilMessageIsComplete,
                                                     backgroundAction, InboxDraft, DRAFT_SAVING_DEBOUNCE_DELAY) {
       var self = this,
           skipAutoSaveOnDestroy = false;
 
       self.$onInit = $onInit;
-      self.$onDestroy = $onDestroy;
+      self.tryClose = tryClose;
       self.saveDraft = _.debounce(saveDraft, DRAFT_SAVING_DEBOUNCE_DELAY);
       self.upload = upload;
       self.removeAttachment = removeAttachment;
@@ -20,6 +20,7 @@
       /////
 
       function $onInit() {
+        self.onTryClose({callback: self.tryClose});
         self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
 
@@ -29,14 +30,26 @@
         });
       }
 
-      function $onDestroy() {
+      function tryClose() {
         if (!skipAutoSaveOnDestroy) {
-          self.saveDraft();
+          return saveDraft();
         }
+
+        return $q.when();
       }
 
       function saveDraft() {
-        return self.draft.save(self.message, { silent: true }).then(self.onSave);
+        var options = {
+          persist: true,
+          silent: true,
+          onFailure: {
+            linkText: 'Reopen the composer',
+            action: self.onShow
+          },
+          onClose: self.forceClose
+        };
+
+        return self.draft.save(self.message, options).then(self.onSave);
       }
 
       function upload(attachment) {

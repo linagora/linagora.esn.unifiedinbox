@@ -13,7 +13,9 @@
         onDiscard: '&',
         onHide: '&',
         onShow: '&',
-        onTitleUpdate: '&'
+        onTitleUpdate: '&',
+        onTryClose: '&',
+        forceClose: '&'
       }
     });
 
