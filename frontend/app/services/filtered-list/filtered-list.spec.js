@@ -75,6 +75,58 @@ describe('The inboxFilteredList factory', function() {
     expect(inboxFilteredList.list()).to.deep.equal([unreadMessage, readMessage]); // both messages are flagged
   });
 
+  context('when setting previous and next properties when filter change', function() {
+    beforeEach(function() {
+      inboxFilters.forEach(function(item) {
+        item.checked = false;
+      });
+    });
+
+    it('should set previous and next property to null when rendered list has only one element', function() {
+      var message1 = newMessage({ isFlagged: true, isUnread: true, date: 1 });
+      var message2 = newMessage({ isFlagged: true, isUnread: false, date: 2 });
+      var message3 = newMessage({ isFlagged: true, isUnread: false, date: 3 });
+      var message4 = newMessage({ isFlagged: true, isUnread: false, date: 4 });
+
+      inboxFilteredList.addAll([message1, message2, message3, message4]);
+      $rootScope.$digest();
+
+      _.find(inboxFilters, { id: 'isUnread' }).checked = true;
+      $rootScope.$broadcast(INBOX_EVENTS.FILTER_CHANGED);
+      $rootScope.$digest();
+
+      expect(inboxFilteredList.list()).to.deep.equal([message1]);
+
+      expect(message1.previous).to.be.null;
+      expect(message1.next).to.be.null;
+    });
+
+    it('should set previous and next property to correct values when rendered list has more than one element', function() {
+      var message1 = newMessage({ isFlagged: true, isUnread: true, date: 1 });
+      var message2 = newMessage({ isFlagged: true, isUnread: true, date: 2 });
+      var message3 = newMessage({ isFlagged: true, isUnread: true, date: 3 });
+      var message4 = newMessage({ isFlagged: true, isUnread: false, date: 4 });
+
+      inboxFilteredList.addAll([message1, message2, message3, message4]);
+      $rootScope.$digest();
+
+      _.find(inboxFilters, { id: 'isUnread' }).checked = true;
+      $rootScope.$broadcast(INBOX_EVENTS.FILTER_CHANGED);
+      $rootScope.$digest();
+
+      expect(inboxFilteredList.list()).to.deep.equal([message3, message2, message1]);
+
+      expect(message1.previous).to.be.null;
+      expect(message1.next()).to.equal(message2);
+
+      expect(message2.previous()).to.equal(message1);
+      expect(message2.next()).to.equal(message3);
+
+      expect(message3.previous()).to.equal(message2);
+      expect(message3.next).to.be.null;
+    });
+  });
+
   it('should render the list when filters are cleared, removing items fetched when filtering was active', function() {
     var unreadMessage = newMessage({ isUnread: true, date: 1 }),
         readMessage = newMessage({ date: 0 });
