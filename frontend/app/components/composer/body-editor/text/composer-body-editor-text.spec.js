@@ -85,7 +85,7 @@ describe('The inboxComposerBodyEditorText component', function() {
 
   it('should add the identity to the body when composing from scratch', function() {
     $rootScope.identity = {
-      mobileSignature: 'my signature'
+      textSignature: 'my signature'
     };
 
     compileComponent();
@@ -96,7 +96,7 @@ describe('The inboxComposerBodyEditorText component', function() {
   it('should add the identity to the body when composing from an existing message', function() {
     $rootScope.message.textBody = 'body';
     $rootScope.identity = {
-      mobileSignature: 'my signature'
+      textSignature: 'my signature'
     };
 
     compileComponent();
@@ -108,7 +108,7 @@ describe('The inboxComposerBodyEditorText component', function() {
     compileComponent();
 
     $rootScope.identity = {
-      mobileSignature: 'another signature'
+      textSignature: 'another signature'
     };
     $rootScope.$digest();
 

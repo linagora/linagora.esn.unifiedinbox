@@ -68,13 +68,13 @@
           newText = text;
         }
 
-        if (identity.mobileSignature) {
+        if (identity.textSignature) {
           // If signature is at the top of the message, add a blank line so that it's easier to enter text before
           if (!newText) {
             newText += '\n\n';
           }
 
-          newText += INBOX_SIGNATURE_SEPARATOR + identity.mobileSignature + '\n\n';
+          newText += INBOX_SIGNATURE_SEPARATOR + identity.textSignature + '\n\n';
         }
 
         if (startOfQuote) {

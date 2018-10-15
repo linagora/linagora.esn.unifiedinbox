@@ -161,8 +161,8 @@ describe('The inboxIdentitiesService factory', function() {
     });
 
     it('should store only the signature of the default identity', function(done) {
+      defaultIdentity.htmlSignature = 'signature';
       defaultIdentity.textSignature = 'signature';
-      defaultIdentity.mobileSignature = 'signature';
 
       inboxIdentitiesService.storeIdentity(defaultIdentity);
       $httpBackend.flush();
@@ -171,15 +171,15 @@ describe('The inboxIdentitiesService factory', function() {
         {
           name: 'identities.default',
           value: {
-            textSignature: 'signature',
-            mobileSignature: 'signature'
+            htmlSignature: 'signature',
+            textSignature: 'signature'
           }
         }
       ], 'linagora.esn.unifiedinbox');
 
       inboxIdentitiesService.getAllIdentities().then(function(identities) {
         expect(identities).to.deep.equal([
-          { id: 'default', isDefault: true, textSignature: 'signature', mobileSignature: 'signature' }
+          { id: 'default', isDefault: true, htmlSignature: 'signature', textSignature: 'signature' }
         ]);
 
         done();

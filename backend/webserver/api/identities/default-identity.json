@@ -5,6 +5,6 @@
   "name" : "<%= user.firstname %> <%= user.lastname %>",
   "email" : "<%= user.preferredEmail %>",
   "replyTo" : "<%= user.preferredEmail %>",
-  "textSignature" : "",
-  "mobileSignature" : ""
+  "htmlSignature" : "",
+  "textSignature" : ""
 }

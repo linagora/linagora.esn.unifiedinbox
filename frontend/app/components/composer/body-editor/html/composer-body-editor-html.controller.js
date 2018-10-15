@@ -65,7 +65,7 @@
             signatureElement = editable.find('> div.openpaas-signature'),
             citeElement = editable.find('> cite');
 
-        if (identity.textSignature) {
+        if (identity.htmlSignature) {
           if (!signatureElement.length) {
             signatureElement = angular.element('<div class="openpaas-signature"></div>');
 
@@ -76,7 +76,7 @@
             }
           }
 
-          signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.textSignature));
+          signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.htmlSignature));
         } else {
           signatureElement.remove();
         }
