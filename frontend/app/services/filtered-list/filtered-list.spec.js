@@ -116,14 +116,14 @@ describe('The inboxFilteredList factory', function() {
 
       expect(inboxFilteredList.list()).to.deep.equal([message3, message2, message1]);
 
-      expect(message1.previous).to.be.null;
-      expect(message1.next()).to.equal(message2);
+      expect(message3.previous).to.be.null;
+      expect(message3.next()).to.equal(message2);
 
-      expect(message2.previous()).to.equal(message1);
-      expect(message2.next()).to.equal(message3);
+      expect(message2.previous()).to.equal(message3);
+      expect(message2.next()).to.equal(message1);
 
-      expect(message3.previous()).to.equal(message2);
-      expect(message3.next).to.be.null;
+      expect(message1.previous()).to.equal(message2);
+      expect(message1.next).to.be.null;
     });
   });
 
