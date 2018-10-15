@@ -112,21 +112,31 @@
           .then(function(filteredStates) {
             _.forEach(filteredStates, function(filtered, index) {
               if (!filtered) {
-                var item = items[index],
-                    renderedItemIndex = renderedList.length;
+                var item = items[index];
+
+                item.previous = null;
+                item.next = null;
+
+                // Now, building the linked list
+
+                // A list of 0 or 1 element doesn't have any element with a predecessor or successor
+                if (renderedList.length > 0) {
+                  var predecessor = renderedList[renderedList.length - 1];
+
+                  // The `next` property of this element's predecessor's point to this element
+                  predecessor.next = function() {
+                    return item;
+                  };
+
+                  // The `previous` property of this element points to its predecessor
+                  item.previous = function() {
+                    return predecessor;
+                  };
+                }
 
                 renderedList.push(item);
-
-                item.previous = _renderedItemGetter(renderedItemIndex - 1);
-                item.next = _renderedItemGetter(renderedItemIndex + 1);
               }
             });
-
-            // First item has no "previous", last item has no "next"
-            // This will needs to be improved as "next" of last item could trigger the load of more items, to actually find the next item
-            if (renderedList.length > 0) {
-              renderedList[0].previous = renderedList[renderedList.length - 1].next = null;
-            }
           });
       }
 
@@ -177,12 +187,6 @@
         return $q(function(resolve, reject) {
           filterFilter([item], { $: quickFilter }).length > 0 ? resolve() : reject();
         });
-      }
-
-      function _renderedItemGetter(index) {
-        return function() {
-          return renderedList[index];
-        };
       }
     });
 
