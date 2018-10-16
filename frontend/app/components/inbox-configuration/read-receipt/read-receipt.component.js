@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .component('inboxReadReceipt', {
-      templateUrl: '/unifiedinbox/app/components/read-receipt/read-receipt.html',
+      templateUrl: '/unifiedinbox/app/components/inbox-configuration/read-receipt/read-receipt.html',
       controller: 'inboxReadReceiptController',
       bindings: {
         message: '<'
