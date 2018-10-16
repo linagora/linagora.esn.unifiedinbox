@@ -46,7 +46,7 @@ describe.skip('The inboxComposerBodyEditorHtml component', function() {
   beforeEach(function() {
     $rootScope.message = {};
     $rootScope.identity = {
-      textSignature: 'my signature'
+      htmlSignature: 'my signature'
     };
   });
 
@@ -72,7 +72,7 @@ describe.skip('The inboxComposerBodyEditorHtml component', function() {
     compileComponent();
 
     $rootScope.identity = {
-      textSignature: 'another signature'
+      htmlSignature: 'another signature'
     };
     $rootScope.$digest();
 

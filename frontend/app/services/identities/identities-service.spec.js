@@ -161,6 +161,7 @@ describe('The inboxIdentitiesService factory', function() {
     });
 
     it('should store only the signature of the default identity', function(done) {
+      defaultIdentity.htmlSignature = 'signature';
       defaultIdentity.textSignature = 'signature';
 
       inboxIdentitiesService.storeIdentity(defaultIdentity);
@@ -170,6 +171,7 @@ describe('The inboxIdentitiesService factory', function() {
         {
           name: 'identities.default',
           value: {
+            htmlSignature: 'signature',
             textSignature: 'signature'
           }
         }
@@ -177,7 +179,7 @@ describe('The inboxIdentitiesService factory', function() {
 
       inboxIdentitiesService.getAllIdentities().then(function(identities) {
         expect(identities).to.deep.equal([
-          { id: 'default', isDefault: true, textSignature: 'signature' }
+          { id: 'default', isDefault: true, htmlSignature: 'signature', textSignature: 'signature' }
         ]);
 
         done();

@@ -195,6 +195,8 @@
   "Show attachments": "Hiển thị tệp đính kèm",
   "Show emails with attachments": "Hiện thư chứa đính kèm",
   "Signature": "Chữ ký",
+  "Mobile signature": "Mobile signature",
+  "Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.": "Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.",
   "Social": "Mạng xã hội",
   "Social networks": "Mạng xã hội",
   "Some items could not be moved to \"%s\"": "Một số mục không thể chuyển đến \"%s\"",

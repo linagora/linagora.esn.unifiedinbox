@@ -12,11 +12,18 @@ sub-header
         input.form-control(ng-model="$ctrl.identity.email", name="email", ng-disabled="$ctrl.identity.isDefault")
       esn-form-group(label=__('Reply to address'))
         input.form-control(ng-model="$ctrl.identity.replyTo", name="replyTo", ng-disabled="$ctrl.identity.isDefault")
-      .form-group.inbox-identity-form-signature
+      .form-group.inbox-identity-form-signature.fg-line(ng-class="{'fg-toggled': $ctrl.isSummernoteFocused}")
         label.fg-label
           | #{__('Signature')}
         .esn-summernote
           summernote.compose-body(
-            ng-model="$ctrl.identity.textSignature",
+            ng-model="$ctrl.identity.htmlSignature",
             config="$ctrl.summernoteOptions",
+            on-focus="$ctrl.onFocus()",
+            on-blur="$ctrl.onBlur()"
           )
+      esn-form-group.inbox-identity-form-signature-mobile(
+        label=__('Mobile signature'),
+        helper=__('Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.')
+      )
+        textarea.form-control(auto-focus="false", auto-size-dynamic="true", ng-model="$ctrl.identity.textSignature", name="textSignature")

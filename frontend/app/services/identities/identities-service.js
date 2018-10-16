@@ -77,6 +77,7 @@
           return {
             name: 'identities.default',
             value: {
+              htmlSignature: identity.htmlSignature,
               textSignature: identity.textSignature
             }
           };

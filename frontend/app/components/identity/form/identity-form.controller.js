@@ -6,6 +6,7 @@
     .controller('inboxIdentityFormController', function(
       _,
       $state,
+      $scope,
       inboxIdentitiesService,
       asyncAction,
       INBOX_SUMMERNOTE_OPTIONS
@@ -13,6 +14,8 @@
       var self = this;
 
       self.$onInit = $onInit;
+      self.onFocus = onFocus;
+      self.onBlur = onBlur;
       self.saveIdentity = saveIdentity;
       self.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
@@ -26,6 +29,16 @@
         } else {
           self.identity = {};
         }
+      }
+
+      function onBlur() {
+        self.isSummernoteFocused = false;
+        $scope.$apply();
+      }
+
+      function onFocus() {
+        self.isSummernoteFocused = true;
+        $scope.$apply();
       }
 
       function saveIdentity() {
