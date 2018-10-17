@@ -7,11 +7,15 @@ sub-header
       input.form-control(required, auto-focus, ng-model="$ctrl.newFilter.name", name="filter name")
 
     // When
-    esn-form-group.nomargin(label=__('If a message'))
-      .select
-        select.form-control(
-          ng-model="$ctrl.newFilter.when"
-          ng-options="condition as condition.val for condition in $ctrl.conditionsOptions")
+    .form-group.nomargin
+      label.fg-label #{__('If a message')}
+      md-input-container
+        md-select(ng-model="$ctrl.newFilter.when")
+          md-option(
+            ng-repeat="condition in $ctrl.conditionsOptions"
+            ng-value="condition")
+            | {{condition.val}}
+
     // Message is from, to, cc or recipents (cc or to)
     .form-group(ng-class='{"ng-hide": $ctrl.hideRecipientsAutoComplete()}')
       recipients-auto-complete.fg-line(
@@ -27,14 +31,21 @@ sub-header
           ng-model="$ctrl.newFilter.subject")
 
     // Then
-    esn-form-group.nomargin(label=__('then'))
-      .select
-        select.form-control(
-          ng-model="$ctrl.newFilter.then"
-          ng-options="action as action.val for action in $ctrl.actionOptions")
+    .form-group.nomargin
+      label.fg-label #{__('then')}
+      md-input-container
+        md-select(ng-model="$ctrl.newFilter.then")
+          md-option(
+            ng-repeat="action in $ctrl.actionOptions"
+            ng-value="action")
+            | {{action.val}}
+
+
     .form-group
       .fg-line
-        .select
-          select.form-control(
-            ng-options="mailbox as mailbox.qualifiedName for mailbox in $ctrl.mailboxes track by mailbox.id"
-            ng-model='$ctrl.newFilter.moveTo')
+        md-input-container
+          md-select(ng-model='$ctrl.newFilter.moveTo')
+            md-option(
+              ng-repeat="mailbox in $ctrl.mailboxes track by mailbox.id"
+              ng-value="mailbox")
+              | {{mailbox.qualifiedName}}
