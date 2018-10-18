@@ -6,7 +6,8 @@
     .component('inboxFilterDefinitionSubheader', {
       templateUrl: '/unifiedinbox/app/components/inbox-configuration/filter-definition/subheader/filter-definition-subheader.html',
       bindings: {
-        onSave: '&'
+        onSave: '&',
+        isEditMode: '<'
       }
     });
 

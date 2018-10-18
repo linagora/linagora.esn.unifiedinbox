@@ -1,5 +1,5 @@
 sub-header
-  inbox-filter-definition-subheader(on-save='$ctrl.saveFilter()')
+  inbox-filter-definition-subheader(on-save='$ctrl.saveFilter()', is-edit-mode="$ctrl.editFilterId !== undefined")
 
 .inbox-configuration-filter-definition
   form(name="form", esn-submit="$ctrl.saveFilter()")
