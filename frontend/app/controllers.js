@@ -392,9 +392,21 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxConfigurationVacationController', function($rootScope, $scope, $state, $stateParams, $q,
-                                                               moment, jmap, withJmapClient, rejectWithErrorNotification,
-                                                               asyncJmapAction, esnPreviousPage, INBOX_EVENTS) {
+  .controller('inboxConfigurationVacationController', function(
+    $rootScope,
+    $scope,
+    $state,
+    $stateParams,
+    $q,
+    moment,
+    jmap,
+    withJmapClient,
+    rejectWithErrorNotification,
+    asyncJmapAction,
+    esnPreviousPage,
+    esnI18nDateFormatService,
+    INBOX_EVENTS
+    ) {
     var self = this;
 
     this.momentTimes = {
@@ -418,6 +430,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     function _init() {
       $scope.vacation = $stateParams.vacation;
+      $scope.dateFormat = esnI18nDateFormatService.getDateFormat();
 
       if (!$scope.vacation) {
         $scope.vacation = {};
