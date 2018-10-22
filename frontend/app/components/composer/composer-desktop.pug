@@ -18,7 +18,14 @@ form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
 
   input.form-control.compose-subject(type="text", placeholder=__('Subject'), ng-model="$ctrl.message.subject", ng-change="$ctrl.onTitleUpdate({ $title: $ctrl.message.subject })")
 
-  inbox-composer-body-editor-html.esn-summernote(message="$ctrl.message", identity="$ctrl.message.identity", is-collapsed="$ctrl.isCollapsed", send="$ctrl.send()", upload="$ctrl.upload($attachment)", remove-attachment="$ctrl.removeAttachment($attachment)", on-body-update="$ctrl.message.htmlBody = $body")
+  inbox-composer-body-editor-html.esn-summernote(
+    message="$ctrl.message",
+    identity="$ctrl.message.identity",
+    is-collapsed="$ctrl.isCollapsed",
+    send="$ctrl.send()",
+    upload="$ctrl.upload($attachment)",
+    remove-attachment="$ctrl.removeAttachment($attachment)",
+    on-body-update="$ctrl.message.htmlBody = $body")
 
   .compose-footer.flex-space-between
     button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", ng-click="$ctrl.destroyDraft()", type="button", title=__('Delete'))
@@ -33,6 +40,6 @@ form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
             md-menu-item.md-indent(type="checkbox", ng-model="$ctrl.hasRequestedReadReceipt")
               | #{__('Request a read receipt')}
       div(dynamic-directive='inboxComposerExtraButtons')
-      inbox-composer-attachments-selector(attachments="$ctrl.message.attachments", upload="$ctrl.upload($attachment)", on-attachments-update="$ctrl.message.attachments = $attachments")
+      inbox-composer-attachments-selector(attachment-holder="$ctrl.attachmentHolder")
       button.btn.btn-primary(type="submit", value="submit", ng-disabled="$ctrl.isSendingMessage") #{__('Send')}
         i.mdi.mdi-send

@@ -223,48 +223,6 @@ describe('The inboxComposerController controller', function() {
 
   });
 
-  describe('The upload function', function() {
-    var inboxAttachmentUploadService;
-
-    beforeEach(inject(function(_inboxAttachmentUploadService_) {
-      inboxAttachmentUploadService = _inboxAttachmentUploadService_;
-    }));
-
-    it('should start the upload', function() {
-      inboxAttachmentUploadService.upload = sinon.stub().returns($q.when());
-
-      ctrl.$onInit();
-      ctrl.upload('attachment');
-
-      expect(inboxAttachmentUploadService.upload).to.have.been.calledWith('attachment');
-    });
-
-    it('should save draft on success', function(done) {
-      inboxAttachmentUploadService.upload = sinon.stub().returns($q.when());
-
-      ctrl.$onInit();
-      ctrl.upload('attachment');
-      $rootScope.$digest();
-
-      shortCircuitDebounce(function() {
-        expect(ctrl.draft.save).to.have.been.calledWith();
-      }, done);
-    });
-
-    it('should not save draft when upload fails', function(done) {
-      inboxAttachmentUploadService.upload = sinon.stub().returns($q.reject());
-
-      ctrl.$onInit();
-      ctrl.upload('attachment');
-      $rootScope.$digest();
-
-      shortCircuitDebounce(function() {
-        expect(ctrl.draft.save).to.have.not.been.calledWith();
-      }, done);
-    });
-
-  });
-
   describe('The removeAttachment function', function() {
 
     it('should remove the attachment from the message and cancel the upload', function() {
