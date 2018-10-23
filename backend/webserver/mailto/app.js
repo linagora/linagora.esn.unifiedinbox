@@ -33,7 +33,8 @@ const mailtoCoreAngularModules = [
   'esn.domain',
   'esn.feature-registry',
   'esn.email-addresses-wrapper',
-  'esn.escape-html'
+  'esn.escape-html',
+  'esn.chips'
 ];
 
 const mailtoAngularJsFiles = [

@@ -7,7 +7,6 @@
     'uuid4',
     'ng.deviceDetector',
     'op.dynamicDirective',
-    'ngTagsInput',
     'mgcrea.ngStrap.modal',
 
     'linagora.esn.unifiedinbox',
@@ -42,6 +41,7 @@
     'esn.i18n',
     'esn.http',
     'esn.promise',
+    'esn.chips',
     'ngAnimate',
     'material.core',
     'material.components.icon',
