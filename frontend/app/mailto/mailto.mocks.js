@@ -28,4 +28,6 @@
   angular.module('linagora.esn.graceperiod', [])
     .service('gracePeriodLiveNotificationService', noop);
 
+  angular.module('ngCookies', []);
+
 })(angular);
