@@ -21,6 +21,7 @@
       self.onSummernoteInit = onSummernoteInit;
       self.onSummernoteKeydown = onSummernoteKeydown;
       self.onSummernoteBlur = onSummernoteBlur;
+      self.onImageUpload = onImageUpload;
       self.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
       /////
@@ -80,6 +81,32 @@
           signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.htmlSignature));
         } else {
           signatureElement.remove();
+        }
+      }
+
+      function onImageUpload(files) {
+        var attachments = [];
+
+        for (var i = files.length; i-- > 0;) {
+          attachments.push(files.item(i));
+        }
+
+        if (typeof self.onAttachmentsUpload === 'function') {
+          self.onAttachmentsUpload({attachments: attachments}).then(function() {
+            attachments.forEach(function(attachment) {
+              if (/image\/*./.test(attachment.type)) {
+                var fr = new FileReader();
+
+                fr.onload = function() {
+                  $scope.editor.summernote('insertImage', fr.result);
+                };
+                fr.onerror = function() {
+                  // Handle error?
+                };
+                fr.readAsDataURL(attachment);
+              }
+            });
+          });
         }
       }
     });

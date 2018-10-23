@@ -22,16 +22,17 @@
       INBOX_ATTACHMENT_TYPE_JMAP
     ) {
       var self = this,
-          skipAutoSaveOnDestroy = false;
+        skipAutoSaveOnDestroy = false;
 
       self.$onInit = $onInit;
       self.tryClose = tryClose;
       self.saveDraft = _.debounce(saveDraft, DRAFT_SAVING_DEBOUNCE_DELAY);
-      self.onFilesUpload = onFilesUpload;
+      self.onAttachmentsUpload = onAttachmentsUpload;
       self.removeAttachment = removeAttachment;
       self.send = send;
       self.destroyDraft = destroyDraft;
       self.toggleReadReceiptRequest = toggleReadReceiptRequest;
+
       /////
 
       function $onInit() {
@@ -39,7 +40,7 @@
         self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
 
-        self.onTitleUpdate({ $title: self.message && self.message.subject });
+        self.onTitleUpdate({$title: self.message && self.message.subject});
         inboxRequestReceiptsService.getDefaultReceipts().then(function(sendingReceiptsConfig) {
           self.hasRequestedReadReceipt = sendingReceiptsConfig.isRequestingReadReceiptsByDefault;
         });
@@ -48,10 +49,15 @@
           get attachments() {
             return self.message && self.message.attachments ? self.message.attachments : [];
           },
+          set attachments(values) {
+            self.message.attachments = self.message.attachments || [];
+            self.message.attachments.concat(values);
+          },
           attachmentType: INBOX_ATTACHMENT_TYPE_JMAP,
           attachmentFilter: {isInline: false},
           onAttachmentsUpdate: function(attachments) {
-            self.message.attachments = attachments;
+            self.message.attachments = self.message.attachments || [];
+            self.message.attachments.concat(attachments);
           },
           uploadAttachments: _.partialRight(inboxAttachmentUploadService.uploadAttachments, self.saveDraft)
         });
@@ -79,17 +85,15 @@
         return self.draft.save(self.message, options).then(self.onSave);
       }
 
-      function onFilesUpload(files) {
-        var _files = [];
+      function onAttachmentsUpload(attachments) {
+        return inboxAttachmentUploadService.uploadAttachments(attachments, self.saveDraft).then(function(attachments) {
+          self.message.attachments = self.message.attachments || [];
 
-        for (var i = files.length; i-- > 0;) {
-          _files.push(files.item(i));
-        }
-
-        inboxAttachmentUploadService.uploadAttachments(_files, self.saveDraft).then(function(attachments) {
           attachments.forEach(function(item) {
             self.message.attachments.push(item);
           });
+
+          return attachments;
         });
       }
 
@@ -136,7 +140,7 @@
               action: self.onShow
             }
           })
-            .then(destroyDraft.bind(self, { silent: true }))
+            .then(destroyDraft.bind(self, {silent: true}))
             .then(self.onSend);
         }
 

@@ -25,9 +25,10 @@ form.form-horizontal.compose.ng-cloak(ng-submit="$ctrl.send()")
     send="$ctrl.send()",
     upload="$ctrl.upload($attachment)",
     remove-attachment="$ctrl.removeAttachment($attachment)",
-    on-body-update="$ctrl.message.htmlBody = $body")
+    on-body-update="$ctrl.message.htmlBody = $body"
+    on-attachments-upload="$ctrl.onAttachmentsUpload(attachments)")
 
-  .compose-footer.flex-space-between
+  .compose-footer.flex-space-between(attachment-drag-and-drop-handler="$ctrl.onAttachmentsUpload(attachments).then($ctrl.attachmentHolder.onAttachmentsUpdate)")
     button.btn.btn-link.btn-icon(feature-flag="linagora.esn.unifiedinbox.drafts", ng-click="$ctrl.destroyDraft()", type="button", title=__('Delete'))
       i.mdi.mdi-delete
 
