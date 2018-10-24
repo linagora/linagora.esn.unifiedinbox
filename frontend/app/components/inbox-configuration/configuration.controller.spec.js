@@ -69,14 +69,14 @@ describe('The inboxConfigurationController', function() {
     });
 
     it('should initiate isFoldersSharingEnabled to true if folders sharing feature is enabled', function() {
-      config['linagora.esn.unifiedinbox.foldersSharing'] = true;
+      config['linagora.esn.unifiedinbox.features.foldersSharing'] = true;
       var controller = initController('inboxConfigurationController');
 
       expect(controller.isFoldersSharingEnabled).to.be.true;
     });
 
     it('should initiate isFoldersSharingEnabled to false if folders sharing feature is disabled', function() {
-      config['linagora.esn.unifiedinbox.foldersSharing'] = false;
+      config['linagora.esn.unifiedinbox.features.foldersSharing'] = false;
       var controller = initController('inboxConfigurationController');
 
       expect(controller.isFoldersSharingEnabled).to.be.false;

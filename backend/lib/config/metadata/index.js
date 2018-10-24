@@ -25,6 +25,6 @@ module.exports = dependencies => ({
     uploadUrl: require('./upload-url')(dependencies),
     view: require('./view')(dependencies),
     useEmailLinks: require('./use-email-links')(dependencies),
-    foldersSharing: require('./folders-sharing')(dependencies)
+    features: require('./features')(dependencies)
   }
 });
