@@ -270,5 +270,7 @@
   "Your message is being sent...": "Thư đang được gửi...",
   "Your vacation responder is enabled.": "Thư trả lời tự động trong kỳ nghỉ của bạn đã kích hoạt.",
   "Your vacation responder stopped on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt nhưng chấm dứt vào %s",
-  "Your vacation responder will be activated on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt và sẽ bắt đầu vào %s"
+  "Your vacation responder will be activated on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt và sẽ bắt đầu vào %s",
+  "Drag files here": "Kéo tệp tin tại đây",
+  "Drop files here": "Thả tệp tin tại đây"
 }

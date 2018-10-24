@@ -6,8 +6,8 @@ var expect = chai.expect;
 
 describe('The inboxComposerController controller', function() {
 
-  var $rootScope, $componentController, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
-    inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault;
+  var $rootScope, $componentController, $q, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
+    inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService;
 
   function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
@@ -35,7 +35,17 @@ describe('The inboxComposerController controller', function() {
 
   }));
 
-  beforeEach(inject(function(_$rootScope_, _$componentController_, _InboxDraft_, _sendEmail_, _Offline_, _notificationFactory_, _inboxRequestReceiptsService_) {
+  beforeEach(inject(function(
+    _$rootScope_,
+    _$componentController_,
+    _$q_,
+    _InboxDraft_,
+    _sendEmail_,
+    _Offline_,
+    _notificationFactory_,
+    _inboxRequestReceiptsService_,
+    _inboxAttachmentUploadService_
+  ) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
 
@@ -44,6 +54,8 @@ describe('The inboxComposerController controller', function() {
     Offline = _Offline_;
     notificationFactory = _notificationFactory_;
     inboxRequestReceiptsService = _inboxRequestReceiptsService_;
+    inboxAttachmentUploadService = _inboxAttachmentUploadService_;
+    $q = _$q_;
   }));
 
   beforeEach(function() {
@@ -152,6 +164,96 @@ describe('The inboxComposerController controller', function() {
       ctrl.$onInit();
 
       expect(ctrl.onTitleUpdate).to.have.been.calledWith({ $title: 'subject' });
+    });
+
+    describe('the attachment holder', function() {
+      describe('the attachment getters and setters', function() {
+        it('getter should return an empty list when message is undesfined or has no attachments yet', function() {
+          ctrl.$onInit();
+          ctrl.message = undefined;
+
+          expect(ctrl.attachmentHolder.attachments).to.eql([]);
+
+          ctrl.$onInit();
+          ctrl.message = {};
+
+          expect(ctrl.attachmentHolder.attachments).to.eql([]);
+        });
+
+        it('getter should return the message attachments', function() {
+          ctrl.$onInit();
+          ctrl.message = {attachments: ['mkj', 'ùmkj']};
+
+          expect(ctrl.attachmentHolder.attachments).to.equal(ctrl.message.attachments);
+        });
+
+        it('setter should initialize message attachments if needed', function() {
+          ctrl.$onInit();
+          ctrl.message = {};
+
+          ctrl.attachmentHolder.attachments = [];
+
+          expect(ctrl.message.attachments).to.exist;
+        });
+
+        it('setter should append provided attachments to existing ones', function() {
+          ctrl.$onInit();
+          ctrl.message = {attachments: ['mkj', 'ùmkj']};
+
+          ctrl.attachmentHolder.attachments = ['mlkj', 'mkhj'];
+
+          expect(ctrl.message.attachments).to.eql(['mkj', 'ùmkj', 'mlkj', 'mkhj']);
+        });
+
+        it('setter should not create duplicates', function() {
+          ctrl.$onInit();
+          ctrl.message = {attachments: [{a: 'a'}, {b: 'b'}]};
+
+          ctrl.attachmentHolder.attachments = [{a: 'a'}, {b: 'b'}, ctrl.message.attachments[0], ctrl.message.attachments[1]];
+
+          expect(ctrl.message.attachments).to.eql([{a: 'a'}, {b: 'b'}, {a: 'a'}, {b: 'b'}]);
+        });
+      });
+
+      describe('onAttachmentsUpdate', function() {
+        it('setter should initialize message attachments if needed', function() {
+          ctrl.$onInit();
+          ctrl.message = {};
+
+          ctrl.attachmentHolder.onAttachmentsUpdate([]);
+
+          expect(ctrl.message.attachments).to.exist;
+        });
+
+        it('setter should append provided attachments to existing ones', function() {
+          ctrl.$onInit();
+          ctrl.message = {attachments: ['mkj', 'ùmkj']};
+
+          ctrl.attachmentHolder.onAttachmentsUpdate(['mlkj', 'mkhj']);
+
+          expect(ctrl.message.attachments).to.eql(['mkj', 'ùmkj', 'mlkj', 'mkhj']);
+        });
+
+        it('setter should not create duplicates', function() {
+          ctrl.$onInit();
+          ctrl.message = {attachments: [{a: 'a'}, {b: 'b'}]};
+
+          ctrl.attachmentHolder.onAttachmentsUpdate([{a: 'a'}, {b: 'b'}, ctrl.message.attachments[0], ctrl.message.attachments[1]]);
+
+          expect(ctrl.message.attachments).to.eql([{a: 'a'}, {b: 'b'}, {a: 'a'}, {b: 'b'}]);
+        });
+      });
+
+      describe('uploadAttachments', function() {
+        it('should call inboxAttachmentUploadService.uploadAttachments', function() {
+          sinon.spy(inboxAttachmentUploadService, 'uploadAttachments');
+
+          ctrl.$onInit();
+          ctrl.attachmentHolder.uploadAttachments();
+
+          expect(inboxAttachmentUploadService.uploadAttachments).to.have.been.calledWith(ctrl.saveDraft);
+        });
+      });
     });
 
   });
@@ -556,4 +658,20 @@ describe('The inboxComposerController controller', function() {
 
   });
 
+  describe('onAttachmentsUpload', function() {
+    it('should set the atachments and retursn them', function(done) {
+      ctrl.message = {attachments: [{a: 'a'}, {b: 'b'}]};
+      sinon.stub(inboxAttachmentUploadService, 'uploadAttachments').callsFake(function(attachments) {
+        return $q.when(attachments);
+      });
+
+      ctrl.onAttachmentsUpload([{c: 'c'}, {d: 'd'}]).then(function(attachments) {
+        expect(attachments).to.eql([{a: 'a'}, {b: 'b'}, {c: 'c'}, {d: 'd'}]);
+        expect(attachments).to.equal(ctrl.message.attachments);
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+  });
 });

@@ -50,15 +50,11 @@
             return self.message && self.message.attachments ? self.message.attachments : [];
           },
           set attachments(values) {
-            self.message.attachments = self.message.attachments || [];
-            self.message.attachments.concat(values);
+            _setMessageAttachments(values);
           },
           attachmentType: INBOX_ATTACHMENT_TYPE_JMAP,
           attachmentFilter: {isInline: false},
-          onAttachmentsUpdate: function(attachments) {
-            self.message.attachments = self.message.attachments || [];
-            self.message.attachments.concat(attachments);
-          },
+          onAttachmentsUpdate: _setMessageAttachments,
           uploadAttachments: _.partialRight(inboxAttachmentUploadService.uploadAttachments, self.saveDraft)
         });
       }
@@ -87,13 +83,9 @@
 
       function onAttachmentsUpload(attachments) {
         return inboxAttachmentUploadService.uploadAttachments(attachments, self.saveDraft).then(function(attachments) {
-          self.message.attachments = self.message.attachments || [];
+          _setMessageAttachments(attachments);
 
-          attachments.forEach(function(item) {
-            self.message.attachments.push(item);
-          });
-
-          return attachments;
+          return self.message.attachments;
         });
       }
 
@@ -187,6 +179,10 @@
             return self.message;
           });
         }
+      }
+
+      function _setMessageAttachments(attachments) {
+        self.message.attachments = _.uniq((self.message.attachments || []).concat(attachments));
       }
     });
 

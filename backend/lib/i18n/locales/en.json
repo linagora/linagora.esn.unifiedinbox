@@ -270,5 +270,7 @@
   "Your message is being sent...": "Your message is being sent...",
   "Your vacation responder is enabled.": "Your vacation responder is enabled.",
   "Your vacation responder stopped on %s": "Your vacation responder stopped on %s",
-  "Your vacation responder will be activated on %s": "Your vacation responder will be activated on %s"
+  "Your vacation responder will be activated on %s": "Your vacation responder will be activated on %s",
+  "Drag files here": "Drag files here",
+  "Drop files here": "Drop files here"
 }

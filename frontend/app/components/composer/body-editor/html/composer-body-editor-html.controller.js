@@ -4,12 +4,13 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .controller('inboxComposerBodyEditorHtmlController', function(
+      $q,
       $timeout,
       $scope,
       $element,
       $compile,
       $filter,
-      summernote,
+      _,
       INBOX_EVENTS,
       INBOX_SUMMERNOTE_OPTIONS,
       INBOX_SIGNATURE_SEPARATOR
@@ -85,29 +86,49 @@
       }
 
       function onImageUpload(files) {
-        var attachments = [];
+        var promises = [];
+        var attachments = {
+          images: [],
+          other: []
+        };
 
         for (var i = files.length; i-- > 0;) {
-          attachments.push(files.item(i));
+          (/image\/*./.test(files.item(i).type)) ?
+            attachments.images.push(files.item(i)) :
+            attachments.other.push(files.item(i));
         }
+
+        // Insert images
+        promises = promises.concat(attachments.images.map(function(image) {
+          var summernoteInsertionCallback = function(base64Url) {
+            $scope.editor.summernote('insertImage', base64Url);
+          };
+
+          return fileReaderAsPromise(image).then(summernoteInsertionCallback);
+        }));
 
         if (typeof self.onAttachmentsUpload === 'function') {
-          self.onAttachmentsUpload({attachments: attachments}).then(function() {
-            attachments.forEach(function(attachment) {
-              if (/image\/*./.test(attachment.type)) {
-                var fr = new FileReader();
-
-                fr.onload = function() {
-                  $scope.editor.summernote('insertImage', fr.result);
-                };
-                fr.onerror = function() {
-                  // Handle error?
-                };
-                fr.readAsDataURL(attachment);
-              }
+          // Enclose attachments
+          if (attachments.other.length) {
+            var promise = self.onAttachmentsUpload({attachments: attachments.other}).catch(function() {
+              // Handle error ?
             });
+
+            promises.push(promise);
+          }
+        }
+
+        function fileReaderAsPromise(image) {
+          return $q(function(resolve, reject) {
+            var fr = new FileReader();
+
+            fr.onload = function() { resolve(fr.result); };
+            fr.onerror = reject;
+            fr.readAsDataURL(image);
           });
         }
+
+        return $q.all(promises);
       }
     });
 })();
