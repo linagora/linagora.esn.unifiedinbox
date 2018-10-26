@@ -1,12 +1,13 @@
 .inbox-message-list-item.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: item.selected }")
-  .inbox-list-item-content.clickable(
-      ng-click="esnIsDragging || ctrl.openEmail(item)",
+  a.inbox-list-item-content.clickable(
+      ng-click="item.isDraft && !esnIsDragging ? ctrl.openEmail(item) : false",
       esn-draggable,
       inbox-draggable-list-item,
       esn-drag-message="getDragMessage($dragData)",
       esn-drag-data="getDragData()",
       esn-drag-class="dragging",
-      ng-class="{ dragging: esnIsDragging && item.selected }"
+      ng-class="{ dragging: esnIsDragging && item.selected }",
+      ng-href="{{ !item.isDraft && !esnIsDragging ? ctrl.openEmailLink(item) : '' }}"
     )
     .inbox-item-with-icon
       .list-image.badge-container(ng-click="ctrl.select(item, $event)", desktop-hover="hovering = hover && !esnIsDragging")
