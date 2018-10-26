@@ -337,11 +337,11 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       }));
 
       function select() {
-        return element.controller('inboxThreadListItem').select(item, $event);
+        return element.controller('inboxMessageListItem').select(item, $event);
       }
 
       it('should stop propagation of the event and prevent default action', function() {
-        compileDirective('<inbox-thread-list-item />');
+        compileDirective('<inbox-message-list-item />');
         select();
 
         expect($event.preventDefault).to.have.been.calledWith();
@@ -349,7 +349,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       });
 
       it('should delegate to inboxSelectionService', function() {
-        compileDirective('<inbox-thread-list-item />');
+        compileDirective('<inbox-message-list-item />');
         select();
 
         expect(inboxSelectionService.toggleItemSelection).to.have.been.calledWith(item);
@@ -383,47 +383,30 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         expect(newComposerService.openDraft).to.have.been.calledWith('id');
       });
 
-      it('should change state to message view with $stateParams.mailbox parameter', function() {
+    });
+
+    describe('openEmailLink fn', function() {
+
+      var inboxOpenEmailMessageService;
+
+      beforeEach(angular.mock.inject(function(_inboxOpenEmailMessageService_) {
+        inboxOpenEmailMessageService = _inboxOpenEmailMessageService_;
+      }));
+
+      function openEmailLink(email) {
+        return element.controller('inboxMessageListItem').openEmailLink(email);
+      }
+
+      it('should call inboxOpenEmailMessageService to get email state with email and $stateParams.mailbox parameter', function() {
+        inboxOpenEmailMessageService.getEmailState = sinon.spy();
         var email = { id: 'expectedId' };
 
-        $stateParams.mailbox = '123';
         $scope.mailbox = { id: '456' };
 
         compileDirective('<inbox-message-list-item />');
-        openEmail(email);
+        openEmailLink(email);
 
-        expect($state.go).to.have.been.calledWith('.message', {
-          emailId: 'expectedId',
-          mailbox: $stateParams.mailbox,
-          item: email
-        });
-      });
-
-      it('should change state to $scope.mailbox.id if present and message is not a draft', function() {
-        var email = { id: 'expectedId' };
-
-        $scope.mailbox = { id: 'chosenMailbox' };
-        compileDirective('<inbox-message-list-item />');
-        openEmail(email);
-
-        expect($state.go).to.have.been.calledWith('.message', {
-          emailId: 'expectedId',
-          mailbox: $scope.mailbox.id,
-          item: email
-        });
-      });
-
-      it('should change state to the first mailbox of the message if message is not a draft', function() {
-        var email = { id: 'expectedId', mailboxIds: ['chosenMailbox', 'mailbox2'] };
-
-        compileDirective('<inbox-message-list-item />');
-        openEmail(email);
-
-        expect($state.go).to.have.been.calledWith('.message', {
-          emailId: 'expectedId',
-          mailbox: 'chosenMailbox',
-          item: email
-        });
+        expect(inboxOpenEmailMessageService.getEmailState).to.have.been.calledWith('.message', email, $scope.mailbox);
       });
 
     });
@@ -752,6 +735,35 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
           mailbox: 'chosenMailbox',
           item: email
         });
+      });
+
+    });
+
+    describe('openEmailLink fn', function() {
+
+      var inboxOpenEmailMessageService, $stateParams;
+
+      beforeEach(angular.mock.inject(function(_inboxOpenEmailMessageService_, _$stateParams_) {
+        inboxOpenEmailMessageService = _inboxOpenEmailMessageService_;
+        $stateParams = _$stateParams_;
+
+        $stateParams.mailbox = null;
+      }));
+
+      function openEmailLink(email) {
+        return element.controller('inboxMessageListItem').openEmailLink(email);
+      }
+
+      it('should call inboxOpenEmailMessageService to get email state with email and $stateParams.mailbox parameter', function() {
+        inboxOpenEmailMessageService.getEmailState = sinon.spy();
+        var email = { id: 'expectedId' };
+
+        $scope.mailbox = { id: '456' };
+
+        compileDirective('<inbox-message-list-item />');
+        openEmailLink(email);
+
+        expect(inboxOpenEmailMessageService.getEmailState).to.have.been.calledWith('.message', email, $scope.mailbox);
       });
 
     });
