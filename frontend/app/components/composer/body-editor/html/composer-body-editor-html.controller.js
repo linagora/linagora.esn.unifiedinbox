@@ -9,6 +9,7 @@
       $element,
       $compile,
       $filter,
+      summernote,
       INBOX_EVENTS,
       INBOX_SUMMERNOTE_OPTIONS,
       INBOX_SIGNATURE_SEPARATOR
