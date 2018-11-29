@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .component('inboxIdentities', {
-      templateUrl: '/unifiedinbox/app/components/identities/identities.html',
+      templateUrl: '/unifiedinbox/app/components/inbox-configuration/identities/identities.html',
       controller: 'inboxIdentitiesController'
     });
 

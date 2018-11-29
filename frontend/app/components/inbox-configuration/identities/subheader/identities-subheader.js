@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .component('inboxIdentitiesSubheader', {
-      templateUrl: '/unifiedinbox/app/components/identities/subheader/identities-subheader.html'
+      templateUrl: '/unifiedinbox/app/components/inbox-configuration/identities/subheader/identities-subheader.html'
     });
 
 })();

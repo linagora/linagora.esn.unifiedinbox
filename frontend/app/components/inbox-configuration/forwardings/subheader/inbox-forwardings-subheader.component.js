@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
     .component('inboxForwardingsSubheader', {
-      templateUrl: '/unifiedinbox/app/components/forwardings/subheader/inbox-forwardings-subheader.html',
+      templateUrl: '/unifiedinbox/app/components/inbox-configuration/forwardings/subheader/inbox-forwardings-subheader.html',
       bindings: {
         forwardings: '<',
         onSave: '&'

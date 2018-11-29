@@ -1,7 +1,7 @@
 extends /modules/subheader/responsive-subheader.pug
 
 block left
-  inbox-subheader-close-button
+  inbox-subheader-close-button(ui-sref="unifiedinbox.configuration.identities")
   .title.ellipsis.extra-title(ng-if="$ctrl.identityId") #{__('Edit identity')}
   .title.ellipsis.extra-title(ng-if="!$ctrl.identityId") #{__('Create identity')}
 
