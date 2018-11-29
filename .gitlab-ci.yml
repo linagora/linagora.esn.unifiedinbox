@@ -1,13 +1,14 @@
 image: node:8
 
 stages:
+  - linter
   - test
   - swagger
   - deploy-swagger
   - deploy_dev
 
-test:
-  stage: test
+linter:
+  stage: linter
   tags:
     - docker
   services:
@@ -17,8 +18,64 @@ test:
     - rabbitmq:3.6
   script:
    - npm i
-   - ./node_modules/bower/bin/bower i --allow-root
-   - ./node_modules/grunt/bin/grunt
+   - ./node_modules/.bin/bower i --allow-root
+   - ./node_modules/.bin/grunt linters
+
+test_frontend:
+  stage: test
+  tags:
+    - docker
+  services:
+    - mongo:3.4
+    - elasticsearch:2.4
+    - redis:3
+    - rabbitmq:3.6
+  script:
+    - npm i
+    - ./node_modules/.bin/bower i --allow-root
+    - ./node_modules/.bin/grunt test-frontend
+
+test_unit_backtend:
+  stage: test
+  tags:
+    - docker
+  services:
+    - mongo:3.4
+    - elasticsearch:2.4
+    - redis:3
+    - rabbitmq:3.6
+  script:
+    - npm i
+    - ./node_modules/.bin/bower i --allow-root
+    - ./node_modules/.bin/grunt test-unit-backend
+
+test_frontend:
+  stage: test
+  tags:
+    - docker
+  services:
+    - mongo:3.4
+    - elasticsearch:2.4
+    - redis:3
+    - rabbitmq:3.6
+  script:
+    - npm i
+    - ./node_modules/.bin/bower i --allow-root
+    - ./node_modules/.bin/grunt test-frontend
+
+test_midway_backtend:
+  stage: test
+  tags:
+    - docker
+  services:
+    - mongo:3.4
+    - elasticsearch:2.4
+    - redis:3
+    - rabbitmq:3.6
+  script:
+    - npm i
+    - ./node_modules/.bin/bower i --allow-root
+    - ./node_modules/.bin/grunt test-midway-backend
 
 swagger:
   stage: swagger
