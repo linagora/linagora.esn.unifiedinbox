@@ -3,20 +3,36 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxComposerController', function($q, notificationFactory, jmap, attachmentUploadService, _, emailSendingService, inboxRequestReceiptsService,
-                                                    emailBodyService, Offline, inboxAttachmentUploadService, waitUntilMessageIsComplete,
-                                                    backgroundAction, InboxDraft, DRAFT_SAVING_DEBOUNCE_DELAY) {
+    .controller('inboxComposerController', function(
+      $q,
+      _,
+      notificationFactory,
+      jmap,
+      attachmentUploadService,
+      emailSendingService,
+      inboxRequestReceiptsService,
+      esnAttachmentsSelectorService,
+      emailBodyService,
+      Offline,
+      inboxAttachmentUploadService,
+      waitUntilMessageIsComplete,
+      backgroundAction,
+      InboxDraft,
+      DRAFT_SAVING_DEBOUNCE_DELAY,
+      INBOX_ATTACHMENT_TYPE_JMAP
+    ) {
       var self = this,
-          skipAutoSaveOnDestroy = false;
+        skipAutoSaveOnDestroy = false;
 
       self.$onInit = $onInit;
       self.tryClose = tryClose;
       self.saveDraft = _.debounce(saveDraft, DRAFT_SAVING_DEBOUNCE_DELAY);
-      self.upload = upload;
+      self.onAttachmentsUpload = onAttachmentsUpload;
       self.removeAttachment = removeAttachment;
       self.send = send;
       self.destroyDraft = destroyDraft;
       self.toggleReadReceiptRequest = toggleReadReceiptRequest;
+
       /////
 
       function $onInit() {
@@ -24,9 +40,22 @@
         self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
 
-        self.onTitleUpdate({ $title: self.message && self.message.subject });
+        self.onTitleUpdate({$title: self.message && self.message.subject});
         inboxRequestReceiptsService.getDefaultReceipts().then(function(sendingReceiptsConfig) {
           self.hasRequestedReadReceipt = sendingReceiptsConfig.isRequestingReadReceiptsByDefault;
+        });
+
+        self.attachmentHolder = esnAttachmentsSelectorService.newAttachmentServiceHolder({
+          get attachments() {
+            return self.message && self.message.attachments ? self.message.attachments : [];
+          },
+          set attachments(values) {
+            _setMessageAttachments(values);
+          },
+          attachmentType: INBOX_ATTACHMENT_TYPE_JMAP,
+          attachmentFilter: {isInline: false},
+          onAttachmentsUpdate: _setMessageAttachments,
+          uploadAttachments: _.partialRight(inboxAttachmentUploadService.uploadAttachments, self.saveDraft)
         });
       }
 
@@ -52,8 +81,12 @@
         return self.draft.save(self.message, options).then(self.onSave);
       }
 
-      function upload(attachment) {
-        return inboxAttachmentUploadService.upload(attachment).then(self.saveDraft);
+      function onAttachmentsUpload(attachments) {
+        return inboxAttachmentUploadService.uploadAttachments(attachments, self.saveDraft).then(function(attachments) {
+          _setMessageAttachments(attachments);
+
+          return self.message.attachments;
+        });
       }
 
       function removeAttachment(attachment) {
@@ -99,7 +132,7 @@
               action: self.onShow
             }
           })
-            .then(destroyDraft.bind(self, { silent: true }))
+            .then(destroyDraft.bind(self, {silent: true}))
             .then(self.onSend);
         }
 
@@ -146,6 +179,10 @@
             return self.message;
           });
         }
+      }
+
+      function _setMessageAttachments(attachments) {
+        self.message.attachments = _.uniq((self.message.attachments || []).concat(attachments));
       }
     });
 

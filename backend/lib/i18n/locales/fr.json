@@ -270,5 +270,7 @@
   "Your message is being sent...": "Votre message est envoyé...",
   "Your vacation responder is enabled.": "Votre répondeur automatique est actif.",
   "Your vacation responder stopped on %s": "Votre message d'absence est désactivé depuis le %s",
-  "Your vacation responder will be activated on %s": "Votre message d'absence sera activé le %s"
+  "Your vacation responder will be activated on %s": "Votre message d'absence sera activé le %s",
+  "Drag files here": "Glissez des fichiers ici",
+  "Drop files here": "Déposez les fichiers ici"
 }

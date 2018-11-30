@@ -6,20 +6,103 @@
 
   function inboxAttachmentUploadService(
     $q,
-    inboxAttachmentProviderRegistry
+    $filter,
+    _,
+    inboxAttachmentProviderRegistry,
+    inboxConfig,
+    withJmapClient,
+    inboxAttachmentAlternativeUploaderModal,
+    DEFAULT_MAX_SIZE_UPLOAD
   ) {
 
-    return {
-      upload: upload
-    };
+    return getInboxAttachmentUploadServiceInstance();
 
-    function upload(attachment) {
+    function getInboxAttachmentUploadServiceInstance() {
+      function InboxAttachmentUploadServiceInstance() {
+        this.uploadAttachments = uploadAttachments.bind(this);
+        this._uploadLargeFiles = _uploadLargeFiles.bind(this);
+        this._upload = _upload.bind(this);
+      }
+
+      InboxAttachmentUploadServiceInstance.prototype.constructor = InboxAttachmentUploadServiceInstance;
+
+      return new InboxAttachmentUploadServiceInstance();
+    }
+
+    function uploadAttachments(files, uploadCallback) {
+      if (!files || files.length === 0) {
+        return $q.resolve([]);
+      }
+
+      var self = this;
+
+      uploadCallback = (typeof uploadCallback === 'function') ? uploadCallback : angular.noop;
+
+      return withJmapClient(function(client) {
+        return inboxConfig('maxSizeUpload', DEFAULT_MAX_SIZE_UPLOAD)
+          .then(function(maxSizeUpload) {
+            var largeFiles = [];
+            var uploadedFiles = [];
+            var humanReadableMaxSizeUpload = $filter('bytes')(maxSizeUpload);
+
+            files.forEach(function(file) {
+              if (file.size > maxSizeUpload) {
+                return largeFiles.push(file);
+              }
+
+              // default attachment requires JMAP client instance
+              var attachment = inboxAttachmentProviderRegistry.getDefault().fileToAttachment(client, file);
+
+              self._upload(attachment).then(uploadCallback);
+
+              return uploadedFiles.push(attachment);
+            });
+
+            var uploadedLargeFiles = largeFiles.length > 0 ?
+              self._uploadLargeFiles(largeFiles, humanReadableMaxSizeUpload, uploadCallback) :
+              $q.when([]);
+
+            return $q.all([
+              $q.when(uploadedFiles),
+              uploadedLargeFiles
+            ]);
+          })
+          .then(function(promises) {
+            return _.union(promises[0], promises[1]);
+          });
+      });
+    }
+
+    function _uploadLargeFiles(files, humanReadableMaxSizeUpload, uploadCallback) {
+      var self = this;
+
+      return $q(function(resolve) {
+        inboxAttachmentAlternativeUploaderModal.show(files, humanReadableMaxSizeUpload, onUpload, onCancel);
+
+        function onUpload(attachmentProvider, selectedFiles) {
+          resolve(selectedFiles && selectedFiles.map(function(file) {
+            var attachment = attachmentProvider.fileToAttachment(file);
+
+            self._upload(attachment).then(uploadCallback);
+
+            return attachment;
+          }));
+        }
+
+        function onCancel() {
+          resolve([]);
+        }
+      });
+    }
+
+    function _upload(attachment) {
       attachment.status = 'uploading';
       attachment.upload = {
         progress: 0
       };
 
-      var uploader = _getUploader(attachment);
+      var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
+      var uploader = attachmentProvider && attachmentProvider.upload;
 
       if (uploader) {
         var uploadTask = uploader(attachment);
@@ -39,12 +122,6 @@
       }
 
       return attachment.upload.promise;
-    }
-
-    function _getUploader(attachment) {
-      var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
-
-      return attachmentProvider && attachmentProvider.upload;
     }
   }
 

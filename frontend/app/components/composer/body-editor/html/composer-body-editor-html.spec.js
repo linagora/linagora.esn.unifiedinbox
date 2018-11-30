@@ -1,12 +1,12 @@
 'use strict';
 
-/* global chai: false */
+/* global chai: false, sinon: false */
 
 var expect = chai.expect;
 
-describe.skip('The inboxComposerBodyEditorHtml component', function() {
+describe('The inboxComposerBodyEditorHtml component', function() {
 
-  var $rootScope, $compile, element;
+  var $q, $rootScope, $compile, $scope, element, controller;
 
   function compileComponent() {
     element = angular.element(
@@ -14,8 +14,10 @@ describe.skip('The inboxComposerBodyEditorHtml component', function() {
     );
     element.appendTo(document.body);
 
-    $compile(element)($rootScope.$new());
+    var compiled = $compile(element)($scope);
+
     $rootScope.$digest();
+    controller = compiled.controller('inboxComposerBodyEditorHtml');
 
     return element;
   }
@@ -38,9 +40,10 @@ describe.skip('The inboxComposerBodyEditorHtml component', function() {
 
   beforeEach(module('jadeTemplates', 'linagora.esn.unifiedinbox'));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function(_$q_, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $q = _$q_;
   }));
 
   beforeEach(function() {
@@ -48,66 +51,156 @@ describe.skip('The inboxComposerBodyEditorHtml component', function() {
     $rootScope.identity = {
       htmlSignature: 'my signature'
     };
+
+    $scope = $rootScope.$new();
   });
 
-  it('should add a new inbox-composer-attachments component inside the body', function() {
-    expect(compileComponent().find('.note-editable + inbox-composer-attachments')).to.have.length(1);
-  });
-
-  it('should add the identity to the body when composing from scratch', function() {
-    compileComponent();
-
-    expect(element.find('.note-editable .openpaas-signature').html()).to.equal('-- \nmy signature');
-  });
-
-  it('should not add the identity to the body when composing from an existing message', function() {
-    $rootScope.message.htmlBody = '<b>body</b>';
-
-    compileComponent();
-
-    expect(element.find('.note-editable .openpaas-signature')).to.have.length(0);
-  });
-
-  it('should update the identity when it changes', function() {
-    compileComponent();
-
-    $rootScope.identity = {
-      htmlSignature: 'another signature'
-    };
-    $rootScope.$digest();
-
-    expect(element.find('.note-editable .openpaas-signature').html()).to.equal('-- \nanother signature');
-  });
-
-  it('should send the message when ctrl+enter is pressed in body', function(done) {
-    $rootScope.send = done;
-
-    compileComponent();
-
-    element.find('.note-editable').trigger(ctrlEnterEvent());
-  });
-
-  it('should force tabindex=-1 on all toolbar form input', function(done) {
-    compileComponent();
-
-    element.find('.note-toolbar :input').each(function() {
-      if ($(this).attr('tabindex') !== '-1') {
-        done('Input element has a positive tabindex', this);
-      }
+  describe.skip('component', function() {
+    it('should add a new inbox-composer-attachments component inside the body', function() {
+      expect(compileComponent().find('.note-editable + inbox-composer-attachments')).to.have.length(1);
     });
 
-    done();
+    it('should add the identity to the body when composing from scratch', function() {
+      compileComponent();
+
+      expect(element.find('.note-editable .openpaas-signature').html()).to.equal('-- \nmy signature');
+    });
+
+    it('should not add the identity to the body when composing from an existing message', function() {
+      $rootScope.message.htmlBody = '<b>body</b>';
+
+      compileComponent();
+
+      expect(element.find('.note-editable .openpaas-signature')).to.have.length(0);
+    });
+
+    it('should update the identity when it changes', function() {
+      compileComponent();
+
+      $rootScope.identity = {
+        htmlSignature: 'another signature'
+      };
+      $rootScope.$digest();
+
+      expect(element.find('.note-editable .openpaas-signature').html()).to.equal('-- \nanother signature');
+    });
+
+    it('should send the message when ctrl+enter is pressed in body', function(done) {
+      $rootScope.send = done;
+
+      compileComponent();
+
+      element.find('.note-editable').trigger(ctrlEnterEvent());
+    });
+
+    it('should force tabindex=-1 on all toolbar form input', function(done) {
+      compileComponent();
+
+      element.find('.note-toolbar :input').each(function() {
+        if ($(this).attr('tabindex') !== '-1') {
+          done('Input element has a positive tabindex', this);
+        }
+      });
+
+      done();
+    });
+
+    it('should call onBodyUpdate on blur', function() {
+      compileComponent();
+
+      element.find('.summernote').summernote('focus');
+      element.find('.summernote').summernote('insertText', 'some other text');
+      element.find('.note-editable').blur();
+      $rootScope.$digest();
+
+      expect($rootScope.message.htmlBody).to.equal('<p>some other text<br></p><pre class="openpaas-signature">-- \nmy signature</pre>');
+    });
   });
 
-  it('should call onBodyUpdate on blur', function() {
-    compileComponent();
+  describe('onImageUpload', function() {
+    beforeEach(function() {
+      compileComponent();
 
-    element.find('.summernote').summernote('focus');
-    element.find('.summernote').summernote('insertText', 'some other text');
-    element.find('.note-editable').blur();
-    $rootScope.$digest();
+      /*
+       * Ugly hack because PhantomJS doesn't correctly support File API event though it's ES5...
+       * See https://github.com/ariya/phantomjs/issues/14247#issuecomment-224251395
+       * Seriously, the ticket has been opened since 2016...
+      */
+      if (typeof File !== 'function') {
+        window.File = function(bits, name, options) {
+          var instance = new Blob(bits, options);
 
-    expect($rootScope.message.htmlBody).to.equal('<p>some other text<br></p><pre class="openpaas-signature">-- \nmy signature</pre>');
+          instance.name = name;
+          instance.lastModified = new Date('2018-10-30');
+          instance.lastModifiedDate = new Date('2018-10-30');
+
+          return instance;
+        };
+        window.File.prototype.constructor = window.File;
+      }
+      /* End of ugly hack */
+
+      window.FileReader = function() {
+        this.result = undefined;
+        this.onerror = angular.noop;
+        this.onload = angular.noop;
+
+        var self = this;
+
+        window.FileReader.prototype.readAsDataURL = sinon.stub().callsFake(function() {
+          self.result = 'data:base64;' + ++window.FileReader.idx;
+          self.onload();
+          return self.result;
+        });
+      };
+      window.FileReader.idx = 0;
+    });
+
+    it('should insert the base64 encoded images in summernote and not attach them to the mail', function(done) {
+      var image1 = new File(['wdghdxsfhgwdg'], 'file1', {type: 'image/jpeg'});
+      var image2 = new File(['dgswdgswdgd'], 'file2', {type: 'image/jpeg'});
+      var pdf1 = new File(['dwgdgwdgwdg'], 'file2', {type: 'application/pdf'});
+      var pdf2 = new File(['wdgwdgxwfdgh'], 'file2', {type: 'application/pdf'});
+
+      controller.onAttachmentsUpload = undefined;
+      sinon.spy($.fn, 'summernote');
+
+      controller.onImageUpload({
+        length: 4,
+        item: function(i) {
+          return [image1, image2, pdf1, pdf2][i];
+        }
+      }).then(function() {
+        expect($.fn.summernote).to.have.been.calledTwice;
+        expect($.fn.summernote.firstCall).to.have.been.calledWith('insertImage', 'data:base64;1');
+        expect($.fn.summernote.secondCall).to.have.been.calledWith('insertImage', 'data:base64;2');
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should attach files that are not images', function(done) {
+      var image1 = new File(['wdghdxsfhgwdg'], 'file1', {type: 'image/jpeg'});
+      var image2 = new File(['dgswdgswdgd'], 'file2', {type: 'image/jpeg'});
+      var pdf1 = new File(['dwgdgwdgwdg'], 'file3', {type: 'application/pdf'});
+      var pdf2 = new File(['wdgwdgxwfdgh'], 'file4', {type: 'application/pdf'});
+
+      controller.onAttachmentsUpload = sinon.stub().returns($q.when());
+
+      controller.onImageUpload({
+        length: 4,
+        item: function(i) {
+          return [image1, image2, pdf1, pdf2][i];
+        }
+      }).then(function() {
+        expect(controller.onAttachmentsUpload).to.have.been.calledOnce;
+        expect(controller.onAttachmentsUpload.firstCall).to.have.been
+          .calledWith(sinon.match({attachments: sinon.match.array.contains([pdf1, pdf2])}));
+        done();
+      });
+
+      $rootScope.$digest();
+    });
   });
-
 });

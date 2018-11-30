@@ -56,6 +56,7 @@ module.exports = function(config) {
       'frontend/components/bootstrap/dist/js/bootstrap.js',
       'frontend/components/summernote/dist/summernote.js',
       'frontend/components/angular-summernote/dist/angular-summernote.js',
+      'frontend/components/sanitize-html/dist/sanitize-html.js',
       'frontend/components/angular-messages/angular-messages.js',
       'frontend/components/angular-animate/angular-animate.js',
       'frontend/components/waves/src/js/waves.js',

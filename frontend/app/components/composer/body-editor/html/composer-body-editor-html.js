@@ -13,7 +13,8 @@
         send: '&',
         upload: '&',
         removeAttachment: '&',
-        onBodyUpdate: '&'
+        onBodyUpdate: '&',
+        onAttachmentsUpload: '&'
       }
     });
 
