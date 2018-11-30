@@ -100,8 +100,12 @@ module.exports = function(config) {
     colors: true,
     singleRun: true,
     autoWatch: true,
-    browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+    // Disable ChromeHeadless causing problems for now
+    // https://github.com/GoogleChrome/puppeteer/issues/1925
+    browsers: ['FirefoxHeadless'/*,'ChromeHeadless'*/],
     customLaunchers: {
+      FirefoxHeadless: {base: 'Firefox', flags: ['--headless']},
+      ChromeHeadless: {base: 'Chrome', flags: ['--headless', '--disable-gpu']},
       Chrome_with_debugging: {
         base: 'Chrome',
         flags: ['--remote-debugging-port=9222'],
@@ -121,7 +125,6 @@ module.exports = function(config) {
     },
 
     plugins: [
-      'karma-phantomjs-launcher',
       'karma-chrome-launcher',
       'karma-firefox-launcher',
       'karma-mocha',

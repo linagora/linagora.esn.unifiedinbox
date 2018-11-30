@@ -25,14 +25,16 @@ test_frontend:
   stage: test
   tags:
     - docker
+  image: docker-registry.linagora.com:5000/public-snapshots/openpaas-esn-test-helper:latest
   services:
     - mongo:3.4
     - elasticsearch:2.4
     - redis:3
     - rabbitmq:3.6
-  script:
+  before_script:
     - npm i
     - ./node_modules/.bin/bower i --allow-root
+  script:
     - ./node_modules/.bin/grunt test-frontend
 
 test_unit_backtend:
@@ -48,20 +50,6 @@ test_unit_backtend:
     - npm i
     - ./node_modules/.bin/bower i --allow-root
     - ./node_modules/.bin/grunt test-unit-backend
-
-test_frontend:
-  stage: test
-  tags:
-    - docker
-  services:
-    - mongo:3.4
-    - elasticsearch:2.4
-    - redis:3
-    - rabbitmq:3.6
-  script:
-    - npm i
-    - ./node_modules/.bin/bower i --allow-root
-    - ./node_modules/.bin/grunt test-frontend
 
 test_midway_backtend:
   stage: test
