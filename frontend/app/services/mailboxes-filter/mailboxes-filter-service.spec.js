@@ -438,7 +438,8 @@ describe('The inboxMailboxesFilterService factory', function() {
         var target = inboxMailboxesFilterService.getFilterSummary(filter);
 
         expect(target).to
-          .eql('If a message has subject &#65279;<b>"admin@open-paas.org"</b>&#65279; then move to destination folder &#65279;<b>INBOX</b>&#65279;');
+          .eql('If a message has subject containing &#65279;<b>"admin@open-paas.org"</b>&#65279; then move to' +
+            ' destination folder &#65279;<b>INBOX</b>&#65279;');
       });
     });
   });

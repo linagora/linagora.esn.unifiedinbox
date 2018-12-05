@@ -229,7 +229,7 @@
             break;
           case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
             filter = new jmap.FilterRule(null, name).when.subject
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+              .value(conditionValue).comparator(jmap.FilterRule.Comparator.CONTAINS);
         }
 
         switch (actionDefinition.action) {
