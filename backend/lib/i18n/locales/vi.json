@@ -97,7 +97,7 @@
   "Go back to mailbox": "Trở lại hòm thư",
   "Go to your Inbox": "Đi tới Hộp thư đến của bạn",
   "Has attachment": "Có tập tin đính kèm",
-  "has subject %s": "có chủ đề %s",
+  "has subject containing %s": "có chủ đề chứa %s",
   "Has the words": "Có các từ",
   "Hide emails with attachments": "Ẩn thư chứa đính kèm",
   "Identities": "Định danh",

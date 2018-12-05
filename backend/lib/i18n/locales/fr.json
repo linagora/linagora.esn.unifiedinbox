@@ -97,7 +97,7 @@
   "Go back to mailbox": "Retourner à la liste des mails",
   "Go to your Inbox": "Aller dans votre inbox",
   "Has attachment": "Contenant une pièce jointe",
-  "has subject %s": "a pour sujet %s",
+  "has subject containing %s": "dont le sujet contient %s",
   "Has the words": "Contient les mots",
   "Hide emails with attachments": "Masquer les emails avec pièces jointes",
   "Identities": "Identités",
