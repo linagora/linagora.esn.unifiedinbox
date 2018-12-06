@@ -97,7 +97,7 @@
   "Go back to mailbox": "Go back to mailbox",
   "Go to your Inbox": "Go to your Inbox",
   "Has attachment": "Has attachment",
-  "has subject %s": "has subject %s",
+  "has subject containing %s": "has subject containing %s",
   "Has the words": "Has the words",
   "Hide emails with attachments": "Hide emails with attachments",
   "Identities": "Identities",
