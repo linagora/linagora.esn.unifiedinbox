@@ -88,7 +88,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
         {key: 'to', val: 'is addressed to '},
         {key: 'cc', val: 'is cc\'d to '},
         {key: 'recipient', val: 'is addressed or cc\'d to '},
-        {key: 'subject', val: 'has subject '},
+        {key: 'subject', val: 'has subject containing '},
         {key: 'condition2', val: 'conditionMessage2'},
         {key: 'condition3', val: 'conditionMessage3'}
       ]);
@@ -515,7 +515,7 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             name: 'My filter',
             when: {
               key: JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY,
-              val: 'has subject '
+              val: 'has subject containing '
             },
             then: {key: 'action2', val: 'actionMessage2'},
             subject: 'email subject'

@@ -22,7 +22,7 @@
         },
         SUBJECT: {
           JMAP_KEY: 'subject',
-          HUMAN_REPRESENTATION: 'has subject %s'
+          HUMAN_REPRESENTATION: 'has subject containing %s'
         }
       },
       CONDITIONS_MAPPING: {
