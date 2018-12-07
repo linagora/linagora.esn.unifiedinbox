@@ -50,6 +50,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       inboxFilterDescendantMailboxesFilter = sinon.spy();
       config['linagora.esn.unifiedinbox.uploadUrl'] = 'http://jmap';
       config['linagora.esn.unifiedinbox.maxSizeUpload'] = DEFAULT_MAX_SIZE_UPLOAD;
+      config['core.datetime'] = {use24hourFormat: true};
       fileUploadMock = {
         addFile: function() {
           return {

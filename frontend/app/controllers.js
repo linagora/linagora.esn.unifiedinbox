@@ -405,6 +405,7 @@ angular.module('linagora.esn.unifiedinbox')
     asyncJmapAction,
     esnPreviousPage,
     esnI18nDateFormatService,
+    esnConfig,
     INBOX_EVENTS
     ) {
     var self = this;
@@ -434,11 +435,16 @@ angular.module('linagora.esn.unifiedinbox')
 
       if (!$scope.vacation) {
         $scope.vacation = {};
+        $scope.is24HourFormat = {};
 
         withJmapClient(function(client) {
-          client.getVacationResponse()
-            .then(function(vacation) {
-              $scope.vacation = vacation;
+
+          $q.all([
+            is24HourFormat(),
+            client.getVacationResponse()
+          ]).then(function(results) {
+              $scope.is24HourFormat = results[0];
+              $scope.vacation = results[1];
 
               // defaultTextBody is being initialised in vacation/index.jade
               if (!$scope.vacation.isEnabled && !$scope.vacation.textBody) {
@@ -544,6 +550,12 @@ angular.module('linagora.esn.unifiedinbox')
       }
 
       return $q.when();
+    }
+
+    function is24HourFormat() {
+      return esnConfig('core.datetime').then(function(config) {
+        return config.use24hourFormat;
+      });
     }
   })
 
