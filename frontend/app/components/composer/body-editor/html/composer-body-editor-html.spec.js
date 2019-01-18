@@ -150,6 +150,7 @@ describe('The inboxComposerBodyEditorHtml component', function() {
         window.FileReader.prototype.readAsDataURL = sinon.stub().callsFake(function() {
           self.result = 'data:base64;' + ++window.FileReader.idx;
           self.onload();
+
           return self.result;
         });
       };
