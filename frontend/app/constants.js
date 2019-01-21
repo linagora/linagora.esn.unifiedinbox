@@ -28,12 +28,6 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS', 30)
   .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS', 30)
   .constant('DEFAULT_VIEW', 'messages')
-  .constant('IFRAME_MESSAGE_PREFIXES', {
-    CHANGE_DOCUMENT: '[linagora.esn.unifiedinbox.changeDocument]',
-    MAILTO: '[linagora.esn.unifiedinbox.mailtoClick]',
-    INLINE_ATTACHMENT: '[linagora.esn.unifiedinbox.inlineAttachment]',
-    CHANGE_CURRENT_LOCATION: '[linagora.esn.unifiedinbox.changeCurrentLocation]'
-  })
   .constant('INBOX_MESSAGE_HEADERS', {
     READ_RECEIPT: 'Disposition-Notification-To',
     REPLY_TO: 'In-Reply-To',

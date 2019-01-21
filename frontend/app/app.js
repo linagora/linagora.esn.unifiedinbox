@@ -332,24 +332,6 @@ angular.module('linagora.esn.unifiedinbox', [
     searchProviders.add(inboxSearchResultsProvider);
   })
 
-  .run(function(newComposerService, listenToPrefixedWindowMessage, IFRAME_MESSAGE_PREFIXES) {
-    listenToPrefixedWindowMessage(IFRAME_MESSAGE_PREFIXES.MAILTO, function(emailAddress) {
-      newComposerService.open({
-          to: [{
-            email: emailAddress,
-            name: emailAddress
-          }]
-        }
-      );
-    });
-  })
-
-  .run(function($window, listenToPrefixedWindowMessage, IFRAME_MESSAGE_PREFIXES) {
-    listenToPrefixedWindowMessage(IFRAME_MESSAGE_PREFIXES.CHANGE_CURRENT_LOCATION, function(url) {
-      $window.location.href = url;
-    });
-  })
-
   .run(function($rootScope) {
     $rootScope.inbox = {
       list: {

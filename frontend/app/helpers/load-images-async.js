@@ -20,14 +20,3 @@ AsyncImageLoader.prototype.onLoad = function() {
   }
 };
 
-/**
- * Keep this here, this is to guarantee that images get loaded _after_ the iFrame is ready,
- * to ensure we can call `window.parentIFrame.size()` when we're done loading images.
- *
- * @see https://github.com/davidjbradshaw/iframe-resizer#readycallback
- */
-window.iFrameResizer = {
-  readyCallback: function() {
-    new AsyncImageLoader().load();
-  }
-};
