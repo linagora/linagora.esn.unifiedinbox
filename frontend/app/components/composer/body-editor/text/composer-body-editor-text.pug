@@ -2,4 +2,4 @@ textarea.compose-body(auto-size-dynamic="true", ng-model="$ctrl.message.textBody
 
 .inbox-composer-original-message(ng-if="$ctrl.message.quoted.htmlBody && !$ctrl.message.isQuoting")
   button.btn.btn-primary.edit-quoted-mail.pull-right(ng-click="$ctrl.editQuotedMail()") #{__('Edit quoted mail')}
-  inbox-message-body(message="$ctrl.message.quoted", auto-scale-disabled="true")
+  inbox-message-body(message="$ctrl.message.quoted")

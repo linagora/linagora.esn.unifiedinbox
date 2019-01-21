@@ -1,8 +1,4 @@
 .inbox-message-body-html
   inbox-read-receipt(message="$ctrl.message")
-  .inbox-message-body-html-autoscale(ng-if="!$ctrl.autoScaleDisabled && $ctrl.message.scaled")
-    .flex-start
-      .inbox-message-body-html-autoscale-message #{__('This message was scaled down.')}
-    .flex-end
-      a.btn.btn-link.inbox-message-body-html-autoscale-disable(ng-click="$ctrl.disableAutoScale()") #{__('Cancel')}
-  div.inbox-message-body-html(ng-bind-html="$ctrl.message.htmlBody | domPurify")
+  div.inbox-message-body-html
+    div(ng-bind-html="$ctrl.message.htmlBody | loadImagesAsync | esnDomPurify")
