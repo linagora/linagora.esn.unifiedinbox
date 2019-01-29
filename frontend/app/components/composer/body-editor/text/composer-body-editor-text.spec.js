@@ -35,7 +35,6 @@ describe('The inboxComposerBodyEditorText component', function() {
     $provide.value('deviceDetector', {
       isMobile: sinon.stub().returns(true)
     });
-    $provide.value('iFrameResize', angular.noop);
     $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
   }));
 

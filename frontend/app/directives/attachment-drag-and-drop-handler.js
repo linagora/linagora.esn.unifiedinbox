@@ -50,13 +50,13 @@
 
         function onDragEnter(evt) {
           cancel(evt);
-          scope.helpText = esnI18nService.translate('Drop files here');
+          scope.helpText = esnI18nService.translate('Drop files here').toString();
           elmt.addClass('esn-dragzone-hover');
         }
 
         function onDragLeave(evt) {
           cancel(evt);
-          scope.helpText = esnI18nService.translate('Drag files here');
+          scope.helpText = esnI18nService.translate('Drag files here').toString();
           elmt.removeClass('esn-dragzone-hover');
         }
 

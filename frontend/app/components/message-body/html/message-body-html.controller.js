@@ -1,103 +1,64 @@
-(function() {
+(function(angular) {
   'use strict';
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxMessageBodyHtmlController', function($scope, $element, $timeout,
-                                                           listenToPrefixedWindowMessage, loadImagesAsyncFilter, iFrameResize, _,
-                                                           IFRAME_MESSAGE_PREFIXES) {
-      var self = this,
-          unregisterWindowListener;
+    .controller('inboxMessageBodyHtmlController', function($timeout, $q, newComposerService, _) {
+      var self = this;
 
-      self.$onInit = $onInit;
-      self.$onDestroy = $onDestroy;
-      self.resize = resize;
-      self.disableAutoScale = disableAutoScale;
-
-      /////
+      self.$onInit = _.partial($timeout, $onInit);
+      self.mailtoCallback = mailtoCallback;
+      self.loadAsyncImages = loadAsyncImages;
 
       function $onInit() {
-        unregisterWindowListener = listenToPrefixedWindowMessage(IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT, function(cid) {
-          $scope.$emit('wm:' + IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT, cid);
+        document.querySelectorAll('.inbox-message-body-html a[href^="mailto:"]').forEach(function(el) {
+          var $el = angular.element(el);
+          var email = $el.attr('href').replace(/^mailto:/, '');
+
+          $el.on('click', _.partialRight(self.mailtoCallback, email));
         });
 
-        $element.find('iframe').load(function(event) {
-          $scope.$emit('iframe:loaded', event.target);
+        self.loadAsyncImages();
+      }
+
+      function loadAsyncImages() {
+        var getUrlFromAttachment = function(attachment) {
+          return attachment ? attachment.getSignedDownloadUrl() : $q.when('broken-link');
+        };
+
+        var promises = Array.prototype.map.call(document.querySelectorAll('img[data-async-src]'), function(el) {
+          var dataAsyncSrc = el.getAttribute('data-async-src');
+
+          el.removeAttribute('data-async-src');
+
+          if (!dataAsyncSrc.match(/^cid:/)) {
+            el.src = dataAsyncSrc;
+
+            return $q.when();
+          }
+
+          return $q
+            .when(_.find(self.message.attachments, {cid: dataAsyncSrc.replace('cid:', '')}))
+            .then(getUrlFromAttachment)
+            .then(function(url) { el.src = url; });
         });
 
-        $scope.$on('iframe:loaded', function(event, iFrame) {
-          var parent = angular.element($element).parent(),
-              iFrameContent = loadImagesAsyncFilter(self.message.htmlBody, self.message.attachments),
-              AUTO_SCALE_MESSAGE_HEIGHT = 40;
+        return $q.all(promises);
+      }
 
-          iFrame.contentWindow.postMessage(IFRAME_MESSAGE_PREFIXES.CHANGE_DOCUMENT + iFrameContent, '*');
+      function mailtoCallback(event, emailAddress) {
+        event.preventDefault();
+        event.stopPropagation();
 
-          self.iFrames = iFrameResize({
-            checkOrigin: false,
-            scrolling: true,
-            inPageLinks: true,
-            heightCalculationMethod: 'max',
-            sizeWidth: true,
-            resizedCallback: function(data) {
-              var ratio = self.autoScaleDisabled ? 1 : parent.width() / data.width;
-
-              if (ratio < 1) {
-                parent.css({
-                  height: (Math.ceil(data.height * ratio) + AUTO_SCALE_MESSAGE_HEIGHT) + 'px',
-                  overflow: 'hidden'
-                });
-                data.iframe.style.transform = 'scale3d(' + ratio + ', ' + ratio + ', 1)';
-              } else {
-                parent.css({
-                  height: 'auto',
-                  overflow: 'auto'
-                });
-                data.iframe.style.transform = '';
-              }
-
-              $scope.$apply(function() {
-                self.message.scaled = ratio < 1;
-              });
+        newComposerService.open({
+          to: [
+            {
+              email: emailAddress,
+              name: emailAddress
             }
-          }, iFrame);
+          ]
         });
-
-        $scope.$on('email:collapse', function(event, isCollapsed) {
-          if (!isCollapsed) {
-            self.resize();
-          }
-        });
-
-        $scope.$on('wm:' + IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT, function(event, cid, iframe) {
-          var attachment = _.find(self.message.attachments, { cid: cid });
-
-          iframe = iframe || self.iFrames[0];
-          if (attachment) {
-            attachment.getSignedDownloadUrl().then(function(url) {
-              iframe.contentWindow.postMessage(IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT + cid + ' ' + url, '*');
-            });
-          } else {
-            iframe.contentWindow.postMessage(IFRAME_MESSAGE_PREFIXES.INLINE_ATTACHMENT + cid, '*');
-          }
-        });
-
-        $scope.$on('$destroy', unregisterWindowListener);
-      }
-
-      function $onDestroy() {
-        unregisterWindowListener();
-      }
-
-      function resize() {
-        $timeout(function() {
-          self.iFrames[0].iFrameResizer.resize();
-        }, 0);
-      }
-
-      function disableAutoScale() {
-        self.autoScaleDisabled = true;
-        self.resize();
       }
     });
 
-})();
+})(angular);
