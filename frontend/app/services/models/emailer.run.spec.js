@@ -26,7 +26,7 @@ describe('The EMailer run block', function() {
     expect(new jmap.EMailer().resolve).to.be.a('function');
   });
 
-  it('should query the search service and use displayName and photo if available', function() {
+  it('should query the search service and use displayName and avatarUrl if available', function() {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
     searchService
@@ -35,7 +35,7 @@ describe('The EMailer run block', function() {
       .withExactArgs('a@a.com')
       .returns($q.when({
         displayName: 'displayName',
-        photo: '/photo'
+        avatarUrl: '/photo'
       }));
 
     emailer.resolve();
@@ -88,7 +88,7 @@ describe('The EMailer run block', function() {
         objectType: 'user',
         id: 'myId',
         displayName: 'displayName',
-        photo: '/photo'
+        avatarUrl: '/photo'
       }));
 
     emailer.resolve();
@@ -109,7 +109,7 @@ describe('The EMailer run block', function() {
         objectType: 'user',
         id: 'myId',
         displayName: 'displayName',
-        photo: '/photo'
+        avatarUrl: '/photo'
       }));
 
     emailer.resolve().then(function(avatar) {
@@ -135,7 +135,7 @@ describe('The EMailer run block', function() {
         objectType: 'contact',
         id: 'myId',
         displayName: 'displayName',
-        photo: '/photo'
+        avatarUrl: '/photo'
       }));
 
     emailer.resolve().then(function(avatar) {
