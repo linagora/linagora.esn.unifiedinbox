@@ -14,6 +14,7 @@ angular.module('linagora.esn.unifiedinbox')
     spam: 'mdi mdi-alert-decagram',
     templates: 'mdi mdi-clipboard-text'
   })
+  .constant('INBOX_AVATAR_SIZE', 65)
   .constant('INBOX_AUTOCOMPLETE_LIMIT', 20)
   .constant('INBOX_AUTOCOMPLETE_OBJECT_TYPES', ['user', 'contact', 'group'])
   .constant('INBOX_DISPLAY_NAME_SIZE', 100)

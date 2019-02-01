@@ -6,16 +6,17 @@ var expect = chai.expect;
 
 describe('The EMailer run block', function() {
 
-  var $rootScope, jmap, searchService;
+  var $rootScope, jmap, searchService, INBOX_AVATAR_SIZE;
 
   beforeEach(function() {
     module('linagora.esn.unifiedinbox');
   });
 
-  beforeEach(inject(function(_$rootScope_, _jmap_, _searchService_) {
+  beforeEach(inject(function(_$rootScope_, _jmap_, _searchService_, _INBOX_AVATAR_SIZE_) {
     $rootScope = _$rootScope_;
     jmap = _jmap_;
     searchService = sinon.mock(_searchService_);
+    INBOX_AVATAR_SIZE = _INBOX_AVATAR_SIZE_;
   }));
 
   afterEach(function() {
@@ -115,7 +116,7 @@ describe('The EMailer run block', function() {
     emailer.resolve().then(function(avatar) {
       expect(avatar).to.deep.equal({
         id: 'myId',
-        url: '/photo',
+        url: '/photo?size=' + INBOX_AVATAR_SIZE,
         email: 'a@a.com'
       });
 
@@ -141,7 +142,7 @@ describe('The EMailer run block', function() {
     emailer.resolve().then(function(avatar) {
       expect(avatar).to.deep.equal({
         id: false,
-        url: '/photo',
+        url: '/photo?size=' + INBOX_AVATAR_SIZE,
         email: 'a@a.com'
       });
 
