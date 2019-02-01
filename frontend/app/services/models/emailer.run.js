@@ -13,7 +13,7 @@
             self.objectType = result && result.objectType;
             self.id = result && result.id;
             self.name = result && result.displayName || self.name;
-            self.avatarUrl = result && result.photo || esnAvatarUrlService.generateUrl(self.email, self.name);
+            self.avatarUrl = result && result.avatarUrl || esnAvatarUrlService.generateUrl(self.email, self.name);
           })
           .then(function() {
             return {
