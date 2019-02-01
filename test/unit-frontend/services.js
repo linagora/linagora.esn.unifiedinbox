@@ -1563,25 +1563,6 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should cache the result', function(done) {
-        attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([{ a: 'b' }]); });
-
-        searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1, INBOX_AUTOCOMPLETE_OBJECT_TYPES);
-          expect(result).to.deep.equal({ a: 'b' });
-        });
-        $rootScope.$digest();
-
-        attendeeService.getAttendeeCandidates.resetHistory();
-        searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(attendeeService.getAttendeeCandidates).to.have.not.been.calledWith();
-          expect(result).to.deep.equal({ a: 'b' });
-
-          done();
-        });
-        $rootScope.$digest();
-      });
-
       it('should return null if there is no match', function(done) {
         attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([]); });
 

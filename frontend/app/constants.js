@@ -15,6 +15,7 @@ angular.module('linagora.esn.unifiedinbox')
     templates: 'mdi mdi-clipboard-text'
   })
   .constant('INBOX_AVATAR_SIZE', 65)
+  .constant('INBOX_CACHE_TTL', 60 * 60 * 1000) // 1 hour
   .constant('INBOX_AUTOCOMPLETE_LIMIT', 20)
   .constant('INBOX_AUTOCOMPLETE_OBJECT_TYPES', ['user', 'contact', 'group'])
   .constant('INBOX_DISPLAY_NAME_SIZE', 100)

@@ -349,7 +349,27 @@ angular.module('linagora.esn.unifiedinbox')
     return [];
   })
 
+  .factory('inboxSearchCacheService', function(Cache, searchService, INBOX_CACHE_TTL) {
+    var cache = new Cache({
+      loader: searchService.searchByEmail,
+      ttl: INBOX_CACHE_TTL
+    });
+
+    return {
+      searchByEmail: searchByEmail
+    };
+
+    function searchByEmail(email) {
+      return cache.get(email);
+    }
+  })
+
   .service('searchService', function(_, attendeeService, INBOX_AUTOCOMPLETE_LIMIT, INBOX_AUTOCOMPLETE_OBJECT_TYPES) {
+    return {
+      searchByEmail: searchByEmail,
+      searchRecipients: searchRecipients
+    };
+
     function searchRecipients(query) {
       return attendeeService.getAttendeeCandidates(query, INBOX_AUTOCOMPLETE_LIMIT, INBOX_AUTOCOMPLETE_OBJECT_TYPES).then(function(recipients) {
         return recipients
@@ -367,11 +387,6 @@ angular.module('linagora.esn.unifiedinbox')
         return results.length > 0 ? results[0] : null;
       }, _.constant(null));
     }
-
-    return {
-      searchByEmail: _.memoize(searchByEmail),
-      searchRecipients: searchRecipients
-    };
   })
 
   .service('attachmentUploadService', function($q, $rootScope, inboxConfig, jmapClientProvider, inBackground, xhrWithUploadProgress) {
