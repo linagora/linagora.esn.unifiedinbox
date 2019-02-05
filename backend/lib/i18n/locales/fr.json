@@ -268,12 +268,14 @@
   "Your vacation responder will be activated on %s": "Votre message d'absence sera activé le %s",
   "Drag files here": "Glissez des fichiers ici",
   "Drop files here": "Déposez les fichiers ici",
-  "Activate JMAP support protocol": "Activate JMAP support protocol",
-  "Composer": "Composer",
-  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
-  "Allow the draft to be saved": "Allow the draft to be saved",
-  "Enable attachments in composer": "Enable attachments in composer",
-  "Fowarding": "Fowarding",
-  "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
-  "Mobile options": "Mobile options"
+  "Activate JMAP protocol": "Activer le protocole JMAP",
+  "Composer": "Application nouveaux messages",
+  "Enable attachments in composer": "Active les pièces jointes",
+  "Forwarding": "Transférer",
+  "Allow users to share folders to other users with some roles": "Autoriser les utilisateurs à partager leurs dossiers avec d'autres utilisateurs en assigant des rôles",
+  "Mobile options": "Options mobiles",
+  "Configure swipe actions to quickly act on emails on the conversation list": "Configurer les actions de balayage pour agir rapidement sur les emails de la liste de conversation",
+  "Emails in outbox are also saved as draft": "Les e-mails dans la boîte d'envoi sont également enregistrés comme brouillons",
+  "Unsent emails are saved as draft": "Les emails non envoyés sont enregistrés comme brouillon",
+  "Automatic redirection of incoming emails to another email account": "Redirection automatique des emails entrants vers un autre compte email"
 }
