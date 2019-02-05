@@ -12,6 +12,7 @@ ng-form.p-t-25(name='form')
       input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkDeleteOperations.value", name="numberItemsPerPageOnBulkDeleteOperations")
     esn-form-group(label=__('Number of items per request, on bulk UPDATE operations'))
       input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkUpdateOperations.value", name="numberItemsPerPageOnBulkUpdateOperations")
+    h5 #{__('Mobile options')}    
     .form-group.option-field
       .col-xs-4.field-name #{__('Swipe right action')}
       .col-xs-8.flex-space-between
@@ -41,31 +42,39 @@ ng-form.p-t-25(name='form')
   .right-block
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable JMAP sending')}
-      .col-xs-4.flex-end
+        p.small.text-muted #{__('Activate JMAP support protocol')}
+      .col-xs-4.flex-end 
         toggle-switch(ng-model="$ctrl.configurations.isJmapSendingEnabled.value", form="form")
+    h5 #{__('Composer')}    
     .form-group.option-field
-      .col-xs-8.field-name #{__('Allow save draft before sending')}
+      .col-xs-8.field-name #{__('Enable save draft before sending')}
+        p.small.text-muted #{__('Allow email to be saved as draft if something goes wrong')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.isSaveDraftBeforeSendingEnabled.value", form="form")
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable draft email')}
+        p.text-muted #{__('Allow the draft to be saved')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.drafts.value", form="form")
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable attachments')}
+        p.text-muted #{__('Enable attachments in composer')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations['composer.attachments'].value", form="form")
     admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
+    h5 #{__('Fowarding')}    
     div(ng-if="$ctrl.mode === $ctrl.availableModes.domain")
       .form-group.option-field.m-b-10
-        .col-xs-8.field-name #{__('Allow users to configure email forwarding')}
+        .col-xs-8.field-name #{__('Enable users to configure email forwarding')}
         .col-xs-4.flex-end
           toggle-switch(ng-model="$ctrl.forwardingConfigs.forwarding.value", form="form", onchange="$ctrl.onForwardingChange()")
       .form-group.option-field(ng-class="{ 'ts-disabled': !$ctrl.forwardingConfigs.forwarding.value }")
-        .col-xs-8.p-l-30.field-name #{__('Allow users to keep a local copy of forwarded emails')}
+        .col-xs-8.field-name #{__('Enable users to keep a local copy of forwarded emails')}
         .col-xs-4.flex-end
           toggle-switch(ng-model="$ctrl.forwardingConfigs.isLocalCopyEnabled.value", form="form", onchange="$ctrl.onLocalCopyChange()", ng-disabled="!$ctrl.forwardingConfigs.forwarding.value")
+    h5 #{__('Shared folders')}    
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable folders sharing')}
+        p.text-muted #{__('Allow users to share folders to other users with some roles')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.features.value.foldersSharing", form="form")

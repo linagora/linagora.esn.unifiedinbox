@@ -12,9 +12,9 @@
   "Add new account": "Add new account",
   "All Mail": "All Mail",
   "All messages in folder have been marked as read": "All messages in folder have been marked as read",
-  "Allow save draft before sending": "Allow save draft before sending",
-  "Allow users to configure email forwarding": "Allow users to configure email forwarding",
-  "Allow users to keep a local copy of forwarded emails": "Allow users to keep a local copy of forwarded emails",
+  "Enable save draft before sending": "Enable save draft before sending",
+  "Enable users to configure email forwarding": "Enable users to configure email forwarding",
+  "Enable users to keep a local copy of forwarded emails": "Enable users to keep a local copy of forwarded emails",
   "Always request read receipts with outgoing messages ?": "Always request read receipts with outgoing messages ?",
   "Attach files": "Attach files",
   "Attachments": "Attachments",
@@ -267,5 +267,13 @@
   "Your vacation responder stopped on %s": "Your vacation responder stopped on %s",
   "Your vacation responder will be activated on %s": "Your vacation responder will be activated on %s",
   "Drag files here": "Drag files here",
-  "Drop files here": "Drop files here"
+  "Drop files here": "Drop files here",
+  "Activate JMAP support protocol": "Activate JMAP support protocol",
+  "Composer": "Composer",
+  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
+  "Allow the draft to be saved": "Allow the draft to be saved",
+  "Enable attachments in composer": "Enable attachments in composer",
+  "Fowarding": "Fowarding",
+  "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
+  "Mobile options": "Mobile options"
 }

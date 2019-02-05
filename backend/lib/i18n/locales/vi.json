@@ -12,9 +12,9 @@
   "Add new account": "Thêm tài khoản",
   "All Mail": "Tất cả thư",
   "All messages in folder have been marked as read": "Đã đánh dấu",
-  "Allow save draft before sending": "Lưu bản nháp trước khi gửi",
-  "Allow users to configure email forwarding": "Cho phép người dùng cấu hình chuyển tiếp thư",
-  "Allow users to keep a local copy of forwarded emails": "Cho phép người dùng giữ bản sao thư chuyển tiếp",
+  "Enable save draft before sending": "Cho phép lưu bản nháp trước khi gửi",
+  "Enable users to configure email forwarding": "Cho phép người dùng định cấu hình chuyển tiếp thư",
+  "Enable users to keep a local copy of forwarded emails": "Cho phép người dùng giữ bản sao thư chuyển tiếp",
   "Always request read receipts with outgoing messages ?": "Luôn yêu cầu xác nhận đã đọc với thư gửi đi?",
   "Attach files": "Đính kèm tệp",
   "Attachments": "Đính kèm",
@@ -267,5 +267,13 @@
   "Your vacation responder stopped on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt nhưng chấm dứt vào %s",
   "Your vacation responder will be activated on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt và sẽ bắt đầu vào %s",
   "Drag files here": "Kéo tệp tin tại đây",
-  "Drop files here": "Thả tệp tin tại đây"
+  "Drop files here": "Thả tệp tin tại đây",
+  "Activate JMAP support protocol": "Activate JMAP support protocol",
+  "Composer": "Composer",
+  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
+  "Allow the draft to be saved": "Allow the draft to be saved",
+  "Enable attachments in composer": "Enable attachments in composer",
+  "Fowarding": "Fowarding",
+  "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
+  "Mobile options": "Mobile options"
 }
