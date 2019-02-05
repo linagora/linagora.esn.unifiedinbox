@@ -268,12 +268,14 @@
   "Your vacation responder will be activated on %s": "Tin nhắn trả lời tự động trong kỳ nghỉ của bạn được kích hoạt và sẽ bắt đầu vào %s",
   "Drag files here": "Kéo tệp tin tại đây",
   "Drop files here": "Thả tệp tin tại đây",
-  "Activate JMAP support protocol": "Activate JMAP support protocol",
-  "Composer": "Composer",
-  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
-  "Allow the draft to be saved": "Allow the draft to be saved",
-  "Enable attachments in composer": "Enable attachments in composer",
-  "Fowarding": "Fowarding",
-  "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
-  "Mobile options": "Mobile options"
+  "Activate JMAP protocol": "Kích hoạt giao thức JMAP",
+  "Composer": "Trình soạn thảo",
+  "Enable attachments in composer": "Kích hoạt tệp đính kèm trong trình soạn thảo",
+  "Forwarding": "Chuyển tiếp",
+  "Allow users to share folders to other users with some roles": "Cho phép người dùng chia sẻ thư mục cho người dùng khác với một số vai trò",
+  "Mobile options": "Tùy chọn di động",
+  "Configure swipe actions to quickly act on emails on the conversation list": "Cấu hình hành động vuốt để thao tác nhanh trên danh sách hội thoại",
+  "Emails in outbox are also saved as draft": "Thư trong hộp thư đi cũng được lưu dưới dạng bản nháp",
+  "Unsent emails are saved as draft": "Thư chưa được gửi được lưu dưới dạng bản nhap",
+  "Automatic redirection of incoming emails to another email account": "Tự động chuyển hướng thư đến tài khoản thư điện tử khác"
 }

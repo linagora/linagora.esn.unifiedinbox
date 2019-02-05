@@ -12,9 +12,24 @@ ng-form.p-t-25(name='form')
       input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkDeleteOperations.value", name="numberItemsPerPageOnBulkDeleteOperations")
     esn-form-group(label=__('Number of items per request, on bulk UPDATE operations'))
       input.form-control(type="number", step="10", min="30", max="5000", ng-model="$ctrl.configurations.numberItemsPerPageOnBulkUpdateOperations.value", name="numberItemsPerPageOnBulkUpdateOperations")
+    .form-group.option-field
+      .col-xs-4.field-name #{__('Display email as')}
+      .col-xs-8.flex-space-between
+        label.col-xs-6.radio.radio-inline.disabled
+          //- James does not support thread at the moment 
+          input(type="radio" , ng-model="$ctrl.configurations.view.value", value="threads", disabled)
+          i.input-helper
+          span
+            |  #{__('Threads')}
+        label.col-xs-6.radio.radio-inline
+          input(type="radio", ng-model="$ctrl.configurations.view.value", value="messages")
+          i.input-helper
+          span
+            |  #{__('Messages')}
     h5 #{__('Mobile options')}    
     .form-group.option-field
       .col-xs-4.field-name #{__('Swipe right action')}
+        p.small.text-muted #{__('Configure swipe actions to quickly act on emails on the conversation list')}
       .col-xs-8.flex-space-between
         label.col-xs-6.radio.radio-inline
           input(type="radio", ng-model="$ctrl.configurations.swipeRightAction.value", value="markAsRead")
@@ -26,34 +41,21 @@ ng-form.p-t-25(name='form')
           i.input-helper
           span
             |  #{__('Move to trash')}
-    .form-group.option-field
-      .col-xs-4.field-name #{__('Display email as')}
-      .col-xs-8.flex-space-between
-        label.col-xs-6.radio.radio-inline
-          input(type="radio", ng-model="$ctrl.configurations.view.value", value="threads")
-          i.input-helper
-          span
-            |  #{__('Threads')}
-        label.col-xs-6.radio.radio-inline
-          input(type="radio", ng-model="$ctrl.configurations.view.value", value="messages")
-          i.input-helper
-          span
-            |  #{__('Messages')}
   .right-block
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable JMAP sending')}
-        p.small.text-muted #{__('Activate JMAP support protocol')}
+        p.small.text-muted #{__('Activate JMAP protocol')}
       .col-xs-4.flex-end 
         toggle-switch(ng-model="$ctrl.configurations.isJmapSendingEnabled.value", form="form")
     h5 #{__('Composer')}    
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable save draft before sending')}
-        p.small.text-muted #{__('Allow email to be saved as draft if something goes wrong')}
+        p.small.text-muted #{__('Emails in outbox are also saved as draft')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.isSaveDraftBeforeSendingEnabled.value", form="form")
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable draft email')}
-        p.text-muted #{__('Allow the draft to be saved')}
+        p.text-muted #{__('Unsent emails are saved as draft')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.drafts.value", form="form")
     .form-group.option-field
@@ -62,8 +64,9 @@ ng-form.p-t-25(name='form')
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations['composer.attachments'].value", form="form")
     admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
-    h5 #{__('Fowarding')}    
+    h5 #{__('Forwarding')}    
     div(ng-if="$ctrl.mode === $ctrl.availableModes.domain")
+      p.small.text-muted #{__('Automatic redirection of incoming emails to another email account')}
       .form-group.option-field.m-b-10
         .col-xs-8.field-name #{__('Enable users to configure email forwarding')}
         .col-xs-4.flex-end

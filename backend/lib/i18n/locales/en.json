@@ -268,12 +268,14 @@
   "Your vacation responder will be activated on %s": "Your vacation responder will be activated on %s",
   "Drag files here": "Drag files here",
   "Drop files here": "Drop files here",
-  "Activate JMAP support protocol": "Activate JMAP support protocol",
+  "Activate JMAP protocol": "Activate JMAP protocol",
   "Composer": "Composer",
-  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
-  "Allow the draft to be saved": "Allow the draft to be saved",
   "Enable attachments in composer": "Enable attachments in composer",
-  "Fowarding": "Fowarding",
+  "Forwarding": "Forwarding",
   "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
-  "Mobile options": "Mobile options"
+  "Mobile options": "Mobile options",
+  "Configure swipe actions to quickly act on emails on the conversation list": "Configure swipe actions to quickly act on emails on the conversation list",
+  "Emails in outbox are also saved as draft": "Emails in outbox are also saved as draft",
+  "Unsent emails are saved as draft": "Unsent emails are saved as draft",
+  "Automatic redirection of incoming emails to another email account": "Automatic redirection of incoming emails to another email account"
 }
