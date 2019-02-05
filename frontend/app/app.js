@@ -33,6 +33,7 @@ angular.module('linagora.esn.unifiedinbox', [
   'linagora.esn.graceperiod',
   'ngAnimate',
   'esn.escape-html',
+  'esn.cache',
   'esn.search',
   'esn.async-action',
   'esn.user',

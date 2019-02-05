@@ -63,7 +63,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     $provide.value('Fullscreen', {});
     $provide.value('ASTrackerController', {});
     $provide.value('deviceDetector', { isMobile: function() { return isMobile;} });
-    $provide.value('searchService', searchService = { searchRecipients: angular.noop });
+    $provide.value('searchService', searchService = { searchRecipients: angular.noop, searchByEmail: angular.noop });
     $provide.value('inboxConfig', function(key, defaultValue) {
       return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);
     });

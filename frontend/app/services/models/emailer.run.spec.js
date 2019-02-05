@@ -5,21 +5,21 @@
 var expect = chai.expect;
 
 describe('The EMailer run block', function() {
-
-  var $rootScope, jmap, searchService;
+  var $rootScope, jmap, inboxSearchCacheService, INBOX_AVATAR_SIZE;
 
   beforeEach(function() {
     module('linagora.esn.unifiedinbox');
   });
 
-  beforeEach(inject(function(_$rootScope_, _jmap_, _searchService_) {
+  beforeEach(inject(function(_$rootScope_, _jmap_, _inboxSearchCacheService_, _INBOX_AVATAR_SIZE_) {
     $rootScope = _$rootScope_;
     jmap = _jmap_;
-    searchService = sinon.mock(_searchService_);
+    inboxSearchCacheService = sinon.mock(_inboxSearchCacheService_);
+    INBOX_AVATAR_SIZE = _INBOX_AVATAR_SIZE_;
   }));
 
   afterEach(function() {
-    searchService.verify();
+    inboxSearchCacheService.verify();
   });
 
   it('should add a "resolve" method to jmap.EMailer instances', function() {
@@ -29,7 +29,7 @@ describe('The EMailer run block', function() {
   it('should query the search service and use displayName and avatarUrl if available', function() {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -48,7 +48,7 @@ describe('The EMailer run block', function() {
   it('should query the search service and use existing name and generated avatar if not info is not available', function() {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -64,7 +64,7 @@ describe('The EMailer run block', function() {
   it('should query the search service and use existing name and generated avatar if search fails', function() {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -80,7 +80,7 @@ describe('The EMailer run block', function() {
   it('should define objectType and id from the found match', function() {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -101,7 +101,7 @@ describe('The EMailer run block', function() {
   it('should resolve with an object suitable for esnAvatar', function(done) {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -115,7 +115,7 @@ describe('The EMailer run block', function() {
     emailer.resolve().then(function(avatar) {
       expect(avatar).to.deep.equal({
         id: 'myId',
-        url: '/photo',
+        url: '/photo?size=' + INBOX_AVATAR_SIZE,
         email: 'a@a.com'
       });
 
@@ -127,7 +127,7 @@ describe('The EMailer run block', function() {
   it('should set avatar.id only if the match is a user', function(done) {
     var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
 
-    searchService
+    inboxSearchCacheService
       .expects('searchByEmail')
       .once()
       .withExactArgs('a@a.com')
@@ -141,7 +141,7 @@ describe('The EMailer run block', function() {
     emailer.resolve().then(function(avatar) {
       expect(avatar).to.deep.equal({
         id: false,
-        url: '/photo',
+        url: '/photo?size=' + INBOX_AVATAR_SIZE,
         email: 'a@a.com'
       });
 
