@@ -12,9 +12,9 @@
   "Add new account": "Ajouter un nouveau compte",
   "All Mail": "Tout le courrier",
   "All messages in folder have been marked as read": "Tous les messages de votre dossier sont lu",
-  "Allow save draft before sending": "Autoriser l'enregistrement en brouillon avant envoi",
-  "Allow users to configure email forwarding": "Permettre aux utilisateurs de gérer les redirections",
-  "Allow users to keep a local copy of forwarded emails": "Permettre aux utilisateurs de conserver une copie des messages transférés",
+  "Enable save draft before sending": "Activer l'enregistrement en brouillon avant envoi",
+  "Enable users to configure email forwarding": "Permettre aux utilisateurs de gérer les redirections",
+  "Enable users to keep a local copy of forwarded emails": "Permettre aux utilisateurs de conserver une copie des messages transférés",
   "Always request read receipts with outgoing messages ?": "Envoyer une demande d'accusé de lecture systématiquement ?",
   "Attach files": "Joindre des fichiers",
   "Attachments": "Pièces jointes",
@@ -267,5 +267,13 @@
   "Your vacation responder stopped on %s": "Votre message d'absence est désactivé depuis le %s",
   "Your vacation responder will be activated on %s": "Votre message d'absence sera activé le %s",
   "Drag files here": "Glissez des fichiers ici",
-  "Drop files here": "Déposez les fichiers ici"
+  "Drop files here": "Déposez les fichiers ici",
+  "Activate JMAP support protocol": "Activate JMAP support protocol",
+  "Composer": "Composer",
+  "Allow email to be saved as draft if something goes wrong": "Allow email to be saved as draft if something goes wrong",
+  "Allow the draft to be saved": "Allow the draft to be saved",
+  "Enable attachments in composer": "Enable attachments in composer",
+  "Fowarding": "Fowarding",
+  "Allow users to share folders to other users with some roles": "Allow users to share folders to other users with some roles",
+  "Mobile options": "Mobile options"
 }
