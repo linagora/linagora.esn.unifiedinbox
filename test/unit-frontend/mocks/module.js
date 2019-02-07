@@ -21,3 +21,14 @@ angular.module('linagora.esn.james', [])
     };
   });
 angular.module('ngCookies', []);
+angular.module('linagora.esn.unifiedinbox', function($provide) {
+  $provide.value('esnConfig', function(key) {
+    if (key === 'core.language') {
+      return $q.when('en');
+    } else if (key === 'core.datetime') {
+      return $q.when({timeZone: 'Europe/Berlin'});
+    }
+
+    return $q.when();
+  });
+});

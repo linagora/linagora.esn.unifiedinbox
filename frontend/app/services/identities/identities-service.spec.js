@@ -16,6 +16,12 @@ describe('The inboxIdentitiesService factory', function() {
 
     $provide.value('esnConfig', function(key, defaultValue) {
       return $q.when().then(function() {
+        if (key === 'core.language') {
+          return $q.when('en');
+        } else if (key === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
         return angular.isDefined(config[key]) ? config[key] : defaultValue;
       });
     });

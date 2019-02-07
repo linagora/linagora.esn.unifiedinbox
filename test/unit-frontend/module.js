@@ -56,7 +56,13 @@ describe('The Unified Inbox Angular module', function() {
 
   it('should register a search provider', function(done) {
     module(function($provide) {
-      $provide.value('esnConfig', function() {
+      $provide.constant('esnConfig', function(argument) {
+        if (argument === 'core.language') {
+          return $q.when('en');
+        } else if (argument === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
         return $q.when();
       });
     });
@@ -67,6 +73,12 @@ describe('The Unified Inbox Angular module', function() {
   it('should register a provider for messages, if there is no configuration', function(done) {
     module(function($provide) {
       $provide.value('esnConfig', function(key, defaultValue) {
+        if (key === 'core.language') {
+          return $q.when('en');
+        } else if (key === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
         return $q.when(defaultValue);
       });
     });
@@ -76,7 +88,13 @@ describe('The Unified Inbox Angular module', function() {
 
   it('should register a provider for messages, if view=messages', function(done) {
     module(function($provide) {
-      $provide.value('esnConfig', function() {
+      $provide.value('esnConfig', function(argument) {
+        if (argument === 'core.language') {
+          return $q.when('en');
+        } else if (argument === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
         return $q.when('messages');
       });
     });
@@ -86,7 +104,13 @@ describe('The Unified Inbox Angular module', function() {
 
   it('should register a provider for threads, if view=threads', function(done) {
     module(function($provide) {
-      $provide.value('esnConfig', function() {
+      $provide.value('esnConfig', function(argument) {
+        if (argument === 'core.language') {
+          return $q.when('en');
+        } else if (argument === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
         return $q.when('threads');
       });
     });

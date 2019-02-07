@@ -31,6 +31,12 @@ describe('The Unified Inbox Angular module services', function() {
       }
     });
     $provide.value('esnConfig', function(key, defaultValue) {
+      if (key === 'core.language') {
+        return $q.when('en');
+      } else if (key === 'core.datetime') {
+        return $q.when({timeZone: 'Europe/Berlin'});
+      }
+
       return $q.when(angular.isDefined(config[key]) ? config[key] : defaultValue);
     });
     $provide.value('inboxIdentitiesService', {
@@ -798,7 +804,7 @@ describe('The Unified Inbox Angular module services', function() {
           to: [{displayName: '1', email: '1@linagora.com'}],
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -829,7 +835,7 @@ describe('The Unified Inbox Angular module services', function() {
           to: [{displayName: '1', email: '1@linagora.com'}],
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -841,7 +847,7 @@ describe('The Unified Inbox Angular module services', function() {
           bcc: [{displayName: '3', email: '3@linagora.com'}],
           subject: 'Re: my subject',
           quoted: {
-            htmlBody: '<p><br/></p><cite>On 12:00:00 14:00, from sender@linagora.com</cite><blockquote><p>my body</p></blockquote>'
+            htmlBody: '<p><br/></p><cite>On August 21, 2015 2:10 AM, from sender@linagora.com</cite><blockquote><p>my body</p></blockquote>'
           },
           quoteTemplate: 'default',
           isQuoting: false
@@ -904,7 +910,7 @@ describe('The Unified Inbox Angular module services', function() {
           headers: {
             'Message-ID': '1234567890'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -941,7 +947,7 @@ describe('The Unified Inbox Angular module services', function() {
           headers: {
             'Message-ID': '1234567890'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -978,7 +984,7 @@ describe('The Unified Inbox Angular module services', function() {
             'Message-ID': '1234567890',
             References: '123 456'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1018,7 +1024,7 @@ describe('The Unified Inbox Angular module services', function() {
           to: [{displayName: '1', email: '1@linagora.com'}],
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1047,7 +1053,7 @@ describe('The Unified Inbox Angular module services', function() {
           to: [{displayName: '1', email: '1@linagora.com'}],
           cc: [{displayName: '2', email: '2@linagora.com'}],
           bcc: [{displayName: '3', email: '3@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1057,7 +1063,7 @@ describe('The Unified Inbox Angular module services', function() {
           to: [{email: 'from@linagora.com', name: 'linagora'}],
           subject: 'Re: my subject',
           quoted: {
-            htmlBody: '<p><br/></p><cite>On 12:00:00 14:00, from from@linagora.com</cite><blockquote><p>my body</p></blockquote>'
+            htmlBody: '<p><br/></p><cite>On August 21, 2015 2:10 AM, from from@linagora.com</cite><blockquote><p>my body</p></blockquote>'
           },
           quoteTemplate: 'default',
           isQuoting: false
@@ -1119,7 +1125,7 @@ describe('The Unified Inbox Angular module services', function() {
           headers: {
             'Message-ID': '1234567890'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1155,7 +1161,7 @@ describe('The Unified Inbox Angular module services', function() {
             'Message-ID': '1234567890',
             References: '123 456'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1196,7 +1202,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: {email: 'from@linagora.com', name: 'from'},
           to: [{name: 'first', email: 'first@linagora.com'}, {name: 'second', email: 'second@linagora.com'}],
           cc: [{name: 'third', email: 'third@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1208,7 +1214,7 @@ describe('The Unified Inbox Angular module services', function() {
           '<cite>' +
           '------- Forwarded message -------<br/>' +
           'Subject: my subject<br/>' +
-          'Date: 12:00:00 14:00<br/>' +
+          'Date: August 21, 2015 2:10 AM<br/>' +
           'From: from@linagora.com<br/>' +
           'To: first &lt;first@linagora.com&gt;, second &lt;second@linagora.com&gt;<br/>' +
           'Cc: third &lt;third@linagora.com&gt;' +
@@ -1233,7 +1239,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: {email: 'from@linagora.com', name: 'from'},
           to: [{name: 'first', email: 'first@linagora.com'}, {name: 'second', email: 'second@linagora.com'}],
           cc: [{name: 'third', email: 'third@linagora.com'}],
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1242,7 +1248,7 @@ describe('The Unified Inbox Angular module services', function() {
           from: 'sender@linagora.com',
           subject: 'Fwd: my subject',
           quoted: {
-            htmlBody: '<p><br/></p><cite>------- Forwarded message -------<br/>Subject: my subject<br/>Date: 12:00:00 14:00<br/>From: from@linagora.com<br/>To: first <first@linagora.com>, second <second@linagora.com><br/>Cc: third <third@linagora.com></cite><blockquote><p>my body</p></blockquote>'
+            htmlBody: '<p><br/></p><cite>------- Forwarded message -------<br/>Subject: my subject<br/>Date: August 21, 2015 2:10 AM<br/>From: from@linagora.com<br/>To: first <first@linagora.com>, second <second@linagora.com><br/>Cc: third <third@linagora.com></cite><blockquote><p>my body</p></blockquote>'
           },
           quoteTemplate: 'forward',
           isQuoting: false
@@ -1305,7 +1311,7 @@ describe('The Unified Inbox Angular module services', function() {
           headers: {
             'Message-ID': '1234567890'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };
@@ -1340,7 +1346,7 @@ describe('The Unified Inbox Angular module services', function() {
             'Message-ID': '1234567890',
             References: '123 456'
           },
-          date: '12:00:00 14:00',
+          date: '2015-08-21T00:10:00Z',
           subject: 'my subject',
           htmlBody: '<p>my body</p>'
         };

@@ -10,12 +10,14 @@ describe('The inboxItemDate filter', function() {
 
   beforeEach(function() {
     module('linagora.esn.unifiedinbox', function($provide) {
-      $provide.value('inboxDateGroups', {
-        getGroup: function() {
-          return {
-            dateFormat: 'yyyy MM dd'
-          };
+      $provide.value('esnConfig', function(key) {
+        if (key === 'core.language') {
+          return {then: function(cb) { cb('en'); }};
+        } else if (key === 'core.datetime') {
+          return {then: function(cb) { cb({timeZone: 'Europe/Berlin'}); }};
         }
+
+        return {then: function(cb) { cb(); }};
       });
     });
   });
@@ -24,8 +26,8 @@ describe('The inboxItemDate filter', function() {
     inboxItemDateFilter = _inboxItemDateFilter_;
   }));
 
-  it('should delegate to the "date" filter, requesting date format from inboxDateGroups', function() {
-    expect(inboxItemDateFilter(new Date(Date.UTC(1970, 0, 1, 12, 0, 0)))).to.equal('1970 01 01');
+  it('should delegate to the "date" filter, requesting date format from esnDatetimeService', function() {
+    expect(inboxItemDateFilter(new Date(1970, 0, 1, 12, 0, 0))).to.equal('01/01/1970');
   });
 
 });
