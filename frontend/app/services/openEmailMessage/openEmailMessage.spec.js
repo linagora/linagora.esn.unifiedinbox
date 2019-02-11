@@ -75,7 +75,7 @@ describe('The inboxOpenEmailMessageService factory', function() {
 
       expect(thread).to.be.undefined;
     });
-    
+
   });
 
 });

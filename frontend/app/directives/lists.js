@@ -194,7 +194,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxThreadListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                             inboxSwipeHelper, inboxSelectionService) {
+                                             inboxSwipeHelper, inboxSelectionService, inboxOpenEmailMessageService) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -220,6 +220,10 @@ angular.module('linagora.esn.unifiedinbox')
               item: thread
             });
           }
+        };
+
+        self.openThreadLink = function(thread) {
+          return inboxOpenEmailMessageService.getThreadState('.thread', thread, $scope.mailbox);
         };
 
         ['markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {

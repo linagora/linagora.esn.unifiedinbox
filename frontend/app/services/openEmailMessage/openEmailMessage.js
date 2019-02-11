@@ -5,7 +5,8 @@
 
     .factory('inboxOpenEmailMessageService', function($state, $stateParams, _) {
       return {
-        getEmailState: getEmailState
+        getEmailState: getEmailState,
+        getThreadState: getThreadState
       };
 
       /////
@@ -21,5 +22,18 @@
           item: email
         });
       }
+
+      function getThreadState(href, thread, mailbox) {
+        if (!thread) {
+          return;
+        }
+
+        return $state.href(href, {
+          mailbox: $stateParams.mailbox || (mailbox && mailbox.id) || _.first(thread.lastEmail.mailboxIds),
+          threadId: thread.id,
+          item: thread
+        });
+      }
+    });
 
 })();
