@@ -192,6 +192,32 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
 
     });
 
+    describe('openThreadLink fn', function() {
+
+      var inboxOpenEmailMessageService;
+
+      beforeEach(angular.mock.inject(function(_inboxOpenEmailMessageService_) {
+        inboxOpenEmailMessageService = _inboxOpenEmailMessageService_;
+      }));
+
+      function openThreadLink(thread) {
+        return element.controller('inboxThreadListItem').openThreadLink(thread);
+      }
+
+      it('should call inboxOpenEmailMessageService to get thread state with thread and $stateParams.mailbox parameter', function() {
+        inboxOpenEmailMessageService.getThreadState = sinon.spy();
+        var thread = { id: 'expectedId', lastEmail: {} };
+
+        $scope.mailbox = { id: '456' };
+
+        compileDirective('<inbox-thread-list-item />');
+        openThreadLink(thread);
+
+        expect(inboxOpenEmailMessageService.getThreadState).to.have.been.calledWith('.thread', thread, $scope.mailbox);
+      });
+
+    });
+
     describe('The swipe feature', function() {
 
       beforeEach(function() {
@@ -202,7 +228,8 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
             this.isUnread = state;
 
             return $q.when();
-          }
+          },
+           lastEmail: {}
         };
 
         $scope.groups = {
@@ -256,7 +283,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       describe('The getDragData function', function() {
 
         it('should return an array containing the item, if there is no selection', function() {
-          $scope.item = { id: 1 };
+          $scope.item = { id: 1, lastEmail: {} };
           inboxSelectionService.unselectAllItems();
 
           compileDirective('<inbox-thread-list-item />');
@@ -265,10 +292,10 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         });
 
         it('should return an array containing the selected items _including_ the item, if there is a selection', function() {
-          var item1 = { id: 1 },
-              item2 = { id: 2 };
+          var item1 = { id: 1, lastEmail: {} },
+              item2 = { id: 2, lastEmail: {} };
 
-          $scope.item = { id: 3 };
+          $scope.item = { id: 3, lastEmail: {} };
           inboxSelectionService.toggleItemSelection(item1);
           inboxSelectionService.toggleItemSelection(item2);
 
@@ -573,7 +600,7 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
       describe('The getDragData function', function() {
 
         it('should return an array containing the item, if there is no selection', function() {
-          $scope.item = { id: 1 };
+          $scope.item = { id: 1, lastEmail: {} };
           inboxSelectionService.unselectAllItems();
 
           compileDirective('<inbox-thread-list-item />');
@@ -582,10 +609,10 @@ describe('The linagora.esn.unifiedinbox List module directives', function() {
         });
 
         it('should return an array containing the selected items _including_ the item, if there is a selection', function() {
-          var item1 = { id: 1 },
-            item2 = { id: 2 };
+          var item1 = { id: 1, lastEmail: {} },
+              item2 = { id: 2, lastEmail: {} };
 
-          $scope.item = { id: 3 };
+          $scope.item = { id: 3, lastEmail: {} };
           inboxSelectionService.toggleItemSelection(item1);
           inboxSelectionService.toggleItemSelection(item2);
 
