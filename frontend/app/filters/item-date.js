@@ -3,9 +3,9 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .filter('inboxItemDate', function(dateFilter, inboxDateGroups) {
+    .filter('inboxItemDate', function(esnDatetimeService) {
       return function(date) {
-        return dateFilter(date, inboxDateGroups.getGroup(date).dateFormat);
+        return esnDatetimeService.format(date, esnDatetimeService.getGroup(date).dateFormat);
       };
     });
 

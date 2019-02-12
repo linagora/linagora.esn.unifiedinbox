@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxListHeaderController', function($scope, inboxDateGroups, inboxFilteringService, INBOX_EVENTS) {
+    .controller('inboxListHeaderController', function($scope, esnDatetimeService, inboxFilteringService, INBOX_EVENTS) {
       var self = this;
 
       self.$onInit = initQuickFilter;
@@ -23,7 +23,7 @@
           return;
         }
 
-        self.group = bindings.item.currentValue && inboxDateGroups.getGroup(bindings.item.currentValue.date);
+        self.group = bindings.item.currentValue && esnDatetimeService.getGroup(bindings.item.currentValue.date);
       }
 
       function setQuickFilter(filter) {
