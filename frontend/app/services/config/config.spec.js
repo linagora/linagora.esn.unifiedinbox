@@ -13,12 +13,6 @@ describe('The inboxConfig factory', function() {
       config = config || {};
 
       $provide.value('esnConfig', function(key, defaultValue) {
-        if (key === 'core.language') {
-          return $q.when('en');
-        } else if (key === 'core.datetime') {
-          return $q.when({timeZone: 'Europe/Berlin'});
-        }
-
         return $q.when(angular.isDefined(config[key]) ? config[key] : defaultValue);
       });
     });

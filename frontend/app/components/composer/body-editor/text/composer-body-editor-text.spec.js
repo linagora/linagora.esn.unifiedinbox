@@ -36,6 +36,18 @@ describe('The inboxComposerBodyEditorText component', function() {
       isMobile: sinon.stub().returns(true)
     });
 
+    $provide.value('esnConfig', function(key, defaultValue) {
+      return $q.when().then(function() {
+        if (key === 'core.language') {
+          return $q.when('en');
+        } else if (key === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
+        return $q.when(defaultValue);
+      });
+    });
+
     $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
   }));
 
