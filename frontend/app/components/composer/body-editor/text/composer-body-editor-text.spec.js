@@ -35,6 +35,19 @@ describe('The inboxComposerBodyEditorText component', function() {
     $provide.value('deviceDetector', {
       isMobile: sinon.stub().returns(true)
     });
+
+    $provide.value('esnConfig', function(key, defaultValue) {
+      return $q.when().then(function() {
+        if (key === 'core.language') {
+          return $q.when('en');
+        } else if (key === 'core.datetime') {
+          return $q.when({timeZone: 'Europe/Berlin'});
+        }
+
+        return $q.when(defaultValue);
+      });
+    });
+
     $provide.constant('ESN_DATETIME_DEFAULT_TIMEZONE', 'UTC');
   }));
 
@@ -70,7 +83,7 @@ describe('The inboxComposerBodyEditorText component', function() {
       editQuotedMail();
 
       expect($rootScope.message.isQuoting).to.equal(true);
-      expect($rootScope.message.textBody).to.equal('\n\n\n\u0000On Aug 21, 2015 12:10 AM, from sender@linagora.com:\n\n> Hello');
+      expect($rootScope.message.textBody).to.equal('\n\n\n\u0000On August 21, 2015 2:10 AM, from sender@linagora.com:\n\n> Hello');
     });
 
     it('should update autosize() on the email body', function() {

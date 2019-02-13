@@ -56,7 +56,7 @@ describe('The Unified Inbox Angular module', function() {
 
   it('should register a search provider', function(done) {
     module(function($provide) {
-      $provide.value('esnConfig', function() {
+      $provide.constant('esnConfig', function() {
         return $q.when();
       });
     });
