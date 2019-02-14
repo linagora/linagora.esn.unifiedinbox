@@ -21,3 +21,6 @@ angular.module('linagora.esn.james', [])
     };
   });
 angular.module('ngCookies', []);
+angular.module('esn.profile', []).factory('profilePopoverCardService', function() {
+  return {bind: angular.noop};
+});

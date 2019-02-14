@@ -132,7 +132,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxEmailer', function(session) {
+  .directive('inboxEmailer', function(session, profilePopoverCardService) {
     return {
       restrict: 'E',
       replace: true,
@@ -143,15 +143,26 @@ angular.module('linagora.esn.unifiedinbox')
         highlight: '@?'
       },
       templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer.html',
-      link: function(scope) {
+      link: function(scope, element) {
         scope.$watch('emailer', function(emailer) {
           scope.me = emailer && emailer.email && emailer.email === session.user.preferredEmail;
+        });
+
+        var unwatch = scope.$watch('emailer.id', function() {
+          if (!scope.emailer || !scope.emailer.id || !scope.emailer.name || !scope.emailer.email) return;
+
+          profilePopoverCardService.bind(element, scope.emailer, {
+            alternativeTitle: scope.emailer.name,
+            showMobile: true,
+            scope: scope
+          });
+          unwatch();
         });
       }
     };
   })
 
-  .directive('inboxEmailerAvatar', function() {
+  .directive('inboxEmailerAvatar', function(profilePopoverCardService) {
     return {
       restrict: 'E',
       controller: 'resolveEmailerController',
@@ -159,7 +170,20 @@ angular.module('linagora.esn.unifiedinbox')
       scope: {
         emailer: '='
       },
-      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html'
+      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar.html',
+      link: function(scope, element) {
+        var unwatch = scope.$watch('emailer.id', function() {
+          if (!scope.emailer || !scope.emailer.id || !scope.emailer.name || !scope.emailer.email) return;
+
+          profilePopoverCardService.bind(element, scope.emailer, {
+            alternativeTitle: scope.emailer.name,
+            hideOnElementScroll: 'body',
+            showMobile: true,
+            scope: scope
+          });
+          unwatch();
+        });
+      }
     };
   })
 
