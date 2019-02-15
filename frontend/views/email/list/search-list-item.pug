@@ -1,5 +1,7 @@
 .inbox-list-item.inbox-message-list-item
-  .inbox-list-item-content.clickable(ng-click="ctrl.openEmail(item)")
+  a.inbox-list-item-content.clickable(
+    ng-click="item.isDraft ? ctrl.openEmail(item) : false",
+    ng-href="{{ !item.isDraft ? ctrl.openEmailLink(item) : '' }}")
     .inbox-item-with-icon
       .list-image.badge-container
         inbox-emailer-avatar(emailer="::mailboxRole.value !== 'sent' ? item.from : item.emailFirstRecipient" )
