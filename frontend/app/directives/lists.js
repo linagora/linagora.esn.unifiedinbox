@@ -51,7 +51,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService, inboxSwipeHelper,
-                                              infiniteListService, inboxMailboxesService, inboxSelectionService) {
+                                              infiniteListService, inboxMailboxesService, inboxSelectionService, inboxOpenEmailMessageService) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -85,6 +85,10 @@ angular.module('linagora.esn.unifiedinbox')
               item: email
             }).finally(unregisterStateNotFoundListener);
           }
+        };
+
+        self.openEmailLink = function(email) {
+          return inboxOpenEmailMessageService.getEmailState('.message', email, $scope.mailbox);
         };
 
         ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged',
@@ -137,7 +141,8 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxSearchMessageListItem', function($q, $state, $stateParams, newComposerService, _, inboxJmapItemService, inboxMailboxesService, inboxPlugins) {
+  .directive('inboxSearchMessageListItem', function($q, $state, $stateParams, newComposerService, _, inboxJmapItemService,
+                                                    inboxMailboxesService, inboxPlugins, inboxOpenEmailMessageService) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -178,6 +183,10 @@ angular.module('linagora.esn.unifiedinbox')
             }).finally(unregisterStateNotFoundListener);
           }
         };
+
+        self.openEmailLink = function(email) {
+          return inboxOpenEmailMessageService.getEmailState('unifiedinbox.inbox.message', email, $scope.mailbox);
+        };
       },
       controllerAs: 'ctrl',
       templateUrl: '/unifiedinbox/views/email/list/search-list-item.html'
@@ -185,7 +194,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxThreadListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                             inboxSwipeHelper, inboxSelectionService) {
+                                             inboxSwipeHelper, inboxSelectionService, inboxOpenEmailMessageService) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -211,6 +220,10 @@ angular.module('linagora.esn.unifiedinbox')
               item: thread
             });
           }
+        };
+
+        self.openThreadLink = function(thread) {
+          return inboxOpenEmailMessageService.getThreadState('.thread', thread, $scope.mailbox);
         };
 
         ['markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
