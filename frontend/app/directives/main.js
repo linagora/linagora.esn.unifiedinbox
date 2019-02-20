@@ -59,7 +59,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxFab', function($timeout, boxOverlayService) {
+  .directive('inboxFab', function() {
     return {
       restrict: 'E',
       templateUrl: '/unifiedinbox/views/partials/inbox-fab.html',
@@ -85,14 +85,6 @@ angular.module('linagora.esn.unifiedinbox')
 
         scope.$on('box-overlay:space-left-on-screen', function() {
           enableFab();
-        });
-
-        $timeout(function() {
-          if (!boxOverlayService.spaceLeftOnScreen()) {
-            disableFab();
-          } else {
-            enableFab();
-          }
         });
       }
     };
