@@ -5,10 +5,9 @@
 
   function inboxSelectionService(_, inboxFilteredList) {
     var selectedItems = [];
-    var selecting = false;
 
     return {
-      isSelecting: function() { return selecting; },
+      isSelecting: function() { return !!selectedItems.length; },
       getSelectedItems: function() { return _.clone(selectedItems); },
       toggleItemSelection: toggleItemSelection,
       groupSelection: groupSelection,
@@ -29,8 +28,6 @@
       } else {
         _.pull(selectedItems, item);
       }
-
-      selecting = selectedItems.length > 0;
     }
 
     function selectItem(item) {
@@ -40,7 +37,6 @@
 
       item.selected = true;
       selectedItems.push(item);
-      selecting = selectedItems.length > 0;
     }
 
     function unselectItem(item) {
@@ -48,7 +44,6 @@
       _.remove(selectedItems, function(selected) {
         return selected.id === item.id;
       });
-      selecting = selectedItems.length > 0;
     }
 
     function groupSelection(item) {
@@ -128,7 +123,6 @@
       });
 
       selectedItems.length = 0;
-      selecting = false;
     }
   }
 })(angular);
