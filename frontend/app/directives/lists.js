@@ -50,8 +50,17 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxMessageListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService, inboxSwipeHelper,
-                                              infiniteListService, inboxMailboxesService, inboxSelectionService, inboxOpenEmailMessageService) {
+  .directive('inboxMessageListItem', function(
+    $state,
+    $stateParams,
+    newComposerService,
+    _,
+    inboxJmapItemService,
+    inboxSwipeHelper,
+    inboxMailboxesService,
+    inboxSelectionService,
+    inboxOpenEmailMessageService
+  ) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -65,7 +74,11 @@ angular.module('linagora.esn.unifiedinbox')
           $event.stopPropagation();
           $event.preventDefault();
 
-          inboxSelectionService.toggleItemSelection(item);
+          if ($event.shiftKey) {
+            inboxSelectionService.groupSelection(item);
+          } else {
+            inboxSelectionService.toggleItemSelection(item);
+          }
         };
 
         self.openEmail = function(email) {
