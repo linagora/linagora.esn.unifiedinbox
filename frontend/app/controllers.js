@@ -132,10 +132,12 @@ angular.module('linagora.esn.unifiedinbox')
 
   .controller('viewEmailController', function($scope, $state, $stateParams, esnShortcuts, inboxJmapItemService,
     inboxMailboxesService, inboxJmapHelper, inboxAsyncHostedMailControllerHelper, inboxUnavailableAccountNotifier,
-    INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY, INBOX_EVENTS, INBOX_CONTROLLER_LOADING_STATES) {
+    inboxFilteredList, INBOX_SHORTCUTS_NAVIGATION_CATEGORY, INBOX_SHORTCUTS_ACTIONS_CATEGORY, INBOX_EVENTS,
+    INBOX_CONTROLLER_LOADING_STATES) {
     var context = $stateParams.context;
+    var emailId = $stateParams.emailId;
 
-    $scope.email = $stateParams.item;
+    $scope.email = $stateParams.item ? $stateParams.item : inboxFilteredList.getById(emailId);
 
     $scope.$on(INBOX_EVENTS.UNAVAILABLE_ACCOUNT_DETECTED, handleUnavailableAccount.bind(this));
 
@@ -145,7 +147,7 @@ angular.module('linagora.esn.unifiedinbox')
 
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxJmapHelper
-        .getMessageById($stateParams.emailId)
+        .getMessageById(emailId)
         .then(function(message) {
           if (!$scope.email) {
             $scope.email = message;

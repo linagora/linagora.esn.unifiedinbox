@@ -1,13 +1,13 @@
 .inbox-thread-list-item.swipe(inbox-swipeable-list-item, swipe-right="onSwipeRight", swipe-left="onSwipeLeft", left-template="{{ leftTemplate }}", ng-class="{ selected: item.selected }")
   .inbox-list-item-content.clickable(
-      ng-click="item.lastEmail.isDraft && !esnIsDragging ? ctrl.openThread(item) : false",
+      ng-attr-ng-click="item.lastEmail.isDraft && !esnIsDragging ? ctrl.openDraft(item.lastEmail.id) : undefined",
       esn-draggable,
       inbox-draggable-list-item,
       esn-drag-message="getDragMessage($dragData)",
       esn-drag-data="getDragData()",
       esn-drag-class="dragging",
       ng-class="{ dragging: esnIsDragging && item.selected }",
-      ng-href="{{ !item.lastEmail.isDraft && !esnIsDragging ? ctrl.openThreadLink(item) : '' }}"
+      ng-attr-ui-sref="{{ !item.lastEmail.isDraft && !esnIsDragging ? '.thread({mailbox: mailbox, threadId: item.lastEmail.id})' : '.' }}"
     )
     .inbox-item-with-icon
       .list-image.badge-container(ng-click="ctrl.select(item, $event)", desktop-hover="hovering = hover && !esnIsDragging")
