@@ -30,6 +30,17 @@
     }
   })
 
+  .constant('INBOX_SHORTCUTS_SELECTION_CATEGORY', {
+    id: 'linagora.esn.unifiedinbox.selection',
+    name: 'Selection',
+    shortcuts: {
+      SELECT_MULTIPLE_EMAILS: {
+        combo: '<shift> + <click>',
+        description: 'Select multiple emails'
+      }
+    }
+  })
+
   .constant('INBOX_SHORTCUTS_ACTIONS_CATEGORY', {
     id: 'linagora.esn.unifiedinbox.actions',
     name: 'Actions',
