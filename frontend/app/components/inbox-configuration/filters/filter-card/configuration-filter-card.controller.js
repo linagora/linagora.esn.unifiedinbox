@@ -7,14 +7,9 @@
   function inboxConfigurationFilterCardController(inboxMailboxesFilterService) {
     var self = this;
 
-    self.deleteFilter = deleteFilter;
     self.getFilterSummary = getFilterSummary;
 
     /////
-
-    function deleteFilter() {
-      inboxMailboxesFilterService.deleteFilter(self.filter.id);
-    }
 
     function getFilterSummary() {
       return inboxMailboxesFilterService.getFilterSummary(self.filter);

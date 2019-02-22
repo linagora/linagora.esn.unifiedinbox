@@ -60,10 +60,11 @@
       function addFilter(type, name, conditionValue, actionDefinition) {
         var filter = _filterOf(type, name, conditionValue, actionDefinition);
 
-        _setFiltersOnServer([].concat(self.filters, [filter])).then(function() {
+        return _setFiltersOnServer([].concat(self.filters, [filter])).then(function() {
           self.filters.push(filter);
           self.filtersIds[filter.id] = filter;
-          _notifyChanged();
+
+          return self.filters;
         }).catch(function() {
           // handle error?
         });
@@ -82,15 +83,14 @@
         filter.id = self.filters[idx].id;
         newFilterList[idx] = filter;
 
-        _setFiltersOnServer(newFilterList).then(function() {
+        return _setFiltersOnServer(newFilterList).then(function() {
           self.filters[idx] = filter;
           self.filtersIds[filter.id] = filter;
-          _notifyChanged();
+
+          return self.filters;
         }).catch(function() {
           // handle error?
         });
-
-        return true;
       }
 
       function deleteFilter(filterId) {
@@ -102,15 +102,14 @@
           return false;
         }
 
-        _setFiltersOnServer(newFilters).then(function() {
+        return _setFiltersOnServer(newFilters).then(function() {
           self.filters = newFilters;
           delete self.filtersIds[filterId];
-          _notifyChanged();
+
+          return self.filters;
         }).catch(function() {
           // Handle error ?
         });
-
-        return true;
       }
 
       function getFilterSummary(filter) {
@@ -133,7 +132,8 @@
       function _setFilters(filters) {
         return _setFiltersOnServer(filters).then(function() {
           _setFiltersLocally(filters);
-          _notifyChanged();
+
+          return self.filters;
         }).catch(function() {
           // Handle error?
         });
@@ -146,10 +146,6 @@
         _.forEach(filters, function(item) {
           self.filtersIds[item.id] = item;
         });
-      }
-
-      function _notifyChanged() {
-        $rootScope.$broadcast('filters-list-changed');
       }
 
       function _getJMapConditionText(filter) {
