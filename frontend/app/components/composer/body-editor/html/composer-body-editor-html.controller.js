@@ -5,13 +5,11 @@
 
     .controller('inboxComposerBodyEditorHtmlController', function(
       $q,
-      $timeout,
       $scope,
       $element,
       $compile,
       $filter,
       _,
-      INBOX_EVENTS,
       INBOX_SUMMERNOTE_OPTIONS,
       INBOX_SIGNATURE_SEPARATOR
     ) {
@@ -34,7 +32,7 @@
       }
 
       function onSummernoteKeydown(event) {
-        if (event.ctrlKey && (event.keyCode === 10 || event.keyCode === 13)) {
+        if ((event.metaKey || event.ctrlKey) && (event.keyCode === 10 || event.keyCode === 13)) {
           self.send();
         }
       }

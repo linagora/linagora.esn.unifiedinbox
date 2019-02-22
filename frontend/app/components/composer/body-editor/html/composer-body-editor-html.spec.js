@@ -32,6 +32,16 @@ describe('The inboxComposerBodyEditorHtml component', function() {
     return ctrlEnterEvent;
   }
 
+  function cmdEnterEvent() {
+    var cmdEnterEvent = new jQuery.Event('keydown');
+
+    cmdEnterEvent.which = 13;
+    cmdEnterEvent.keyCode = 13;
+    cmdEnterEvent.cmdKey = true;
+
+    return cmdEnterEvent;
+  }
+
   afterEach(function() {
     if (element) {
       element.remove();
@@ -91,6 +101,14 @@ describe('The inboxComposerBodyEditorHtml component', function() {
       compileComponent();
 
       element.find('.note-editable').trigger(ctrlEnterEvent());
+    });
+
+    it('should send the message when cmd+enter is pressed in body', function(done) {
+      $rootScope.send = done;
+
+      compileComponent();
+
+      element.find('.note-editable').trigger(cmdEnterEvent());
     });
 
     it('should force tabindex=-1 on all toolbar form input', function(done) {
