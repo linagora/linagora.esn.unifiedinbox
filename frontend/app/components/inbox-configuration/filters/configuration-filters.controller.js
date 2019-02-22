@@ -6,20 +6,21 @@
 
   function inboxConfigurationFiltersController(
     $scope,
+    _,
     inboxMailboxesFilterService,
     dragulaService
   ) {
     var self = this;
 
     self.$onInit = $onInit;
-    self.refreshFilters = refreshFilters;
-    self.filtersList = [];
+    self.getFilters = getFilters;
+    self.deleteFilter = deleteFilter;
+    self.filtersList;
 
     /////
 
     function $onInit() {
-      self.refreshFilters();
-      $scope.$on('filters-list-changed', self.refreshFilters);
+      self.getFilters();
       $scope.$on('filter-bag.drop-model', function() {
         inboxMailboxesFilterService.filters = self.filtersList;
       });
@@ -31,8 +32,14 @@
       });
     }
 
-    function refreshFilters() {
+    function getFilters() {
       return inboxMailboxesFilterService.getFilters().then(function(filters) {
+        self.filtersList = filters;
+      });
+    }
+
+    function deleteFilter(filterId) {
+      return inboxMailboxesFilterService.deleteFilter(filterId).then(function(filters) {
         self.filtersList = filters;
       });
     }
