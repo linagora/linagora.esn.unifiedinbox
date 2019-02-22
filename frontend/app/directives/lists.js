@@ -58,8 +58,7 @@ angular.module('linagora.esn.unifiedinbox')
     inboxJmapItemService,
     inboxSwipeHelper,
     inboxMailboxesService,
-    inboxSelectionService,
-    inboxOpenEmailMessageService
+    inboxSelectionService
   ) {
     return {
       restrict: 'E',
@@ -67,6 +66,7 @@ angular.module('linagora.esn.unifiedinbox')
         var self = this,
         context = $stateParams.context;
 
+        $scope.mailbox = $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || ($scope.item && _.first($scope.item.mailboxIds));
         // need this scope value for action list
         $scope.email = $scope.item;
 
@@ -81,27 +81,8 @@ angular.module('linagora.esn.unifiedinbox')
           }
         };
 
-        self.openEmail = function(email) {
-          if (email.isDraft) {
-            newComposerService.openDraft(email.id);
-          } else {
-            // Used to fallback to the absolute state name if the transition to a relative state does not work
-            // This allows us to plug '.message' states where we want and guarantee the email can still be opened
-            // when coming from a state that does not get a .message child state (like search for instance)
-            var unregisterStateNotFoundListener = $scope.$on('$stateNotFound', function(event, redirect) {
-              redirect.to = 'unifiedinbox.inbox.message';
-            });
-
-            $state.go('.message', {
-              mailbox: $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || _.first(email.mailboxIds),
-              emailId: email.id,
-              item: email
-            }).finally(unregisterStateNotFoundListener);
-          }
-        };
-
-        self.openEmailLink = function(email) {
-          return inboxOpenEmailMessageService.getEmailState('.message', email, $scope.mailbox);
+        self.openDraft = function(emailId) {
+          newComposerService.openDraft(emailId);
         };
 
         ['reply', 'replyAll', 'forward', 'markAsUnread', 'markAsRead', 'markAsFlagged',
@@ -155,7 +136,7 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxSearchMessageListItem', function($q, $state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                                    inboxMailboxesService, inboxPlugins, inboxOpenEmailMessageService) {
+                                                    inboxMailboxesService, inboxPlugins) {
     return {
       restrict: 'E',
       controller: function($scope) {
@@ -170,6 +151,7 @@ angular.module('linagora.esn.unifiedinbox')
           });
         }
 
+        $scope.mailbox = $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || ($scope.item && _.first($scope.item.mailboxIds));
         $scope.email = $scope.item;
 
         $q.all(_.map($scope.item.mailboxIds, function(mailboxId) {
@@ -178,27 +160,8 @@ angular.module('linagora.esn.unifiedinbox')
           $scope.item.mailboxes = mailboxes;
         });
 
-        self.openEmail = function(email) {
-          if (email.isDraft) {
-            newComposerService.openDraft(email.id);
-          } else {
-            // Used to fallback to the absolute state name if the transition to a relative state does not work
-            // This allows us to plug '.message' states where we want and guarantee the email can still be opened
-            // when coming from a state that does not get a .message child state (like search for instance)
-            var unregisterStateNotFoundListener = $scope.$on('$stateNotFound', function(event, redirect) {
-              redirect.to = 'unifiedinbox.inbox.message';
-            });
-
-            $state.go('.message', {
-              mailbox: $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || _.first(email.mailboxIds),
-              emailId: email.id,
-              item: email
-            }).finally(unregisterStateNotFoundListener);
-          }
-        };
-
-        self.openEmailLink = function(email) {
-          return inboxOpenEmailMessageService.getEmailState('unifiedinbox.inbox.message', email, $scope.mailbox);
+        self.openDraft = function(emailId) {
+          newComposerService.openDraft(emailId);
         };
       },
       controllerAs: 'ctrl',
@@ -207,12 +170,13 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .directive('inboxThreadListItem', function($state, $stateParams, newComposerService, _, inboxJmapItemService,
-                                             inboxSwipeHelper, inboxSelectionService, inboxOpenEmailMessageService) {
+                                             inboxSwipeHelper, inboxSelectionService) {
     return {
       restrict: 'E',
       controller: function($scope) {
         var self = this;
 
+        $scope.mailbox = $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || ($scope.item && _.first($scope.item.lastEmail.mailboxIds));
         // need this scope value for action list
         $scope.thread = $scope.item;
 
@@ -223,20 +187,8 @@ angular.module('linagora.esn.unifiedinbox')
           inboxSelectionService.toggleItemSelection(item);
         };
 
-        self.openThread = function(thread) {
-          if (thread.lastEmail.isDraft) {
-            newComposerService.openDraft(thread.lastEmail.id);
-          } else {
-            $state.go('.thread', {
-              mailbox: $stateParams.mailbox || ($scope.mailbox && $scope.mailbox.id) || _.first(thread.lastEmail.mailboxIds),
-              threadId: thread.id,
-              item: thread
-            });
-          }
-        };
-
-        self.openThreadLink = function(thread) {
-          return inboxOpenEmailMessageService.getThreadState('.thread', thread, $scope.mailbox);
+        self.openDraft = function(threadId) {
+          newComposerService.openDraft(threadId);
         };
 
         ['markAsUnread', 'markAsRead', 'markAsFlagged', 'unmarkAsFlagged', 'moveToTrash'].forEach(function(action) {
