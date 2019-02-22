@@ -277,5 +277,6 @@
   "Configure swipe actions to quickly act on emails on the conversation list": "Configure swipe actions to quickly act on emails on the conversation list",
   "Emails in outbox are also saved as draft": "Emails in outbox are also saved as draft",
   "Unsent emails are saved as draft": "Unsent emails are saved as draft",
-  "Automatic redirection of incoming emails to another email account": "Automatic redirection of incoming emails to another email account"
+  "Automatic redirection of incoming emails to another email account": "Automatic redirection of incoming emails to another email account",
+  "Select multiple emails": "Select multiple emails"
 }
