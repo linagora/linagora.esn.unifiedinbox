@@ -21,7 +21,6 @@
       self.filtersIds = {};
 
       inboxMailboxesService.assignMailboxesList(self);
-      getFilters();
 
       return {
         addFilter: addFilter,
@@ -120,6 +119,8 @@
       }
 
       function getFilters() {
+        if (self.filters.length) return $q.when(self.filters);
+
         return withJmapClient(function(client) {
           return client.getFilter().then(function(result) {
             _setFiltersLocally(result);
