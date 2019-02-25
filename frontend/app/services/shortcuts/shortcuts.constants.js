@@ -64,6 +64,10 @@
       SPAM_EMAIL: {
         combo: 'j',
         description: 'Mark as spam'
+      },
+      SEND_EMAIL: {
+        combo: 'mod+return',
+        description: 'Send email'
       }
     }
   });
