@@ -12,4 +12,11 @@
 //    - Passing avatar-url (a < binding) allows the esnAvatar component to be notified when the emailer changes
 //    so that it computes the avatar again, calling our resolveAvatar() function.
 //
-esn-avatar(resolve-avatar="$ctrl.resolveAvatar()", avatar-url="emailer.avatarUrl")
+esn-avatar(
+  resolve-avatar="$ctrl.resolveAvatar()"
+  avatar-url="emailer.avatarUrl"
+  profile-popover-card="{source: 'emailer', property: 'id'}"
+  profile-popover-card-alternative-title="{{ emailer.email }}"
+  profile-popover-card-hide-on-element-scroll="body"
+  profile-popover-card-show-mobile
+)
