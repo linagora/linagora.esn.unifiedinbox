@@ -277,5 +277,6 @@
   "Configure swipe actions to quickly act on emails on the conversation list": "Configurer les actions de balayage pour agir rapidement sur les emails de la liste de conversation",
   "Emails in outbox are also saved as draft": "Les e-mails dans la boîte d'envoi sont également enregistrés comme brouillons",
   "Unsent emails are saved as draft": "Les emails non envoyés sont enregistrés comme brouillon",
-  "Automatic redirection of incoming emails to another email account": "Redirection automatique des emails entrants vers un autre compte email"
+  "Automatic redirection of incoming emails to another email account": "Redirection automatique des emails entrants vers un autre compte email",
+  "Select multiple emails": "Sélectionner plusieurs emails"
 }
