@@ -53,11 +53,11 @@ describe('The mailto Angular application', function() {
       });
     });
 
-    inject(function(newComposerService, StateManager) {
+    inject(function(newComposerService, BoxOverlayStateManager) {
       expect(newComposerService.open).to.have.been.calledWith(message, {
         closeable: false,
         allowedStates: [],
-        initialState: StateManager.STATES.FULL_SCREEN,
+        initialState: BoxOverlayStateManager.STATES.FULL_SCREEN,
         onSend: sinon.match.func
       });
     });
