@@ -10,6 +10,8 @@ const mailtoCoreAngularModules = [
   'esn.profile',
   'esn.summernote-wrapper',
   'esn.attendee',
+  'esn.people',
+  'esn.attachments-selector',
   'esn.scroll',
   'esn.offline-wrapper',
   'esn.lodash-wrapper',
