@@ -420,11 +420,9 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   });
 
   describe('The inboxFab directive', function() {
+    var newComposerService;
 
-    var boxOverlayService, newComposerService;
-
-    beforeEach(inject(function(_boxOverlayService_, _newComposerService_) {
-      boxOverlayService = _boxOverlayService_;
+    beforeEach(inject(function(_newComposerService_) {
       newComposerService = _newComposerService_;
     }));
 
@@ -453,22 +451,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
       return findInnerFabButton(fab);
     }
-
-    it('should have enabled button when space left on screen when linked', function() {
-      boxOverlayService.spaceLeftOnScreen = function() {return true;};
-
-      var button = compileFabDirective();
-
-      expectFabToBeEnabled(button);
-    });
-
-    it('should have disabled button when no space left on screen when linked', function() {
-      boxOverlayService.spaceLeftOnScreen = function() {return false;};
-
-      var button = compileFabDirective();
-
-      expectFabToBeDisabled(button);
-    });
 
     it('should disable the button when no space left on screen', function() {
       var button = compileFabDirective();
