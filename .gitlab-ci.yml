@@ -68,8 +68,7 @@ test_midway_backtend:
 swagger:
   stage: swagger
   tags:
-    - master
-    - shell
+    - docker
   script:
    - npm i
    - npm prune
