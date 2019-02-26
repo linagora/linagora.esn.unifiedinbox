@@ -272,6 +272,15 @@ angular.module('linagora.esn.unifiedinbox', [
           }
         }
       })
+      .state('unifiedinbox.inbox.search', {
+        url: '/search?type&account&context',
+        views: {
+          'main@unifiedinbox': {
+            controller: 'unifiedInboxSearchController as ctrl',
+            templateUrl: '/unifiedinbox/views/unified-inbox/index'
+          }
+        }
+      })
       .state('unifiedinbox.inbox.attachments', stateOpeningRightSidebar({
         url: '/attachments',
         views: {
@@ -318,19 +327,21 @@ angular.module('linagora.esn.unifiedinbox', [
     $mdIconProvider.defaultIconSet('images/mdi/mdi.svg', 24);
   })
 
-  .run(function($q, inboxConfig, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailThreadsProvider,
-                session, searchProviders, inboxSearchResultsProvider, DEFAULT_VIEW) {
-
+  .run(function(
+    $q,
+    inboxConfig,
+    inboxProviders,
+    inboxHostedMailMessagesProvider,
+    inboxHostedMailThreadsProvider,
+    DEFAULT_VIEW
+  ) {
     $q.all([
       inboxConfig('view', DEFAULT_VIEW)
     ]).then(function(config) {
       var view = config[0];
 
       inboxProviders.add(view === 'messages' ? inboxHostedMailMessagesProvider : inboxHostedMailThreadsProvider);
-
     });
-
-    searchProviders.add(inboxSearchResultsProvider);
   })
 
   .run(function($rootScope) {

@@ -227,10 +227,6 @@ angular.module('linagora.esn.unifiedinbox')
     return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/message', computeUniqueSetOfRecipients);
   })
 
-  .factory('inboxSearchResultsProvider', function(inboxNewMessageProvider, computeUniqueSetOfRecipients) {
-    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/search', computeUniqueSetOfRecipients);
-  })
-
   .factory('inboxHostedMailAttachmentProvider', function(withJmapClient, pagedJmapRequest, newProvider, ByDateElementGroupingTool,
                                                          inboxFilteringService, inboxMailboxesService, inboxJmapProviderContextBuilder,
                                                          JMAP_GET_MESSAGES_ATTACHMENTS_LIST, ELEMENTS_PER_REQUEST, PROVIDER_TYPES) {
