@@ -5,7 +5,7 @@
     )
     .inbox-item-with-icon
       .list-image.badge-container
-        inbox-emailer-avatar(emailer="::mailboxRole.value !== 'sent' ? item.from : item.emailFirstRecipient" )
+        inbox-emailer-avatar-popover(emailer="::mailboxRole.value !== 'sent' ? item.from : item.emailFirstRecipient" )
       .media-body
         .inbox-list-item-subject-and-from
           .inbox-subject.lv-title

@@ -155,6 +155,18 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
+  .directive('inboxEmailerAvatarPopover', function() {
+    return {
+      restrict: 'E',
+      controller: 'resolveEmailerController',
+      controllerAs: '$ctrl',
+      scope: {
+        emailer: '='
+      },
+      templateUrl: '/unifiedinbox/views/partials/emailer/inbox-emailer-avatar-popover.html'
+    };
+  })
+
   .directive('inboxEmailerGroup', function() {
     return {
       restrict: 'E',
