@@ -5,7 +5,7 @@
 
     .filter('inboxItemDate', function(esnDatetimeService) {
       return function(date) {
-        return esnDatetimeService.format(date, esnDatetimeService.getGroup(date).dateFormat);
+        return esnDatetimeService.format(date, esnDatetimeService.getHumanTimeGrouping(date).dateFormat);
       };
     });
 

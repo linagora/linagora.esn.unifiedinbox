@@ -23,7 +23,7 @@
           return;
         }
 
-        self.group = bindings.item.currentValue && esnDatetimeService.getGroup(bindings.item.currentValue.date);
+        self.group = bindings.item.currentValue && esnDatetimeService.getHumanTimeGrouping(bindings.item.currentValue.date);
       }
 
       function setQuickFilter(filter) {
