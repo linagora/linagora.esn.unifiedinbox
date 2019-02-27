@@ -244,8 +244,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         acceptedTypes: ['myType'],
         acceptedAccounts: ['myAccount'],
         filterByType: {
-          jmap: {},
-          social: {}
+          jmap: {}
         },
         context: 'myContext',
         quickFilter: null
