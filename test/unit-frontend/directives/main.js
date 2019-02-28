@@ -504,6 +504,17 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       element.find('recipients-auto-complete').isolateScope().search();
     });
 
+    it('should call searchService.searchRecipients with a list of excluded attendee', function() {
+      searchService.searchRecipients = sinon.spy();
+
+      var scope = compileDirectiveThenGetScope();
+
+      scope.excludes = [{ id: 'foo', objectType: 'bar' }];
+
+      scope.search('query');
+      expect(searchService.searchRecipients).to.have.been.calledWith('query', [{ id: 'foo', objectType: 'bar' }]);
+    });
+
     it('should define $scope.search from the composerDesktop directive controller', function(done) {
       searchService.searchRecipients = function() { done(); };
       compileDirective('<div><recipients-auto-complete ng-model="model" template="recipients-auto-complete"></recipients-auto-complete></div>', {
@@ -511,6 +522,15 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       });
 
       element.find('recipients-auto-complete').isolateScope().search();
+    });
+
+    it('should add new added tag to excludes list', function() {
+      var scope = compileDirectiveThenGetScope();
+      var tag = { id: 'foog', objectType: 'bar' };
+
+      scope.onTagAdded(tag);
+
+      expect(scope.excludes).to.include({ id: 'foog', objectType: 'bar' });
     });
 
     it('should scrolldown element when a tag is added and broadcast an event to inform the fullscreen-edit-form to scrolldown', function() {

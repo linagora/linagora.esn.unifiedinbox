@@ -370,8 +370,8 @@ angular.module('linagora.esn.unifiedinbox')
       searchRecipients: searchRecipients
     };
 
-    function searchRecipients(query) {
-      return attendeeService.getAttendeeCandidates(query, INBOX_AUTOCOMPLETE_LIMIT, INBOX_AUTOCOMPLETE_OBJECT_TYPES).then(function(recipients) {
+    function searchRecipients(query, excludes) {
+      return attendeeService.getAttendeeCandidates(query, INBOX_AUTOCOMPLETE_LIMIT, INBOX_AUTOCOMPLETE_OBJECT_TYPES, excludes).then(function(recipients) {
         return recipients
           .filter(_.property('email'))
           .map(function(recipient) {
