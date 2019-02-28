@@ -21,7 +21,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('opInboxCompose', function(newComposerService, _) {
+  .directive('opInboxCompose', function($parse, newComposerService, _) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
@@ -41,18 +41,24 @@ angular.module('linagora.esn.unifiedinbox')
         element.on('click', function(event) {
           var emails = _findRecipientEmails();
 
-          if (emails) {
+          if (emails || attrs.opInboxComposeUsers) {
             event.preventDefault();
             event.stopPropagation();
 
-            newComposerService.open({
-              to: emails.map(function(email) {
+            var targets;
+
+            if (attrs.opInboxComposeUsers) {
+              targets = $parse(attrs.opInboxComposeUsers)(scope);
+            } else {
+              targets = emails.map(function(email) {
                 return {
                   email: email,
                   name: attrs.opInboxComposeDisplayName || email
                 };
-              })
-            });
+              });
+            }
+
+            newComposerService.open({to: targets});
           }
         });
       }
