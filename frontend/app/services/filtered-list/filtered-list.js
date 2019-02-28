@@ -20,6 +20,7 @@
 
       return {
         list: list,
+        reset: reset,
         getById: getById,
         addAll: addAll,
         asMdVirtualRepeatModel: asMdVirtualRepeatModel,
@@ -28,6 +29,12 @@
       };
 
       /////
+
+      function reset() {
+        items.length = 0;
+        renderedList.length = 0;
+        itemsById = {};
+      }
 
       function list() {
         return renderedList;

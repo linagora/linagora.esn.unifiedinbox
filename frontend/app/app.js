@@ -264,19 +264,29 @@ angular.module('linagora.esn.unifiedinbox', [
         }
       })
       .state('unifiedinbox.inbox', {
-        url: '/inbox?type&account&context',
+        url: '/inbox?type&account&context&q&{a:json}',
+        params: {
+          q: {
+            value: '',
+            squash: true
+          },
+          // 'a' stands for 'A'dvanced search, MUST be an object
+          a: {
+            value: {},
+            squash: true
+          }
+        },
+        resolve: {
+          cleanState: function($stateParams, PROVIDER_TYPES) {
+            if ($stateParams.type !== PROVIDER_TYPES.SEARCH) {
+              delete $stateParams.q;
+              delete $stateParams.a;
+            }
+          }
+        },
         views: {
           'main@unifiedinbox': {
             controller: 'unifiedInboxController as ctrl',
-            templateUrl: '/unifiedinbox/views/unified-inbox/index'
-          }
-        }
-      })
-      .state('unifiedinbox.inbox.search', {
-        url: '/search?type&account&context',
-        views: {
-          'main@unifiedinbox': {
-            controller: 'unifiedInboxSearchController as ctrl',
             templateUrl: '/unifiedinbox/views/unified-inbox/index'
           }
         }

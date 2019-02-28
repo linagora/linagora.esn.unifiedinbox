@@ -70,6 +70,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       $provide.value('newComposerService', newComposerService);
       $provide.value('$state', $state);
       $provide.constant('ELEMENTS_PER_PAGE', 2);
+      $provide.constant('ESN_SEARCH_QUERY_LOAD_EVENT', 'ESN_SEARCH_QUERY_LOAD_EVENT');
       $provide.value('fileUploadService', {
         get: function() {
           return fileUploadMock;
