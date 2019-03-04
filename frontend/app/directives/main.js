@@ -311,10 +311,22 @@ angular.module('linagora.esn.unifiedinbox')
         }
 
         scope.tags = scope.tags || [];
+        scope.excludes = scope.tags.map(function(tag) {
+          if (tag.id && tag.objectType) {
+            return {
+              id: tag.id,
+              objectType: tag.objectType
+            };
+          }
+        }).filter(Boolean);
+
         scope.tags
           .filter(function(tag) { return tag.email; })
           .forEach(normalizeToEMailer);
-        scope.search = searchService.searchRecipients;
+
+        scope.search = function(query) {
+          return searchService.searchRecipients(query, scope.excludes);
+        };
 
         scope.onTagAdding = function($tag) {
           normalizeToEMailer($tag);
@@ -329,7 +341,15 @@ angular.module('linagora.esn.unifiedinbox')
 
           return !_.find(scope.tags, { email: $tag.email });
         };
-        scope.onTagAdded = function() {
+
+        scope.onTagAdded = function($tag) {
+          if ($tag.id && $tag.objectType) {
+            scope.excludes.push({
+              id: $tag.id,
+              objectType: $tag.objectType
+            });
+          }
+
           elementScrollService.autoScrollDown(element.find('div.tags'));
         };
       }
