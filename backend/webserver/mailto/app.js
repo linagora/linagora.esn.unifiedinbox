@@ -36,7 +36,18 @@ const mailtoCoreAngularModules = [
   'esn.feature-registry',
   'esn.email-addresses-wrapper',
   'esn.escape-html',
-  'esn.chips'
+  'esn.chips',
+
+  'uuid4',
+  'matchmedia-ng',
+  'esn.touchscreen-detector',
+  'esn.textarea-autosize',
+  'esn.waves',
+  'esn.autolinker-wrapper',
+  'esn.ui',
+  'esn.avatar',
+  'esn.media.query',
+  'esn.profile-popover-card'
 ];
 
 const mailtoAngularJsFiles = [
