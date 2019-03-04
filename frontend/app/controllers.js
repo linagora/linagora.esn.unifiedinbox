@@ -2,10 +2,10 @@
 
 angular.module('linagora.esn.unifiedinbox')
 
-  .controller('unifiedInboxController', function($rootScope, $timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
+  .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
                                                  inboxMailboxesService, inboxFilteredList, inboxJmapItemService, inboxUserQuotaService, inboxPlugins, inboxUnavailableAccountNotifier,
-                                                 ELEMENTS_PER_PAGE, inboxLocalSearchProvider, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, PROVIDER_TYPES, ESN_SEARCH_QUERY_LOAD_EVENT) {
+                                                 ELEMENTS_PER_PAGE, inboxLocalSearchProvider, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, PROVIDER_TYPES) {
 
     var plugin = inboxPlugins.get($stateParams.type);
 
@@ -131,8 +131,6 @@ angular.module('linagora.esn.unifiedinbox')
 
       function getProviders() {
         if (plugin && plugin.type === PROVIDER_TYPES.SEARCH) {
-          $rootScope.$emit(ESN_SEARCH_QUERY_LOAD_EVENT);
-
           return $q.when([inboxLocalSearchProvider()]);
         }
 
