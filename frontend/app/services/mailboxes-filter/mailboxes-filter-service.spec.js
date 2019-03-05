@@ -66,12 +66,6 @@ describe('The inboxMailboxesFilterService factory', function() {
 
   describe('addFilter', function() {
     it('should add a new filter', function(done) {
-      inboxMailboxesFilterService.addFilter(
-        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
-          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
-          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
-        });
-
       var expected = {
         id: '1',
         name: 'My filter',
@@ -87,15 +81,19 @@ describe('The inboxMailboxesFilterService factory', function() {
         }
       };
 
-      $rootScope.$on('filters-list-changed', function() {
-        expect(inboxMailboxesFilterService.filters.length).to.equal(1);
-        expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
-        expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
-        expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
-          .to.deep.eql(expected);
+      inboxMailboxesFilterService.addFilter(
+        JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter', 'admin@open-paas.org', {
+          action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
+          mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
+        }).then(function() {
+          expect(inboxMailboxesFilterService.filters.length).to.equal(1);
+          expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
+          expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
+          expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
+            .to.deep.eql(expected);
 
-        done();
-      });
+          done();
+          }).catch(done);
 
       $rootScope.$digest();
     });
@@ -138,21 +136,19 @@ describe('The inboxMailboxesFilterService factory', function() {
         JMAP_FILTER.CONDITIONS.CC.JMAP_KEY, 'My filter 2', 'test@test.test', {
           action: JMAP_FILTER.ACTIONS.MOVE_TO.JMAP_KEY,
           mailboxId: '79a160a7-55c1-4fec-87d8-c90c70373990'
-        });
+        }).then(function() {
+          expected.name = 'My filter 2';
+          expected.condition.field = 'cc';
+          expected.condition.value = 'test@test.test';
 
-      expected.name = 'My filter 2';
-      expected.condition.field = 'cc';
-      expected.condition.value = 'test@test.test';
+          expect(inboxMailboxesFilterService.filters.length).to.equal(1);
+          expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
+          expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
+          expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
+            .to.deep.eql(expected);
 
-      $rootScope.$on('filters-list-changed', function() {
-        expect(inboxMailboxesFilterService.filters.length).to.equal(1);
-        expect(inboxMailboxesFilterService.filters[0]).to.deep.eql(expected);
-        expect(Object.keys(inboxMailboxesFilterService.filtersIds).length).to.equal(1);
-        expect(inboxMailboxesFilterService.filtersIds[Object.keys(inboxMailboxesFilterService.filtersIds)[0]])
-          .to.deep.eql(expected);
-
-        done();
-      });
+            done();
+          }).catch(done);
 
       $rootScope.$digest();
     });
@@ -181,14 +177,9 @@ describe('The inboxMailboxesFilterService factory', function() {
       expect(inboxMailboxesFilterService.deleteFilter('5e4003c6-8f09-40d3-b75c-46a7e92a6440')).to.be.false;
     });
 
-    it('should return true when trying to delete a existant filter', function() {
-      expect(inboxMailboxesFilterService.deleteFilter('1')).to.be.true;
-    });
-
     it('should remove the filter and notify when the filter was deleted', function(done) {
-      $rootScope.$on('filters-list-changed', function() {
         var expected = {
-          id: '2',
+            id: '2',
           name: 'My filter 2',
           condition: {
             field: 'from',
@@ -198,18 +189,36 @@ describe('The inboxMailboxesFilterService factory', function() {
           action: {appendIn: {mailboxIds: ['79a160a7-55c1-4fec-87d8-c90c70373990']}}
         };
 
-        expect(inboxMailboxesFilterService.filters).to.deep.eql([expected]);
-        expect(inboxMailboxesFilterService.filtersIds).to.deep.eql({2: expected});
+        inboxMailboxesFilterService.deleteFilter('1').then(function() {
+          expect(inboxMailboxesFilterService.filtersIds).to.deep.eql({2: expected});
+          expect(inboxMailboxesFilterService.filters).to.deep.eql([expected]);
 
-        done();
-      });
+          done();
+        }).catch(done);
 
-      inboxMailboxesFilterService.deleteFilter('1');
       $rootScope.$digest();
     });
   });
 
   describe('getFilters', function() {
+    it('it should not get filters from client if filters are already defined', function(done) {
+
+      asyncJmapAction = sinon.stub().returns($q.when([]));
+
+      inboxMailboxesFilterService.filters = [1, 2, 3];
+
+      $rootScope.$digest();
+
+      inboxMailboxesFilterService.getFilters().then(function(filters) {
+        expect(jmapClient.getFilter).to.not.have.been.called;
+        expect(filters).to.eql([1, 2, 3]);
+
+        done();
+      }).catch(done);
+
+      $rootScope.$digest();
+    });
+
     it('should query the backend', function(done) {
       var filter1 = {
         id: '116e2454-3d55-4fe3-948c-95a7e2e92abe',
@@ -252,7 +261,7 @@ describe('The inboxMailboxesFilterService factory', function() {
         expect(inboxMailboxesFilterService.filtersIds[filter2.id]).to.deep.eql(filter2);
 
         done();
-      });
+      }).catch(done);
 
       $rootScope.$digest();
     });
@@ -335,16 +344,6 @@ describe('The inboxMailboxesFilterService factory', function() {
           expect(inboxMailboxesFilterService.filters).to.deep.eql([filter1, filter2]);
           done();
         });
-      });
-
-      $rootScope.$digest();
-    });
-
-    it('should notify when filters where set', function(done) {
-
-      inboxMailboxesFilterService.filters = [];
-      $rootScope.$on('filters-list-changed', function() {
-        done();
       });
 
       $rootScope.$digest();
