@@ -354,12 +354,6 @@ angular.module('linagora.esn.unifiedinbox', [
     });
   })
 
-  .run(function(esnSearchQueryService, PROVIDER_TYPES) {
-    esnSearchQueryService.addSearchKeeper(function(toState, toParams) {
-      return toParams.type === PROVIDER_TYPES.SEARCH && (toState.name === 'unifiedinbox.inbox' || toState.name === 'unifiedinbox.inbox.message');
-    });
-  })
-
   .run(function($rootScope) {
     $rootScope.inbox = {
       list: {
