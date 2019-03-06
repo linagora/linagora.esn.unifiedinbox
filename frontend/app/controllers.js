@@ -12,7 +12,6 @@ angular.module('linagora.esn.unifiedinbox')
     setupPolling();
 
     inboxSelectionService.unselectAllItems();
-    inboxFilteredList.reset();
 
     inboxFilteringService.setProviderFilters({
       types: $stateParams.type ? [$stateParams.type] : null,
