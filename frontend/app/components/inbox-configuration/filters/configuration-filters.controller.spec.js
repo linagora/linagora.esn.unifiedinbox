@@ -47,13 +47,12 @@ describe('The inboxConfigurationFiltersController', function() {
     it('should correctly init the component', function() {
       var target = initController();
 
-      sinon.spy(target, 'refreshFilters');
+      sinon.spy(target, 'getFilters');
       sinon.spy($scope, '$on');
 
       target.$onInit();
 
-      expect(target.refreshFilters).to.have.been.called;
-      expect($scope.$on).to.have.been.calledWith('filters-list-changed', target.refreshFilters);
+      expect(target.getFilters).to.have.been.called;
     });
 
     context('when dragging filters', function() {
@@ -101,13 +100,13 @@ describe('The inboxConfigurationFiltersController', function() {
     });
   });
 
-  describe('refreshFilters', function() {
+  describe('getFilters', function() {
     it('should assign the filters list', function(done) {
       inboxMailboxesFilterService.getFilters = sinon.stub().returns($q.when([1, 2, 3]));
 
       var target = initController();
 
-      target.refreshFilters().then(function() {
+      target.getFilters().then(function() {
         expect(inboxMailboxesFilterService.getFilters).to.have.been.called;
         expect(target.filtersList).to.eql([1, 2, 3]);
 
@@ -118,4 +117,23 @@ describe('The inboxConfigurationFiltersController', function() {
     });
   });
 
+  describe('deleteFilters', function() {
+    it('should delete the filter from the list', function(done) {
+      inboxMailboxesFilterService.deleteFilter = sinon.stub().returns($q.when([1, 2]));
+
+      var target = initController();
+
+      target.$onInit();
+      target.filtersList = [1, 2, 3];
+
+      target.deleteFilter(3).then(function() {
+        expect(inboxMailboxesFilterService.deleteFilter).to.have.been.called;
+        expect(target.filtersList).to.eql([1, 2]);
+
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+  });
 });

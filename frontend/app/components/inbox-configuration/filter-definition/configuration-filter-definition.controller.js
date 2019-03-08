@@ -125,14 +125,15 @@
           break;
       }
 
-      fn(
+      return fn(
         self.newFilter.when.key,
         self.newFilter.name,
         conditionValue,
         {action: self.newFilter.then.key, mailboxId: self.newFilter.moveTo.id}
-      );
+      ).then(function() {
+        $state.go('unifiedinbox.configuration.filters');
+      });
 
-      $state.go('unifiedinbox.configuration.filters');
     }
 
     function _getJmapFilterOptions(jmapFilterSection) {
