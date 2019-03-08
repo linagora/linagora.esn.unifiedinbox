@@ -113,14 +113,17 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
     });
   });
 
-  describe('saving filters', function() {
+  describe('saving filters', function(done) {
+    beforeEach(function() {
+      inboxMailboxesFilterService.addFilter = sinon.stub().returns($q.when());
+      inboxMailboxesFilterService.editFilter = sinon.stub().returns($q.when());
+    });
     describe('when adding a new filter', function() {
       context('when condition is FROM, TO, CC and RECIPIENT', function() {
         it('should add the new filter to the list', function() {
           var controller = initController();
 
           sinon.spy($state, 'go');
-          sinon.spy(inboxMailboxesFilterService, 'addFilter');
 
           controller.newFilter = {
             name: 'My filter',
@@ -130,32 +133,41 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
           };
 
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.addFilter).to.have.been
+              .calledWith('from', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
 
-          expect(inboxMailboxesFilterService.addFilter).to.have.been
-            .calledWith('from', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'to';
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.addFilter).to.have.been
+              .calledWith('to', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
 
-          expect(inboxMailboxesFilterService.addFilter).to.have.been
-            .calledWith('to', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'cc';
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.addFilter).to.have.been
+              .calledWith('cc', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
 
-          expect(inboxMailboxesFilterService.addFilter).to.have.been
-            .calledWith('cc', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'recipient';
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.addFilter).to.have.been
+              .calledWith('recipient', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
 
-          expect(inboxMailboxesFilterService.addFilter).to.have.been
-            .calledWith('recipient', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
+
         });
       });
 
@@ -164,7 +176,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
           var controller = initController();
 
           sinon.spy($state, 'go');
-          sinon.spy(inboxMailboxesFilterService, 'addFilter');
 
           controller.newFilter = {
             name: 'My filter',
@@ -174,11 +185,13 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
           };
 
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.addFilter).to.have.been
+              .calledWith('subject', 'My filter', 'email subject',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
-          expect(inboxMailboxesFilterService.addFilter).to.have.been
-            .calledWith('subject', 'My filter', 'email subject',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
         });
       });
     });
@@ -191,7 +204,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
           controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
 
           sinon.spy($state, 'go');
-          sinon.spy(inboxMailboxesFilterService, 'editFilter');
 
           controller.newFilter = {
             name: 'My filter',
@@ -201,32 +213,37 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
           };
 
-          controller.saveFilter();
-
-          expect(inboxMailboxesFilterService.editFilter).to.have.been
-            .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'from', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.editFilter).to.have.been
+              .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'from', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'to';
-          controller.saveFilter();
-
-          expect(inboxMailboxesFilterService.editFilter).to.have.been
-            .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'to', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.editFilter).to.have.been
+              .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'to', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'cc';
-          controller.saveFilter();
-
-          expect(inboxMailboxesFilterService.editFilter).to.have.been
-            .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'cc', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.editFilter).to.have.been
+              .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'cc', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
           controller.newFilter.when.key = 'recipient';
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.editFilter).to.have.been
+              .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'recipient', 'My filter', 'admin@open-paas.org',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
-          expect(inboxMailboxesFilterService.editFilter).to.have.been
-            .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'recipient', 'My filter', 'admin@open-paas.org',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
         });
       });
 
@@ -237,7 +254,6 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
           controller.editFilterId = '3ec75e00-414e-4c7d-8a16-1c4fea55131a';
 
           sinon.spy($state, 'go');
-          sinon.spy(inboxMailboxesFilterService, 'editFilter');
 
           controller.newFilter = {
             name: 'My filter',
@@ -247,11 +263,13 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
             moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
           };
 
-          controller.saveFilter();
+          controller.saveFilter().then(function() {
+            expect(inboxMailboxesFilterService.editFilter).to.have.been
+              .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'subject', 'My filter', 'email subject',
+                {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
+            done();
+          }).catch(done);
 
-          expect(inboxMailboxesFilterService.editFilter).to.have.been
-            .calledWith('3ec75e00-414e-4c7d-8a16-1c4fea55131a', 'subject', 'My filter', 'email subject',
-              {action: 'appendIn', mailboxId: 'b2b44073-325e-4e01-ab59-925ea4723ee9'});
         });
       });
     });
@@ -269,8 +287,10 @@ describe('The inboxConfigurationFilterDefinitionController', function() {
         moveTo: {id: 'b2b44073-325e-4e01-ab59-925ea4723ee9'}
       };
 
-      controller.saveFilter();
-      expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
+      controller.saveFilter().then(function() {
+        expect($state.go).to.have.been.calledWith('unifiedinbox.configuration.filters');
+        done();
+      }).catch(done);
     });
   });
 
