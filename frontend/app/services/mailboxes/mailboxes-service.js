@@ -143,6 +143,8 @@
           cache[index] = qualifyMailbox(mailbox);
         });
 
+        $rootScope.$broadcast(INBOX_EVENTS.PERSONAL_FOLDERS_UPDATED);
+
         return inboxMailboxesCache.sort(_sortBySortOrderAndQualifiedName);
       }
 
@@ -226,9 +228,11 @@
                 }
               }
 
-               _updateMailboxCache(sharedMailboxList);
+              _updateMailboxCache(sharedMailboxList);
             })
             .then(function() {
+              $rootScope.$broadcast(INBOX_EVENTS.SHARED_FOLDERS_UPDATED);
+
               return _getSharedMailboxes(inboxMailboxesCache);
             });
         });
@@ -426,6 +430,7 @@
           return client.setMailboxes({ destroy: ids })
             .then(function(response) {
               _removeMailboxesFromCache(response.destroyed);
+              $rootScope.$broadcast(INBOX_EVENTS.PERSONAL_FOLDERS_UPDATED);
 
               if (response.destroyed.length !== ids.length) {
                 return $q.reject('Expected ' + ids.length + ' successfull deletions, but got ' + response.destroyed.length + '.');

@@ -51,7 +51,9 @@ angular.module('linagora.esn.unifiedinbox')
     BADGE_LOADING_ACTIVATED: 'inbox:badgeLoadingActivated',
     UNAVAILABLE_ACCOUNT_DETECTED: 'inbox:unavailableAccountDetected',
     DRAFT_DESTROYED: 'inbox:draftDestroyed',
-    DRAFT_CREATED: 'inbox:draftCreated'
+    DRAFT_CREATED: 'inbox:draftCreated',
+    PERSONAL_FOLDERS_UPDATED: 'inbox:personalFoldersUpdated',
+    SHARED_FOLDERS_UPDATED: 'inbox:sharedFoldersUpdated'
   })
   .constant('INBOX_SUMMERNOTE_OPTIONS', {
     focus: false,
