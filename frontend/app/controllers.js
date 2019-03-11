@@ -5,7 +5,7 @@ angular.module('linagora.esn.unifiedinbox')
   .controller('unifiedInboxController', function($timeout, $interval, $scope, $stateParams, $q, infiniteScrollHelperBuilder, inboxProviders, inboxSelectionService, infiniteListService,
                                                  PageAggregatorService, _, sortByDateInDescendingOrder, inboxFilteringService, inboxAsyncHostedMailControllerHelper, esnPromiseService,
                                                  inboxMailboxesService, inboxFilteredList, inboxJmapItemService, inboxUserQuotaService, inboxPlugins, inboxUnavailableAccountNotifier,
-                                                 ELEMENTS_PER_PAGE, INFINITE_LIST_EVENTS, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, PROVIDER_TYPES) {
+                                                 ELEMENTS_PER_PAGE, inboxLocalSearchProvider, INBOX_CONTROLLER_LOADING_STATES, INBOX_EVENTS, INFINITE_LIST_POLLING_INTERVAL, PROVIDER_TYPES) {
 
     var plugin = inboxPlugins.get($stateParams.type);
 
@@ -121,12 +121,20 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function buildFetcher() {
-      return inboxProviders.getAll(inboxFilteringService.getAllProviderFilters()).then(function(providers) {
+      return getProviders().then(function(providers) {
         return new PageAggregatorService('unifiedInboxControllerAggregator', providers, {
           compare: sortByDateInDescendingOrder,
           results_per_page: ELEMENTS_PER_PAGE
         }).bidirectionalFetcher();
       });
+
+      function getProviders() {
+        if (plugin && plugin.type === PROVIDER_TYPES.SEARCH) {
+          return $q.when([inboxLocalSearchProvider()]);
+        }
+
+        return inboxProviders.getAll(inboxFilteringService.getAllProviderFilters());
+      }
     }
   })
 

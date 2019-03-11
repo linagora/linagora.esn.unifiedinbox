@@ -95,6 +95,7 @@ module.exports = function(config) {
     ],
     exclude: [
       'node_modules/linagora-rse/frontend/js/**/*.spec.js',
+      'frontend/app/search/search-query.run.js',
       'frontend/app/mailto/mailto.mocks.js',
       'frontend/app/mailto/mailto.pug'
     ],

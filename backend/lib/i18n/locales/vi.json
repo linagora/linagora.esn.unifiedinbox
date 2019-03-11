@@ -276,5 +276,7 @@
   "Emails in outbox are also saved as draft": "Thư trong hộp thư đi cũng được lưu dưới dạng bản nháp",
   "Unsent emails are saved as draft": "Thư chưa được gửi được lưu dưới dạng bản nhap",
   "Automatic redirection of incoming emails to another email account": "Tự động chuyển hướng thư đến tài khoản thư điện tử khác",
-  "Select multiple emails": "Chọn nhiều thư"
+  "Select multiple emails": "Chọn nhiều thư",
+  "Search results": "Kết quả tìm kiếm",
+  "No emails are matching your search": "Không có email phù hợp với tìm kiếm của bạn"
 }

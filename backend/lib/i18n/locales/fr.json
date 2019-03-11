@@ -276,5 +276,7 @@
   "Emails in outbox are also saved as draft": "Les e-mails dans la boîte d'envoi sont également enregistrés comme brouillons",
   "Unsent emails are saved as draft": "Les emails non envoyés sont enregistrés comme brouillon",
   "Automatic redirection of incoming emails to another email account": "Redirection automatique des emails entrants vers un autre compte email",
-  "Select multiple emails": "Sélectionner plusieurs emails"
+  "Select multiple emails": "Sélectionner plusieurs emails",
+  "Search results": "Résultats de recherche",
+  "No emails are matching your search": "Pas d'emails correspondant à votre recherche"
 }

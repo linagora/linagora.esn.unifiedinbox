@@ -135,39 +135,7 @@ angular.module('linagora.esn.unifiedinbox')
         activeOn: ['unifiedinbox'],
         name: 'Emails',
         fetch: function(context) {
-          function getMessages(position, dateOfMostRecentItem) {
-            return withJmapClient(function(client) {
-              return client.getMessageList({
-                filter: dateOfMostRecentItem ? angular.extend({}, context, { after: dateOfMostRecentItem }) : context,
-                sort: ['date desc'],
-                collapseThreads: false,
-                fetchMessages: false,
-                position: position,
-                limit: ELEMENTS_PER_REQUEST
-              })
-                .then(function(messageList) {
-                  if (messageList.messageIds.length === 0) {
-                    return [];
-                  }
-
-                  return messageList.getMessages({ properties: JMAP_GET_MESSAGES_LIST });
-                })
-                .then(function(messages) {
-                  return messages.sort(sortByDateInDescendingOrder); // We need to sort here because the backend might return shuffled messages
-                })
-                .then(function(messages) {
-                  return emailTransform ? messages.map(emailTransform) : messages;
-                });
-            });
-          }
-
           var fetcher = pagedJmapRequest(getMessages);
-
-          function rejectItemById(item) {
-            return function(items) {
-               return item ? _.reject(items, { id: item.id }) : items;
-            };
-          }
 
           fetcher.loadRecentItems = function(mostRecentItem) {
             return getMessages(0, mostRecentItem.date)
@@ -184,6 +152,38 @@ angular.module('linagora.esn.unifiedinbox')
           };
 
           return fetcher;
+
+          function rejectItemById(item) {
+            return function(items) {
+               return item ? _.reject(items, { id: item.id }) : items;
+            };
+          }
+
+          function getMessages(position, dateOfMostRecentItem) {
+            return withJmapClient(function(client) {
+              return client.getMessageList({
+                filter: dateOfMostRecentItem ? angular.extend({}, context, { after: dateOfMostRecentItem }) : context,
+                sort: ['date desc'],
+                collapseThreads: false,
+                fetchMessages: false,
+                position: position,
+                limit: ELEMENTS_PER_REQUEST
+              })
+              .then(function(messageList) {
+                if (messageList.messageIds.length === 0) {
+                  return [];
+                }
+
+                return messageList.getMessages({ properties: JMAP_GET_MESSAGES_LIST });
+              })
+              .then(function(messages) {
+                return messages.sort(sortByDateInDescendingOrder); // We need to sort here because the backend might return shuffled messages
+              })
+              .then(function(messages) {
+                return emailTransform ? messages.map(emailTransform) : messages;
+              });
+            });
+          }
         },
         buildFetchContext: inboxJmapProviderContextBuilder,
         cleanQuery: function(query) {
@@ -218,17 +218,13 @@ angular.module('linagora.esn.unifiedinbox')
           });
         },
         templateUrl: templateUrl,
-        searchTemplateUrl: '/unifiedinbox/app/components/search/search-form-template.html'
+        searchTemplateUrl: '/unifiedinbox/app/search/form/search-form-template.html'
       });
     };
   })
 
   .factory('inboxHostedMailMessagesProvider', function(inboxNewMessageProvider, computeUniqueSetOfRecipients) {
     return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/message', computeUniqueSetOfRecipients);
-  })
-
-  .factory('inboxSearchResultsProvider', function(inboxNewMessageProvider, computeUniqueSetOfRecipients) {
-    return inboxNewMessageProvider('/unifiedinbox/views/unified-inbox/elements/search', computeUniqueSetOfRecipients);
   })
 
   .factory('inboxHostedMailAttachmentProvider', function(withJmapClient, pagedJmapRequest, newProvider, ByDateElementGroupingTool,
