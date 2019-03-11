@@ -106,7 +106,7 @@
 
       user.selectedShareeRight = self.defaultRole;
       self.usersShared = self.usersShared.concat(user);
-      inboxSharedMailboxesPermissionsService.grantDefaultRole(self.mailbox, user.preferredEmail);
+      inboxSharedMailboxesPermissionsService.grantDefaultRole(self.mailbox, user.preferredEmail ? user.preferredEmail : user.email);
       self.users = [];
     }
 
@@ -116,7 +116,7 @@
       }
 
       _.remove(self.usersShared, { _id: user._id });
-      inboxSharedMailboxesPermissionsService.revoke(self.mailbox, user.preferredEmail);
+      inboxSharedMailboxesPermissionsService.revoke(self.mailbox, user.preferredEmail ? user.preferredEmail : user.email);
     }
 
     function onAddingUser($tags) {
