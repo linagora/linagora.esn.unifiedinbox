@@ -218,7 +218,8 @@ angular.module('linagora.esn.unifiedinbox')
           });
         },
         templateUrl: templateUrl,
-        searchTemplateUrl: '/unifiedinbox/app/search/form/search-form-template.html'
+        searchTemplateUrl: '/unifiedinbox/app/search/form/search-form-template.html',
+        placeHolder: 'Search in emails'
       });
     };
   })
