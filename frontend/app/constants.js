@@ -44,6 +44,7 @@ angular.module('linagora.esn.unifiedinbox')
   .constant('INBOX_EVENTS', {
     VACATION_STATUS: 'inbox:vacationStatusUpdated',
     FILTER_CHANGED: 'inbox:filterChanged',
+    FILTER_SOCIAL_CHANGED: 'inbox:filterSocialChanged',
     ITEM_SELECTION_CHANGED: 'inbox:itemSelectionChanged',
     ITEM_FLAG_CHANGED: 'inbox:itemFlagChanged',
     ITEM_MAILBOX_IDS_CHANGED: 'inbox:itemMailboxIdsChanged',
