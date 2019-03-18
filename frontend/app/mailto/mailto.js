@@ -4,10 +4,20 @@
   angular.module('linagora.esn.unifiedinbox.mailto', [
     'restangular',
     'angularMoment',
-    'uuid4',
     'ng.deviceDetector',
     'op.dynamicDirective',
     'mgcrea.ngStrap.modal',
+
+    'uuid4',
+    'matchmedia-ng',
+    'esn.touchscreen-detector',
+    'esn.textarea-autosize',
+    'esn.waves',
+    'esn.autolinker-wrapper',
+    'esn.ui',
+    'esn.avatar',
+    'esn.media.query',
+    'esn.profile-popover-card',
 
     'linagora.esn.unifiedinbox',
     'linagora.esn.graceperiod',
