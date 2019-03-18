@@ -7,7 +7,8 @@ var expect = chai.expect;
 describe('The inboxComposerController controller', function() {
 
   var $rootScope, $componentController, $q, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
-    inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService;
+    inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService,
+    inboxAttachmentProviderRegistry;
 
   function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
@@ -44,7 +45,8 @@ describe('The inboxComposerController controller', function() {
     _Offline_,
     _notificationFactory_,
     _inboxRequestReceiptsService_,
-    _inboxAttachmentUploadService_
+    _inboxAttachmentUploadService_,
+    _inboxAttachmentProviderRegistry_
   ) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
@@ -55,6 +57,7 @@ describe('The inboxComposerController controller', function() {
     notificationFactory = _notificationFactory_;
     inboxRequestReceiptsService = _inboxRequestReceiptsService_;
     inboxAttachmentUploadService = _inboxAttachmentUploadService_;
+    inboxAttachmentProviderRegistry = _inboxAttachmentProviderRegistry_;
     $q = _$q_;
   }));
 
@@ -373,6 +376,24 @@ describe('The inboxComposerController controller', function() {
       }, done);
     });
 
+    it('should call #removeAttachment method of corresponding attachment provider if the method is registered', function() {
+      var attachmentType = 'foo';
+      var attachment = {
+        attachmentType: attachmentType
+      };
+      var removeAttachmentMock = sinon.spy();
+
+      inboxAttachmentProviderRegistry.get = sinon.stub().returns({
+        removeAttachment: removeAttachmentMock
+      });
+
+      ctrl.message.attachments = [attachment];
+      ctrl.$onInit();
+      ctrl.removeAttachment(attachment);
+
+      expect(inboxAttachmentProviderRegistry.get).to.have.been.calledWith(attachmentType);
+      expect(removeAttachmentMock).to.have.been.calledWith(ctrl.message, attachment);
+    });
   });
 
   describe('The send function', function() {

@@ -7,8 +7,6 @@
       $q,
       _,
       notificationFactory,
-      jmap,
-      attachmentUploadService,
       emailSendingService,
       inboxRequestReceiptsService,
       esnAttachmentsSelectorService,
@@ -18,6 +16,7 @@
       waitUntilMessageIsComplete,
       backgroundAction,
       InboxDraft,
+      inboxAttachmentProviderRegistry,
       DRAFT_SAVING_DEBOUNCE_DELAY,
       INBOX_ATTACHMENT_TYPE_JMAP
     ) {
@@ -90,6 +89,10 @@
       }
 
       function removeAttachment(attachment) {
+        var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
+
+        attachmentProvider && attachmentProvider.removeAttachment && attachmentProvider.removeAttachment(self.message, attachment);
+
         _.pull(self.message.attachments, attachment);
         _cancelAttachment(attachment);
 
