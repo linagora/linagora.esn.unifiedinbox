@@ -279,5 +279,6 @@
   "Select multiple emails": "Sélectionner plusieurs emails",
   "Search results": "Résultats de recherche",
   "No emails are matching your search": "Pas d'emails correspondant à votre recherche",
-  "Search in emails": "Rechercher dans les emails"
+  "Search in emails": "Rechercher dans les emails",
+  "Load failed": "Chargement échoué"
 }
