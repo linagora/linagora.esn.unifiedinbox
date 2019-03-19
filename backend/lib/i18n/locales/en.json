@@ -278,5 +278,9 @@
   "Emails in outbox are also saved as draft": "Emails in outbox are also saved as draft",
   "Unsent emails are saved as draft": "Unsent emails are saved as draft",
   "Automatic redirection of incoming emails to another email account": "Automatic redirection of incoming emails to another email account",
-  "Select multiple emails": "Select multiple emails"
+  "Select multiple emails": "Select multiple emails",
+  "Search results": "Search results",
+  "No emails are matching your search": "No emails are matching your search",
+  "Search in emails": "Search in emails",
+  "Load failed": "Load failed"
 }
