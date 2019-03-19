@@ -17,6 +17,7 @@
       backgroundAction,
       InboxDraft,
       inboxAttachmentProviderRegistry,
+      inboxEmailComposingHookService,
       DRAFT_SAVING_DEBOUNCE_DELAY,
       INBOX_ATTACHMENT_TYPE_JMAP
     ) {
@@ -35,6 +36,7 @@
       /////
 
       function $onInit() {
+        inboxEmailComposingHookService.preComposing(self.message);
         self.onTryClose({callback: self.tryClose});
         self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));

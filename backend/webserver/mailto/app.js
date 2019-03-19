@@ -79,6 +79,7 @@ const mailtoInboxAngularAppFiles = [
   'services/user-quota/user-quota-service.js',
   'services/user-quota/user-quota-service.constants.js',
   'services/hook/email-sending-hook.service.js',
+  'services/hook/email-composing-hook.service.js',
   'services/attachment-upload/inbox-attachment-upload.service.js',
   'services/attachment-provider-registry/attachment-provider-registry.service.js',
   'services/attachment-jmap/attachment-jmap.service.js',

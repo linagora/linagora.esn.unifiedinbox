@@ -8,7 +8,7 @@ describe('The inboxComposerController controller', function() {
 
   var $rootScope, $componentController, $q, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
     inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService,
-    inboxAttachmentProviderRegistry;
+    inboxAttachmentProviderRegistry, inboxEmailComposingHookService;
 
   function InboxDraftMock() {
     this.save = sinon.stub().returns($q.when());
@@ -46,7 +46,8 @@ describe('The inboxComposerController controller', function() {
     _notificationFactory_,
     _inboxRequestReceiptsService_,
     _inboxAttachmentUploadService_,
-    _inboxAttachmentProviderRegistry_
+    _inboxAttachmentProviderRegistry_,
+    _inboxEmailComposingHookService_
   ) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
@@ -58,6 +59,7 @@ describe('The inboxComposerController controller', function() {
     inboxRequestReceiptsService = _inboxRequestReceiptsService_;
     inboxAttachmentUploadService = _inboxAttachmentUploadService_;
     inboxAttachmentProviderRegistry = _inboxAttachmentProviderRegistry_;
+    inboxEmailComposingHookService = _inboxEmailComposingHookService_;
     $q = _$q_;
   }));
 
@@ -98,6 +100,13 @@ describe('The inboxComposerController controller', function() {
   }
 
   describe('The $onInit function', function() {
+    it('should call #preComposing method of inboxEmailComposingHookService', function() {
+      inboxEmailComposingHookService.preComposing = sinon.spy();
+
+      ctrl.$onInit();
+
+      expect(inboxEmailComposingHookService.preComposing).to.have.been.calledWith(ctrl.message);
+    });
 
     it('should start the draft at init time', function() {
       ctrl.$onInit();
