@@ -279,5 +279,6 @@
   "Select multiple emails": "Chọn nhiều thư",
   "Search results": "Kết quả tìm kiếm",
   "No emails are matching your search": "Không có email phù hợp với tìm kiếm của bạn",
-  "Search in emails": "Tìm trong hộp thư"
+  "Search in emails": "Tìm trong hộp thư",
+  "Load failed": "Tải không thành công"
 }

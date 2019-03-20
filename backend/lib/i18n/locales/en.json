@@ -279,5 +279,6 @@
   "Select multiple emails": "Select multiple emails",
   "Search results": "Search results",
   "No emails are matching your search": "No emails are matching your search",
-  "Search in emails": "Search in emails"
+  "Search in emails": "Search in emails",
+  "Load failed": "Load failed"
 }
