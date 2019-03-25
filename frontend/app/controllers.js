@@ -601,23 +601,50 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('inboxSidebarEmailController', function($scope, _, $interval,
+  .controller('inboxSidebarEmailController', function(_, $scope, $rootScope, $interval,
     inboxMailboxesService, inboxSpecialMailboxes, inboxAsyncHostedMailControllerHelper,
-    inboxUnavailableAccountNotifier, session, inboxSharedMailboxesService, $filter, INFINITE_LIST_POLLING_INTERVAL) {
+    inboxUnavailableAccountNotifier, session, inboxSharedMailboxesService, $filter, INFINITE_LIST_POLLING_INTERVAL, INBOX_EVENTS) {
     setupFolderPolling();
 
     $scope.specialMailboxes = inboxSpecialMailboxes.list();
     $scope.emailAddress = session.user.preferredEmail;
+    $scope.displayMyFolders = displayMyFolders;
+    $scope.displaySharedFolders = displaySharedFolders;
+    $scope.$onDestroy = $onDestroy;
+
+    $scope.updateMyPersonnalsfolders = $rootScope.$on(INBOX_EVENTS.PERSONAL_FOLDERS_UPDATED, displayMyFolders);
+    $scope.updateSharedfolders = $rootScope.$on(INBOX_EVENTS.SHARED_FOLDERS_UPDATED, displaySharedFolders);
+
+    function $onDestroy() {
+      $scope.updateMyPersonnalsfolders();
+      $scope.updateSharedfolders();
+    }
 
     inboxAsyncHostedMailControllerHelper(this, function() {
       return inboxMailboxesService.assignMailboxesList($scope);
     }, inboxUnavailableAccountNotifier).then(function() {
-        $scope.displayMyFolders = $filter('filter', $scope.mailboxes, { role: { value: '!' }, namespace: { type: 'Personal' }}).length > 0;
-        inboxSharedMailboxesService.isEnabled()
-          .then(function(isFoldersSharingEnabled) {
-            $scope.displaySharedFolders = $filter('inboxFilterVisibleSharedMailboxes', $scope.mailboxes).length > 0 && isFoldersSharingEnabled;
-          });
-       });
+      displayMyFolders();
+      inboxSharedMailboxesService.isEnabled().then(function(isFoldersSharingEnabled) {
+        $scope.isFoldersSharingEnabled = isFoldersSharingEnabled;
+        displaySharedFolders();
+        });
+      });
+
+    function displayMyFolders() {
+      if (!$scope.mailboxes) {
+        return;
+      }
+
+      $scope.displayPersonnalFolders = $filter('filter')($scope.mailboxes, { role: { value: '!' }, namespace: { type: 'Personal' }}).length > 0;
+    }
+
+    function displaySharedFolders() {
+      if (!$scope.mailboxes) {
+        return;
+      }
+
+      $scope.displayFoldersSharedWithMe = $filter('inboxFilterVisibleSharedMailboxes')($scope.mailboxes).length > 0 && $scope.isFoldersSharingEnabled;
+    }
 
     function setupFolderPolling() {
       if (INFINITE_LIST_POLLING_INTERVAL > 0) {
