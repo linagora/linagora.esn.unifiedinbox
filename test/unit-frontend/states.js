@@ -36,6 +36,9 @@ describe('The Inbox states', function() {
       $provide.value('withJmapClient', function(callback) {
         return callback(jmapClient);
       });
+      $provide.value('inboxConfig', function(key, defaultValue) {
+        return $q.when(defaultValue);
+      });
     });
   });
 
