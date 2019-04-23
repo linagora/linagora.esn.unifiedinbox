@@ -2,12 +2,19 @@
 
 const express = require('express');
 
-module.exports = dependencies => {
+module.exports = (dependencies, moduleName) => {
   const router = express.Router();
   const helperMW = dependencies('helperMW');
   const configurationMW = dependencies('configurationMW');
+  const authorizationMW = dependencies('authorizationMW');
+  const moduleMW = dependencies('moduleMW');
   const controller = require('./controller')(dependencies);
   const middleware = require('./middleware')(dependencies);
+
+  router.all('/*',
+    authorizationMW.requiresAPILogin,
+    moduleMW.requiresModuleIsEnabledInCurrentDomain(moduleName)
+  );
 
   /**
    * @swagger
