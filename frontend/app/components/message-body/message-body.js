@@ -7,7 +7,8 @@
       templateUrl: '/unifiedinbox/app/components/message-body/message-body.html',
       bindings: {
         message: '<'
-      }
+      },
+      controller: 'inboxMessageBodyController'
     });
 
 })();
