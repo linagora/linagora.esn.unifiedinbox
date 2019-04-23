@@ -784,19 +784,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
         element.controller('email').toggleIsCollapsed(email);
       });
-
-      it('should open links in a new tab', function() {
-        $scope.email = {
-          id: 'id',
-          htmlBody: '<div>Body with <a href="mailto:me@open-paas.org">open-paas.org</a> ' +
-            'and <a id="open-paas-link" href="https://open-paas.org">open-paas.org</a></div>'
-        };
-        compileDirective('<email email="email"/>');
-        var aElement = element.find('a#open-paas-link');
-
-        expect(aElement.attr('rel')).to.eq('nofollow noopener');
-        expect(aElement.attr('target')).to.eq('_blank');
-      });
     });
 
   });
