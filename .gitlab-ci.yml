@@ -1,84 +1,133 @@
-image: node:8.15.0
-
 stages:
-  - linter
+  - prepare
+  - linters
   - test
   - swagger
-  - deploy-swagger
-  - deploy_dev
+  - deploy
 
-linter:
-  stage: linter
-  tags:
-    - docker
-  services:
-    - mongo:3.4
-    - elasticsearch:2.4
-    - redis:3
-    - rabbitmq:3.6
-  script:
-   - npm i
-   - ./node_modules/.bin/bower i --allow-root
-   - ./node_modules/.bin/grunt linters
+.cache-tpl: &cache-tpl
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - node_modules
+    - frontend/components
+  policy: pull
 
-test_frontend:
+.test-template: &test-template
+  image: node:8.15.0-stretch
   stage: test
   tags:
     - docker
-  image: docker-registry.linagora.com:5000/public-snapshots/openpaas-esn-test-helper:latest
-  services:
-    - mongo:3.4
-    - elasticsearch:2.4
-    - redis:3
-    - rabbitmq:3.6
+  cache:
+    <<: *cache-tpl
+  variables:
+      TZ: "America/New_York"
   before_script:
-    - npm i
-    - ./node_modules/.bin/bower i --allow-root
+    - npm install -g grunt-cli
+    - 'echo "INFO: NB node packages : $(ls node_modules | wc -l)"'
+    - 'echo "INFO: NB bower packages : $(ls frontend/components | wc -l)"'
+  except:
+    variables:
+      - $SKIP_TESTS
+    refs:
+      - tags@linagora/lgs/openpaas/linagora.esn.unifiedinbox
+
+.test-template-svc: &test-template-svc
+  <<: *test-template
+  services:
+    - name: elasticsearch:2.4
+      alias: elasticsearch
+    - name: mongo:3.2.0
+      alias: mongo
+    - name: redis:latest
+      alias: redis
+    - name: rabbitmq:3.6.5-management
+      alias: rabbitmq
+  variables:
+    MONGO_HOST: mongo
+    MONGO_PORT: 27017
+    AMQP_HOST: rabbitmq
+    AMQP_PORT: 5672
+    ELASTICSEARCH_HOST : elasticsearch
+    ELASTICSEARCH_PORT: 9200
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+
+
+prepare:
+  image: node:8.15.0-stretch
+  stage: prepare
+  tags:
+    - docker
+  cache:
+    <<: *cache-tpl
+    policy: pull-push
   script:
-    - ./node_modules/.bin/grunt test-frontend
+    - npm install
+    # Weird behaviour: at the time, npm postinstall was not called.
+    - ./node_modules/.bin/bower install --allow-root
+    - 'echo "INFO: NB node packages : $(ls node_modules | wc -l)"'
+    - 'echo "INFO: NB bower packages : $(ls frontend/components | wc -l)"'
+  except:
+    variables:
+      - $SKIP_PREPARE
+
+linters:
+  <<: *test-template
+  stage: linters
+  script:
+    - grunt -v linters
+  except:
+    variables:
+      - $SKIP_LINTERS
+    refs:
+      - tags@linagora/lgs/openpaas/linagora.esn.unifiedinbox
+
+check_author:
+  image: docker-registry.linagora.com:5000/lgs-releases/gitlab-integrity-checks:latest
+  stage: linters
+  variables:
+    GIT_DEPTH: "1"
+  tags:
+    - docker-medium
+    - check-author
+  script:
+    - check_author.py check "$GITLAB_USER_EMAIL" "$GITLAB_USER_NAME" --no-accents
+  except:
+    refs:
+      - master@linagora/lgs/openpaas/linagora.esn.unifiedinbox
+      - tags@linagora/lgs/openpaas/linagora.esn.unifiedinbox
+      - /^release-.*/@linagora/lgs/openpaas/linagora.esn.unifiedinbox
+
+####### tests without services requirements
+test_frontend:
+  <<: *test-template 
+  image: docker-registry.linagora.com:5000/public-releases/openpaas-esn-test-helper:1.1.0
+  script:
+    - grunt -v test-frontend
 
 test_unit_backtend:
-  stage: test
-  tags:
-    - docker
-  services:
-    - mongo:3.4
-    - elasticsearch:2.4
-    - redis:3
-    - rabbitmq:3.6
+  <<: *test-template
   script:
-    - npm i
-    - ./node_modules/.bin/bower i --allow-root
-    - ./node_modules/.bin/grunt test-unit-backend
+    - grunt -v --chunk=1 test-unit-backend
+
+####### tests with services requirements
 
 test_midway_backtend:
-  stage: test
-  tags:
-    - docker
-  services:
-    - mongo:3.4
-    - elasticsearch:2.4
-    - redis:3
-    - rabbitmq:3.6
+  <<: *test-template-svc
   script:
-    - npm i
-    - ./node_modules/.bin/bower i --allow-root
-    - ./node_modules/.bin/grunt test-midway-backend
+    - grunt -v --chunk=1 test-midway-backend
 
 swagger:
+  <<: *test-template
   stage: swagger
-  tags:
-    - docker
   script:
-   - npm i
-   - npm prune
-   - ./node_modules/grunt/bin/grunt swagger-generate
+    - grunt swagger-generate
   artifacts:
     paths:
-     - ./doc/REST_API/swagger/unifiedinbox-swagger.json
+      - ./doc/REST_API/swagger/swagger.json
 
 deploy-swagger:
-  stage: deploy-swagger
+  stage: deploy
   tags:
     - deployment
     - api.open-paas.org
@@ -93,7 +142,7 @@ deploy-swagger:
     - cp ./doc/REST_API/swagger/unifiedinbox-swagger.json /var/www/html
 
 deploy_dev:
-  stage: deploy_dev
+  stage: deploy
   tags:
     - dev.open-paas.org
     - deployment
