@@ -124,7 +124,7 @@ swagger:
     - grunt swagger-generate
   artifacts:
     paths:
-      - ./doc/REST_API/swagger/swagger.json
+      - ./doc/REST_API/swagger/unifiedinbox-swagger.json
 
 deploy-swagger:
   stage: deploy
