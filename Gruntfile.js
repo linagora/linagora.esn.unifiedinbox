@@ -26,6 +26,7 @@ module.exports = function(grunt) {
           ]
         },
         src: [
+          'frontend/app/**/*.less',
           'frontend/css/**/*.less'
         ]
       }
@@ -162,7 +163,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['linters', 'test-frontend', 'test-unit-backend', 'test-midway-backend']);
 
   grunt.registerTask('i18n', 'Check the translation files', ['i18n_checker']);
-  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'pug-linter', 'i18n']);
+  grunt.registerTask('linters', 'Check code for lint', ['eslint:all', 'lint_pattern:all', 'lint_pattern:css', 'pug-linter', 'i18n']);
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'jscs:quick', 'lint_pattern:quick']);
   grunt.registerTask('pug-linter', 'Check the pug/jade files', ['puglint:all']);
   grunt.registerTask('swagger-generate', 'Grunt plugin for swagger generate', ['swagger_generate']);
