@@ -12,6 +12,7 @@
           .secondary-metadata(ng-switch="attachment.status")
             .retry(ng-switch-when="error") #{__('Upload failed')}.
               a(href="", ng-click="$ctrl.upload({ $attachment: attachment })") #{__('Retry')}
+            .loading(ng-switch-when="load-error") #{__('Load failed')}
             .size(ng-switch-default) {{ ::attachment.size | bytes }}
         .provider-icon
           i(ng-class='$ctrl.getAttachmentProviderIcon(attachment)')

@@ -7,8 +7,6 @@
       $q,
       _,
       notificationFactory,
-      jmap,
-      attachmentUploadService,
       emailSendingService,
       inboxRequestReceiptsService,
       esnAttachmentsSelectorService,
@@ -18,6 +16,8 @@
       waitUntilMessageIsComplete,
       backgroundAction,
       InboxDraft,
+      inboxAttachmentProviderRegistry,
+      inboxEmailComposingHookService,
       DRAFT_SAVING_DEBOUNCE_DELAY,
       INBOX_ATTACHMENT_TYPE_JMAP
     ) {
@@ -36,6 +36,7 @@
       /////
 
       function $onInit() {
+        inboxEmailComposingHookService.preComposing(self.message);
         self.onTryClose({callback: self.tryClose});
         self.draft = new InboxDraft(self.message);
         self.isCollapsed = !self.message || (_.isEmpty(self.message.cc) && _.isEmpty(self.message.bcc));
@@ -90,6 +91,10 @@
       }
 
       function removeAttachment(attachment) {
+        var attachmentProvider = inboxAttachmentProviderRegistry.get(attachment.attachmentType);
+
+        attachmentProvider && attachmentProvider.removeAttachment && attachmentProvider.removeAttachment(self.message, attachment);
+
         _.pull(self.message.attachments, attachment);
         _cancelAttachment(attachment);
 
