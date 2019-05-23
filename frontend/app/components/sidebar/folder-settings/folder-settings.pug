@@ -14,6 +14,7 @@ md-menu-item(ng-if="ctrl.mailbox.role.value === 'trash'")
   md-button(ng-disabled="ctrl.mailbox.totalMessages === 0", ng-click="ctrl.emptyTrash(ctrl.mailbox.id)")
     md-icon(md-menu-origin, md-svg-icon="delete-empty", aria-label="empty Icon")
     | #{__('Empty trash')}
+div(dynamic-directive="unifiedinbox-sidebar-folder-setting")
 md-menu-divider(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem")
 md-menu-item(ng-if="ctrl.isFolder || !ctrl.isShared && !ctrl.isSystem", esn-modal-launcher="/unifiedinbox/views/folders/delete/index.html", controller-as="ctrl", controller="inboxDeleteFolderController")
   md-button
