@@ -19,7 +19,7 @@
       }
 
       function $onChanges(bindings) {
-        if (!bindings.item) {
+        if (!bindings || !bindings.item) {
           return;
         }
 
@@ -27,6 +27,10 @@
       }
 
       function setQuickFilter(filter) {
+        if (!filter && !self.quickFilter) {
+          return;
+        }
+
         inboxFilteringService.setQuickFilter(self.quickFilter = filter);
       }
     });

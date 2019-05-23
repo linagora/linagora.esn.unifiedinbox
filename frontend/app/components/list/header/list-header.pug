@@ -13,7 +13,7 @@
 
   .inbox-list-header-actions
     .inbox-list-header-quick-filter
-      inbox-filter-input(ng-if="$ctrl.searching || $ctrl.quickFilter", auto-focus-input="true", filter="$ctrl.quickFilter", on-change="$ctrl.setQuickFilter($filter)", on-blur="$ctrl.searching = false")
-      button.btn.btn-link.btn-icon.waves-notransition(ng-if="!$ctrl.searching && !$ctrl.quickFilter", ng-click="$ctrl.searching = true", ng-class="{ active: $ctrl.quickFilter }", title=__('Search'))
+      esn-filter-input(placeholder="Search...", ng-if="$ctrl.searching || $ctrl.quickFilter", auto-focus-input="true", filter="$ctrl.quickFilter", on-change="$ctrl.setQuickFilter($filter)", on-blur="$ctrl.searching = false")
+      button.btn.btn-link.btn-icon-inside-input.waves-notransition(ng-if="!$ctrl.searching && !$ctrl.quickFilter", ng-click="$ctrl.searching = true", ng-class="{ active: $ctrl.quickFilter }", title=__('Search'))
         i.mdi.mdi-magnify
     inbox-filter-button.clickable(ng-if="$ctrl.filters.length > 0", filters="$ctrl.filters")

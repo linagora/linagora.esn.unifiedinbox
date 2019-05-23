@@ -82,9 +82,17 @@
     }
   }
 
-  .inbox-filter-input {
-    width: 90%;
+  esn-filter-input {
+    width: 100%;
     margin: 2px 2px 2px 16px;
+
+    input:not([type='button']):not([type='submit']):not([type='file']) {
+      font-size: 13px;
+    }
+
+    div.fg-line {
+      width: ~"calc(100% - 25px)";
+    }
   }
 }
 
@@ -191,7 +199,7 @@
       }
     }
 
-    .inbox-filter-input {
+    esn-filter-input {
       margin-right: 0;
     }
   }
