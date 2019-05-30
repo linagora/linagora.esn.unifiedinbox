@@ -14,7 +14,7 @@
         .title.ellipsis
           span {{ ::emailAddress }}
       ul.nopadding
-        inbox-filter-input(on-change="ctrl.filter = $filter")
+        esn-filter-input(on-change="ctrl.filter = $filter")
         mailbox-display.lv-item(is-special="true", mailbox="mailbox", ng-repeat="mailbox in specialMailboxes" ui-sref="unifiedinbox.inbox({ type: 'jmap', account: '', context: mailbox.id })")
 
         mailbox-display.lv-item(is-system="true", mailbox="mailbox", ng-repeat="mailbox in mailboxes | filter: { role: { value: '' }, namespace: { type: 'Personal' }, name: ctrl.filter } track by mailbox.id", ui-sref="unifiedinbox.inbox({ type: 'jmap', account: '', context: mailbox.id })")
