@@ -81,10 +81,4 @@ ng-form.p-t-25(name='form')
         p.text-muted #{__('Allow users to share folders to other users with some roles')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.features.value.foldersSharing", form="form")
-    h5 #{__('Deleted messages')}
-    .form-group.option-field
-      .col-xs-8.field-name #{__('Enable restoring deleted messages')}
-        p.small.text-muted #{__('Allow domain members to recover their deleted messages')}
-      .col-xs-4.flex-end
-        toggle-switch(ng-model="$ctrl.configurations.deletedMessages.value.restore.isEnabled", form="form")
     .inbox-config-item-dd(dynamic-directive='inbox-config-item')
