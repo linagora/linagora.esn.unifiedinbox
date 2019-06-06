@@ -682,6 +682,15 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       expect(compileDirectiveThenGetScope().tags).to.deep.equal([{ a: '1' }]);
     });
 
+    it('should remove removed tag in excluded emails list', function() {
+      var scope = compileDirectiveThenGetScope();
+      var tag = { id: '123', objectType: 'bar' };
+
+      scope.excludes = [tag];
+      scope.onTagRemoved(tag);
+
+      expect(scope.excludes).to.not.include(tag);
+    });
   });
 
   describe('The email directive', function() {
