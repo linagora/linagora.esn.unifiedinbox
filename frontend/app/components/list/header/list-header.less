@@ -2,10 +2,25 @@
   .flex-vertical-centered;
 
   height: @inbox-list-header-height;
-  padding: 0 10px 0 12px;
+  padding: 0 12px;
+  color: lighten(@secondaryTextColor, 20%);
 
-  inbox-list-group-toggle-selection, inbox-refresh-button {
-    margin-right: 0.5em;
+  .clickable:not(.text-danger):not(.menu-root).mdi, .mdi {
+    font-size: 1.6em;
+    vertical-align: sub;
+
+    &.active {
+      color: @primaryColor;
+    }
+
+    &:hover {
+      color: @text-color;
+      background-color: transparent;
+    }
+  }
+
+  inbox-list-group-toggle-selection button, inbox-refresh-button button {
+    margin-right: 8px;
   }
 
   .inbox-list-header-actions {
@@ -17,8 +32,14 @@
     }
 
     inbox-filter-button {
-      margin-left: 1em;
+      margin-left: 8px;
     }
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
   }
 }
 

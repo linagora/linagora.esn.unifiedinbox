@@ -850,7 +850,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     });
 
     it('should call the $dropdown service once clicked on mobile', function() {
-      element.find('.inbox-filter-button.visible-xs').click();
+      element.find('.visible-xs button').click();
 
       expect($dropdown).to.have.been.calledOnce;
     });
