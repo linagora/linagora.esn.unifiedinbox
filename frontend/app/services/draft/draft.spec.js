@@ -501,6 +501,19 @@ describe('The InboxDraft factory', function() {
       unsubscriber();
     });
 
+    it('should save the new message draft first then destroy the original message', function() {
+      jmapClient.saveAsDraft = sinon.stub().returns($q.when({ id: 'new-draft'}));
+      jmapClient.destroyMessage = sinon.stub().returns($q.when());
+
+      var draft = new InboxDraft({ id: 'original-draft' });
+
+      draft.needToBeSaved = function() { return true; };
+      draft.save({});
+
+      $rootScope.$digest();
+      expect(jmapClient.destroyMessage).to.be.calledAfter(jmapClient.saveAsDraft);
+      expect(jmapClient.destroyMessage).to.have.been.calledWith('original-draft');
+    });
   });
 
   describe('The destroy method', function() {
