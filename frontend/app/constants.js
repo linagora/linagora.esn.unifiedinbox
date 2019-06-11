@@ -89,7 +89,8 @@
           platform: true
         }
       },
-      disableable: true
+      disableable: true,
+      isDisplayedByDefault: true
     })
     .constant('INBOX_SIGNATURE_SEPARATOR', '-- \n'); // https://tools.ietf.org/html/rfc3676#section-4.3
 })(angular);
