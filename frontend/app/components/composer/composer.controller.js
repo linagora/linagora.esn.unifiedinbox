@@ -79,7 +79,11 @@
           onClose: self.forceClose
         };
 
-        return self.draft.save(self.message, options).then(self.onSave);
+        return self.draft.save(self.message, options)
+          .then(function() {
+            self.message = _.assign({}, self.message, self.draft.original);
+          })
+          .then(self.onSave);
       }
 
       function onAttachmentsUpload(attachments) {

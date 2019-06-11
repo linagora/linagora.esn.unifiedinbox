@@ -48,9 +48,12 @@
           })
           .then(self.destroy.bind(self, { silent: true }))
           .then(function() {
-            self.original = angular.copy(email);
-            self.original.id = newDraftId;
-            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_CREATED, self.original);
+            return inboxJmapHelper.getMessageById(newDraftId);
+          })
+          .then(function(newDraft) {
+            self.original = newDraft;
+
+            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_CREATED, newDraft);
           });
       };
 
