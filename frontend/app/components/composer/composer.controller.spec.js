@@ -79,6 +79,7 @@ describe('The inboxComposerController controller', function() {
       onHide: sinon.spy(),
       onShow: sinon.spy(),
       onTitleUpdate: sinon.spy(),
+      onMessageIdUpdate: sinon.spy(),
       onTryClose: sinon.spy(),
       forceClose: sinon.spy()
     });
@@ -320,6 +321,17 @@ describe('The inboxComposerController controller', function() {
         };
 
         expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, options);
+      }, done);
+    });
+
+    it('should call onMessageIdUpdate after draft is saved', function(done) {
+      ctrl.$onInit();
+      ctrl.saveDraft();
+
+      shortCircuitDebounce(function() {
+        $rootScope.$digest();
+
+        expect(ctrl.onMessageIdUpdate).to.have.been.called;
       }, done);
     });
 

@@ -82,6 +82,7 @@
         return self.draft.save(self.message, options)
           .then(function() {
             self.message = _.assign({}, self.message, self.draft.original);
+            self.onMessageIdUpdate({ $id: self.message.id });
           })
           .then(self.onSave);
       }
