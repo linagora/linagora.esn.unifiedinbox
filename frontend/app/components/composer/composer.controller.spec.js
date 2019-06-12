@@ -10,10 +10,7 @@ describe('The inboxComposerController controller', function() {
     inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService,
     inboxAttachmentProviderRegistry, inboxEmailComposingHookService;
 
-  function InboxDraftMock() {
-    this.save = sinon.stub().returns($q.when());
-    this.destroy = sinon.stub().returns($q.when());
-  }
+  function InboxDraftMock() {}
 
   beforeEach(module('jadeTemplates', 'linagora.esn.unifiedinbox', function($provide) {
     $provide.constant('DRAFT_SAVING_DEBOUNCE_DELAY', 0);
@@ -61,6 +58,8 @@ describe('The inboxComposerController controller', function() {
     inboxAttachmentProviderRegistry = _inboxAttachmentProviderRegistry_;
     inboxEmailComposingHookService = _inboxEmailComposingHookService_;
     $q = _$q_;
+    InboxDraftMock.prototype.save = sinon.stub().returns($q.when());
+    InboxDraftMock.prototype.destroy = sinon.stub().returns($q.when());
   }));
 
   beforeEach(function() {
@@ -80,6 +79,7 @@ describe('The inboxComposerController controller', function() {
       onHide: sinon.spy(),
       onShow: sinon.spy(),
       onTitleUpdate: sinon.spy(),
+      onMessageIdUpdate: sinon.spy(),
       onTryClose: sinon.spy(),
       forceClose: sinon.spy()
     });
@@ -324,6 +324,17 @@ describe('The inboxComposerController controller', function() {
       }, done);
     });
 
+    it('should call onMessageIdUpdate after draft is saved', function(done) {
+      ctrl.$onInit();
+      ctrl.saveDraft();
+
+      shortCircuitDebounce(function() {
+        $rootScope.$digest();
+
+        expect(ctrl.onMessageIdUpdate).to.have.been.called;
+      }, done);
+    });
+
     it('should notify when the draft is successfully saved', function(done) {
       ctrl.$onInit();
       ctrl.saveDraft();
@@ -335,6 +346,21 @@ describe('The inboxComposerController controller', function() {
       }, done);
     });
 
+    it('should reset the message following the draft after draft is saved', function(done) {
+      InboxDraftMock.prototype.save = function() {
+        this.original = { id: 'new-draft' };
+
+        return $q.when();
+      };
+      ctrl.$onInit();
+      ctrl.saveDraft();
+
+      shortCircuitDebounce(function() {
+        $rootScope.$digest();
+
+        expect(ctrl.message.id).to.equal('new-draft');
+      }, done);
+    });
   });
 
   describe('The removeAttachment function', function() {
