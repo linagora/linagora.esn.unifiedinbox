@@ -328,9 +328,8 @@ angular.module('linagora.esn.unifiedinbox')
   .factory('waitUntilMessageIsComplete', function($q, _) {
     function attachmentsAreReady(message) {
       return _.size(message.attachments) === 0 ||
-        _.every(message.attachments, { status: 'uploaded' }) ||
         _.every(message.attachments, function(attachment) {
-          return (!attachment.upload || !attachment.upload.promise) && !attachment.status;
+          return attachment.status === 'uploaded' || (!attachment.upload || !attachment.upload.promise) && !attachment.status;
         });
     }
 
@@ -340,7 +339,7 @@ angular.module('linagora.esn.unifiedinbox')
       }
 
       return $q.all(message.attachments.map(function(attachment) {
-        return attachment.upload.promise;
+        return attachment.upload && attachment.upload.promise || $q.when();
       })).then(_.constant(message));
     };
   })
