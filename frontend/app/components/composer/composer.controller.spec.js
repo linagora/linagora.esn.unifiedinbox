@@ -263,7 +263,7 @@ describe('The inboxComposerController controller', function() {
           ctrl.$onInit();
           ctrl.attachmentHolder.uploadAttachments();
 
-          expect(inboxAttachmentUploadService.uploadAttachments).to.have.been.calledWith(ctrl.saveDraft);
+          expect(inboxAttachmentUploadService.uploadAttachments).to.have.been.called;
         });
       });
     });
@@ -388,27 +388,6 @@ describe('The inboxComposerController controller', function() {
       ctrl.removeAttachment(attachment);
 
       expect(ctrl.message.attachments).to.deep.equal([]);
-    });
-
-    it('should save the draft', function(done) {
-      var attachment = {};
-      var options = {
-        persist: true,
-        silent: true,
-        onFailure: {
-          linkText: 'Reopen the composer',
-          action: ctrl.onShow
-        },
-        onClose: ctrl.forceClose
-      };
-
-      ctrl.message.attachments = [attachment];
-      ctrl.$onInit();
-      ctrl.removeAttachment(attachment);
-
-      shortCircuitDebounce(function() {
-        expect(ctrl.draft.save).to.have.been.calledWith(ctrl.message, options);
-      }, done);
     });
 
     it('should call #removeAttachment method of corresponding attachment provider if the method is registered', function() {
