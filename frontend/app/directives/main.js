@@ -515,15 +515,13 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('inboxClearFiltersButton', function($rootScope, inboxFilteringService, INBOX_EVENTS) {
+  .directive('inboxClearFiltersButton', function(inboxFilteringService) {
     return {
       restrict: 'E',
       scope: {},
       controller: function() {
         this.clearFilters = function() {
           inboxFilteringService.clearFilters();
-
-          $rootScope.$broadcast(INBOX_EVENTS.FILTER_CHANGED);
         };
       },
       controllerAs: 'ctrl',
