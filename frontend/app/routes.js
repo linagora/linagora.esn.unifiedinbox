@@ -231,8 +231,8 @@
             isModuleActive: isModuleActive,
             cleanState: function($stateParams, PROVIDER_TYPES) {
               if ($stateParams.type !== PROVIDER_TYPES.SEARCH) {
-                delete $stateParams.q;
-                delete $stateParams.a;
+                $stateParams.q = '';
+                $stateParams.a = {};
               }
             }
           },
