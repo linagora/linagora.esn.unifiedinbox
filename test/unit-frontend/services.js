@@ -1787,7 +1787,12 @@ describe('The Unified Inbox Angular module services', function() {
     it('should resolve when there are attachments but no upload in progress', function(done) {
       var message = {
         subject: 'subject',
-        attachments: [{}]
+        attachments: [{
+          blobId: '1',
+          status: 'uploaded'
+        }, {
+          blobId: '2'
+        }]
       };
 
       waitUntilMessageIsComplete(message).then(function(value) {
@@ -1823,7 +1828,6 @@ describe('The Unified Inbox Angular module services', function() {
       defer.resolve();
       $rootScope.$digest();
     });
-
   });
 
   describe('The inboxSwipeHelper service', function() {
