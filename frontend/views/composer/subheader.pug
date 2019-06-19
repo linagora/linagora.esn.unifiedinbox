@@ -1,7 +1,7 @@
 extends /modules/subheader/fullwidth-subheader.pug
 
 block left
-  inbox-subheader-close-button(ng-click='$ctrl.onHide()')
+  inbox-subheader-close-button(ng-click='$ctrl.tryClose(); $ctrl.onHide()')
 
 block right
   .inbox-composer-buttons.flex-vertical-centered

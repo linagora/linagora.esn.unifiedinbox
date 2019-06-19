@@ -36,6 +36,9 @@
 
         return _areDraftsEnabled()
           .then(self.needToBeSaved.bind(self, email))
+          .then(function() {
+            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, self.original);
+          })
           .then(waitUntilMessageIsComplete.bind(null, email))
           .then(function() {
             return asyncJmapAction('Saving your email as draft', function(client) {
@@ -46,7 +49,13 @@
               });
             }, options);
           })
-          .then(self.destroy.bind(self, { silent: true }))
+          .then(function() {
+            if (self.original.id) {
+              return asyncJmapAction('Destroying a draft', function(client) {
+                return client.destroyMessage(self.original.id);
+              }, { silent: true });
+            }
+          })
           .then(function() {
             return inboxJmapHelper.getMessageById(newDraftId);
           })

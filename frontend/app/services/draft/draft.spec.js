@@ -506,6 +506,23 @@ describe('The InboxDraft factory', function() {
       $rootScope.$digest();
     });
 
+    it('should broadcast a draft destroyed event at the start of saving process', function() {
+      jmapClient.saveAsDraft = sinon.stub().returns($q.when({ id: 'new-draft'}));
+      jmapClient.getMessages = function() { return $q.when(); };
+      var draft = new InboxDraft({}),
+        eventCatcher = sinon.spy();
+
+      draft.needToBeSaved = function() {return true;};
+
+      var unsubscriber = $rootScope.$on(INBOX_EVENTS.DRAFT_DESTROYED, eventCatcher);
+
+      draft.save({to: []});
+
+      $rootScope.$digest();
+      expect(eventCatcher).to.have.been.calledBefore(jmapClient.saveAsDraft);
+      unsubscriber();
+    });
+
     it('should broadcast an event when draft has been saved successfully', function() {
       jmapClient.saveAsDraft = function() {return $q.when({});};
       jmapClient.getMessages = function() { return $q.when(); };
