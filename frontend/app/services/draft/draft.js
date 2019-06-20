@@ -32,23 +32,37 @@
 
       InboxDraft.prototype.save = function(email, options) {
         var self = this;
+        var newDraftId;
 
         return _areDraftsEnabled()
           .then(self.needToBeSaved.bind(self, email))
+          .then(function() {
+            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_DESTROYED, self.original);
+          })
           .then(waitUntilMessageIsComplete.bind(null, email))
-          .then(self.destroy.bind(self, { silent: true }))
           .then(function() {
             return asyncJmapAction('Saving your email as draft', function(client) {
               return inboxJmapHelper.toOutboundMessage(client, email).then(function(message) {
                 return client.saveAsDraft(message).then(function(ack) {
-                  self.original = angular.copy(email);
-                  self.original.id = ack.id;
+                  newDraftId = ack.id;
                 });
               });
             }, options);
           })
           .then(function() {
-            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_CREATED, self.original);
+            if (self.original.id) {
+              return asyncJmapAction('Destroying a draft', function(client) {
+                return client.destroyMessage(self.original.id);
+              }, { silent: true });
+            }
+          })
+          .then(function() {
+            return inboxJmapHelper.getMessageById(newDraftId);
+          })
+          .then(function(newDraft) {
+            self.original = newDraft;
+
+            $rootScope.$broadcast(INBOX_EVENTS.DRAFT_CREATED, newDraft);
           });
       };
 

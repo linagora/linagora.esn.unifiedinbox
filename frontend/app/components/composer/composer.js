@@ -13,6 +13,7 @@
         onDiscard: '&',
         onHide: '&',
         onShow: '&',
+        onMessageIdUpdate: '&',
         onTitleUpdate: '&',
         onTryClose: '&',
         forceClose: '&'

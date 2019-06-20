@@ -56,7 +56,7 @@
           attachmentType: INBOX_ATTACHMENT_TYPE_JMAP,
           attachmentFilter: {isInline: false},
           onAttachmentsUpdate: _setMessageAttachments,
-          uploadAttachments: _.partialRight(inboxAttachmentUploadService.uploadAttachments, self.saveDraft)
+          uploadAttachments: inboxAttachmentUploadService.uploadAttachments
         });
       }
 
@@ -79,11 +79,16 @@
           onClose: self.forceClose
         };
 
-        return self.draft.save(self.message, options).then(self.onSave);
+        return self.draft.save(self.message, options)
+          .then(function() {
+            self.message = _.assign({}, self.message, self.draft.original);
+            self.onMessageIdUpdate({ $id: self.message.id });
+          })
+          .then(self.onSave);
       }
 
       function onAttachmentsUpload(attachments) {
-        return inboxAttachmentUploadService.uploadAttachments(attachments, self.saveDraft).then(function(attachments) {
+        return inboxAttachmentUploadService.uploadAttachments(attachments).then(function(attachments) {
           _setMessageAttachments(attachments);
 
           return self.message.attachments;
@@ -97,8 +102,6 @@
 
         _.pull(self.message.attachments, attachment);
         _cancelAttachment(attachment);
-
-        self.saveDraft();
       }
 
       function toggleReadReceiptRequest() {
