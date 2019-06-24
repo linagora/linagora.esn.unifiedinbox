@@ -43,7 +43,9 @@
 
         self.onTitleUpdate({$title: self.message && self.message.subject});
         inboxRequestReceiptsService.getDefaultReceipts().then(function(sendingReceiptsConfig) {
-          self.hasRequestedReadReceipt = sendingReceiptsConfig.isRequestingReadReceiptsByDefault;
+          self.hasRequestedReadReceipt = sendingReceiptsConfig.isRequestingReadReceiptsByDefault || emailSendingService.getReadReceiptRequest(self.message, {
+            asCurrentUser: true
+          });
         });
 
         self.attachmentHolder = esnAttachmentsSelectorService.newAttachmentServiceHolder({
@@ -79,6 +81,8 @@
           onClose: self.forceClose
         };
 
+        _updateMessageForReadReceiptRequest();
+
         return self.draft.save(self.message, options)
           .then(function() {
             self.message = _.assign({}, self.message, self.draft.original);
@@ -113,11 +117,9 @@
 
         if (_canBeSentOrNotify()) {
           _closeComposer();
+          _updateMessageForReadReceiptRequest();
 
           emailSendingService.removeDuplicateRecipients(self.message);
-          if (self.hasRequestedReadReceipt) {
-            emailSendingService.addReadReceiptRequest(self.message);
-          }
 
           return backgroundAction({
             progressing: 'Your message is being sent...',
@@ -191,6 +193,14 @@
 
       function _setMessageAttachments(attachments) {
         self.message.attachments = _.uniq((self.message.attachments || []).concat(attachments));
+      }
+
+      function _updateMessageForReadReceiptRequest() {
+        if (self.hasRequestedReadReceipt) {
+          emailSendingService.addReadReceiptRequest(self.message);
+        } else {
+          emailSendingService.removeReadReceiptRequest(self.message);
+        }
       }
     });
 
