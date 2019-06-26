@@ -8,7 +8,8 @@ describe('The inboxComposerController controller', function() {
 
   var $rootScope, $componentController, $q, ctrl, InboxDraft, sendEmail, Offline, notificationFactory,
     inboxRequestReceiptsService, isConfiguredToSendAskReceiptsByDefault, inboxAttachmentUploadService,
-    inboxAttachmentProviderRegistry, inboxEmailComposingHookService;
+    inboxAttachmentProviderRegistry, inboxEmailComposingHookService,
+    INBOX_MESSAGE_HEADERS;
 
   function InboxDraftMock() {}
 
@@ -44,7 +45,8 @@ describe('The inboxComposerController controller', function() {
     _inboxRequestReceiptsService_,
     _inboxAttachmentUploadService_,
     _inboxAttachmentProviderRegistry_,
-    _inboxEmailComposingHookService_
+    _inboxEmailComposingHookService_,
+    _INBOX_MESSAGE_HEADERS_
   ) {
     $rootScope = _$rootScope_;
     $componentController = _$componentController_;
@@ -57,6 +59,7 @@ describe('The inboxComposerController controller', function() {
     inboxAttachmentUploadService = _inboxAttachmentUploadService_;
     inboxAttachmentProviderRegistry = _inboxAttachmentProviderRegistry_;
     inboxEmailComposingHookService = _inboxEmailComposingHookService_;
+    INBOX_MESSAGE_HEADERS = _INBOX_MESSAGE_HEADERS_;
     $q = _$q_;
     InboxDraftMock.prototype.save = sinon.stub().returns($q.when());
     InboxDraftMock.prototype.destroy = sinon.stub().returns($q.when());
@@ -68,6 +71,7 @@ describe('The inboxComposerController controller', function() {
       message: {
         id: 'messageId',
         subject: 'subject',
+        headers: {},
         to: [{
           name: 'name',
           email: 'email'
@@ -87,7 +91,8 @@ describe('The inboxComposerController controller', function() {
       session.user = {
         firstname: 'user',
         lastname: 'using',
-        preferredEmail: 'user@linagora.com'
+        preferredEmail: 'user@linagora.com',
+        emails: []
       };
     });
   });
@@ -361,6 +366,35 @@ describe('The inboxComposerController controller', function() {
         expect(ctrl.message.id).to.equal('new-draft');
       }, done);
     });
+
+    it('should save draft that contains an additional header when a read request receipt is required', function(done) {
+      ctrl.$onInit();
+      ctrl.hasRequestedReadReceipt = true;
+      ctrl.saveDraft();
+
+      shortCircuitDebounce(function() {
+        $rootScope.$digest();
+        expect(ctrl.message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]).to.equal('user@linagora.com');
+        expect(ctrl.draft.save).to.have.been.calledWith(sinon.match(function(message) {
+          return message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] === 'user@linagora.com';
+        }));
+      }, done);
+    });
+
+    it('should remove additional header of message if request receipt is not required before saving draft', function(done) {
+      ctrl.$onInit();
+      ctrl.message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'user@linagora.com';
+      ctrl.hasRequestedReadReceipt = false;
+      ctrl.saveDraft();
+
+      shortCircuitDebounce(function() {
+        $rootScope.$digest();
+        expect(ctrl.message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]).to.be.undefined;
+        expect(ctrl.draft.save).to.have.been.calledWith(sinon.match(function(message) {
+          return !message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
+        }));
+      }, done);
+    });
   });
 
   describe('The removeAttachment function', function() {
@@ -411,18 +445,12 @@ describe('The inboxComposerController controller', function() {
   });
 
   describe('The send function', function() {
-    var INBOX_MESSAGE_HEADERS;
-
     function sendMessage() {
       ctrl.$onInit();
       ctrl.send();
 
       $rootScope.$digest();
     }
-
-    beforeEach(inject(function(_INBOX_MESSAGE_HEADERS_) {
-      INBOX_MESSAGE_HEADERS = _INBOX_MESSAGE_HEADERS_;
-    }));
 
     afterEach(function() {
       Offline.state = 'up';
@@ -637,6 +665,21 @@ describe('The inboxComposerController controller', function() {
       expect(sendEmail).to.have.been.calledWith(missingReceiptHeaderMatcher.and(sinon.match({textBody: 'Body'})));
     });
 
+    it('should remove read reciept request header if read receipt were not requested', function() {
+      ctrl.message = {
+        to: [{ email: 'A@A.com' }],
+        headers: {name: 'value'},
+        textBody: 'Body'
+      };
+      ctrl.message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'user@linagora.com';
+      ctrl.hasRequestedReadReceipt = false;
+
+      sendMessage();
+
+      expect(sendEmail).to.have.been.calledWithMatch(sinon.match(function(message) {
+        return !message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
+      }));
+    });
   });
 
   describe('The "destroyDraft" function', function() {

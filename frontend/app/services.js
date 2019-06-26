@@ -70,7 +70,6 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
-
     /**
      * Add the following logic when sending an email: Check for an invalid email used as a recipient
      *
@@ -117,13 +116,23 @@ angular.module('linagora.esn.unifiedinbox')
       message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = senderAddress;
     }
 
-    function getReadReceiptRequest(message) {
+    function removeReadReceiptRequest(message) {
+      if (message.headers && message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]) {
+        delete message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
+      }
+    }
+
+    function getReadReceiptRequest(message, options) {
+      options = options || {};
+
       if (!message || !message.headers || !message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]) {
         return false;
       }
       var recipient = message.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT];
 
-      return session.user.emails.indexOf(recipient) < 0 && recipient;
+      return options.asCurrentUser ?
+        session.user.emails.indexOf(recipient) > -1 :
+        session.user.emails.indexOf(recipient) < 0 && recipient;
     }
 
     function countRecipients(email) {
@@ -308,6 +317,7 @@ angular.module('linagora.esn.unifiedinbox')
     return {
       emailsAreValid: emailsAreValid,
       removeDuplicateRecipients: removeDuplicateRecipients,
+      removeReadReceiptRequest: removeReadReceiptRequest,
       addReadReceiptRequest: addReadReceiptRequest,
       getReadReceiptRequest: getReadReceiptRequest,
       noRecipient: noRecipient,

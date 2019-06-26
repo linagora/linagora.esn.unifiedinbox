@@ -377,6 +377,16 @@ describe('The Unified Inbox Angular module services', function() {
       });
     });
 
+    describe('Ther removeReadReceiptRequest function', function() {
+      it('remove read receipt request related header', function() {
+        email = { headers: {} };
+        email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'foo@bar.fo';
+        emailSendingService.removeReadReceiptRequest(email);
+
+        expect(email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT]).to.be.undefined;
+      });
+    });
+
     describe('The addReadReceiptRequest function', function() {
 
       it('should add a message header', function() {
@@ -426,6 +436,19 @@ describe('The Unified Inbox Angular module services', function() {
         expect(emailSendingService.getReadReceiptRequest(email)).to.be.false;
       });
 
+      it('should return true when being called as current user and Disposition-Notification-To is current user', function() {
+        email = { headers: [] };
+        email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = 'user@linagora.com';
+
+        expect(emailSendingService.getReadReceiptRequest(email, { asCurrentUser: true })).to.be.true;
+      });
+
+      it('should return flase when being called as current user and Disposition-Notification-To is not current user', function() {
+        email = { headers: [] };
+        email.headers[INBOX_MESSAGE_HEADERS.READ_RECEIPT] = '2222@test.com';
+
+        expect(emailSendingService.getReadReceiptRequest(email, { asCurrentUser: true })).to.be.false;
+      });
     });
 
     describe('The prefixSubject function', function() {
