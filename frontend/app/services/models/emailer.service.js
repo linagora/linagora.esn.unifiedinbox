@@ -10,7 +10,7 @@
       return inboxSearchCacheService.searchByEmail(self.email)
         .catch(angular.noop)
         .then(function(result) {
-          self.objectType = result && result.objectType;
+          self.objectType = result && result.objectType ? result.objectType : 'email';
           self.id = result && result.id;
           self.name = result && result.displayName || self.name;
           self.avatarUrl = result && result.avatarUrl || esnAvatarUrlService.generateUrl(self.email, self.name);
