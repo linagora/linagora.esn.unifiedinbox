@@ -297,9 +297,6 @@ angular.module('linagora.esn.unifiedinbox')
               }
             }
 
-            if (!_.contains(['_id', 'id', 'name', 'email', 'displayName', 'preferredEmail', 'officeLocation', 'objectType'], key)) {
-              delete tag[key];
-            }
           });
 
           if (!tag.email) {

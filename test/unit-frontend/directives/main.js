@@ -586,31 +586,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       expect(scope.onTagAdding({ email: 'email@op.org' })).to.equal(false);
     });
 
-    it('should remove all fields that are not "_id", "email",  "name", "displayName", "preferredEmail" or "officeLocation"', function() {
-      var scope = compileDirectiveThenGetScope();
-      var recipient = {
-        _id: 'ea220a8d-6d07-44e6-898c-5262c1d4ac52',
-        other: 'unexpected',
-        name: 'The display name field',
-        displayName: 'The display displayName field',
-        email: 'user@domain',
-        preferredEmail: 'user@domain',
-        officeLocation: 'nowhere',
-        not: 'expected'
-      };
-
-      scope.onTagAdding(recipient);
-
-      expect(recipient).to.deep.equal({
-        _id: 'ea220a8d-6d07-44e6-898c-5262c1d4ac52',
-        name: 'The display name field',
-        email: 'user@domain',
-        preferredEmail: 'user@domain',
-        displayName: 'The display displayName field',
-        officeLocation: 'nowhere'
-      });
-    });
-
     it('should make sure "email" is defined', function() {
       var scope = compileDirectiveThenGetScope(),
           recipient = { name: 'a@a.com' };
