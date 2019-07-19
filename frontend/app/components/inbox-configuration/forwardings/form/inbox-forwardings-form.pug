@@ -27,7 +27,7 @@ hr
     .user-info
       a.ellipsis(
         ng-href="mailto:{{::forwarding}}",
-        op-inbox-compose op-inbox-compose-display-name="{{::forwarding.user.displayName}}"
+        op-inbox-compose, op-inbox-compose-users="[forwarding]}}"
       ) {{::forwarding}}
   .forwarding-actions
     a.hidden-xs(href='', ng-click='form.$setDirty(); $ctrl.onRemoveForwarding(forwarding)') #{__('Remove')}
