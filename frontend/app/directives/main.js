@@ -48,7 +48,17 @@ angular.module('linagora.esn.unifiedinbox')
             var targets;
 
             if (attrs.opInboxComposeUsers) {
-              targets = $parse(attrs.opInboxComposeUsers)(scope);
+             var users = $parse(attrs.opInboxComposeUsers)(scope);
+
+              targets = users.map(function(target) {
+                var targetToAdded = {
+                  name: target.name || target.displayName || target.displayName() || target.firstname + ' ' + target.lastname || target.preferredEmail,
+                  email: target.email || target.preferredEmail
+                };
+
+                return Object.assign(target, targetToAdded);
+              });
+
             } else {
               targets = emails.map(function(email) {
                 return {
