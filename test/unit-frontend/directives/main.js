@@ -666,6 +666,26 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
 
       expect(scope.excludes).to.not.include(tag);
     });
+
+    it('should call onEmailAdded after calling onTagRemoved', function() {
+      $scope.onEmailAdded = sinon.spy();
+      compileDirective('<div><recipients-auto-complete ng-model="model" on-email-added="onEmailAdded" template="recipients-auto-complete"></recipients-auto-complete></div>');
+      var scope = element.find('recipients-auto-complete').isolateScope();
+      var tag = { email: 'emai@no.aa' };
+
+      scope.onTagAdded(tag);
+      expect($scope.onEmailAdded).to.have.been.calledWith(tag);
+    });
+
+    it('should call onEmailRemoved after calling onTagRemoved', function() {
+      $scope.onEmailRemoved = sinon.spy();
+      compileDirective('<div><recipients-auto-complete ng-model="model" on-email-removed="onEmailRemoved" template="recipients-auto-complete"></recipients-auto-complete></div>');
+      var scope = element.find('recipients-auto-complete').isolateScope();
+      var tag = { email: 'emai@no.aa' };
+
+      scope.onTagRemoved(tag);
+      expect($scope.onEmailRemoved).to.have.been.calledWith(tag);
+    });
   });
 
   describe('The email directive', function() {

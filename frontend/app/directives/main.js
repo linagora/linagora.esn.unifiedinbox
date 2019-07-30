@@ -262,7 +262,9 @@ angular.module('linagora.esn.unifiedinbox')
       scope: {
         tags: '=ngModel',
         excludedEmails: '=',
-        addClass: '=?'
+        addClass: '=?',
+        onEmailAdded: '=',
+        onEmailRemoved: '='
       },
       templateUrl: '/unifiedinbox/views/composer/recipients-auto-complete.html',
       link: function(scope, element) {
@@ -358,12 +360,14 @@ angular.module('linagora.esn.unifiedinbox')
           }
 
           elementScrollService.autoScrollDown(element.find('div.tags'));
+          scope.onEmailAdded && scope.onEmailAdded($tag);
         };
 
         scope.onTagRemoved = function($tag) {
           _.remove(scope.excludes, function(exclude) {
             return exclude.id === $tag.id;
           });
+          scope.onEmailRemoved && scope.onEmailRemoved($tag);
         };
       }
     };
