@@ -100,7 +100,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(messages) {
         expect(messages.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(messages[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'message_200'
+          id: 'message_' + ELEMENTS_PER_REQUEST
         });
 
         done();
@@ -273,7 +273,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(messages) {
         expect(messages.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(messages[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'message_200'
+          id: 'message_' + ELEMENTS_PER_REQUEST
         });
 
         done();
@@ -315,7 +315,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(messages) {
         expect(messages.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(messages[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'message_199'
+          id: 'message_' + (ELEMENTS_PER_REQUEST - 1)
         });
       });
       $rootScope.$digest();
@@ -323,7 +323,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(messages) {
         expect(messages.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(messages[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'message_399'
+          id: 'message_' + (ELEMENTS_PER_REQUEST * 2 - 1)
         });
 
         done();
@@ -355,7 +355,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(threads) {
         expect(threads.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(threads[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'thread_199'
+          id: 'thread_' + (ELEMENTS_PER_REQUEST - 1)
         });
       });
       $rootScope.$digest();
@@ -363,7 +363,7 @@ describe('The Unified Inbox Angular module providers', function() {
       fetcher().then(function(threads) {
         expect(threads.length).to.equal(ELEMENTS_PER_REQUEST);
         expect(threads[ELEMENTS_PER_REQUEST - 1]).to.shallowDeepEqual({
-          id: 'thread_399'
+          id: 'thread_' + (ELEMENTS_PER_REQUEST * 2 - 1)
         });
 
         done();
