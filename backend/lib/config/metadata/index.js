@@ -24,7 +24,6 @@ module.exports = dependencies => ({
     uploadUrl: require('./upload-url')(dependencies),
     view: require('./view')(dependencies),
     useEmailLinks: require('./use-email-links')(dependencies),
-    features: require('./features')(dependencies),
-    deletedMessages: require('./deletedMessages')(dependencies)
+    features: require('./features')(dependencies)
   }
 });
