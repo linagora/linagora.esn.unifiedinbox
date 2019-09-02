@@ -164,3 +164,10 @@ deploy_dev:
     - bower prune
     - git checkout -- .
     - sudo /etc/init.d/rse.dev restart
+
+trigger_build:
+  stage: deploy
+  script:
+    - "curl -X POST -F token=${ESN_TOKEN} -F ref=master https://ci.linagora.com/api/v4/projects/375/trigger/pipeline"
+  only:
+    - master@linagora/lgs/openpaas/linagora.esn.unifiedinbox
