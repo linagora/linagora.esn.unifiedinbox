@@ -11,7 +11,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       iFrameResize = angular.noop, elementScrollService, $stateParams, $dropdown,
       isMobile, searchService, windowMock, fakeNotification,
       sendEmailFakePromise, inboxConfigMock, inboxJmapItemService, _, INBOX_EVENTS,
-      $httpBackend;
+      $httpBackend, inboxCustomRoleMailboxService;
 
   beforeEach(function() {
     module('esn.i18n', function($translateProvider) {
@@ -84,7 +84,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   }));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, _$stateParams_, _$templateCache_, _$httpBackend_, session,
-                             _inboxJmapItemService_, _inboxPlugins_, ___, _INBOX_EVENTS_) {
+                             _inboxJmapItemService_, _inboxPlugins_, ___, _inboxCustomRoleMailboxService_, _INBOX_EVENTS_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;
@@ -93,6 +93,7 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
     $httpBackend = _$httpBackend_;
     inboxJmapItemService = _inboxJmapItemService_;
     inboxPlugins = _inboxPlugins_;
+    inboxCustomRoleMailboxService = _inboxCustomRoleMailboxService_;
     _ = ___;
     INBOX_EVENTS = _INBOX_EVENTS_;
 
@@ -314,6 +315,19 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
           qualifiedName: 'test',
           icon: 'mdi-custom-icon'
       };
+      compileDirective('<mailbox-display mailbox="mailbox" />');
+
+      expect(element.isolateScope().mailboxIcons).to.equal('mdi-custom-icon');
+    });
+
+    it('should define $scope.mailboxIcons to registered icon in inboxCustomRoleMailboxService, if provided by a mailbox with custom role', function() {
+      $scope.mailbox = {
+        role: {
+          value: 'custom role'
+        },
+        qualifiedName: 'test'
+      };
+      inboxCustomRoleMailboxService.getMailboxIcon = function() { return 'mdi-custom-icon'; };
       compileDirective('<mailbox-display mailbox="mailbox" />');
 
       expect(element.isolateScope().mailboxIcons).to.equal('mdi-custom-icon');

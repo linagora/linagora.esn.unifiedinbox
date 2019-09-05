@@ -106,7 +106,15 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .directive('mailboxDisplay', function(MAILBOX_ROLE_ICONS_MAPPING, inboxJmapItemService, inboxMailboxesService, _, $rootScope, INBOX_EVENTS) {
+  .directive('mailboxDisplay', function(
+      _,
+      $rootScope,
+      inboxCustomRoleMailboxService,
+      inboxMailboxesService,
+      inboxJmapItemService,
+      MAILBOX_ROLE_ICONS_MAPPING,
+      INBOX_EVENTS
+    ) {
     return {
       restrict: 'E',
       replace: true,
@@ -121,7 +129,7 @@ angular.module('linagora.esn.unifiedinbox')
       },
       templateUrl: '/unifiedinbox/views/sidebar/email/menu-item.html',
       link: function(scope) {
-        scope.mailboxIcons = MAILBOX_ROLE_ICONS_MAPPING[scope.mailbox.role.value || 'default'] || scope.mailbox.icon;
+        scope.mailboxIcons = getMailboxIcon();
 
         $rootScope.$on(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, function(evt, data) {
           scope.badgeLoadingActivated = data;
@@ -136,6 +144,12 @@ angular.module('linagora.esn.unifiedinbox')
             return inboxMailboxesService.canMoveMessage(item, scope.mailbox);
           });
         };
+
+        function getMailboxIcon() {
+          return scope.mailbox.icon ||
+            inboxCustomRoleMailboxService.getMailboxIcon(scope.mailbox.role.value) ||
+            MAILBOX_ROLE_ICONS_MAPPING[scope.mailbox.role.value || 'default'];
+        }
       }
     };
   })
