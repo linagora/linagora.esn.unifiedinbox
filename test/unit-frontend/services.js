@@ -10,7 +10,6 @@ describe('The Unified Inbox Angular module services', function() {
   var attendeeService, isMobile, config;
 
   beforeEach(function() {
-    angular.mock.module('esn.jmap-client-wrapper');
     angular.mock.module('esn.session');
     angular.mock.module('esn.core');
     angular.mock.module('linagora.esn.unifiedinbox');

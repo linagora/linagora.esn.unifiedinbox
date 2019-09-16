@@ -3,7 +3,6 @@ const path = require('path');
 const FRONTEND_JS_PATH = path.join(__dirname, '../../../frontend/app/');
 
 const mailtoCoreAngularModules = [
-  'esn.jmap-client-wrapper',
   'esn.notification',
   'esn.file',
   'esn.box-overlay',

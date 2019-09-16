@@ -24,7 +24,6 @@
 
     'esn.router',
     'esn.box-overlay',
-    'esn.jmap-client-wrapper',
     'esn.notification',
     'esn.file',
     'esn.profile',
