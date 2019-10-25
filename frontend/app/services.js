@@ -23,15 +23,6 @@ angular.module('linagora.esn.unifiedinbox')
       return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
 
-    function sendByJmapMovingDraftToOutbox(client, message) {
-      return $q.all([
-          client.saveAsDraft(message),
-          inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.OUTBOX)
-        ]).then(function(data) {
-          return client.moveMessage(data[0].id, [data[1].id]);
-        });
-    }
-
     function sendByJmapDirectlyToOutbox(client, message) {
       return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.OUTBOX).then(function(outbox) {
         return client.send(message, outbox);
@@ -46,17 +37,13 @@ angular.module('linagora.esn.unifiedinbox')
       return withJmapClient(function(client) {
         return $q.all([
           inboxConfig('isJmapSendingEnabled'),
-          inboxConfig('isSaveDraftBeforeSendingEnabled'),
           inboxJmapHelper.toOutboundMessage(client, email)
         ]).then(function(data) {
           var isJmapSendingEnabled = data[0],
-              isSaveDraftBeforeSendingEnabled = data[1],
-              message = data[2];
+              message = data[1];
 
           if (!isJmapSendingEnabled) {
             return sendBySmtp(message);
-          } else if (isSaveDraftBeforeSendingEnabled) {
-            return sendByJmapMovingDraftToOutbox(client, message);
           }
 
           return sendByJmapDirectlyToOutbox(client, message);

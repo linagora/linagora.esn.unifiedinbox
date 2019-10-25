@@ -16,7 +16,6 @@ module.exports = dependencies => ({
     identities: require('./identities')(dependencies),
     isJmapSendingEnabled: require('./is-jmap-sending-enabled')(dependencies),
     isLocalCopyEnabled: require('./is-local-copy-enabled')(dependencies),
-    isSaveDraftBeforeSendingEnabled: require('./is-save-draft-before-sending-enabled')(dependencies),
     maxSizeUpload: require('./max-size-upload')(dependencies),
     numberItemsPerPageOnBulkDeleteOperations: require('./number-items-per-page-on-bulk-delete-operations')(dependencies),
     numberItemsPerPageOnBulkReadOperations: require('./number-items-per-page-on-bulk-read-operations')(dependencies),
