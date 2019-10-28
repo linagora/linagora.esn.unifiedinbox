@@ -49,11 +49,6 @@ ng-form.p-t-25(name='form')
         toggle-switch(ng-model="$ctrl.configurations.isJmapSendingEnabled.value", form="form")
     h5 #{__('Composer')}    
     .form-group.option-field
-      .col-xs-8.field-name #{__('Enable save draft before sending')}
-        p.small.text-muted #{__('Emails in outbox are also saved as draft')}
-      .col-xs-4.flex-end
-        toggle-switch(ng-model="$ctrl.configurations.isSaveDraftBeforeSendingEnabled.value", form="form")
-    .form-group.option-field
       .col-xs-8.field-name #{__('Enable draft email')}
         p.text-muted #{__('Unsent emails are saved as draft')}
       .col-xs-4.flex-end
