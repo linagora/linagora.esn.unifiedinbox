@@ -3,17 +3,17 @@
 
   angular.module('linagora.esn.unifiedinbox').factory('inboxEmailerResolver', inboxEmailerResolver);
 
-  function inboxEmailerResolver(inboxSearchCacheService, esnAvatarUrlService, INBOX_AVATAR_SIZE) {
+  function inboxEmailerResolver(inboxCacheService, esnAvatarUrlService, INBOX_AVATAR_SIZE) {
     return function() {
       var self = this;
 
-      return inboxSearchCacheService.searchByEmail(self.email)
+      return inboxCacheService.resolveEmail(self.email)
         .catch(angular.noop)
-        .then(function(result) {
-          self.objectType = result && result.objectType ? result.objectType : 'email';
-          self.id = result && result.id;
-          self.name = result && result.displayName || self.name;
-          self.avatarUrl = result && result.avatarUrl || esnAvatarUrlService.generateUrl(self.email, self.name);
+        .then(function(person) {
+          self.objectType = person && person.objectType ? person.objectType : 'email';
+          self.id = person && person.id;
+          self.name = person && person.names && person.names[0] && person.names[0].displayName || self.name;
+          self.avatarUrl = person && person.photos && person.photos[0] && person.photos[0].url || esnAvatarUrlService.generateUrl(self.email, self.name);
         })
         .then(function() {
           return {

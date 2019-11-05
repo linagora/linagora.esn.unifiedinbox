@@ -1410,12 +1410,11 @@ describe('The Unified Inbox Angular module services', function() {
 
   describe('The searchService factory', function() {
 
-    var $rootScope, searchService, INBOX_AUTOCOMPLETE_OBJECT_TYPES;
+    var $rootScope, searchService;
 
-    beforeEach(inject(function(_$rootScope_, _searchService_, _INBOX_AUTOCOMPLETE_OBJECT_TYPES_) {
+    beforeEach(inject(function(_$rootScope_, _searchService_) {
       $rootScope = _$rootScope_;
       searchService = _searchService_;
-      INBOX_AUTOCOMPLETE_OBJECT_TYPES = _INBOX_AUTOCOMPLETE_OBJECT_TYPES_;
     }));
 
     describe('The searchRecipients method', function() {
@@ -1506,45 +1505,6 @@ describe('The Unified Inbox Angular module services', function() {
       });
 
     });
-
-    describe('The searchByEmail method', function() {
-
-      it('should delegate to attendeeService, requesting a single result, and return the match if there is one', function(done) {
-        attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([{ a: 'b' }]); });
-
-        searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(attendeeService.getAttendeeCandidates).to.have.been.calledWith('me@open-paas.org', 1, INBOX_AUTOCOMPLETE_OBJECT_TYPES);
-          expect(result).to.deep.equal({ a: 'b' });
-
-          done();
-        });
-        $rootScope.$digest();
-      });
-
-      it('should return null if there is no match', function(done) {
-        attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.when([]); });
-
-        searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(result).to.equal(null);
-
-          done();
-        });
-        $rootScope.$digest();
-      });
-
-      it('should return null if search fails', function(done) {
-        attendeeService.getAttendeeCandidates = sinon.spy(function() { return $q.reject(); });
-
-        searchService.searchByEmail('me@open-paas.org').then(function(result) {
-          expect(result).to.equal(null);
-
-          done();
-        });
-        $rootScope.$digest();
-      });
-
-    });
-
   });
 
   describe('The attachmentUploadService service', function() {

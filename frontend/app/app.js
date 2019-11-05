@@ -54,6 +54,7 @@
     'esn.http',
     'esn.shortcuts',
     'esn.promise',
+    'esn.people',
     'material.components.button',
     'material.components.menu',
     'material.components.icon',
