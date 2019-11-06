@@ -910,10 +910,13 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should not include attachments in the replayAll email', function(done) {
+      it('should not include non-inline attachments in the replyAll email', function(done) {
         email = {
           from: {email: 'from@linagora.com', name: 'linagora'},
-          attachments: [{attachment: 'A'}, {attachment: 'B'}]
+          attachments: [
+            {name: 'A', isInline: false },
+            {name: 'B', isInline: false }
+          ]
         };
 
         sender = {displayName: 'sender', email: 'sender@linagora.com'};
@@ -921,6 +924,75 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
           expect(email.attachments).to.be.undefined;
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include inline attachments in the replyAll email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.attachments).to.deep.equal([
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include image urls if the email has inline attachments in the replyAll email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.htmlBody).to.have.string('imageUrlA', 'imageUrlB');
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include mapping of Url and Cid if the email has inline attachments in the replyAll email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.mappingsUrlAndCid).to.deep.equal([
+            { url: 'imageUrlA', cid: 'cid:contentIdA'},
+            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+          ]);
         }).then(done, done);
 
         $rootScope.$digest();
@@ -1126,14 +1198,83 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should not include attachments in the replay email', function(done) {
+      it('should not include non-inline attachments in the reply email', function(done) {
         email = {
-          attachments: [{attachment: 'A'}, {attachment: 'B'}]
+          attachments: [
+            { name: 'A', isInline: false },
+            { name: 'B', isInline: false }
+          ]
         };
 
         mockGetMessages(email);
         emailSendingService.createReplyEmailObject('id', sender).then(function(email) {
           expect(email.attachments).to.be.undefined;
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include inline attachments in the reply email', function(done) {
+        email = {
+          attachments: [
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createReplyEmailObject('id', sender).then(function(email) {
+          expect(email.attachments).to.deep.equal([
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]);
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include image urls if the email has inline attachments in the reply email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.htmlBody).to.have.string('imageUrlA', 'imageUrlB');
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include mapping of Url and Cid if the email has inline attachments in the reply email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.mappingsUrlAndCid).to.deep.equal([
+            { url: 'imageUrlA', cid: 'cid:contentIdA'},
+            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+          ]);
         }).then(done, done);
 
         $rootScope.$digest();
@@ -1310,19 +1451,89 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
-      it('should include attachments in the forwarded email and mark status as uploaded', function(done) {
+      it('should include non-inline attachments in the forwarded email and mark status as uploaded', function(done) {
         email = {
-          attachments: [{ attachment: 'A' }, { attachment: 'B' }]
+          attachments: [
+            { name: 'A', isInline: false },
+            { name: 'B', isInline: false }
+          ]
         };
 
         mockGetMessages(email);
         emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
           expect(email.attachments).to.shallowDeepEqual([
-            { attachment: 'A', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP },
-            { attachment: 'B', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP}
+            { name: 'A', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP },
+            { name: 'B', status: 'uploaded', attachmentType: INBOX_ATTACHMENT_TYPE_JMAP }
           ]);
           done();
         }).catch(done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include inline attachments in the forwarded email', function(done) {
+        email = {
+          attachments: [
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]
+        };
+
+        mockGetMessages(email);
+        emailSendingService.createForwardEmailObject('id', sender).then(function(email) {
+          expect(email.attachments).to.deep.equal([
+            { name: 'A', isInline: true },
+            { name: 'B', isInline: true }
+          ]);
+          done();
+        }).catch(done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include image urls if the email has inline attachments in the forwarded email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.htmlBody).to.have.string('imageUrlA', 'imageUrlB');
+        }).then(done, done);
+
+        $rootScope.$digest();
+      });
+
+      it('should include mapping of Url and Cid if the email has inline attachments in the forwarded email', function(done) {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA', getSignedDownloadUrl: function() { return $q.when('imageUrlA'); } },
+            { name: 'B', isInline: true, cid: 'contentIdB', getSignedDownloadUrl: function() { return $q.when('imageUrlB'); } }
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+        };
+
+        sender = {displayName: 'sender', email: 'sender@linagora.com'};
+
+        mockGetMessages(email);
+        emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
+          expect(email.mappingsUrlAndCid).to.deep.equal([
+            { url: 'imageUrlA', cid: 'cid:contentIdA'},
+            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+          ]);
+        }).then(done, done);
 
         $rootScope.$digest();
       });
@@ -1394,6 +1605,50 @@ describe('The Unified Inbox Angular module services', function() {
         $rootScope.$digest();
       });
 
+    });
+
+    describe('The handleInlineImageBeforeSending function', function() {
+      it('should include image content id if the email has inline attachments in a quoted email', function() {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA' },
+            { name: 'B', isInline: true, cid: 'contentIdB' }
+          ],
+          mappingsUrlAndCid: [
+            {url: 'imageUrlA', cid: 'cid:contentIdA'},
+            {url: 'imageUrlB', cid: 'cid:contentIdB'}
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img src="imageUrlA" alt="imageA" width="1" height="1"></p>' +
+          '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
+        };
+
+        emailSendingService.handleInlineImageBeforeSending(email);
+
+        expect(email.htmlBody).to.have.string('cid:contentIdA', 'cid:contentIdB');
+      });
+
+      it('should remove mappingsUrlAndCid property', function() {
+        email = {
+          from: {email: 'from@linagora.com', name: 'linagora'},
+          attachments: [
+            { name: 'A', isInline: true, cid: 'contentIdA' },
+            { name: 'B', isInline: true, cid: 'contentIdB' }
+          ],
+          mappingsUrlAndCid: [
+            {url: 'imageUrlA', cid: 'cid:contentIdA'},
+            {url: 'imageUrlB', cid: 'cid:contentIdB'}
+          ],
+          htmlBody: '<p>my body</p>' +
+          '<p><img src="imageUrlA" alt="imageA" width="1" height="1"></p>' +
+          '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
+        };
+
+        emailSendingService.handleInlineImageBeforeSending(email);
+
+        expect(email.mappingsUrlAndCid).to.be.undefined;
+      });
     });
   });
 
