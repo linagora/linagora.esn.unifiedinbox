@@ -44,7 +44,8 @@ describe('The inboxJmapItemService service', function() {
     $provide.value('emailSendingService', emailSendingService = {
       createReplyEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); }),
       createReplyAllEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); }),
-      createForwardEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); })
+      createForwardEmailObject: sinon.spy(function(email) { return $q.when(quoteEmail(email)); }),
+      handleInlineImageBeforeSending: sinon.spy(function() {})
     });
     $provide.value('inboxConfig', function(key, defaultValue) {
       return $q.when(angular.isDefined(inboxConfigMock[key]) ? inboxConfigMock[key] : defaultValue);

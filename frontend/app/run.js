@@ -2,7 +2,6 @@
   'use strict';
 
   angular.module('linagora.esn.unifiedinbox')
-
     .run(function(
       $q,
       inboxConfig,
@@ -34,5 +33,9 @@
 
     .run(function(esnScrollListenerService) {
       esnScrollListenerService.bindTo('.inbox-infinite-list .md-virtual-repeat-scroller');
+    })
+
+    .run(function(inboxEmailSendingHookService, emailSendingService) {
+      inboxEmailSendingHookService.registerPreSendingHook(emailSendingService.handleInlineImageBeforeSending);
     });
 })(angular);

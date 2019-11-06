@@ -18,7 +18,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('sendEmail', function($http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
+  .factory('sendEmail', function(_, $http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
     function sendBySmtp(email) {
       return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
@@ -57,6 +57,46 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
+    var referencingEmailOptions = {
+      reply: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyRecipients,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
+      },
+      forward: {
+        subjectPrefix: 'Fwd: ',
+        templateName: 'forward',
+        includeAttachments: true,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.FORWARD
+      },
+      replyAll: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyAllRecipients,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
+      }
+    };
+
+    return {
+      emailsAreValid: emailsAreValid,
+      removeDuplicateRecipients: removeDuplicateRecipients,
+      removeReadReceiptRequest: removeReadReceiptRequest,
+      addReadReceiptRequest: addReadReceiptRequest,
+      getReadReceiptRequest: getReadReceiptRequest,
+      noRecipient: noRecipient,
+      sendEmail: sendEmail,
+      prefixSubject: prefixSubject,
+      getReplyRecipients: getReplyRecipients,
+      getReplyAllRecipients: getReplyAllRecipients,
+      getFirstRecipient: getFirstRecipient,
+      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
+      showReplyAllButton: showReplyAllButton,
+      createReplyAllEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.replyAll),
+      createReplyEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.reply),
+      createForwardEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.forward),
+      countRecipients: countRecipients,
+      handleInlineImageBeforeSending: handleInlineImageBeforeSending
+    };
+
     /**
      * Add the following logic when sending an email: Check for an invalid email used as a recipient
      *
@@ -226,6 +266,24 @@ angular.module('linagora.esn.unifiedinbox')
       return email;
     }
 
+    function handleInlineImageBeforeSending(email) {
+      if (
+        !email.attachments ||
+        !email.attachments.length ||
+        !email.mappingsUrlAndCid
+      ) {
+        return email;
+      }
+
+      email.mappingsUrlAndCid.forEach(function(mapping) {
+        email.htmlBody = email.htmlBody.replace(mapping.url, mapping.cid);
+      });
+
+      delete email.mappingsUrlAndCid;
+
+      return email;
+    }
+
     function _addReferenceToOriginalMessage(referencedMessageIdsHeaderName, parentMessage) {
       if (!parentMessage.headers || !referencedMessageIdsHeaderName) {
         return;
@@ -242,7 +300,6 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function _createQuotedEmail(opts, messageId, sender) {
-
       return inboxJmapHelper.getMessageById(messageId).then(function(message) {
         var newRecipients = opts.recipients ? opts.recipients(message, sender) : {},
             newEmail = {
@@ -257,69 +314,120 @@ angular.module('linagora.esn.unifiedinbox')
               headers: _addReferenceToOriginalMessage(opts.referenceIdHeader, message)
             };
 
-        if (opts.includeAttachments && message.attachments) {
-          newEmail.attachments = message.attachments;
-          newEmail.attachments.forEach(function(attachment) {
-            attachment.attachmentType = INBOX_ATTACHMENT_TYPE_JMAP;
-            attachment.status = 'uploaded';
-          });
-        }
+        var handleAttachment = opts.includeAttachments ?
+          _handleAttachmentInQuoteOfForwardMail : _handleAttachmentInQuoteOfReplyMail;
 
-        // We do not automatically quote the message if we're using a plain text editor and the message
-        // has a HTML body. In this case the "Edit Quoted Mail" button will show
-        if (!emailBodyService.supportsRichtext() && message.htmlBody) {
-          return emailBodyService.quote(newEmail, opts.templateName, true).then(function(body) {
-            newEmail.quoted.htmlBody = body;
+        return handleAttachment(message, newEmail)
+          .then(function() {
+            // We do not automatically quote the message if we're using a plain text editor and the message
+            // has a HTML body. In this case the "Edit Quoted Mail" button will show
+            if (!emailBodyService.supportsRichtext() && message.htmlBody) {
+              return emailBodyService.quote(newEmail, opts.templateName, true).then(function(body) {
+                newEmail.quoted.htmlBody = body;
 
-            return newEmail;
-          });
-        }
+                return newEmail;
+              });
+            }
 
-        return emailBodyService.quote(newEmail, opts.templateName)
-          .then(function(body) {
-            return _enrichWithQuote(newEmail, body);
+            return emailBodyService.quote(newEmail, opts.templateName, true)
+              .then(function(body) {
+                return _enrichWithQuote(newEmail, body);
+              });
           });
       });
     }
 
-    var referencingEmailOptions = {
-      reply: {
-        subjectPrefix: 'Re: ',
-        recipients: getReplyRecipients,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
-      },
-      forward: {
-        subjectPrefix: 'Fwd: ',
-        templateName: 'forward',
-        includeAttachments: true,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.FORWARD
-      },
-      replyAll: {
-        subjectPrefix: 'Re: ',
-        recipients: getReplyAllRecipients,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
+    function _handleAttachmentInQuoteOfForwardMail(message, newEmail) {
+      if (!message.attachments || !message.attachments.length) {
+        return $q.when();
       }
-    };
 
-    return {
-      emailsAreValid: emailsAreValid,
-      removeDuplicateRecipients: removeDuplicateRecipients,
-      removeReadReceiptRequest: removeReadReceiptRequest,
-      addReadReceiptRequest: addReadReceiptRequest,
-      getReadReceiptRequest: getReadReceiptRequest,
-      noRecipient: noRecipient,
-      sendEmail: sendEmail,
-      prefixSubject: prefixSubject,
-      getReplyRecipients: getReplyRecipients,
-      getReplyAllRecipients: getReplyAllRecipients,
-      getFirstRecipient: getFirstRecipient,
-      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
-      showReplyAllButton: showReplyAllButton,
-      createReplyAllEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.replyAll),
-      createReplyEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.reply),
-      createForwardEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.forward),
-      countRecipients: countRecipients
-    };
+      var inlineAttachments = _getInlineAttachments(message.attachments);
+      var nonInlineAttachments = message.attachments.filter(function(attachment) {
+        return !attachment.isInline;
+      });
+
+      newEmail.attachments = [];
+
+      if (nonInlineAttachments.length) {
+        nonInlineAttachments.forEach(function(attachment) {
+          attachment.attachmentType = INBOX_ATTACHMENT_TYPE_JMAP;
+          attachment.status = 'uploaded';
+
+          newEmail.attachments.push(attachment);
+        });
+      }
+
+      if (!inlineAttachments.length) {
+        return $q.when();
+      }
+
+      return _handleInlineAttachment(newEmail, inlineAttachments);
+    }
+
+    function _handleAttachmentInQuoteOfReplyMail(message, newEmail) {
+      if (!message.attachments || !message.attachments.length) {
+        return $q.when();
+      }
+
+      var inlineAttachments = _getInlineAttachments(message.attachments);
+
+      if (!inlineAttachments.length) {
+        return $q.when();
+      }
+
+      newEmail.attachments = [];
+
+      return _handleInlineAttachment(newEmail, inlineAttachments);
+    }
+
+    function _handleInlineAttachment(newEmail, attachments) {
+      var inlineCids = _getInlineImageSources(newEmail.quoted.htmlBody);
+      var inlineImageMappingsUrlAndCid = _getInlineImageMappingsUrlAndCid(inlineCids, attachments);
+
+      attachments.forEach(function(attachment) {
+        newEmail.attachments.push(attachment);
+      });
+
+      return $q.all(inlineImageMappingsUrlAndCid)
+        .then(function(mappings) {
+          newEmail.mappingsUrlAndCid = mappings;
+          mappings.forEach(function(mapping) {
+            newEmail.quoted.htmlBody = newEmail.quoted.htmlBody.replace(mapping.cid, mapping.url);
+          });
+        })
+        .then($q.when());
+    }
+
+    function _getInlineAttachments(attachments) {
+      return attachments.filter(function(attachment) {
+        return attachment.isInline;
+      });
+    }
+
+    function _getInlineImageSources(messageBody) {
+      var document = new DOMParser().parseFromString(messageBody, 'text/html');
+      var elements = document.getElementsByTagName('img');
+
+      // elements is a HTMLCollection and isn't a 'true' array,
+      // elements doesn't have 'forEach', 'map' function like an array. Therefore, we have to convert it to array.
+      return [].map.call(elements, function(element) {
+        return element.src;
+      });
+    }
+
+    function _getInlineImageMappingsUrlAndCid(cids, attachments) {
+      return cids.map(function(cid) {
+        var inlineAttachment = _.find(attachments, function(attachment) {
+          return attachment.cid === cid.split('cid:')[1];
+        });
+
+        return inlineAttachment.getSignedDownloadUrl()
+          .then(function(url) {
+            return {url: url, cid: 'cid:' + inlineAttachment.cid};
+          });
+      });
+    }
   })
 
   .factory('waitUntilMessageIsComplete', function($q, _) {
