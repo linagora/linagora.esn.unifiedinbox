@@ -70,6 +70,46 @@ angular.module('linagora.esn.unifiedinbox')
   })
 
   .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
+    var referencingEmailOptions = {
+      reply: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyRecipients,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
+      },
+      forward: {
+        subjectPrefix: 'Fwd: ',
+        templateName: 'forward',
+        includeAttachments: true,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.FORWARD
+      },
+      replyAll: {
+        subjectPrefix: 'Re: ',
+        recipients: getReplyAllRecipients,
+        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
+      }
+    };
+
+    return {
+      emailsAreValid: emailsAreValid,
+      removeDuplicateRecipients: removeDuplicateRecipients,
+      removeReadReceiptRequest: removeReadReceiptRequest,
+      addReadReceiptRequest: addReadReceiptRequest,
+      getReadReceiptRequest: getReadReceiptRequest,
+      noRecipient: noRecipient,
+      sendEmail: sendEmail,
+      prefixSubject: prefixSubject,
+      getReplyRecipients: getReplyRecipients,
+      getReplyAllRecipients: getReplyAllRecipients,
+      getFirstRecipient: getFirstRecipient,
+      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
+      showReplyAllButton: showReplyAllButton,
+      createReplyAllEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.replyAll),
+      createReplyEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.reply),
+      createForwardEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.forward),
+      countRecipients: countRecipients,
+      handleInlineImageBeforeSending: handleInlineImageBeforeSending
+    };
+
     /**
      * Add the following logic when sending an email: Check for an invalid email used as a recipient
      *
@@ -401,46 +441,6 @@ angular.module('linagora.esn.unifiedinbox')
           });
       });
     }
-
-    var referencingEmailOptions = {
-      reply: {
-        subjectPrefix: 'Re: ',
-        recipients: getReplyRecipients,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
-      },
-      forward: {
-        subjectPrefix: 'Fwd: ',
-        templateName: 'forward',
-        includeAttachments: true,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.FORWARD
-      },
-      replyAll: {
-        subjectPrefix: 'Re: ',
-        recipients: getReplyAllRecipients,
-        referenceIdHeader: INBOX_MESSAGE_HEADERS.REPLY_TO
-      }
-    };
-
-    return {
-      emailsAreValid: emailsAreValid,
-      removeDuplicateRecipients: removeDuplicateRecipients,
-      removeReadReceiptRequest: removeReadReceiptRequest,
-      addReadReceiptRequest: addReadReceiptRequest,
-      getReadReceiptRequest: getReadReceiptRequest,
-      noRecipient: noRecipient,
-      sendEmail: sendEmail,
-      prefixSubject: prefixSubject,
-      getReplyRecipients: getReplyRecipients,
-      getReplyAllRecipients: getReplyAllRecipients,
-      getFirstRecipient: getFirstRecipient,
-      getAllRecipientsExceptSender: getAllRecipientsExceptSender,
-      showReplyAllButton: showReplyAllButton,
-      createReplyAllEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.replyAll),
-      createReplyEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.reply),
-      createForwardEmailObject: _createQuotedEmail.bind(null, referencingEmailOptions.forward),
-      countRecipients: countRecipients,
-      handleInlineImageBeforeSending: handleInlineImageBeforeSending
-    };
   })
 
   .factory('waitUntilMessageIsComplete', function($q, _) {
