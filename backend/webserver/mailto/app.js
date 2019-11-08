@@ -104,7 +104,6 @@ const mailtoInboxAngularAppFiles = [
   'components/composer/identity-selector/composer-identity-selector.js',
   'components/composer/identity-selector/composer-identity-selector.controller.js',
   'components/composer/attachments-selector/composer-attachments-selector.js',
-  'components/composer/attachments-selector/composer-attachments-selector.controller.js',
   'components/inbox-configuration/read-receipt/read-receipt.component.js',
   'components/inbox-configuration/read-receipt/read-receipt.controller.js',
   'components/banner/vacation-banner/vacation-banner.component.js',
