@@ -14,4 +14,4 @@ cite
   br
   | {{ email.quoted.cc | emailerList:'#{__('Cc')}: '}}
 
-blockquote {{ email.quoted.htmlBody || (email.quoted.textBody | nl2br) }}
+blockquote {{ email.quoted.htmlBody || (email.quoted.textBody | escapeHtml | nl2br) }}
