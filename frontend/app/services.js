@@ -329,7 +329,7 @@ angular.module('linagora.esn.unifiedinbox')
               });
             }
 
-            return emailBodyService.quote(newEmail, opts.templateName, true)
+            return emailBodyService.quote(newEmail, opts.templateName)
               .then(function(body) {
                 return _enrichWithQuote(newEmail, body);
               });

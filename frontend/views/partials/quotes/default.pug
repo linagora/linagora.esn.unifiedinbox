@@ -2,4 +2,4 @@ p
   br
 
 cite #{__('On')} {{ email.quoted.date | esnDatetime:"mediumDate time" }}, #{__('from')} {{ email.quoted.from.email }}
-blockquote {{ email.quoted.htmlBody || (email.quoted.textBody | nl2br) }}
+blockquote {{ email.quoted.htmlBody || (email.quoted.textBody | escapeHtml | nl2br) }}
