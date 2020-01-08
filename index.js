@@ -11,7 +11,8 @@ const MODULE_NAME = 'linagora.esn.unifiedinbox';
 const getPath = item => path.join('../components', item);
 const EXTERNAL_COMPONENTS_JS = [
   'angularjs-dragula/dist/angularjs-dragula.js',
-  'sanitize-html/dist/sanitize-html.js'
+  'sanitize-html/dist/sanitize-html.js',
+  'jmap-client/dist/jmap-client.min.js'
 ].map(getPath);
 
 const EXTERNAL_COMPONENTS_CSS = [
