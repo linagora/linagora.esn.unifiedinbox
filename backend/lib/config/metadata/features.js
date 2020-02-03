@@ -7,7 +7,10 @@ module.exports = dependencies => {
       foldersSharing: {
         type: 'boolean'
       }
-    }
+    },
+    required: [
+      'foldersSharing'
+    ]
   };
 
   return {
