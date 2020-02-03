@@ -279,5 +279,7 @@
   "Search results": "Résultats de recherche",
   "No emails are matching your search": "Pas d'emails correspondant à votre recherche",
   "Search in emails": "Rechercher dans les emails",
-  "Load failed": "Chargement échoué"
+  "Load failed": "Chargement échoué",
+  "Allow users to manage their identities": "Autoriser les utilisateurs à gérer leurs identités",
+  "Allow users to create or remove identities based on their mail aliases": "Autoriser les utilisateurs à créer ou effacer les identités, en fonction de leurs alias de mail"
 }

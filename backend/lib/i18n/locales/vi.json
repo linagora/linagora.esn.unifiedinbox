@@ -279,5 +279,7 @@
   "Search results": "Kết quả tìm kiếm",
   "No emails are matching your search": "Không có email phù hợp với tìm kiếm của bạn",
   "Search in emails": "Tìm trong hộp thư",
-  "Load failed": "Tải không thành công"
+  "Load failed": "Tải không thành công",
+  "Allow users to manage their identities": "Cho phép người dùng quản lý định danh",
+  "Allow users to create or remove identities based on their mail aliases": "Cho phép người dùng tạo hoặc xóa định danh dựa trên địa chỉ thư thay thế"
 }

@@ -279,5 +279,7 @@
   "Your message is being sent...": "您的消息发送中…",
   "Your vacation responder is enabled.": "您的假期自动回复已开启",
   "Your vacation responder stopped on %s": "您的假期自动回复将会在%s停止",
-  "Your vacation responder will be activated on %s": "您的假期自动回复将会在%s开启"
+  "Your vacation responder will be activated on %s": "您的假期自动回复将会在%s开启",
+  "Allow users to manage their identities": "允许用户管理其身份",
+  "Allow users to create or remove identities based on their mail aliases": "允许用户根据他们的邮件别名创建或删除身份"
 }

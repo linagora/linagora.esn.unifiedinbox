@@ -279,5 +279,7 @@
   "Search results": "Результаты поиска",
   "No emails are matching your search": "Нет писем, соответствующих вашему запросу",
   "Search in emails": "Поиск в письмах",
-  "Load failed": "Загрузка не удалась"
+  "Load failed": "Загрузка не удалась",
+  "Allow users to manage their identities": "Разрешить пользователям управлять своими личностями",
+  "Allow users to create or remove identities based on their mail aliases": "Разрешить пользователям создавать или удалять удостоверения на основе их почтовых псевдонимов"
 }

@@ -279,5 +279,7 @@
   "Search results": "Search results",
   "No emails are matching your search": "No emails are matching your search",
   "Search in emails": "Search in emails",
-  "Load failed": "Load failed"
+  "Load failed": "Load failed",
+  "Allow users to manage their identities": "Allow users to manage their identities",
+  "Allow users to create or remove identities based on their mail aliases": "Allow users to create or remove identities based on their mail aliases"
 }
