@@ -22,6 +22,7 @@ const EXTERNAL_COMPONENTS_CSS = [
 module.exports = new AwesomeModule(MODULE_NAME, {
   dependencies: [
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.logger', 'logger'),
+    new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.db', 'db'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.esn-config', 'esn-config'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.email', 'email'),
     new Dependency(Dependency.TYPE_NAME, 'linagora.esn.core.i18n', 'i18n'),
@@ -42,7 +43,8 @@ module.exports = new AwesomeModule(MODULE_NAME, {
       const lib = {
         api: {
           inbox: require('./backend/webserver/api')(dependencies)
-        }
+        },
+        lib: require('./backend/lib')(dependencies)
       };
 
       return callback(null, lib);
