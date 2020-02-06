@@ -2,4 +2,8 @@ sub-header
   inbox-identities-subheader
 
 .inbox-identities
-  inbox-identity(ng-repeat="identity in $ctrl.identities track by identity.id", identity-id="{{ identity.id }}" ui-sref="unifiedinbox.configuration.identities.identity({ identityId: identity.id })")
+  inbox-identity(
+    ng-repeat="identity in $ctrl.identities track by identity.id",
+    identity-id="{{ identity.id }}",
+    ui-sref="unifiedinbox.configuration.identities.identity({ identityId: identity.id })"
+  )

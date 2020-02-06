@@ -118,10 +118,10 @@
           },
           params: { vacation: null }
         })
-        .state('unifiedinbox.configuration.identities', {
+        .state('profile.details.identities', {
           url: '/identities',
           views: {
-            'configuration@unifiedinbox.configuration': {
+            'details@profile.details': {
               template: '<inbox-identities />'
             }
           }
