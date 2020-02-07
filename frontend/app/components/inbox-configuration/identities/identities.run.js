@@ -7,7 +7,7 @@
   function injectUserProfileTabsDirective(dynamicDirectiveService) {
     var userIdentities = new dynamicDirectiveService.DynamicDirective(true, 'inbox-identities-tab', {
       attributes: [
-        { name: 'ng-if', value: '$ctrl.me' }
+        { name: 'ng-if', value: '$ctrl.canEdit' }
       ]
     });
 
