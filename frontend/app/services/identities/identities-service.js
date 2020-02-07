@@ -4,10 +4,11 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .factory('inboxIdentitiesService', function($q, $http, uuid4, inboxConfig, esnUserConfigurationService, _,
-                                                INBOX_MODULE_NAME) {
+      session, esnConfig, INBOX_MODULE_NAME) {
       var identities;
 
       return {
+        canEditIdentities: canEditIdentities,
         getAllIdentities: getAllIdentities,
         getDefaultIdentity: getDefaultIdentity,
         getIdentity: getIdentity,
@@ -89,6 +90,11 @@
         };
       }
 
+      function canEditIdentities() {
+        return session.userIsDomainAdministrator() ?
+          $q.when(true) :
+          esnConfig('linagora.esn.unifiedinbox.features.allowMembersToManageIdentities', false);
+      }
     });
 
 })();

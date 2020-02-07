@@ -5,5 +5,5 @@ sub-header
   inbox-identity(
     ng-repeat="identity in $ctrl.identities track by identity.id",
     identity-id="{{ identity.id }}",
-    ui-sref="unifiedinbox.configuration.identities.identity({ identityId: identity.id })"
+    can-edit="$ctrl.canEdit"
   )
