@@ -41,15 +41,14 @@ module.exports = new AwesomeModule(MODULE_NAME, {
   states: {
     lib: function(dependencies, callback) {
       const lib = {
+        lib: require('./backend/lib')(dependencies),
         api: {
           inbox: require('./backend/webserver/api')(dependencies)
-        },
-        lib: require('./backend/lib')(dependencies)
+        }
       };
 
       return callback(null, lib);
     },
-
     deploy: function(dependencies, callback) {
       require('./backend/webserver/mailto/app')(dependencies);
       const app = require('./backend/webserver/application')(dependencies);
