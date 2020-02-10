@@ -1,4 +1,5 @@
 const emailAddresses = require('email-addresses');
+const uuidV4 = require('uuid/v4');
 
 module.exports = dependencies => {
   const mongoose = dependencies('db').mongo.mongoose;
@@ -6,6 +7,7 @@ module.exports = dependencies => {
   const ObjectId = Schema.ObjectId;
 
   const IdentitySchema = new Schema({
+    uuid: { type: String, default: uuidV4 },
     name: { type: String, required: true },
     default: { type: Boolean, default: false },
     description: { type: String, required: true },
@@ -24,7 +26,7 @@ module.exports = dependencies => {
     },
     htmlSignature: { type: String },
     textSignature: { type: String }
-  });
+  }, { _id: false });
 
   const InboxUserIdentitiesSchema = new Schema({
     _id: {
@@ -33,7 +35,10 @@ module.exports = dependencies => {
       required: true,
       unique: true
     },
-    identities: [IdentitySchema]
+    identities: {
+      type: [IdentitySchema],
+      required: true
+    }
   });
 
   InboxUserIdentitiesSchema.pre('validate', function(next) {
