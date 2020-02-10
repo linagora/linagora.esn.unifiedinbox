@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 
 module.exports = dependencies => {
@@ -14,6 +12,7 @@ module.exports = dependencies => {
   );
   router.use('/sendemail', require('./sendEmail')(dependencies));
   router.use('/forwardings', require('./forwardings')(dependencies));
+  router.use('/users', require('./users')(dependencies));
 
   return router;
 };
