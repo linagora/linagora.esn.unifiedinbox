@@ -110,6 +110,11 @@ test_unit_backtend:
   script:
     - grunt -v --chunk=1 test-unit-backend
 
+test_unit-storage:
+  <<: *test-template-svc
+  script:
+    - grunt -v --chunk=1 test-unit-storage
+
 ####### tests with services requirements
 
 test_midway_backtend:

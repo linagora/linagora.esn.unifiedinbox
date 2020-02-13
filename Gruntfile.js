@@ -43,6 +43,15 @@ module.exports = function(grunt) {
         files: {
           src: ['test/midway-backend/**/*.js']
         }
+      },
+      storage: {
+        options: {
+          common: ['test/unit-storage/all.js'],
+          target: 'mochacli:storage'
+        },
+        files: {
+          src: ['test/unit-storage/**/*.js']
+        }
       }
     },
     mochacli: {
@@ -159,6 +168,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-unit-frontend', 'Unit test frontend code', ['karma:unit']);
   grunt.registerTask('test-unit-backend', 'Test backend code', ['mochacli:backend']);
 
+  grunt.registerTask('test-unit-storage', ['splitfiles:storage']);
   grunt.registerTask('test-midway-backend', ['splitfiles:midway']);
 
   grunt.registerTask('test', ['linters', 'test-frontend', 'test-unit-backend', 'test-midway-backend']);
