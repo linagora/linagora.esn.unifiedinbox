@@ -12,8 +12,6 @@ module.exports = dependencies => ({
     forwarding: require('./forwarding')(dependencies),
     hiddenSharedMailboxes: require('./hidden-shared-mailboxes')(dependencies),
     requestReceipts: require('./request-receipts')(dependencies),
-    'identities.default': require('./identities-default')(dependencies),
-    identities: require('./identities')(dependencies),
     isJmapSendingEnabled: require('./is-jmap-sending-enabled')(dependencies),
     isLocalCopyEnabled: require('./is-local-copy-enabled')(dependencies),
     maxSizeUpload: require('./max-size-upload')(dependencies),
