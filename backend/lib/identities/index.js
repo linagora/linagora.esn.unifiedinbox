@@ -1,11 +1,8 @@
 module.exports = dependencies => {
-  const i18n = dependencies('i18n');
-  const esnConfig = dependencies('esn-config');
   const mongoose = dependencies('db').mongo.mongoose;
-  const { getDisplayName } = dependencies('user');
   const InboxUserIdentities = mongoose.model('InboxUserIdentities');
   const validators = require('./validators')(dependencies);
-  const __ = (locale, phrase) => i18n.__({ locale, phrase });
+  const { getDefaultIdentity } = require('./fallback')(dependencies);
 
   return {
     get,
@@ -26,7 +23,7 @@ module.exports = dependencies => {
     return InboxUserIdentities.findOne({ _id: user._id})
       .then(userIdentities => {
         if (!userIdentities || !userIdentities.identities) {
-          return _buildDefaultIdentity(user).then(identity => [identity]);
+          return getDefaultIdentity(user).then(identity => [identity]);
         }
 
         return userIdentities.identities;
@@ -46,24 +43,5 @@ module.exports = dependencies => {
       { $set: { identities } },
       { new: true, upsert: true }
     ).exec();
-  }
-
-  function _buildDefaultIdentity(user) {
-    const DEFAULT_LOCALE = 'en';
-    const defaultIdentity = {
-      default: true,
-      name: getDisplayName(user),
-      email: user.preferredEmail,
-      replyTo: user.preferredEmail,
-      htmlSignature: '',
-      textSignature: ''
-    };
-
-    return esnConfig('language').inModule('core').forUser(user, true).get()
-      .catch(() => DEFAULT_LOCALE)
-      .then((locale = DEFAULT_LOCALE) => ({
-        description: __(locale, 'My default identity'),
-        ...defaultIdentity
-      }));
   }
 };
