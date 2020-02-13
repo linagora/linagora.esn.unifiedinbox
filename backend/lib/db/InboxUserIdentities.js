@@ -20,6 +20,7 @@ module.exports = dependencies => {
     },
     replyTo: {
       type: String,
+      required: true,
       trim: true,
       lowercase: true,
       validate: [_validateEmail, 'Invalid email address']
