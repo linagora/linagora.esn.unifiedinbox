@@ -293,6 +293,28 @@ describe('The user identities saving API', function() {
   });
 
   describe('As domain administrator', () => {
+    it('should return 200 with updated identities even if the feature is disabled', function(done) {
+      helpers.requireBackend('core/esn-config')('features')
+        .inModule('linagora.esn.unifiedinbox')
+        .forUser(admin)
+        .store({ allowMembersToManageIdentities: false })
+        .then(() => helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsAdmin) => {
+          if (err) return done(err);
+
+          const req = requestAsAdmin(request(app).put(`${API_PATH}/${user1.id}/identities`));
+
+          req.send(identites);
+          req.expect(200);
+          req.end((err, res) => {
+            if (err) return done(err);
+
+            expect(res.body).to.shallowDeepEqual(identites);
+            done();
+          });
+        }))
+        .catch(done);
+    });
+
     it('should return 200 with updated identities', function(done) {
       helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsAdmin) => {
         if (err) return done(err);
