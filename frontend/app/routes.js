@@ -122,7 +122,7 @@
           url: '/identities',
           views: {
             'details@profile.details': {
-              template: '<inbox-identities />'
+              template: '<inbox-identities user="user" />'
             }
           }
         })
