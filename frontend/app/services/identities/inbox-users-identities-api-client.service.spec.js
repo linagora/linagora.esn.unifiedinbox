@@ -12,8 +12,8 @@ describe('The inboxUsersIdentitiesClient service', function() {
     inboxUsersIdentitiesClient = _inboxUsersIdentitiesClient_;
   }));
 
-  describe('The listForwardings function', function() {
-    it('should GET to right endpoint to list forwarding of current user', function() {
+  describe('The getIdentities function', function() {
+    it('should GET to right endpoint to get identities of a specific user', function() {
       $httpBackend.expectGET(API_PATH + '/user-id/identities').respond(200, []);
 
       inboxUsersIdentitiesClient.getIdentities('user-id');
@@ -22,7 +22,7 @@ describe('The inboxUsersIdentitiesClient service', function() {
   });
 
   describe('The updateIdentites function', function() {
-    it('should PUT to right endpoint to update forwarding configurations', function() {
+    it('should PUT to right endpoint to update identities of a specific user', function() {
       var identities = [{
         default: true,
         email: 'user@email'

@@ -14,7 +14,7 @@
      * Get identities of a specific user
      *
      * @param  {String} userId      - User ID
-     * @return {Promise}            - Resolve response with list of forwardings
+     * @return {Promise}            - Resolve response with list of identities
      */
     function getIdentities(userId) {
       return inboxRestangular.one('users', userId).all('identities').getList()
