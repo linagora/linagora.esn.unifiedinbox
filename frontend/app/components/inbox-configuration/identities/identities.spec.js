@@ -26,6 +26,9 @@ describe('The inboxIdentities component', function() {
         },
         getIdentity: function(id) {
           return $q.when({ id: id });
+        },
+        canEditIdentities: function() {
+          return $q.when(true);
         }
       });
     });

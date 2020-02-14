@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxIdentitiesController', function(inboxIdentitiesService) {
+    .controller('inboxIdentitiesController', function($q, inboxIdentitiesService) {
       var self = this;
 
       self.$onInit = $onInit;
@@ -11,9 +11,14 @@
       /////
 
       function $onInit() {
-        inboxIdentitiesService.getAllIdentities().then(function(identities) {
-          self.identities = identities;
-        });
+        $q.all([
+          inboxIdentitiesService.canEditIdentities(),
+          inboxIdentitiesService.getAllIdentities()
+        ])
+          .then(function(results) {
+            self.canEdit = results[0];
+            self.identities = results[1];
+          });
       }
     });
 

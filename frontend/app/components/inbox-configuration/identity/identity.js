@@ -6,7 +6,8 @@
     .component('inboxIdentity', {
       templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/identity.html',
       bindings: {
-        identityId: '@'
+        identityId: '@',
+        canEdit: '<'
       },
       controller: 'inboxIdentityController'
     });

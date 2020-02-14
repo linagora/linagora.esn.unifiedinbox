@@ -6,12 +6,17 @@ var expect = chai.expect;
 
 describe('The inboxIdentitiesService factory', function() {
 
-  var $rootScope, $httpBackend, config, esnUserConfigurationService, inboxIdentitiesService, defaultIdentity;
+  var $rootScope, $httpBackend;
+  var config, esnUserConfigurationService, inboxIdentitiesService, defaultIdentity;
+  var sessionMock;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     config = {};
     esnUserConfigurationService = {
       set: sinon.spy()
+    };
+    sessionMock = {
+      userIsDomainAdministrator: function() {}
     };
 
     $provide.value('esnConfig', function(key, defaultValue) {
@@ -25,6 +30,8 @@ describe('The inboxIdentitiesService factory', function() {
         return '1234';
       }
     });
+
+    $provide.value('session', sessionMock);
   }));
 
   beforeEach(inject(function(_$rootScope_, _$httpBackend_, _inboxIdentitiesService_) {
@@ -261,6 +268,43 @@ describe('The inboxIdentitiesService factory', function() {
       $rootScope.$digest();
     });
 
+  });
+
+  describe('The canEditIdentities function', function() {
+    it('should return true when user is an administrator', function(done) {
+      sessionMock.userIsDomainAdministrator = function() { return true; };
+
+      inboxIdentitiesService.canEditIdentities().then(function(canEdit) {
+        expect(canEdit).to.be.true;
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should return true when user is allowed to edit identity', function(done) {
+      sessionMock.userIsDomainAdministrator = function() { return false; };
+      config['linagora.esn.unifiedinbox.features.allowMembersToManageIdentities'] = true;
+
+      inboxIdentitiesService.canEditIdentities().then(function(canEdit) {
+        expect(canEdit).to.be.true;
+        done();
+      });
+
+      $rootScope.$digest();
+    });
+
+    it('should return false when user is not allowed to edit identity', function(done) {
+      sessionMock.userIsDomainAdministrator = function() { return false; };
+      config['linagora.esn.unifiedinbox.features.allowMembersToManageIdentities'] = false;
+
+      inboxIdentitiesService.canEditIdentities().then(function(canEdit) {
+        expect(canEdit).to.be.false;
+        done();
+      });
+
+      $rootScope.$digest();
+    });
   });
 
 });
