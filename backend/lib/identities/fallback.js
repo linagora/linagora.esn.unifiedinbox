@@ -1,8 +1,11 @@
+const uuidV4 = require('uuid/v4');
+
 module.exports = dependencies => {
   const i18n = dependencies('i18n');
   const esnConfig = dependencies('esn-config');
   const { getDisplayName } = dependencies('user');
   const __ = (locale, phrase) => i18n.__({ locale, phrase });
+  const defaultUuid = uuidV4();
 
   return {
     getDefaultIdentity
@@ -23,6 +26,7 @@ module.exports = dependencies => {
       .then((locale = DEFAULT_LOCALE) =>
         esnConfig('identities.default').inModule('linagora.esn.unifiedinbox').forUser(user, true).get()
           .then((defaultIdentity = {}) => ({
+            uuid: defaultUuid,
             default: true,
             name: getDisplayName(user),
             email: user.preferredEmail,
