@@ -7,7 +7,7 @@
           i.mdi.mdi-dots-vertical
         ul.dropdown-menu.dropdown-menu-right
           li
-            a(ui-sref="unifiedinbox.configuration.identities.identity({ identityId: $ctrl.identity.id })") #{__('Edit')}
+            a(href="", ng-click="$ctrl.onEditBtnClick()") #{__('Edit')}
           li
             a(ng-if="!$ctrl.identity.isDefault" ng-click="$event.stopPropagation(); $ctrl.removeIdentity()") #{__('Delete')}
   .inbox-identity-body

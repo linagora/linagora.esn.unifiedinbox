@@ -5,7 +5,10 @@
 
     .component('inboxIdentities', {
       templateUrl: '/unifiedinbox/app/components/inbox-configuration/identities/identities.html',
-      controller: 'inboxIdentitiesController'
+      controller: 'inboxIdentitiesController',
+      bindings: {
+        user: '<'
+      }
     });
 
 })();

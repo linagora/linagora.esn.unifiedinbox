@@ -22,10 +22,10 @@ describe('The inboxIdentities component', function() {
     module('linagora.esn.unifiedinbox', function($provide) {
       $provide.value('inboxIdentitiesService', {
         getAllIdentities: function() {
-          return $q.when([{ id: 'default' }, { id: 'customIdentity1 '}]); // Two identities
+          return $q.when([{ uuid: 'default' }, { uuid: 'customIdentity1 '}]); // Two identities
         },
-        getIdentity: function(id) {
-          return $q.when({ id: id });
+        getIdentity: function(uuid) {
+          return $q.when({ uuid: uuid });
         },
         canEditIdentities: function() {
           return $q.when(true);
@@ -40,7 +40,7 @@ describe('The inboxIdentities component', function() {
   }));
 
   it('should add one child element per user identity', function() {
-    compileDirective('<inbox-identities />');
+    compileDirective('<inbox-identities user="{}" />');
 
     expect(element.find('inbox-identity')).to.have.length(2);
   });
