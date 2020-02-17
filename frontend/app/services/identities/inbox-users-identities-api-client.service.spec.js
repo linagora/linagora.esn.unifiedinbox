@@ -34,4 +34,13 @@ describe('The inboxUsersIdentitiesClient service', function() {
       $httpBackend.flush();
     });
   });
+
+  describe('The getValidEmails function', function() {
+    it('should GET to right endpoint to get valid emails for identity of a specific user', function() {
+      $httpBackend.expectGET(API_PATH + '/user-id/identities/validEmails').respond(200, []);
+
+      inboxUsersIdentitiesClient.getValidEmails('user-id');
+      $httpBackend.flush();
+    });
+  });
 });

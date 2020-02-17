@@ -1,5 +1,6 @@
 /**
   * @swagger
+  * response:
   *   ib_identities:
   *     description: Ok with a list of identities.
   *     schema:
@@ -28,4 +29,13 @@
   *             "textSignature": ""
   *           }
   *         ]
+  *   ib_identity_valid_emails:
+  *     description: Ok with a list of emails.
+  *     schema:
+  *       type: array
+  *       items:
+  *         $ref: "#/definitions/us_email"
+  *     examples:
+  *       application/json:
+  *         ["foo@open-pas.org", "bar@open-paas.org"]
 **/
