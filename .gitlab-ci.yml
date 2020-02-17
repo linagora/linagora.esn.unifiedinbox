@@ -105,7 +105,7 @@ test_frontend:
   script:
     - grunt -v test-frontend
 
-test_unit_backtend:
+test_unit_backend:
   <<: *test-template
   script:
     - grunt -v --chunk=1 test-unit-backend

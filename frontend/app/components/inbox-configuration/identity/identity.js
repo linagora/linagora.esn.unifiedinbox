@@ -6,10 +6,10 @@
     .component('inboxIdentity', {
       templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/identity.html',
       bindings: {
-        identityId: '@',
-        canEdit: '<'
+        identity: '<',
+        canEdit: '<',
+        user: '<'
       },
       controller: 'inboxIdentityController'
     });
-
 })();

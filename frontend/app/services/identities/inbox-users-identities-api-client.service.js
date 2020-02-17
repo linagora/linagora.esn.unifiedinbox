@@ -28,10 +28,13 @@
      *
      * @param {String} userId     - User ID
      * @param {Array} identities  - List of identity object
-     * @return {Promise}          - Resolve on success
+     * @return {Promise}          - Resolve on success with the list of updated identities
      */
     function updateIdentities(userId, identities) {
-      return inboxRestangular.one('users', userId).all('identities').customPUT(identities);
+      return inboxRestangular.one('users', userId).all('identities').customPUT(identities)
+        .then(function(response) {
+          return Restangular.stripRestangular(response.data);
+        });
     }
   }
 })(angular);

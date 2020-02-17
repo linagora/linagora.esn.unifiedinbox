@@ -1,9 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
+const mokery = require('mockery');
 
 describe('The identities module', function() {
   let esnConfigModuleMock, i18nModuleMock, userModuleMock;
-  let getModule, moduleHelpers, user, displayName;
+  let getModule, moduleHelpers, user, displayName, uuid;
   let esnConfigInModuleMock, esnConfigForUserMock, esnConfigGetMock;
 
   beforeEach(function() {
@@ -35,6 +36,10 @@ describe('The identities module', function() {
     moduleHelpers.addDep('esn-config', esnConfigModuleMock);
     moduleHelpers.addDep('i18n', i18nModuleMock);
     moduleHelpers.addDep('user', userModuleMock);
+
+    uuid = 'uuid';
+
+    mokery.registerMock('uuid/v4', () => uuid);
 
     getModule = () => require(`${moduleHelpers.backendPath}/lib/identities/fallback`)(moduleHelpers.dependencies);
   });
@@ -84,6 +89,7 @@ describe('The identities module', function() {
           expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My default identity' });
 
           expect(defaultIdentity).to.deep.equal({
+            uuid,
             default: true,
             name: displayName,
             email: user.preferredEmail,
@@ -122,6 +128,7 @@ describe('The identities module', function() {
           expect(i18nModuleMock.__).to.have.been.calledWith({ locale: userLocale, phrase: 'My default identity' });
 
           expect(defaultIdentity).to.deep.equal({
+            uuid,
             default: true,
             name: displayName,
             email: user.preferredEmail,
@@ -163,6 +170,7 @@ describe('The identities module', function() {
           expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My default identity' });
 
           expect(defaultIdentity).to.deep.equal({
+            uuid,
             default: true,
             name: displayName,
             email: user.preferredEmail,

@@ -3,7 +3,8 @@ sub-header
 
 .inbox-identities
   inbox-identity(
-    ng-repeat="identity in $ctrl.identities track by identity.id",
-    identity-id="{{ identity.id }}",
-    can-edit="$ctrl.canEdit"
+    ng-repeat="identity in $ctrl.identities track by identity.uuid",
+    identity="identity",
+    can-edit="$ctrl.canEdit",
+    user="$ctrl.user"
   )

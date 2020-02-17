@@ -12,16 +12,23 @@ module.exports = dependencies => {
   };
 
   function canUpdate(target, actor) {
-    if (target.id === actor.id) {
-      return esnConfig('features')
-        .inModule('linagora.esn.unifiedinbox')
-        .forUser(target)
-        .get()
-        .then(features => !!(features && features.allowMembersToManageIdentities));
-    }
-
     return loadDomain(target.preferredDomainId)
-      .then(domain => isDomainAdministrator(actor, domain));
+      .then(domain => isDomainAdministrator(actor, domain))
+      .then(_isDomainAdministrator => {
+        if (_isDomainAdministrator) {
+          return true;
+        }
+
+        if (target.id !== actor.id) {
+          return false;
+        }
+
+        return esnConfig('features')
+          .inModule('linagora.esn.unifiedinbox')
+          .forUser(target)
+          .get()
+          .then(features => !!(features && features.allowMembersToManageIdentities));
+      });
   }
 
   function canGet(target, actor) {
