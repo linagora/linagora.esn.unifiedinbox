@@ -1,7 +1,7 @@
 .inbox-identity.card
   .inbox-identity-header.flex-vertical-centered
     .inbox-identity-description.ellipsis {{ $ctrl.identity.description }}
-    ul.actions
+    ul.actions(ng-if="$ctrl.canEdit")
       li.dropdown
         a(href="" data-toggle="dropdown" aria-expanded="false")
           i.mdi.mdi-dots-vertical
