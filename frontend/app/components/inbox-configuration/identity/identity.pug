@@ -9,7 +9,7 @@
           li
             a(href="", ng-click="$ctrl.onEditBtnClick()") #{__('Edit')}
           li
-            a(ng-if="!$ctrl.identity.default" ng-click="$event.stopPropagation(); $ctrl.onRemoveBtnClick()") #{__('Remove')}
+            a(href="", ng-if="!$ctrl.identity.default" ng-click="$event.stopPropagation(); $ctrl.onRemoveBtnClick()") #{__('Remove')}
   .inbox-identity-body
     .inbox-identity-name.ellipsis {{ $ctrl.identity.name }}
     .inbox-identity-email.flex-vertical-centered.ellipsis
