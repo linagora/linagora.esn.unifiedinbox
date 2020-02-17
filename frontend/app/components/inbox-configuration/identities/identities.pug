@@ -8,3 +8,9 @@ sub-header
     can-edit="$ctrl.canEdit",
     user="$ctrl.user"
   )
+
+fab(
+  icon="plus",
+  ng-if="$ctrl.canEdit",
+  ng-click="$ctrl.openCreateForm()"
+)

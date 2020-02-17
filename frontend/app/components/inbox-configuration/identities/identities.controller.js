@@ -4,6 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
     .controller('inboxIdentitiesController', function(
       $q,
+      $modal,
       $scope,
       inboxIdentitiesService,
       INBOX_IDENTITIES_EVENTS
@@ -11,6 +12,7 @@
       var self = this;
 
       self.$onInit = $onInit;
+      self.openCreateForm = openCreateForm;
 
       /////
 
@@ -29,6 +31,22 @@
 
       function onUpdatedIdentitiesEvent(event, updatedIdentities) {
         self.identities = updatedIdentities;
+      }
+
+      function openCreateForm() {
+        $modal({
+          templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/create/inbox-identity-create.html',
+          backdrop: 'static',
+          placement: 'center',
+          controllerAs: '$ctrl',
+          controller: 'inboxIdentityCreateController',
+          locals: {
+            user: {
+              _id: self.user._id,
+              emails: self.user.emails
+            }
+          }
+        });
       }
     });
 })();
