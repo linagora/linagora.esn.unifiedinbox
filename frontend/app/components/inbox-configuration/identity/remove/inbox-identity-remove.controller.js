@@ -8,7 +8,7 @@
     $rootScope,
     asyncAction,
     identity,
-    user,
+    userId,
     inboxIdentitiesService,
     INBOX_IDENTITIES_EVENTS
   ) {
@@ -32,7 +32,7 @@
     }
 
     function _removeIdentity() {
-      return inboxIdentitiesService.removeIdentity(self.identity.uuid, user._id)
+      return inboxIdentitiesService.removeIdentity(self.identity.uuid, userId)
         .then(updatedIdentities => {
           $rootScope.$broadcast(INBOX_IDENTITIES_EVENTS.UPDATED, updatedIdentities);
         });

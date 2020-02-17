@@ -6,6 +6,7 @@
     .controller('inboxIdentityFormController', function(
       _,
       $scope,
+      inboxUsersIdentitiesClient,
       INBOX_SUMMERNOTE_OPTIONS
     ) {
       var self = this;
@@ -18,7 +19,20 @@
       /////
 
       function $onInit() {
+        self.status = 'loading';
         self.identity = self.identity || {};
+        self.initiallyDefaultIdentity = self.identity.default;
+
+        return inboxUsersIdentitiesClient.getValidEmails(self.userId)
+          .then(function(validEmails) {
+            self.status = 'loaded';
+            self.validEmails = validEmails;
+            self.identity.email = self.identity.email || validEmails[0];
+            self.identity.replyTo = self.identity.replyTo || validEmails[0];
+          })
+          .catch(function() {
+            self.status = 'error';
+          });
       }
 
       function onBlur() {

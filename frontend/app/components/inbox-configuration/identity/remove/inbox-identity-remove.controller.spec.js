@@ -6,12 +6,12 @@ var expect = chai.expect;
 
 describe('The inboxIdentityRemoveController', function() {
   var $q, $rootScope, $controller, scope;
-  var user, identity;
+  var userId, identity;
   var inboxIdentitiesService;
   var INBOX_IDENTITIES_EVENTS;
 
   beforeEach(function() {
-    user = { _id: 'userId' };
+    userId = 'userId';
     identity = { uuid: 'uuid' };
 
     module('linagora.esn.unifiedinbox');
@@ -41,7 +41,7 @@ describe('The inboxIdentityRemoveController', function() {
   function initController() {
     var controller = $controller('inboxIdentityRemoveController', {
       $scope: scope,
-      user: user,
+      userId: userId,
       identity: identity
     });
 
@@ -64,7 +64,7 @@ describe('The inboxIdentityRemoveController', function() {
           done(new Error('should not resolve'));
         })
         .catch(function(err) {
-          expect(inboxIdentitiesService.removeIdentity).to.have.been.calledWith(identity.uuid, user._id);
+          expect(inboxIdentitiesService.removeIdentity).to.have.been.calledWith(identity.uuid, userId);
           expect(err.message).to.equal('something wrong');
           done();
         });
@@ -83,7 +83,7 @@ describe('The inboxIdentityRemoveController', function() {
       controller.identity = identity;
       controller.onRemoveBtnClick()
         .then(function() {
-          expect(inboxIdentitiesService.removeIdentity).to.have.been.calledWith(identity.uuid, user._id);
+          expect(inboxIdentitiesService.removeIdentity).to.have.been.calledWith(identity.uuid, userId);
           expect($rootScope.$broadcast).to.have.been.calledWith(INBOX_IDENTITIES_EVENTS.UPDATED, updatedIdentities);
           done();
         })

@@ -286,5 +286,7 @@
   "Identity created": "身份已创建",
   "Failed to create identity": "创建身份失败",
   "Failed to remove identity": "无法删除身份",
-  "Remove identity": "删除身份"
+  "Remove identity": "删除身份",
+  "Default identity": "默认身份",
+  "Can not open identity form": "无法打开身份表"
 }

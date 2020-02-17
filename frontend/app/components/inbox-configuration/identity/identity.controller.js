@@ -22,10 +22,7 @@
           controller: 'inboxIdentityEditController',
           locals: {
             identity: self.identity,
-            user: {
-              _id: self.user._id,
-              emails: self.user.emails
-            }
+            userId: self.user._id
           }
         });
       }
@@ -39,9 +36,7 @@
           controller: 'inboxIdentityRemoveController',
           locals: {
             identity: self.identity,
-            user: {
-              _id: self.user._id
-            }
+            userId: self.user._id
           }
         });
       }

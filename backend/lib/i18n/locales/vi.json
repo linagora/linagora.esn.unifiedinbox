@@ -286,5 +286,7 @@
   "Identity created": "Định danh đã được tạo",
   "Failed to create identity": "Tạo định danh thất bại",
   "Failed to remove identity": "Xóa định danh thất bại",
-  "Remove identity": "Xóa định danh"
+  "Remove identity": "Xóa định danh",
+  "Default identity": "Định danh mặc định",
+  "Can not open identity form": "Có lỗi khi mở mẫu định danh"
 }

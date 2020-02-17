@@ -286,5 +286,7 @@
   "Identity created": "Créé par l'identité",
   "Failed to create identity": "Impossible de créer une identité",
   "Failed to remove identity": "Impossible de supprimer une identité",
-  "Remove identity": "Supprimer l'identité"
+  "Remove identity": "Supprimer l'identité",
+  "Default identity": "L'identité par défaut",
+  "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité"
 }

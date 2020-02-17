@@ -1,24 +1,47 @@
 ng-form(name="form")
-  esn-form-group(label=__('Description'))
-    input.form-control(required, auto-focus="!$ctrl.identity.default", ng-model="$ctrl.identity.description", name="description", ng-disabled="$ctrl.identity.default")
-  esn-form-group(label=__('Name'))
-    input.form-control(ng-model="$ctrl.identity.name", name="name", ng-disabled="$ctrl.identity.default")
-  esn-form-group(label=__('Email'))
-    input.form-control(ng-model="$ctrl.identity.email", name="email", ng-disabled="$ctrl.identity.default")
-  esn-form-group(label=__('Reply to address'))
-    input.form-control(ng-model="$ctrl.identity.replyTo", name="replyTo", ng-disabled="$ctrl.identity.default")
-  .form-group.inbox-identity-form-signature.fg-line(ng-class="{'fg-toggled': $ctrl.isSummernoteFocused}")
-    label.fg-label
-      | #{__('Signature')}
-    .esn-summernote
-      summernote.compose-body(
-        ng-model="$ctrl.identity.htmlSignature",
-        config="$ctrl.summernoteOptions",
-        on-focus="$ctrl.onFocus()",
-        on-blur="$ctrl.onBlur()"
-      )
-  esn-form-group.inbox-identity-form-signature-mobile(
-    label=__('Mobile signature'),
-    helper=__('Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.')
+  .text-center(
+    ng-if="$ctrl.status === 'loading'"
+    openpaas-logo-spinner
+    spinner-start-active='1'
+    spinner-size='0.5'
   )
-    textarea.form-control(auto-focus="false", auto-size-dynamic="true", ng-model="$ctrl.identity.textSignature", name="textSignature")
+  .text-center(
+    ng-if="$ctrl.status === 'error'"
+  ) #{__('Can not open identity form')}
+  div(ng-if="$ctrl.status === 'loaded'")
+    .form-group(ng-if="!$ctrl.initiallyDefaultIdentity")
+      .fg-line.nopadding
+        .checkbox
+          label
+            input(type="checkbox", ng-model="$ctrl.identity.default")
+            i.input-helper
+            span #{__('Default identity')}
+    esn-form-group(label=__('Description'))
+      input.form-control(type="text", auto-focus, ng-model="$ctrl.identity.description", name="description")
+    esn-form-group(label=__('Name'))
+      input.form-control(type="text", required, ng-model="$ctrl.identity.name", name="name")
+    esn-form-group(label=__('Email'))
+      .fg-line.select
+        select.form-control.multi-input-type(ng-model="$ctrl.identity.email")
+          option(ng-value="email" ng-repeat="email in $ctrl.validEmails")
+            | {{ email }}
+    esn-form-group(label=__('Reply to address'))
+      .fg-line.select
+        select.form-control.multi-input-type(ng-model="$ctrl.identity.replyTo")
+          option(ng-value="email" ng-repeat="email in $ctrl.validEmails")
+            | {{ email }}
+    .form-group.inbox-identity-form-signature.fg-line(ng-class="{'fg-toggled': $ctrl.isSummernoteFocused}")
+      label.fg-label
+        | #{__('Signature')}
+      .esn-summernote
+        summernote.compose-body(
+          ng-model="$ctrl.identity.htmlSignature",
+          config="$ctrl.summernoteOptions",
+          on-focus="$ctrl.onFocus()",
+          on-blur="$ctrl.onBlur()"
+        )
+    esn-form-group.inbox-identity-form-signature-mobile(
+      label=__('Mobile signature'),
+      helper=__('Mobile signature will be used on mobile version of OpenPaaS. It can only be textual.')
+    )
+      textarea.form-control(auto-focus="false", auto-size-dynamic="true", ng-model="$ctrl.identity.textSignature", name="textSignature")

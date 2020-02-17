@@ -8,7 +8,7 @@
     $rootScope,
     asyncAction,
     identity,
-    user,
+    userId,
     inboxIdentitiesService,
     INBOX_IDENTITIES_EVENTS
   ) {
@@ -18,6 +18,7 @@
     self.onSaveBtnClick = onSaveBtnClick;
 
     function init() {
+      self.userId = userId;
       self.identity = identity;
     }
 
@@ -32,7 +33,7 @@
     }
 
     function _storeIdentity() {
-      return inboxIdentitiesService.storeIdentity(self.identity, user._id)
+      return inboxIdentitiesService.storeIdentity(self.identity, userId)
         .then(updatedIdentities => {
           $rootScope.$broadcast(INBOX_IDENTITIES_EVENTS.UPDATED, updatedIdentities);
         });

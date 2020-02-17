@@ -41,10 +41,7 @@
           controllerAs: '$ctrl',
           controller: 'inboxIdentityCreateController',
           locals: {
-            user: {
-              _id: self.user._id,
-              emails: self.user.emails
-            }
+            userId: self.user._id
           }
         });
       }
