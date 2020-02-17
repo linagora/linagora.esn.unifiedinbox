@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, chai, sinon: false */
+/* global chai, sinon: false */
 
 var expect = chai.expect;
 
@@ -34,7 +34,7 @@ describe('The inboxIdentitiesService factory', function() {
     inboxUsersIdentitiesClient = _inboxUsersIdentitiesClient_;
     session = _session_;
 
-    session.user = { _id: '123' };
+    session.user = { _id: userId };
     inboxUsersIdentitiesClient.getIdentities = sinon.stub().returns($q.when(identities));
   }));
 
@@ -166,31 +166,137 @@ describe('The inboxIdentitiesService factory', function() {
   });
 
   describe('The storeIdentity function', function() {
-    it('should store a new identity if identity with given uuid is not found', function(done) {
-      inboxUsersIdentitiesClient.updateIdentities = function(id, identities) {
-        expect(id).to.equal(userId);
-        expect(identities).to.have.lengthOf(3);
-        done();
+    describe('add new identity', function() {
+      var newIdentity = {
+        uuid: 'id3',
+        default: false,
+        name: 'Identity 3'
       };
 
-      inboxIdentitiesService.storeIdentity({ id: 'id3' })
-        .catch(done);
+      it('should store a new identity if the given identity is not default', function(done) {
+        var identitiesToUpdate = identities.concat(newIdentity);
 
-      $rootScope.$digest();
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
+
+        inboxIdentitiesService.storeIdentity(newIdentity)
+          .then(function() {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.have.been.calledWith(userId, identitiesToUpdate);
+            done();
+          })
+          .catch(done);
+
+        $rootScope.$digest();
+      });
+
+      it('should store a new identity if the given identity is default', function(done) {
+        newIdentity.default = true;
+        var identitiesToUpdate = [{
+          uuid: 'id1',
+          default: false,
+          name: 'Identity 1'
+        }, {
+          uuid: 'id2',
+          default: false,
+          name: 'Identity 2'
+        }, {
+          uuid: 'id3',
+          default: true,
+          name: 'Identity 3'
+        }];
+
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
+
+        inboxIdentitiesService.storeIdentity(newIdentity)
+          .then(function() {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.have.been.calledWith(userId, identitiesToUpdate);
+            done();
+          })
+          .catch(done);
+
+        $rootScope.$digest();
+      });
     });
 
-    it('should store a new identity if identity with given uuid is not found', function(done) {
-      inboxUsersIdentitiesClient.updateIdentities = function(id, identities) {
-        expect(id).to.equal(userId);
-        expect(identities).to.have.lengthOf(2);
-        expect(_.find(identities, {uuid: 'id2'}).name).to.equal('Identity 2 updated');
-        done();
-      };
+    describe('update an existing identity', function() {
+      it('should reject if we update the default identity to normal identity', function(done) {
+        var updatingIdentity = {
+          uuid: 'id1',
+          default: false,
+          name: 'Identity 1'
+        };
 
-      inboxIdentitiesService.storeIdentity({ uuid: 'id2', name: 'Identity 2 updated' })
-        .catch(done);
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
 
-      $rootScope.$digest();
+        inboxIdentitiesService.storeIdentity(updatingIdentity)
+          .then(function() {
+            done(new Error('Should not resolve'));
+          })
+          .catch(function(err) {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.not.have.been.called;
+            expect(err.message).to.equal('There must be one default identity');
+            done();
+          });
+
+        $rootScope.$digest();
+      });
+
+      it('should store identies if we update the normal identity to default identity', function(done) {
+        var updatingIdentity = {
+          uuid: 'id2',
+          default: true,
+          name: 'Identity 2'
+        };
+
+        var identitiesToUpdate = [{
+          uuid: 'id1',
+          default: false,
+          name: 'Identity 1'
+        }, {
+          uuid: 'id2',
+          default: true,
+          name: 'Identity 2'
+        }];
+
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
+
+        inboxIdentitiesService.storeIdentity(updatingIdentity)
+          .then(function() {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.have.been.calledWith(userId, identitiesToUpdate);
+            done();
+          })
+          .catch(done);
+
+        $rootScope.$digest();
+      });
+
+      it('should store identies if we update the normal identity', function(done) {
+        var updatingIdentity = {
+          uuid: 'id2',
+          default: false,
+          name: 'Updated Identity 2'
+        };
+
+        var identitiesToUpdate = [{
+          uuid: 'id1',
+          default: true,
+          name: 'Identity 1'
+        }, {
+          uuid: 'id2',
+          default: false,
+          name: updatingIdentity.name
+        }];
+
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
+
+        inboxIdentitiesService.storeIdentity(updatingIdentity)
+          .then(function() {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.have.been.calledWith(userId, identitiesToUpdate);
+            done();
+          })
+          .catch(done);
+
+        $rootScope.$digest();
+      });
     });
   });
 });

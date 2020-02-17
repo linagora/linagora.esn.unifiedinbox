@@ -47,14 +47,46 @@
         return getAllIdentities(userId).then(function(identities) {
           var targetIdentity = _.find(identities, { uuid: identity.uuid });
 
-          if (!targetIdentity) {
-            identities.push(identity);
-          } else {
-            _.merge(targetIdentity, identity);
+          if (targetIdentity) {
+            return _updateIdentity(identities, identity, userId);
           }
 
-          return inboxUsersIdentitiesClient.updateIdentities(userId, identities);
+          return _addIdentity(identities, identity, userId);
         });
+      }
+
+      function _addIdentity(identities, identity, userId) {
+        if (identity.default) {
+          var currentDefaultIdentity = _getDefaultIdentity(identities);
+
+          currentDefaultIdentity.default = false;
+        }
+
+        identities.push(identity);
+
+        return inboxUsersIdentitiesClient.updateIdentities(userId, identities);
+      }
+
+      function _updateIdentity(identities, identity, userId) {
+        var targetIdentity = _.find(identities, { uuid: identity.uuid });
+
+        if (targetIdentity.default && !identity.default) {
+          return $q.reject(new Error('There must be one default identity'));
+        }
+
+        if (!targetIdentity.default && identity.default) {
+          var currentDefaultIdentity = _getDefaultIdentity(identities);
+
+          currentDefaultIdentity.default = false;
+        }
+
+        _.merge(targetIdentity, identity);
+
+        return inboxUsersIdentitiesClient.updateIdentities(userId, identities);
+      }
+
+      function _getDefaultIdentity(identities) {
+        return _.find(identities, { default: true });
       }
 
       function removeIdentity(identityId, userId) {
