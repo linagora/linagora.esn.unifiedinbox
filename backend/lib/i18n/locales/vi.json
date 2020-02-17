@@ -29,7 +29,6 @@
   "Consultation": "Tra cứu",
   "Consultation and organize folder": "Tra cứu và tổ chức thư mục",
   "Could not download message \"%s\"": "Could not download message \"%s\"",
-  "Could not remove identity": "Không thể xóa định danh",
   "Could not save identity": "Không thể lưu lại định danh",
   "Could not send the read receipt.": "Không gửi được yêu cầu trạng thái đọc.",
   "Could not update \"%s\"": "Không thể cập nhật \"%s\"",
@@ -281,5 +280,11 @@
   "Search in emails": "Tìm trong hộp thư",
   "Load failed": "Tải không thành công",
   "Allow users to manage their identities": "Cho phép người dùng quản lý định danh",
-  "Allow users to create or remove identities based on their mail aliases": "Cho phép người dùng tạo hoặc xóa định danh dựa trên địa chỉ thư thay thế"
+  "Allow users to create or remove identities based on their mail aliases": "Cho phép người dùng tạo hoặc xóa định danh dựa trên địa chỉ thư thay thế",
+  "Create a new identity": "Tạo định danh mới",
+  "Creating identity...": "Đang tạo định danh...",
+  "Identity created": "Định danh đã được tạo",
+  "Failed to create identity": "Tạo định danh thất bại",
+  "Failed to remove identity": "Xóa định danh thất bại",
+  "Remove identity": "Xóa định danh"
 }

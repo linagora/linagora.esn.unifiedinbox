@@ -32,7 +32,6 @@
   "Consultation": "查看",
   "Consultation and organize folder": "查看并管理文档",
   "Could not download message \"%s\"": "无法下载\"%s\"消息",
-  "Could not remove identity": "无法移除账户",
   "Could not save identity": "无法保存账户",
   "Could not send the read receipt.": "无法发送已读回执",
   "Could not update \"%s\"": "无法更新\"%s",
@@ -281,5 +280,11 @@
   "Your vacation responder stopped on %s": "您的假期自动回复将会在%s停止",
   "Your vacation responder will be activated on %s": "您的假期自动回复将会在%s开启",
   "Allow users to manage their identities": "允许用户管理其身份",
-  "Allow users to create or remove identities based on their mail aliases": "允许用户根据他们的邮件别名创建或删除身份"
+  "Allow users to create or remove identities based on their mail aliases": "允许用户根据他们的邮件别名创建或删除身份",
+  "Create a new identity": "建立新身分",
+  "Creating identity...": "建立身分...",
+  "Identity created": "身份已创建",
+  "Failed to create identity": "创建身份失败",
+  "Failed to remove identity": "无法删除身份",
+  "Remove identity": "删除身份"
 }

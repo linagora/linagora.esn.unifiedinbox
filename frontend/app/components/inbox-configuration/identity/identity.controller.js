@@ -4,19 +4,14 @@
   angular.module('linagora.esn.unifiedinbox')
 
     .controller('inboxIdentityController', function(
-      $modal,
-      inboxIdentitiesService,
-      asyncAction
+      $modal
     ) {
       var self = this;
 
-      self.$onInit = $onInit;
       self.onEditBtnClick = onEditBtnClick;
-      self.removeIdentity = removeIdentity;
+      self.onRemoveBtnClick = onRemoveBtnClick;
 
       /////
-
-      function $onInit() {}
 
       function onEditBtnClick() {
         $modal({
@@ -35,13 +30,19 @@
         });
       }
 
-      function removeIdentity() {
-        return asyncAction({
-          progressing: 'Removing identity...',
-          success: 'Identity removed',
-          failure: 'Could not remove identity'
-        }, function() {
-          return inboxIdentitiesService.removeIdentity(self.identity);
+      function onRemoveBtnClick() {
+        $modal({
+          templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/remove/inbox-identity-remove.html',
+          backdrop: 'static',
+          placement: 'center',
+          controllerAs: '$ctrl',
+          controller: 'inboxIdentityRemoveController',
+          locals: {
+            identity: self.identity,
+            user: {
+              _id: self.user._id
+            }
+          }
         });
       }
     });
