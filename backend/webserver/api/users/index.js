@@ -2,7 +2,7 @@ const express = require('express');
 
 module.exports = dependencies => {
   const router = express.Router();
-  const { getIdentities, updateIdentities } = require('./controller')(dependencies);
+  const { getIdentities, updateIdentities, getValidEmails } = require('./controller')(dependencies);
   const { canGet, canUpdate, validateIdentities } = require('./middleware')(dependencies);
   const { loadTargetUser } = dependencies('usersMW');
   const { checkIdInParams } = dependencies('helperMW');
@@ -62,6 +62,31 @@ module.exports = dependencies => {
     validateIdentities,
     canUpdate,
     updateIdentities
+  );
+
+    /**
+   * @swagger
+   * /unifiedinbox/api/inbox/users/{uuid}/identities/validEmails:
+   *   get:
+   *     tags:
+   *       - Identity
+   *     description: Get a list of valid emails for identities of a specific user.
+   *     parameters:
+   *       - $ref: "#/parameters/uss_uuid"
+   *     responses:
+   *       200:
+   *         $ref: "#/responses/ib_identity_valid_emails"
+   *       401:
+   *         $ref: "#/responses/cm_401"
+   *       404:
+   *         $ref: "#/responses/cm_404"
+   *       500:
+   *         $ref: "#/responses/cm_500"
+   */
+  router.get('/:uuid/identities/validEmails',
+    checkIdInParams('uuid', 'User'),
+    loadTargetUser,
+    getValidEmails
   );
 
   return router;

@@ -6,6 +6,7 @@ module.exports = dependencies => {
 
   return {
     get,
+    getValidEmails,
     update,
     validators,
     rights: require('./rights')(dependencies)
@@ -43,5 +44,15 @@ module.exports = dependencies => {
       { $set: { identities } },
       { new: true, upsert: true }
     ).exec();
+  }
+
+  /**
+   * Get all the valid emails for identities of a user.
+   *
+   * @param {Object} user A User object
+   * @return {Promise} On resolve, return a list of emails
+   */
+  function getValidEmails(user) {
+    return Promise.resolve(user.emails);
   }
 };

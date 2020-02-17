@@ -7,6 +7,7 @@
   function inboxUsersIdentitiesClient(inboxRestangular, Restangular) {
     return {
       getIdentities: getIdentities,
+      getValidEmails: getValidEmails,
       updateIdentities: updateIdentities
     };
 
@@ -32,6 +33,19 @@
      */
     function updateIdentities(userId, identities) {
       return inboxRestangular.one('users', userId).all('identities').customPUT(identities)
+        .then(function(response) {
+          return Restangular.stripRestangular(response.data);
+        });
+    }
+
+    /**
+     * Get valid emails for user identity
+     *
+     * @param {String} userId     - User ID
+     * @return {Promise}          - Resolve on success with the list of emails
+     */
+    function getValidEmails(userId) {
+      return inboxRestangular.one('users', userId).all('identities').all('validEmails').getList()
         .then(function(response) {
           return Restangular.stripRestangular(response.data);
         });

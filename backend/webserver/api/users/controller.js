@@ -4,6 +4,7 @@ module.exports = dependencies => {
 
   return {
     getIdentities,
+    getValidEmails,
     updateIdentities
   };
 
@@ -17,5 +18,11 @@ module.exports = dependencies => {
     identities.update(req.targetUser._id, req.body)
       .then(updated => res.status(200).json(updated.identities))
       .catch(error => sendError(res, 500, `Failed to update identities for user ${req.params.uuid}`, error));
+  }
+
+  function getValidEmails(req, res) {
+    identities.getValidEmails(req.targetUser)
+      .then(validEmails => res.status(200).json(validEmails))
+      .catch(error => sendError(res, 500, `Failed to get valid emails for identities of user ${req.params.uuid}`, error));
   }
 };
