@@ -29,7 +29,6 @@
   "Consultation": "Консультация",
   "Consultation and organize folder": "Консультация и организация папок",
   "Could not download message \"%s\"": "Не удалось загрузить сообщение \"%s\"",
-  "Could not remove identity": "Не удалось удалить подпись",
   "Could not save identity": "Не удалось сохранить подпись",
   "Could not send the read receipt.": "Не удалось отправить подтверждение о прочтении письма.",
   "Could not update \"%s\"": "Не удалось обновить \"%s\"",
@@ -281,5 +280,11 @@
   "Search in emails": "Поиск в письмах",
   "Load failed": "Загрузка не удалась",
   "Allow users to manage their identities": "Разрешить пользователям управлять своими личностями",
-  "Allow users to create or remove identities based on their mail aliases": "Разрешить пользователям создавать или удалять удостоверения на основе их почтовых псевдонимов"
+  "Allow users to create or remove identities based on their mail aliases": "Разрешить пользователям создавать или удалять удостоверения на основе их почтовых псевдонимов",
+  "Create a new identity": "Создать новую личность",
+  "Creating identity...": "Создание личности...",
+  "Identity created": "Личность создана",
+  "Failed to create identity": "Не удалось создать личность",
+  "Failed to remove identity": "Не удалось удалить личность",
+  "Remove identity": "Удалить личность"
 }
