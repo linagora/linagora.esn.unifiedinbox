@@ -6,12 +6,12 @@ var expect = chai.expect;
 
 describe('The inboxIdentityCreateController', function() {
   var $q, $rootScope, $controller, scope;
-  var user;
+  var userId;
   var inboxIdentitiesService;
   var INBOX_IDENTITIES_EVENTS;
 
   beforeEach(function() {
-    user = { _id: 'userId' };
+    userId = 'userId';
 
     module('linagora.esn.unifiedinbox');
 
@@ -40,7 +40,7 @@ describe('The inboxIdentityCreateController', function() {
   function initController() {
     var controller = $controller('inboxIdentityCreateController', {
       $scope: scope,
-      user: user
+      userId: userId
     });
 
     controller.init();
@@ -62,7 +62,7 @@ describe('The inboxIdentityCreateController', function() {
           done(new Error('should not resolve'));
         })
         .catch(function(err) {
-          expect(inboxIdentitiesService.storeIdentity).to.have.been.calledWith(identity, user._id);
+          expect(inboxIdentitiesService.storeIdentity).to.have.been.calledWith(identity, userId);
           expect(err.message).to.equal('something wrong');
           done();
         });
@@ -81,7 +81,7 @@ describe('The inboxIdentityCreateController', function() {
       controller.identity = identity;
       controller.onCreateBtnClick()
         .then(function() {
-          expect(inboxIdentitiesService.storeIdentity).to.have.been.calledWith(identity, user._id);
+          expect(inboxIdentitiesService.storeIdentity).to.have.been.calledWith(identity, userId);
           expect($rootScope.$broadcast).to.have.been.calledWith(INBOX_IDENTITIES_EVENTS.UPDATED, updatedIdentities);
           done();
         })

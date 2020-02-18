@@ -47,7 +47,7 @@
     function getValidEmails(userId) {
       return inboxRestangular.one('users', userId).all('identities').all('validEmails').getList()
         .then(function(response) {
-          return Restangular.stripRestangular(response.data);
+          return response.data;
         });
     }
   }

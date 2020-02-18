@@ -286,6 +286,7 @@
   "Identity created": "Identity created",
   "Failed to create identity": "Failed to create identity",
   "Failed to remove identity": "Failed to remove identity",
-  "Remove identity": "Remove identity"
-  
+  "Remove identity": "Remove identity",
+  "Default identity": "Default identity",
+  "Can not open identity form": "Can not open identity form"
 }
