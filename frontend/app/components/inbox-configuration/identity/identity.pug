@@ -1,6 +1,8 @@
 .inbox-identity.card
   .inbox-identity-header.flex-vertical-centered
-    .inbox-identity-description.ellipsis {{ $ctrl.identity.description }}
+    .col-xs-11.inbox-identity-description.flex
+      p.ellipsis {{ ::$ctrl.identity.description }}
+      .text-muted.m-l-5(ng-if="$ctrl.identity.default") (#{__('default')})
     ul.actions(ng-if="$ctrl.canEdit")
       li.dropdown
         a(href="" data-toggle="dropdown" aria-expanded="false")

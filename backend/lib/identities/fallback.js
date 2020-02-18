@@ -33,7 +33,7 @@ module.exports = dependencies => {
             replyTo: user.preferredEmail,
             htmlSignature: '',
             textSignature: '',
-            description: __(locale, 'My default identity'),
+            description: __(locale, 'My identity'),
             ...defaultIdentity
           }))
       );

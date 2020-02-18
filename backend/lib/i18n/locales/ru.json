@@ -129,7 +129,7 @@
   "Move to": "Переместить в",
   "move to destination folder %s": "переместить в папку назначения %s",
   "Move to trash": "Переместить в корзину",
-  "My default identity": "Моя подпись по умолчанию",
+  "My identity": "Моя личность",
   "My folders": "Мои папки",
   "Name or email address": "Имя или адрес электронной почты",
   "Navigation": "Навигация",
@@ -288,5 +288,6 @@
   "Failed to remove identity": "Не удалось удалить личность",
   "Remove identity": "Удалить личность",
   "Default identity": "Личность по умолчанию",
-  "Can not open identity form": "Не могу открыть форму идентификации"
+  "Can not open identity form": "Не могу открыть форму идентификации",
+  "default": "дефолт"
 }

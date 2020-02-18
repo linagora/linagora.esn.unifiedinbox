@@ -143,7 +143,7 @@
   "Move to": "移至",
   "move to destination folder %s": "移至目标文档%s",
   "Move to trash": "移至垃圾箱",
-  "My default identity": "我的默认账户",
+  "My identity": "我的身份",
   "My folders": "我的文件夹",
   "Name or email address": "名字或邮箱地址",
   "Navigation": "导航",
@@ -288,5 +288,6 @@
   "Failed to remove identity": "无法删除身份",
   "Remove identity": "删除身份",
   "Default identity": "默认身份",
-  "Can not open identity form": "无法打开身份表"
+  "Can not open identity form": "无法打开身份表",
+  "default": "默认"
 }

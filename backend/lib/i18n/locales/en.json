@@ -129,7 +129,7 @@
   "Move to": "Move to",
   "move to destination folder %s": "move to destination folder %s",
   "Move to trash": "Move to trash",
-  "My default identity": "My default identity",
+  "My identity": "My identity",
   "My folders": "My folders",
   "Name or email address": "Name or email address",
   "Navigation": "Navigation",
@@ -288,5 +288,6 @@
   "Failed to remove identity": "Failed to remove identity",
   "Remove identity": "Remove identity",
   "Default identity": "Default identity",
-  "Can not open identity form": "Can not open identity form"
+  "Can not open identity form": "Can not open identity form",
+  "default": "default"
 }

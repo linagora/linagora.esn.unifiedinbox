@@ -86,7 +86,7 @@ describe('The identities module', function() {
 
           expect(esnConfigGetMock).to.have.been.calledTwice;
           expect(userModuleMock.getDisplayName).to.have.been.calledWith(user);
-          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My default identity' });
+          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My identity' });
 
           expect(defaultIdentity).to.deep.equal({
             uuid,
@@ -94,7 +94,7 @@ describe('The identities module', function() {
             name: displayName,
             email: user.preferredEmail,
             replyTo: user.preferredEmail,
-            description: 'My default identity',
+            description: 'My identity',
             htmlSignature: '',
             textSignature: ''
           });
@@ -125,7 +125,7 @@ describe('The identities module', function() {
 
           expect(esnConfigGetMock).to.have.been.calledTwice;
           expect(userModuleMock.getDisplayName).to.have.been.calledWith(user);
-          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: userLocale, phrase: 'My default identity' });
+          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: userLocale, phrase: 'My identity' });
 
           expect(defaultIdentity).to.deep.equal({
             uuid,
@@ -133,7 +133,7 @@ describe('The identities module', function() {
             name: displayName,
             email: user.preferredEmail,
             replyTo: user.preferredEmail,
-            description: 'My default identity',
+            description: 'My identity',
             htmlSignature: '',
             textSignature: ''
           });
@@ -167,7 +167,7 @@ describe('The identities module', function() {
 
           expect(esnConfigGetMock).to.have.been.calledTwice;
           expect(userModuleMock.getDisplayName).to.have.been.calledWith(user);
-          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My default identity' });
+          expect(i18nModuleMock.__).to.have.been.calledWith({ locale: 'en', phrase: 'My identity' });
 
           expect(defaultIdentity).to.deep.equal({
             uuid,
@@ -175,7 +175,7 @@ describe('The identities module', function() {
             name: displayName,
             email: user.preferredEmail,
             replyTo: user.preferredEmail,
-            description: 'My default identity',
+            description: 'My identity',
             htmlSignature: signatures.htmlSignature,
             textSignature: signatures.textSignature
           });
