@@ -5,10 +5,8 @@
 
     .controller('inboxIdentityFormController', function(
       _,
-      $state,
       $scope,
-      inboxIdentitiesService,
-      asyncAction,
+      inboxUsersIdentitiesClient,
       INBOX_SUMMERNOTE_OPTIONS
     ) {
       var self = this;
@@ -16,19 +14,25 @@
       self.$onInit = $onInit;
       self.onFocus = onFocus;
       self.onBlur = onBlur;
-      self.saveIdentity = saveIdentity;
       self.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
       /////
 
       function $onInit() {
-        if (self.identityId) {
-          inboxIdentitiesService.getIdentity(self.identityId).then(function(identity) {
-            self.identity = _.clone(identity);
+        self.status = 'loading';
+        self.identity = self.identity || {};
+        self.initiallyDefaultIdentity = self.identity.default;
+
+        return inboxUsersIdentitiesClient.getValidEmails(self.userId)
+          .then(function(validEmails) {
+            self.status = 'loaded';
+            self.validEmails = validEmails;
+            self.identity.email = self.identity.email || validEmails[0];
+            self.identity.replyTo = self.identity.replyTo || validEmails[0];
+          })
+          .catch(function() {
+            self.status = 'error';
           });
-        } else {
-          self.identity = {};
-        }
       }
 
       function onBlur() {
@@ -39,18 +43,6 @@
       function onFocus() {
         self.isSummernoteFocused = true;
         $scope.$apply();
-      }
-
-      function saveIdentity() {
-        $state.go('unifiedinbox.configuration.identities');
-
-        return asyncAction({
-          progressing: 'Saving identity...',
-          success: 'Identity saved',
-          failure: 'Could not save identity'
-        }, function() {
-          return inboxIdentitiesService.storeIdentity(self.identity);
-        });
       }
     });
 

@@ -1,8 +1,17 @@
-.clickable.inbox-identity.card.flex-colum
+.inbox-identity.card
   .inbox-identity-header.flex-vertical-centered
-    .inbox-identity-description.ellipsis {{ $ctrl.identity.description }}
-    button.inbox-identity-remove-button.btn.btn-link.btn-icon.close.button(ng-if="!$ctrl.identity.isDefault", ng-click="$event.stopPropagation(); $ctrl.removeIdentity()", title=__('Delete'))
-      i.mdi.mdi-close
+    .col-xs-11.inbox-identity-description.flex
+      p.ellipsis {{ ::$ctrl.identity.description }}
+      .text-muted.m-l-5(ng-if="$ctrl.identity.default") (#{__('default')})
+    ul.actions(ng-if="$ctrl.canEdit")
+      li.dropdown
+        a(href="" data-toggle="dropdown" aria-expanded="false")
+          i.mdi.mdi-dots-vertical
+        ul.dropdown-menu.dropdown-menu-right
+          li
+            a(href="", ng-click="$ctrl.onEditBtnClick()") #{__('Edit')}
+          li
+            a(href="", ng-if="!$ctrl.identity.default" ng-click="$event.stopPropagation(); $ctrl.onRemoveBtnClick()") #{__('Remove')}
   .inbox-identity-body
     .inbox-identity-name.ellipsis {{ $ctrl.identity.name }}
     .inbox-identity-email.flex-vertical-centered.ellipsis

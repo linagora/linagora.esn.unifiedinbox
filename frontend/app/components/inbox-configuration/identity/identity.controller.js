@@ -3,27 +3,41 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .controller('inboxIdentityController', function(inboxIdentitiesService, asyncAction) {
+    .controller('inboxIdentityController', function(
+      $modal
+    ) {
       var self = this;
 
-      self.$onInit = $onInit;
-      self.removeIdentity = removeIdentity;
+      self.onEditBtnClick = onEditBtnClick;
+      self.onRemoveBtnClick = onRemoveBtnClick;
 
       /////
 
-      function $onInit() {
-        inboxIdentitiesService.getIdentity(self.identityId).then(function(identity) {
-          self.identity = identity;
+      function onEditBtnClick() {
+        $modal({
+          templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/edit/inbox-identity-edit.html',
+          backdrop: 'static',
+          placement: 'center',
+          controllerAs: '$ctrl',
+          controller: 'inboxIdentityEditController',
+          locals: {
+            identity: self.identity,
+            userId: self.user._id
+          }
         });
       }
 
-      function removeIdentity() {
-        return asyncAction({
-          progressing: 'Removing identity...',
-          success: 'Identity removed',
-          failure: 'Could not remove identity'
-        }, function() {
-          return inboxIdentitiesService.removeIdentity(self.identity);
+      function onRemoveBtnClick() {
+        $modal({
+          templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/remove/inbox-identity-remove.html',
+          backdrop: 'static',
+          placement: 'center',
+          controllerAs: '$ctrl',
+          controller: 'inboxIdentityRemoveController',
+          locals: {
+            identity: self.identity,
+            userId: self.user._id
+          }
         });
       }
     });

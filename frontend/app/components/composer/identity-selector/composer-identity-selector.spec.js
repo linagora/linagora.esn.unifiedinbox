@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The inboxComposerIdentitySelector component', function() {
 
   var $compile, $rootScope, element;
-  var DEFAULT_IDENTITY = { isDefault: true, id: 'default', name: 'name', email: 'email' };
+  var DEFAULT_IDENTITY = { default: true, uuid: 'default', name: 'name', email: 'email' };
 
   function compileDirective(html) {
     element = angular.element(html);

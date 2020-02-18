@@ -6,7 +6,8 @@
     .component('inboxIdentityForm', {
       templateUrl: '/unifiedinbox/app/components/inbox-configuration/identity/form/identity-form.html',
       bindings: {
-        identityId: '@'
+        identity: '<',
+        userId: '<'
       },
       controller: 'inboxIdentityFormController'
     });

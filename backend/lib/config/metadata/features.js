@@ -6,8 +6,15 @@ module.exports = dependencies => {
     properties: {
       foldersSharing: {
         type: 'boolean'
+      },
+      allowMembersToManageIdentities: {
+        type: 'boolean'
       }
-    }
+    },
+    required: [
+      'foldersSharing',
+      'allowMembersToManageIdentities'
+    ]
   };
 
   return {

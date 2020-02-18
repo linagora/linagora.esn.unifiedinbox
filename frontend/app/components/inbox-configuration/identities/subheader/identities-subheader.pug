@@ -1,5 +1,6 @@
 extends /modules/subheader/responsive-subheader.pug
 
 block left
-  inbox-subheader-close-button.hidden-md
+  button.btn.btn-link.btn-icon(esn-back-button='home', title=__('Back'))
+    i.mdi.mdi-arrow-left
   .title #{__('Identities')}

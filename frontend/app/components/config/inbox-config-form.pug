@@ -16,7 +16,7 @@ ng-form.p-t-25(name='form')
       .col-xs-4.field-name #{__('Display email as')}
       .col-xs-8.flex-space-between
         label.col-xs-6.radio.radio-inline.disabled
-          //- James does not support thread at the moment 
+          //- James does not support thread at the moment
           input(type="radio" , ng-model="$ctrl.configurations.view.value", value="threads", disabled)
           i.input-helper
           span
@@ -26,7 +26,7 @@ ng-form.p-t-25(name='form')
           i.input-helper
           span
             |  #{__('Messages')}
-    h5 #{__('Mobile options')}    
+    h5 #{__('Mobile options')}
     .form-group.option-field
       .col-xs-4.field-name #{__('Swipe right action')}
         p.small.text-muted #{__('Configure swipe actions to quickly act on emails on the conversation list')}
@@ -45,9 +45,9 @@ ng-form.p-t-25(name='form')
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable JMAP sending')}
         p.small.text-muted #{__('Activate JMAP protocol')}
-      .col-xs-4.flex-end 
+      .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.isJmapSendingEnabled.value", form="form")
-    h5 #{__('Composer')}    
+    h5 #{__('Composer')}
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable draft email')}
         p.text-muted #{__('Unsent emails are saved as draft')}
@@ -59,7 +59,7 @@ ng-form.p-t-25(name='form')
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations['composer.attachments'].value", form="form")
     admin-form-input-bytes(input-value="$ctrl.configurations.maxSizeUpload.value", min="1KB", max="50TB", label=__('Max size upload'), required="true")
-    h5 #{__('Forwarding')}    
+    h5 #{__('Forwarding')}
     div(ng-if="$ctrl.mode === $ctrl.availableModes.domain")
       p.small.text-muted #{__('Automatic redirection of incoming emails to another email account')}
       .form-group.option-field.m-b-10
@@ -70,10 +70,17 @@ ng-form.p-t-25(name='form')
         .col-xs-8.field-name #{__('Enable users to keep a local copy of forwarded emails')}
         .col-xs-4.flex-end
           toggle-switch(ng-model="$ctrl.forwardingConfigs.isLocalCopyEnabled.value", form="form", onchange="$ctrl.onLocalCopyChange()", ng-disabled="!$ctrl.forwardingConfigs.forwarding.value")
-    h5 #{__('Shared folders')}    
+    h5 #{__('Shared folders')}
     .form-group.option-field
       .col-xs-8.field-name #{__('Enable folders sharing')}
         p.text-muted #{__('Allow users to share folders to other users with some roles')}
       .col-xs-4.flex-end
         toggle-switch(ng-model="$ctrl.configurations.features.value.foldersSharing", form="form")
+    h5 #{__('Identities')}
+    .form-group.option-field
+      .col-xs-8.field-name #{__('Allow users to manage their identities')}
+        p.text-muted #{__('Allow users to create or remove identities based on their mail aliases')}
+      .col-xs-4.flex-end
+        toggle-switch(ng-model="$ctrl.configurations.features.value.allowMembersToManageIdentities", form="form")
+
     .inbox-config-item-dd(dynamic-directive='inbox-config-item')
