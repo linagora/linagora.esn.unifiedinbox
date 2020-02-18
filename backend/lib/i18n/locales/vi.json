@@ -129,7 +129,7 @@
   "Move to": "Chuyển tới",
   "move to destination folder %s": "chuyển đến thư mục %s",
   "Move to trash": "Chuyển đến thùng rác",
-  "My default identity": "Định danh mặc định",
+  "My identity": "Định danh của tôi",
   "My folders": "Thư mục của tôi",
   "Name or email address": "Tên hoặc địa chỉ email",
   "Navigation": "Điều hướng",
@@ -288,5 +288,6 @@
   "Failed to remove identity": "Xóa định danh thất bại",
   "Remove identity": "Xóa định danh",
   "Default identity": "Định danh mặc định",
-  "Can not open identity form": "Có lỗi khi mở mẫu định danh"
+  "Can not open identity form": "Có lỗi khi mở mẫu định danh",
+  "default": "mặc định"
 }

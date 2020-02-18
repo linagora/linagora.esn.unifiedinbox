@@ -129,7 +129,7 @@
   "Move to": "Déplacer vers",
   "move to destination folder %s": "le déplacer dans le dossier %s",
   "Move to trash": "Déplacer à la corbeille",
-  "My default identity": "Mon identité par défaut",
+  "My identity": "Mon identité",
   "My folders": "Mes dossiers",
   "Name or email address": "Nom ou adresse email",
   "Navigation": "Navigation",
@@ -288,5 +288,6 @@
   "Failed to remove identity": "Impossible de supprimer une identité",
   "Remove identity": "Supprimer l'identité",
   "Default identity": "L'identité par défaut",
-  "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité"
+  "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité",
+  "default": "défaut"
 }
