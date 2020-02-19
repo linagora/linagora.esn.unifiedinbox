@@ -17,7 +17,7 @@ ng-form(name="form")
             i.input-helper
             span #{__('Default identity')}
     esn-form-group(label=__('Description'))
-      input.form-control(type="text", auto-focus, ng-model="$ctrl.identity.description", name="description")
+      input.form-control(type="text", required, auto-focus, ng-model="$ctrl.identity.description", name="description")
     esn-form-group(label=__('Name'))
       input.form-control(type="text", required, ng-model="$ctrl.identity.name", name="name")
     esn-form-group(label=__('Email'))
