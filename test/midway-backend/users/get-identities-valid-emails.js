@@ -1,9 +1,11 @@
 const request = require('supertest');
+const express = require('express');
+const { expect } = require('chai');
 
 describe('The user identity valid emails getting API', function() {
   const API_PATH = '/api/inbox/users';
   const password = 'secret';
-  let helpers, models, app, user1;
+  let helpers, models, app, user1, port, james;
 
   before(function(done) {
     helpers = this.helpers;
@@ -32,6 +34,27 @@ describe('The user identity valid emails getting API', function() {
     helpers.api.cleanDomainDeployment(models, done);
   });
 
+  before(function(done) {
+    const app = express();
+
+    port = this.testEnv.serversConfig.express.port;
+
+    app.get('/users/:username/allowedFromHeaders', (req, res) => res.status(200).json(user1.emails));
+    james = app.listen(port, error => {
+      if (error) return done(error);
+
+      helpers.requireBackend('core/esn-config')('webadminApiBackend')
+        .inModule('linagora.esn.james')
+        .store(`http://localhost:${port}`)
+        .then(() => helpers.jwt.saveTestConfiguration(done))
+        .catch(done);
+    });
+  });
+
+  after(function(done) {
+    james.close(() => done());
+  });
+
   it('should return 401 if not logged in', function(done) {
     request(app)
       .get(`${API_PATH}/123123/identities/validEmails`)
@@ -58,6 +81,22 @@ describe('The user identity valid emails getting API', function() {
 
       req.expect(404);
       req.end(done);
+    });
+  });
+
+  it('should return 200 with a list of valid emails for user identity', function(done) {
+    helpers.api.loginAsUser(app, user1.emails[0], password, (err, requestAsMember) => {
+      if (err) return done(err);
+
+      const req = requestAsMember(request(app).get(`${API_PATH}/${user1._id}/identities/validEmails`));
+
+      req.expect(200);
+      req.end((error, res) => {
+        if (error) return done(error);
+
+        expect(res.body).to.shallowDeepEqual(user1.emails);
+        done();
+      });
     });
   });
 });
