@@ -1,10 +1,11 @@
 const request = require('supertest');
+const express = require('express');
 const { expect } = require('chai');
 
 describe('The user identities saving API', function() {
   const API_PATH = '/api/inbox/users';
   const password = 'secret';
-  let helpers, models, admin, app, user1, user2, identites;
+  let helpers, models, admin, app, user1, user2, identites, james, port;
 
   before(function(done) {
     helpers = this.helpers;
@@ -41,7 +42,27 @@ describe('The user identities saving API', function() {
 
       done();
     });
+  });
 
+  before(function(done) {
+    const app = express();
+
+    port = this.testEnv.serversConfig.express.port;
+
+    app.get('/users/:username/allowedFromHeaders', (req, res) => res.status(200).json(user1.emails));
+    james = app.listen(port, error => {
+      if (error) return done(error);
+
+      helpers.requireBackend('core/esn-config')('webadminApiBackend')
+        .inModule('linagora.esn.james')
+        .store(`http://localhost:${port}`)
+        .then(() => helpers.jwt.saveTestConfiguration(done))
+        .catch(done);
+    });
+  });
+
+  after(function(done) {
+    james.close(() => done());
   });
 
   afterEach(function(done) {

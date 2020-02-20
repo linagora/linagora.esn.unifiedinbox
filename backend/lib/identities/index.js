@@ -1,5 +1,6 @@
 module.exports = dependencies => {
   const mongoose = dependencies('db').mongo.mongoose;
+  const jamesModule = dependencies('james');
   const InboxUserIdentities = mongoose.model('InboxUserIdentities');
   const validators = require('./validators')(dependencies);
   const { getDefaultIdentity } = require('./fallback')(dependencies);
@@ -53,6 +54,6 @@ module.exports = dependencies => {
    * @return {Promise} On resolve, return a list of emails
    */
   function getValidEmails(user) {
-    return Promise.resolve(user.emails);
+    return jamesModule.lib.client.getAllowedFromHeaders(user.preferredEmail);
   }
 };
