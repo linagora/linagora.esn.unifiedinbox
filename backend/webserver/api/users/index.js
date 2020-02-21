@@ -42,6 +42,7 @@ module.exports = dependencies => {
    *     description: Save a list of identities for a specific user.
    *     parameters:
    *       - $ref: "#/parameters/uss_uuid"
+   *       - $ref: "#/parameters/ib_identities"
    *     responses:
    *       200:
    *         $ref: "#/responses/ib_identities"
