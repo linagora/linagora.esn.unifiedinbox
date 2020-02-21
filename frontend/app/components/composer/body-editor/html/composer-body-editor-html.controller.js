@@ -78,6 +78,8 @@
           }
 
           signatureElement.html(INBOX_SIGNATURE_SEPARATOR + $filter('sanitizeStylisedHtml')(identity.htmlSignature));
+
+          self.onBodyUpdate({ $body: $element.find('.summernote').summernote('code') });
         } else {
           signatureElement.remove();
         }

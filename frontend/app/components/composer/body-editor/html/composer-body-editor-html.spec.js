@@ -37,7 +37,7 @@ describe('The inboxComposerBodyEditorHtml component', function() {
 
     cmdEnterEvent.which = 13;
     cmdEnterEvent.keyCode = 13;
-    cmdEnterEvent.cmdKey = true;
+    cmdEnterEvent.metaKey = true;
 
     return cmdEnterEvent;
   }
@@ -65,7 +65,7 @@ describe('The inboxComposerBodyEditorHtml component', function() {
     $scope = $rootScope.$new();
   });
 
-  describe.skip('component', function() {
+  describe('component', function() {
     it('should add a new inbox-composer-attachments component inside the body', function() {
       expect(compileComponent().find('.note-editable + inbox-composer-attachments')).to.have.length(1);
     });
@@ -74,14 +74,6 @@ describe('The inboxComposerBodyEditorHtml component', function() {
       compileComponent();
 
       expect(element.find('.note-editable .openpaas-signature').html()).to.equal('-- \nmy signature');
-    });
-
-    it('should not add the identity to the body when composing from an existing message', function() {
-      $rootScope.message.htmlBody = '<b>body</b>';
-
-      compileComponent();
-
-      expect(element.find('.note-editable .openpaas-signature')).to.have.length(0);
     });
 
     it('should update the identity when it changes', function() {
@@ -114,9 +106,9 @@ describe('The inboxComposerBodyEditorHtml component', function() {
     it('should force tabindex=-1 on all toolbar form input', function(done) {
       compileComponent();
 
-      element.find('.note-toolbar :input').each(function() {
+      element.find('.note-toolbar a').each(function() {
         if ($(this).attr('tabindex') !== '-1') {
-          done('Input element has a positive tabindex', this);
+          done(new Error('Input element has a positive tabindex'));
         }
       });
 
@@ -131,7 +123,15 @@ describe('The inboxComposerBodyEditorHtml component', function() {
       element.find('.note-editable').blur();
       $rootScope.$digest();
 
-      expect($rootScope.message.htmlBody).to.equal('<p>some other text<br></p><pre class="openpaas-signature">-- \nmy signature</pre>');
+      expect($rootScope.message.htmlBody).to.equal('<p>some other text<br></p><div class="openpaas-signature">-- \nmy signature</div>');
+    });
+
+    it('should call onBodyUpdate on init', function() {
+      compileComponent();
+
+      $rootScope.$digest();
+
+      expect($rootScope.message.htmlBody).to.equal('<p><br></p><div class="openpaas-signature">-- \nmy signature</div>');
     });
   });
 
