@@ -3,10 +3,14 @@
   * response:
   *   fw_forwardings:
   *     description: OK. With list of forwardings
-  *     $ref: "#/definitions/fw_forwardings"
+  *     schema:
+  *       type: array
+  *       items:
+  *         $ref: "#/definitions/fw_forwarding"
   *     examples:
-  *       [
-  *         'user1@opa.net',
-  *         'user2@opa.net'
-  *       ]
+  *       application/json:
+  *         [
+  *           'user1@opa.net',
+  *           'user2@opa.net'
+  *         ]
 **/
