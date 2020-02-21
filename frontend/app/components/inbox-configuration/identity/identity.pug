@@ -1,5 +1,6 @@
 .inbox-identity.card
-  .inbox-identity-header.flex-vertical-centered
+  .inbox-identity-header.flex-vertical-centered.p-l-10
+    i.mdi.mdi-alert.c-red(ng-if="!$ctrl.identity.usable", title=__("This identity is not usable"))
     .col-xs-11.inbox-identity-description.flex
       p.m-b-0.ellipsis {{ ::$ctrl.identity.description }}
       .text-muted.m-l-5(ng-if="$ctrl.identity.default") (#{__('default')})
@@ -16,9 +17,9 @@
     .inbox-identity-name.ellipsis {{ $ctrl.identity.name }}
     .inbox-identity-email.flex-vertical-centered.ellipsis
       i.mdi.mdi-email
-      | {{ $ctrl.identity.email }}
+      .text-lowercase(ng-class="{'error': $ctrl.identity.error.email}") {{ $ctrl.identity.email }}
     .inbox-identity-reply-to.flex-vertical-centered.ellipsis
       i.mdi.mdi-reply
-      | {{ $ctrl.identity.replyTo }}
+      .text-lowercase(ng-class="{'error': $ctrl.identity.error.replyTo }") {{ $ctrl.identity.replyTo }}
     div(ng-if="$ctrl.identity.htmlSignature" ng-bind-html="$ctrl.identity.htmlSignature | sanitizeStylisedHtml")
     .inbox-identity-signature.ellipsis(ng-if="$ctrl.identity.textSignature") {{ $ctrl.identity.textSignature }}

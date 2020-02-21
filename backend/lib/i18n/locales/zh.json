@@ -289,5 +289,6 @@
   "Remove identity": "删除身份",
   "Default identity": "默认身份",
   "Can not open identity form": "无法打开身份表",
-  "default": "默认"
+  "default": "默认",
+  "This identity is not usable": "此身份不可用"
 }
