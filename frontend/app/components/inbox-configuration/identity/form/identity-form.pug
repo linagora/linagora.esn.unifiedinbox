@@ -27,8 +27,8 @@ ng-form(name="form")
             | {{ email }}
     esn-form-group(label=__('Reply to address'))
       .fg-line.select
-        select.form-control.multi-input-type(ng-model="$ctrl.identity.replyTo")
-          option(ng-value="email" ng-repeat="email in $ctrl.validEmails")
+        select.form-control.multi-input-type(ng-model="$ctrl.selectedReplyToEmail", ng-change="$ctrl.onReplyToChange()")
+          option(ng-value="email", ng-repeat="email in $ctrl.validReplyToEmails")
             | {{ email }}
     .form-group.inbox-identity-form-signature.fg-line(ng-class="{'fg-toggled': $ctrl.isSummernoteFocused}")
       label.fg-label
