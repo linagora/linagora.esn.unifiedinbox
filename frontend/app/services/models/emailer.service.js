@@ -3,6 +3,10 @@
 
   angular.module('linagora.esn.unifiedinbox').factory('inboxEmailerResolver', inboxEmailerResolver);
 
+  /**
+   * Resolve people from email
+   * If the resolved object type is "user", we use name in email FROM field instead of resolved display name
+   */
   function inboxEmailerResolver(inboxCacheService, esnAvatarUrlService, INBOX_AVATAR_SIZE) {
     return function() {
       var self = this;
@@ -11,8 +15,12 @@
         .catch(angular.noop)
         .then(function(person) {
           self.objectType = person && person.objectType ? person.objectType : 'email';
+
+          if (self.objectType !== 'user') {
+            self.name = person && person.names && person.names[0] && person.names[0].displayName || self.name;
+          }
+
           self.id = person && person.id;
-          self.name = person && person.names && person.names[0] && person.names[0].displayName || self.name;
           self.avatarUrl = person && person.photos && person.photos[0] && person.photos[0].url || esnAvatarUrlService.generateUrl(self.email, self.name);
         })
         .then(function() {

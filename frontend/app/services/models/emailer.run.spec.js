@@ -34,6 +34,7 @@ describe('The EMailer run block', function() {
       .once()
       .withExactArgs('a@a.com')
       .returns($q.when({
+        objectType: 'contact',
         names: [{ displayName: 'displayName' }],
         photos: [{ url: '/photo' }]
       }));
@@ -43,6 +44,26 @@ describe('The EMailer run block', function() {
 
     expect(emailer.avatarUrl).to.equal('/photo');
     expect(emailer.name).to.equal('displayName');
+  });
+
+  it('should query the search service and use displayName and avatarUrl if available if the resolved object type is "user"', function() {
+    var emailer = new jmap.EMailer({ email: 'a@a.com', name: 'a' });
+
+    inboxCacheService
+      .expects('resolveEmail')
+      .once()
+      .withExactArgs('a@a.com')
+      .returns($q.when({
+        objectType: 'user',
+        names: [{ displayName: 'displayName' }],
+        photos: [{ url: '/photo' }]
+      }));
+
+    emailer.resolve();
+    $rootScope.$digest();
+
+    expect(emailer.avatarUrl).to.equal('/photo');
+    expect(emailer.name).to.equal('a');
   });
 
   it('should query the search service and use existing name and generated avatar if not info is not available', function() {
