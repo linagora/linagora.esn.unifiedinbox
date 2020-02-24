@@ -43,30 +43,13 @@ module.exports = dependencies => {
   };
 
   return {
-    validateFormat,
-    validateEmails
+    validateFormat
   };
-
-  function validateEmails(userEmails, identities) {
-    return _checkValidEmailField(userEmails, identities, 'email') ||
-      _checkValidEmailField(userEmails, identities, 'replyTo');
-  }
 
   function validateFormat(identities) {
     return createValidator(schema)(identities) ||
       _checkDefaultIdentity(identities) ||
       _checkUuidUniqueness(identities);
-  }
-
-  function _checkValidEmailField(validEmails, identities, fieldName) {
-    const emails = [...new Set(identities.map(identity => identity[fieldName]))];
-    const invalidEmails = emails.filter(email => !validEmails.includes(email));
-
-    if (invalidEmails.length) {
-      return `Invalid identity ${fieldName} addresses: ${invalidEmails.join(', ')}`;
-    }
-
-    return null;
   }
 
   function _checkDefaultIdentity(data) {

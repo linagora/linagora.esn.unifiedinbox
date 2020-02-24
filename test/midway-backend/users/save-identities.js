@@ -241,20 +241,6 @@ describe('The user identities saving API', function() {
 
       assert400ResponseWithError(identites, 'Identity UUIDs must either unique or null', done);
     });
-
-    it('should return 400 if there are invalid emails', function(done) {
-      identites[0].email = 'random@email1';
-      identites[1].email = 'random@email2';
-
-      assert400ResponseWithError(identites, 'Invalid identity email addresses: random@email1, random@email2', done);
-    });
-
-    it('should return 400 if there are invalid replyTo addresses', function(done) {
-      identites[0].replyTo = 'random@email1';
-      identites[1].replyTo = 'random@email2';
-
-      assert400ResponseWithError(identites, 'Invalid identity replyTo addresses: random@email1, random@email2', done);
-    });
   });
 
   describe('As normal user while identities management is disabled', () => {
