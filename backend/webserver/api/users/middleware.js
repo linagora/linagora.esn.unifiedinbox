@@ -9,19 +9,11 @@ module.exports = dependencies => {
   };
 
   function validateIdentities(req, res, next) {
-    let error = identities.validators.validateFormat(req.body);
+    const error = identities.validators.validateFormat(req.body);
 
     if (error) return sendError(res, 400, error);
 
-    identities.getValidEmails(req.targetUser)
-      .then(validEmails => {
-        error = identities.validators.validateEmails(validEmails, req.body);
-
-        if (error) return sendError(res, 400, error);
-
-        next();
-      })
-      .catch(error => sendError(res, 500, `Failed to get valid emails for identities of user ${req.params.uuid}`, error));
+    next();
   }
 
   function canGet(req, res, next) {

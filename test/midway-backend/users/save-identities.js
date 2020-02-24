@@ -241,20 +241,6 @@ describe('The user identities saving API', function() {
 
       assert400ResponseWithError(identites, 'Identity UUIDs must either unique or null', done);
     });
-
-    it('should return 400 if there are invalid emails', function(done) {
-      identites[0].email = 'random@email1';
-      identites[1].email = 'random@email2';
-
-      assert400ResponseWithError(identites, 'Invalid identity email addresses: random@email1, random@email2', done);
-    });
-
-    it('should return 400 if there are invalid replyTo addresses', function(done) {
-      identites[0].replyTo = 'random@email1';
-      identites[1].replyTo = 'random@email2';
-
-      assert400ResponseWithError(identites, 'Invalid identity replyTo addresses: random@email1, random@email2', done);
-    });
   });
 
   describe('As normal user while identities management is disabled', () => {
@@ -348,6 +334,28 @@ describe('The user identities saving API', function() {
           if (err) return done(err);
 
           expect(res.body).to.shallowDeepEqual(identites);
+          done();
+        });
+      });
+    });
+
+    it('should return 200 with updated identities with their usability', function(done) {
+      identites[1].email = 'radom@email';
+
+      helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsAdmin) => {
+        if (err) return done(err);
+
+        const req = requestAsAdmin(request(app).put(`${API_PATH}/${user1.id}/identities`));
+
+        req.send(identites);
+        req.expect(200);
+        req.end((err, res) => {
+          if (err) return done(err);
+
+          expect(res.body).to.shallowDeepEqual(identites);
+          expect(res.body[0].usable).to.be.true;
+          expect(res.body[1].usable).to.be.false;
+          expect(res.body[1].error.email).to.be.true;
           done();
         });
       });

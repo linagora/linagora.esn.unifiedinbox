@@ -19,9 +19,11 @@ module.exports = dependencies => {
    * based on user info
    *
    * @param {Object} user A User object
+   * @param {Object} options Valid options are
+   * - populateUsability: extend updated identities with usability of their emails
    * @returns {Promise} On resolve, return a list of identity objects
    */
-  function get(user) {
+  function get(user, options = { populateUsability: false }) {
     return InboxUserIdentities.findOne({ _id: user._id})
       .then(userIdentities => {
         if (!userIdentities || !userIdentities.identities) {
@@ -29,22 +31,27 @@ module.exports = dependencies => {
         }
 
         return userIdentities.identities;
-      });
+      })
+      .then(identities => (options.populateUsability ? _populateUsability(user, identities) : identities));
   }
 
   /**
    * Update identities of a user.
    *
-   * @param {Object} userId ID of target user for update
+   * @param {Object} user A User object of target user
    * @param {Array} identities A list of identities
+   * @param {Object} options Valid options are
+   * - populateUsability: extend identities with usability of their emails
    * @return {Promise} On resolve, return updated identities of user
    */
-  function update(userId, identities) {
+  function update(user, identities, options = { populateUsability: false }) {
     return InboxUserIdentities.findOneAndUpdate(
-      { _id: userId },
+      { _id: user._id },
       { $set: { identities } },
       { new: true, upsert: true }
-    ).exec();
+    )
+      .exec()
+      .then(updated => (options.populateUsability ? _populateUsability(user, updated.identities) : updated.identities));
   }
 
   /**
@@ -55,5 +62,27 @@ module.exports = dependencies => {
    */
   function getValidEmails(user) {
     return jamesModule.lib.client.getAllowedFromHeaders(user.preferredEmail);
+  }
+
+  function _populateUsability(targetUser, identities) {
+    identities = identities.toObject ? identities.toObject() : identities;
+
+    return getValidEmails(targetUser)
+      .then(validEmails => identities.map(identity => {
+          identity.error = {};
+          identity.usable = true;
+
+          if (!validEmails.includes(identity.email)) {
+            identity.usable = false;
+            identity.error.email = true;
+          }
+
+          if (identity.replyTo && !validEmails.includes(identity.replyTo)) {
+            identity.usable = false;
+            identity.error.replyTo = true;
+          }
+
+          return identity;
+        }));
   }
 };
