@@ -1,7 +1,6 @@
 module.exports = dependencies => {
   const identitiesLibModule = require('../../../lib/identities')(dependencies);
   const { sendError } = require('../utils')(dependencies);
-  const { checkUsableIdentities } = require('./utils')(dependencies);
 
   return {
     getIdentities,
@@ -10,15 +9,13 @@ module.exports = dependencies => {
   };
 
   function getIdentities(req, res) {
-    identitiesLibModule.get(req.targetUser)
-      .then(identities => checkUsableIdentities(req.targetUser, identities))
+    identitiesLibModule.get(req.targetUser, { populateUsability: true })
       .then(identities => res.status(200).json(identities))
       .catch(error => sendError(res, 500, `Failed to get identities for user ${req.params.uuid}`, error));
   }
 
   function updateIdentities(req, res) {
-    identitiesLibModule.update(req.targetUser._id, req.body)
-      .then(updated => checkUsableIdentities(req.targetUser, updated.identities))
+    identitiesLibModule.update(req.targetUser, req.body, { populateUsability: true })
       .then(identities => res.status(200).json(identities))
       .catch(error => sendError(res, 500, `Failed to update identities for user ${req.params.uuid}`, error));
   }

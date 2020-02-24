@@ -130,7 +130,7 @@ describe('The user identities getting API', function() {
         description: 'Identity'
       }];
 
-      lib.identities.update(user1.id, identites).then(() => {
+      lib.identities.update(user1, identites).then(() => {
         helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsMember) => {
           if (err) return done(err);
 
@@ -162,10 +162,11 @@ describe('The user identities getting API', function() {
         req.end((err, res) => {
           if (err) return done(err);
 
-          const identities = res.body;
+          const results = res.body;
 
-          expect(identities).to.have.lengthOf(1);
-          expect(identities[0].email).to.equal(user1.emails[0]);
+          expect(results).to.have.lengthOf(1);
+          expect(results[0].email).to.equal(user1.emails[0]);
+          expect(results[0].usable).to.be.true;
           done();
         });
       });
@@ -179,7 +180,7 @@ describe('The user identities getting API', function() {
         description: 'Identity'
       }];
 
-      lib.identities.update(user1.id, identites).then(() => {
+      lib.identities.update(user1, identites).then(() => {
         helpers.api.loginAsUser(app, user1.emails[0], password, (err, requestAsMember) => {
           expect(err).to.not.exist;
           const req = requestAsMember(request(app).get(`${API_PATH}/${user1.id}/identities`));
@@ -188,10 +189,12 @@ describe('The user identities getting API', function() {
           req.end((err, res) => {
             if (err) return done(err);
 
-            const identities = res.body;
+            const results = res.body;
 
-            expect(res.body).to.have.lengthOf(1);
-            expect(identities[0].email).to.equal(identities[0].email);
+            expect(results).to.have.lengthOf(1);
+            expect(results[0].email).to.equal(identites[0].email);
+            expect(results[0].usable).to.be.false;
+            expect(results[0].error.email).to.be.true;
             done();
           });
         });

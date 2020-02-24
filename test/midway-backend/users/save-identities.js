@@ -338,5 +338,27 @@ describe('The user identities saving API', function() {
         });
       });
     });
+
+    it('should return 200 with updated identities with their usability', function(done) {
+      identites[1].email = 'radom@email';
+
+      helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsAdmin) => {
+        if (err) return done(err);
+
+        const req = requestAsAdmin(request(app).put(`${API_PATH}/${user1.id}/identities`));
+
+        req.send(identites);
+        req.expect(200);
+        req.end((err, res) => {
+          if (err) return done(err);
+
+          expect(res.body).to.shallowDeepEqual(identites);
+          expect(res.body[0].usable).to.be.true;
+          expect(res.body[1].usable).to.be.false;
+          expect(res.body[1].error.email).to.be.true;
+          done();
+        });
+      });
+    });
   });
 });
