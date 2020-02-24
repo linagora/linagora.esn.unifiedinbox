@@ -11,12 +11,13 @@
  *     name: forwarding
  *     in: body
  *     description: The forwarding email address
- *     require: true
- *     type: string
+ *     required: true
+ *     schema:
+ *       type: string
  *   fw_user_id:
  *     name: uuid
  *     in: path
  *     description: The user ID
- *     require: true
+ *     required: true
  *     type: string
 **/

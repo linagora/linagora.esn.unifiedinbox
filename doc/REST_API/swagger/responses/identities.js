@@ -6,7 +6,7 @@
   *     schema:
   *       type: array
   *       items:
-  *         $ref: "#/definitions/ib_identity"
+  *         $ref: "#/definitions/ib_identity_to_respond"
   *     examples:
   *       application/json:
   *         [
@@ -17,7 +17,9 @@
   *             "description": "Foo",
   *             "email": "foo@open-paas.org",
   *             "replyTo": "foo@open-paas.org",
-  *             "htmlSignature": ""
+  *             "htmlSignature": "",
+  *             "usable": true,
+  *             "error": {}
   *           },
   *           {
   *             "id": "5968618344f5e527677f5d21",
@@ -25,8 +27,12 @@
   *             "name": "bar",
   *             "description": "Bar",
   *             "email": "bar@open-paas.org",
-  *             "replyTo": "bar@open-paas.org",
-  *             "textSignature": ""
+  *             "replyTo": "foo@open-paas.org",
+  *             "textSignature": "",
+  *             "usable": false,
+  *             "error": {
+  *                "email": true
+  *             }
   *           }
   *         ]
   *   ib_identity_valid_emails:

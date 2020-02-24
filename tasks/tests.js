@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function(grunt) {
   grunt.registerMultiTask('splitfiles', 'split the files and run separate targets', function() {
     const options = this.options({
@@ -13,12 +11,22 @@ module.exports = function(grunt) {
       return;
     }
 
-    const files = this.files.reduce((a, b) => a.concat(b.src), []),
-          totalFiles = files.length,
-          chunkSize = options.chunk,
-          commonFiles = grunt.file.expand(options.common),
-          targets = [],
-          configBase = options.target.replace(/:/g, '.');
+    const files = this.files.reduce(function(a, b) {
+      return a.concat(b.src);
+    }, []);
+    const totalFiles = files.length;
+
+    let chunkSize = grunt.option('chunk');
+
+    if (chunkSize === true) {
+      chunkSize = options.chunk;
+    } else if (typeof chunkSize === 'undefined') {
+      chunkSize = totalFiles;
+    }
+    const commonFiles = grunt.file.expand(options.common);
+
+    const targets = [];
+    const configBase = options.target.replace(/:/g, '.');
 
     for (let chunkId = 1; files.length; chunkId++) {
       const chunkFiles = commonFiles.concat(files.splice(0, chunkSize));

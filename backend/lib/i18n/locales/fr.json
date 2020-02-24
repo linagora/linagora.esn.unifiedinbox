@@ -289,5 +289,6 @@
   "Remove identity": "Supprimer l'identité",
   "Default identity": "L'identité par défaut",
   "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité",
-  "default": "défaut"
+  "default": "défaut",
+  "This identity is not usable": "Cette identité n'est pas utilisable"
 }

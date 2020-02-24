@@ -289,5 +289,6 @@
   "Remove identity": "Remove identity",
   "Default identity": "Default identity",
   "Can not open identity form": "Can not open identity form",
-  "default": "default"
+  "default": "default",
+  "This identity is not usable": "This identity is not usable"
 }

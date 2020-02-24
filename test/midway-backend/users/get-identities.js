@@ -1,10 +1,11 @@
 const request = require('supertest');
 const { expect } = require('chai');
+const express = require('express');
 
 describe('The user identities getting API', function() {
   const API_PATH = '/api/inbox/users';
   const password = 'secret';
-  let helpers, models, admin, app, user1, user2, lib;
+  let helpers, models, admin, app, user1, user2, lib, james;
 
   before(function(done) {
     helpers = this.helpers;
@@ -32,8 +33,28 @@ describe('The user identities getting API', function() {
 
   });
 
+  before(function(done) {
+    const app = express();
+    const port = this.testEnv.serversConfig.express.port;
+
+    app.get('/users/:username/allowedFromHeaders', (req, res) => res.status(200).json(user1.emails));
+    james = app.listen(port, error => {
+      if (error) return done(error);
+
+      helpers.requireBackend('core/esn-config')('webadminApiBackend')
+        .inModule('linagora.esn.james')
+        .store(`http://localhost:${port}`)
+        .then(() => helpers.jwt.saveTestConfiguration(done))
+        .catch(done);
+    });
+  });
+
   afterEach(function(done) {
     helpers.api.cleanDomainDeployment(models, done);
+  });
+
+  after(function(done) {
+    james.close(() => done());
   });
 
   it('should return 401 if not logged in', function(done) {
