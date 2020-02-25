@@ -17,7 +17,7 @@
     .inbox-identity-name.ellipsis {{ $ctrl.identity.name }}
     .inbox-identity-email.flex-vertical-centered.ellipsis
       i.mdi.mdi-email
-      | {{ $ctrl.identity.email }}
+      .text-lowercase(ng-class="{'error': $ctrl.identity.error.email }") {{ $ctrl.identity.email }}
     .inbox-identity-reply-to.flex-vertical-centered.ellipsisn(ng-if="$ctrl.identity.replyTo")
       i.mdi.mdi-reply
       .text-lowercase(ng-class="{'error': $ctrl.identity.error.replyTo }") {{ $ctrl.identity.replyTo }}
