@@ -193,12 +193,6 @@ describe('The user identities saving API', function() {
       assert400ResponseWithError(identites, '[0]: should have required property \'email\'', done);
     });
 
-    it('should return 400 if there is no replyTo', function(done) {
-      delete identites[0].replyTo;
-
-      assert400ResponseWithError(identites, '[0]: should have required property \'replyTo\'', done);
-    });
-
     it('should return 400 if email is not email formatted', function(done) {
       identites[0].email = '!#@$%$%';
 

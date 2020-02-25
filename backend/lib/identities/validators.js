@@ -38,7 +38,7 @@ module.exports = dependencies => {
           minLength: 0
         }
       },
-      required: ['description', 'name', 'email', 'replyTo']
+      required: ['description', 'name', 'email']
     }
   };
 

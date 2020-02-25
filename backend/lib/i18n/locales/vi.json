@@ -290,5 +290,6 @@
   "Default identity": "Định danh mặc định",
   "Can not open identity form": "Có lỗi khi mở mẫu định danh",
   "default": "mặc định",
-  "This identity is not usable": "Định danh này không khả dụng"
+  "This identity is not usable": "Định danh này không khả dụng",
+  "None": "Không chọn thư"
 }

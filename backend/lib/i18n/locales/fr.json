@@ -290,5 +290,6 @@
   "Default identity": "L'identité par défaut",
   "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité",
   "default": "défaut",
-  "This identity is not usable": "Cette identité n'est pas utilisable"
+  "This identity is not usable": "Cette identité n'est pas utilisable",
+  "None": "Aucun"
 }

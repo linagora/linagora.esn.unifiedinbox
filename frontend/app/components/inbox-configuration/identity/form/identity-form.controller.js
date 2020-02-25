@@ -6,14 +6,17 @@
     .controller('inboxIdentityFormController', function(
       _,
       $scope,
+      esnI18nService,
       inboxUsersIdentitiesClient,
       INBOX_SUMMERNOTE_OPTIONS
     ) {
       var self = this;
+      var noneEmail = esnI18nService.translate('None').toString();
 
       self.$onInit = $onInit;
       self.onFocus = onFocus;
       self.onBlur = onBlur;
+      self.onReplyToChange = onReplyToChange;
       self.summernoteOptions = INBOX_SUMMERNOTE_OPTIONS;
 
       /////
@@ -28,7 +31,10 @@
             self.status = 'loaded';
             self.validEmails = validEmails;
             self.identity.email = self.identity.email || validEmails[0];
-            self.identity.replyTo = self.identity.replyTo || validEmails[0];
+
+            self.validReplyToEmails = angular.copy(validEmails);
+            self.validReplyToEmails.unshift(noneEmail);
+            self.selectedReplyToEmail = self.identity.replyTo || noneEmail;
           })
           .catch(function() {
             self.status = 'error';
@@ -43,6 +49,10 @@
       function onFocus() {
         self.isSummernoteFocused = true;
         $scope.$apply();
+      }
+
+      function onReplyToChange() {
+        self.identity.replyTo = self.selectedReplyToEmail === noneEmail ? undefined : self.selectedReplyToEmail;
       }
     });
 
