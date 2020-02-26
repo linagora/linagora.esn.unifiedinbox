@@ -17,16 +17,22 @@
       /////
 
       function $onInit() {
+        self.status = 'loading';
+
         $q.all([
           inboxIdentitiesService.canEditIdentities(),
           inboxIdentitiesService.getAllIdentities(self.user._id)
         ])
           .then(function(results) {
+            self.status = 'loaded';
             self.canEdit = results[0];
             self.identities = results[1];
-          });
 
-        $scope.$on(INBOX_IDENTITIES_EVENTS.UPDATED, onUpdatedIdentitiesEvent);
+            $scope.$on(INBOX_IDENTITIES_EVENTS.UPDATED, onUpdatedIdentitiesEvent);
+          })
+          .catch(function() {
+            self.status = 'error';
+          });
       }
 
       function onUpdatedIdentitiesEvent(event, updatedIdentities) {

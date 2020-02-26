@@ -291,5 +291,6 @@
   "Can not open identity form": "Có lỗi khi mở mẫu định danh",
   "default": "mặc định",
   "This identity is not usable": "Định danh này không khả dụng",
-  "None": "Không chọn thư"
+  "None": "Không chọn thư",
+  "A problem occurred while getting data, try refreshing this page!": "Có lỗi xảy ra, hãy thử tải lại trình duyệt!"
 }

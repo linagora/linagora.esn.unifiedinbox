@@ -291,5 +291,6 @@
   "Can not open identity form": "Impossible d'ouvrir le formulaire d'identité",
   "default": "défaut",
   "This identity is not usable": "Cette identité n'est pas utilisable",
-  "None": "Aucun"
+  "None": "Aucun",
+  "A problem occurred while getting data, try refreshing this page!": "Un problème s'est produit lors du chargement de certaines données, essayez de recharger la page!"
 }
