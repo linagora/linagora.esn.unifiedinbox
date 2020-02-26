@@ -291,5 +291,6 @@
   "Can not open identity form": "Can not open identity form",
   "default": "default",
   "This identity is not usable": "This identity is not usable",
-  "None": "None"
+  "None": "None",
+  "A problem occurred while getting data, try refreshing this page!": "A problem occurred while getting data, try refreshing this page!"
 }

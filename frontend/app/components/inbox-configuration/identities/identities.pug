@@ -1,7 +1,17 @@
 sub-header
   inbox-identities-subheader
 
-.inbox-identities
+.text-center.m-t-20(
+  ng-if="$ctrl.status === 'loading'"
+  openpaas-logo-spinner
+  spinner-start-active='1'
+  spinner-size='0.5'
+)
+.inbox-identitites-error(ng-if="$ctrl.status === 'error'")
+  i.mdi.mdi-alert-circle
+  .message #{__('A problem occurred while getting data, try refreshing this page!')}
+
+.inbox-identities(ng-if="$ctrl.status === 'loaded'")
   inbox-identity(
     ng-repeat="identity in $ctrl.identities track by identity.uuid",
     identity="identity",

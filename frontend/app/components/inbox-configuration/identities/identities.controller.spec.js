@@ -46,6 +46,26 @@ describe('The inboxIdentitiesController', function() {
     return controller;
   }
   describe('The $onInit function', function() {
+    it('should set status to loaded when success to loading identities', function() {
+      inboxIdentitiesService.canEditIdentities = sinon.stub().returns($q.when(canEdit));
+      inboxIdentitiesService.getAllIdentities = sinon.stub().returns($q.when(identities));
+
+      var controller = initController('inboxIdentitiesController');
+
+      expect(inboxIdentitiesService.getAllIdentities).to.have.been.calledOnce;
+      expect(controller.status).to.equal('loaded');
+    });
+
+    it('should set status to error when failed to loading identities', function() {
+      inboxIdentitiesService.canEditIdentities = sinon.stub().returns($q.when(canEdit));
+      inboxIdentitiesService.getAllIdentities = sinon.stub().returns($q.reject());
+
+      var controller = initController('inboxIdentitiesController');
+
+      expect(inboxIdentitiesService.getAllIdentities).to.have.been.calledOnce;
+      expect(controller.status).to.equal('error');
+    });
+
     it('should turn canEdit flag to which return from service', function() {
       inboxIdentitiesService.canEditIdentities = sinon.stub().returns($q.when(canEdit));
       inboxIdentitiesService.getAllIdentities = sinon.stub().returns($q.when(identities));

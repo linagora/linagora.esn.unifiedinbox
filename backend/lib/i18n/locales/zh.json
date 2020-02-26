@@ -291,5 +291,6 @@
   "Can not open identity form": "无法打开身份表",
   "default": "默认",
   "This identity is not usable": "此身份不可用",
-  "None": "没有"
+  "None": "没有",
+  "A problem occurred while getting data, try refreshing this page!": "获取数据出现问题，尝试刷新页面！"
 }

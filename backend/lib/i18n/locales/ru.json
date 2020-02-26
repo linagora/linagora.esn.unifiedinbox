@@ -291,5 +291,6 @@
   "Can not open identity form": "Не могу открыть форму идентификации",
   "default": "дефолт",
   "This identity is not usable": "Эта личность не используется",
-  "None": "Никто"
+  "None": "Никто",
+  "A problem occurred while getting data, try refreshing this page!": "Возникла проблема при получении данных, попробуйте обновить эту страницу!"
 }
