@@ -18,7 +18,8 @@ describe('The inboxIdentitiesService factory', function() {
     }, {
       uuid: 'id2',
       default: false,
-      name: 'Identity 2'
+      name: 'Identity 2',
+      replyTo: 'id2@linagora.com'
     }];
 
     $provide.value('esnConfig', function(key, defaultValue) {
@@ -197,7 +198,8 @@ describe('The inboxIdentitiesService factory', function() {
         }, {
           uuid: 'id2',
           default: false,
-          name: 'Identity 2'
+          name: 'Identity 2',
+          replyTo: 'id2@linagora.com'
         }, {
           uuid: 'id3',
           default: true,
@@ -244,7 +246,8 @@ describe('The inboxIdentitiesService factory', function() {
         var updatingIdentity = {
           uuid: 'id2',
           default: true,
-          name: 'Identity 2'
+          name: 'Identity 2',
+          replyTo: 'id2@linagora.com'
         };
 
         var identitiesToUpdate = [{
@@ -254,7 +257,8 @@ describe('The inboxIdentitiesService factory', function() {
         }, {
           uuid: 'id2',
           default: true,
-          name: 'Identity 2'
+          name: 'Identity 2',
+          replyTo: 'id2@linagora.com'
         }];
 
         inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
@@ -270,6 +274,37 @@ describe('The inboxIdentitiesService factory', function() {
       });
 
       it('should store identies if we update the normal identity', function(done) {
+        var updatingIdentity = {
+          uuid: 'id2',
+          default: false,
+          name: 'Updated Identity 2',
+          replyTo: 'updatedid2@linagora.com'
+        };
+
+        var identitiesToUpdate = [{
+          uuid: 'id1',
+          default: true,
+          name: 'Identity 1'
+        }, {
+          uuid: 'id2',
+          default: false,
+          name: updatingIdentity.name,
+          replyTo: updatingIdentity.replyTo
+        }];
+
+        inboxUsersIdentitiesClient.updateIdentities = sinon.stub().returns($q.when());
+
+        inboxIdentitiesService.storeIdentity(updatingIdentity)
+          .then(function() {
+            expect(inboxUsersIdentitiesClient.updateIdentities).to.have.been.calledWith(userId, identitiesToUpdate);
+            done();
+          })
+          .catch(done);
+
+        $rootScope.$digest();
+      });
+
+      it('should store identities included identity which does not have replyTo property', function(done) {
         var updatingIdentity = {
           uuid: 'id2',
           default: false,
