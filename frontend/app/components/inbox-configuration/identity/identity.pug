@@ -2,7 +2,7 @@
   .inbox-identity-header.flex-vertical-centered.p-l-10
     i.mdi.mdi-alert.c-red(ng-if="!$ctrl.identity.usable", title=__("This identity is not usable"))
     .inbox-identity-description.flex
-      p.m-b-0.ellipsis {{ ::$ctrl.identity.description }}
+      p.m-b-0.ellipsis {{ $ctrl.identity.description }}
       .text-muted.m-l-5(ng-if="$ctrl.identity.default") (#{__('default')})
     ul.actions(ng-if="$ctrl.canEdit")
       li.dropdown
