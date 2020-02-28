@@ -69,6 +69,7 @@
 
       function _updateIdentity(identities, identity, userId) {
         var targetIdentity = _.find(identities, { uuid: identity.uuid });
+        var targetIdentityIndex = identities.indexOf(targetIdentity);
 
         if (targetIdentity.default && !identity.default) {
           return $q.reject(new Error('There must be one default identity'));
@@ -80,7 +81,7 @@
           currentDefaultIdentity.default = false;
         }
 
-        _.merge(targetIdentity, identity);
+        identities[targetIdentityIndex] = identity;
 
         return inboxUsersIdentitiesClient.updateIdentities(userId, identities);
       }
