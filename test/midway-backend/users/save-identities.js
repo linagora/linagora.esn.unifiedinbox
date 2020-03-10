@@ -49,7 +49,7 @@ describe('The user identities saving API', function() {
 
     port = this.testEnv.serversConfig.express.port;
 
-    app.get('/users/:username/allowedFromHeaders', (req, res) => res.status(200).json(user1.emails));
+    app.get('/address/aliases/:username', (req, res) => res.status(200).json([]));
     james = app.listen(port, error => {
       if (error) return done(error);
 
