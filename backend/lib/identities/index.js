@@ -61,7 +61,8 @@ module.exports = dependencies => {
    * @return {Promise} On resolve, return a list of emails
    */
   function getValidEmails(user) {
-    return jamesModule.lib.client.getAllowedFromHeaders(user.preferredEmail);
+    return jamesModule.lib.client.listUserAliases(user.preferredEmail)
+      .then(userAliases => [user.preferredEmail, ...userAliases.map(alias => alias.source)]);
   }
 
   function _populateUsability(targetUser, identities) {
