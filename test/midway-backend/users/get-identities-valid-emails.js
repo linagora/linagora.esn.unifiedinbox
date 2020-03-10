@@ -5,11 +5,13 @@ const { expect } = require('chai');
 describe('The user identity valid emails getting API', function() {
   const API_PATH = '/api/inbox/users';
   const password = 'secret';
-  let helpers, models, app, user1, port, james;
+  let helpers, models, app, user1, port, james, alias;
 
   before(function(done) {
     helpers = this.helpers;
     helpers.modules.initMidway('linagora.esn.unifiedinbox', helpers.callbacks.noErrorAnd(done));
+
+    alias = 'alias@kng.org';
   });
 
   beforeEach(function() {
@@ -39,7 +41,7 @@ describe('The user identity valid emails getting API', function() {
 
     port = this.testEnv.serversConfig.express.port;
 
-    app.get('/users/:username/allowedFromHeaders', (req, res) => res.status(200).json(user1.emails));
+    app.get('/address/aliases/:username', (req, res) => res.status(200).json([{ source: alias }]));
     james = app.listen(port, error => {
       if (error) return done(error);
 
@@ -94,7 +96,7 @@ describe('The user identity valid emails getting API', function() {
       req.end((error, res) => {
         if (error) return done(error);
 
-        expect(res.body).to.shallowDeepEqual(user1.emails);
+        expect(res.body).to.shallowDeepEqual([user1.preferredEmail, alias]);
         done();
       });
     });
