@@ -292,5 +292,7 @@
   "default": "默认",
   "This identity is not usable": "此身份不可用",
   "None": "没有",
-  "A problem occurred while getting data, try refreshing this page!": "获取数据出现问题，尝试刷新页面！"
+  "A problem occurred while getting data, try refreshing this page!": "获取数据出现问题，尝试刷新页面！",
+  "Allow users to choose identity emails from domain aliases": "允许用户从域别名中选择身份电子邮件",
+  "Once enabled, users can choose identity emails not only from their emails but also from domain aliases.": "启用后，用户不仅可以从其电子邮件中选择身份电子邮件，还可以从域别名中选择身份电子邮件."
 }
