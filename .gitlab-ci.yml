@@ -34,8 +34,9 @@ stages:
 .test-template-svc: &test-template-svc
   <<: *test-template
   services:
-    - name: elasticsearch:2.4
+    - name: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
       alias: elasticsearch
+      command: [ "bin/elasticsearch", "-Ediscovery.type=single-node" ]
     - name: mongo:3.2.0
       alias: mongo
     - name: redis:latest
