@@ -5,13 +5,33 @@ const { expect } = require('chai');
 describe('The user identity valid emails getting API', function() {
   const API_PATH = '/api/inbox/users';
   const password = 'secret';
-  let helpers, models, app, user1, port, james, alias;
+  let helpers, models, app, user1, port, james;
+  let alias, allowedFromHeaders;
 
   before(function(done) {
     helpers = this.helpers;
     helpers.modules.initMidway('linagora.esn.unifiedinbox', helpers.callbacks.noErrorAnd(done));
+  });
 
+  before(function(done) {
+    allowedFromHeaders = ['foo@lng.com', 'bar@lng.com'];
     alias = 'alias@kng.org';
+
+    const app = express();
+
+    port = this.testEnv.serversConfig.express.port;
+
+    app.get('/address/aliases/:username', (req, res) => res.status(200).json([{ source: alias }]));
+    app.get('/users/:givenUser/allowedFromHeaders', (req, res) => res.status(200).json(allowedFromHeaders));
+    james = app.listen(port, error => {
+      if (error) return done(error);
+
+      helpers.requireBackend('core/esn-config')('webadminApiBackend')
+        .inModule('linagora.esn.james')
+        .store(`http://localhost:${port}`)
+        .then(() => helpers.jwt.saveTestConfiguration(done))
+        .catch(done);
+    });
   });
 
   beforeEach(function() {
@@ -34,23 +54,6 @@ describe('The user identity valid emails getting API', function() {
 
   afterEach(function(done) {
     helpers.api.cleanDomainDeployment(models, done);
-  });
-
-  before(function(done) {
-    const app = express();
-
-    port = this.testEnv.serversConfig.express.port;
-
-    app.get('/address/aliases/:username', (req, res) => res.status(200).json([{ source: alias }]));
-    james = app.listen(port, error => {
-      if (error) return done(error);
-
-      helpers.requireBackend('core/esn-config')('webadminApiBackend')
-        .inModule('linagora.esn.james')
-        .store(`http://localhost:${port}`)
-        .then(() => helpers.jwt.saveTestConfiguration(done))
-        .catch(done);
-    });
   });
 
   after(function(done) {
@@ -86,18 +89,74 @@ describe('The user identity valid emails getting API', function() {
     });
   });
 
-  it('should return 200 with a list of valid emails for user identity', function(done) {
-    helpers.api.loginAsUser(app, user1.emails[0], password, (err, requestAsMember) => {
-      if (err) return done(err);
+  describe('when identity email sources do not accept domain aliases', function() {
+    beforeEach(function(done) {
+      helpers.requireBackend('core/esn-config')('features')
+        .inModule('linagora.esn.unifiedinbox')
+        .forUser(user1)
+        .store({ identity: { acceptDomainAliasesAsEmailSource: false } })
+        .then(() => done())
+        .catch(done);
+    });
 
-      const req = requestAsMember(request(app).get(`${API_PATH}/${user1._id}/identities/validEmails`));
+    afterEach(function(done) {
+      helpers.requireBackend('core/esn-config')('features')
+        .inModule('linagora.esn.unifiedinbox')
+        .forUser(user1)
+        .store({ identity: {} })
+        .then(() => done())
+        .catch(done);
+    });
 
-      req.expect(200);
-      req.end((error, res) => {
-        if (error) return done(error);
+    it('should return 200 with a list of valid emails for user identity', function(done) {
+      helpers.api.loginAsUser(app, user1.emails[0], password, (err, requestAsMember) => {
+        if (err) return done(err);
 
-        expect(res.body).to.shallowDeepEqual([user1.preferredEmail, alias]);
-        done();
+        const req = requestAsMember(request(app).get(`${API_PATH}/${user1._id}/identities/validEmails`));
+
+        req.expect(200);
+        req.end((error, res) => {
+          if (error) return done(error);
+
+          expect(res.body).to.shallowDeepEqual([user1.preferredEmail, alias]);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('when identity email sources accept domain aliases', function() {
+    beforeEach(function(done) {
+      helpers.requireBackend('core/esn-config')('features')
+        .inModule('linagora.esn.unifiedinbox')
+        .forUser(user1)
+        .store({ identity: { acceptDomainAliasesAsEmailSource: true } })
+        .then(() => done())
+        .catch(done);
+    });
+
+    afterEach(function(done) {
+      helpers.requireBackend('core/esn-config')('features')
+        .inModule('linagora.esn.unifiedinbox')
+        .forUser(user1)
+        .store({ identity: {} })
+        .then(() => done())
+        .catch(done);
+    });
+
+    it('should return 200 with a list of valid emails for user identity', function(done) {
+      helpers.api.loginAsUser(app, user1.emails[0], password, (err, requestAsMember) => {
+        if (err) return done(err);
+
+        const req = requestAsMember(request(app).get(`${API_PATH}/${user1._id}/identities/validEmails`));
+
+        req.expect(200);
+        req.end((error, res) => {
+          if (error) return done(error);
+
+          expect(res.body).to.shallowDeepEqual(allowedFromHeaders);
+          done();
+        });
       });
     });
   });

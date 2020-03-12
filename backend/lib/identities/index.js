@@ -1,6 +1,7 @@
 module.exports = dependencies => {
   const mongoose = dependencies('db').mongo.mongoose;
   const jamesModule = dependencies('james');
+  const esnConfig = dependencies('esn-config');
   const InboxUserIdentities = mongoose.model('InboxUserIdentities');
   const validators = require('./validators')(dependencies);
   const { getDefaultIdentity } = require('./fallback')(dependencies);
@@ -61,8 +62,18 @@ module.exports = dependencies => {
    * @return {Promise} On resolve, return a list of emails
    */
   function getValidEmails(user) {
-    return jamesModule.lib.client.listUserAliases(user.preferredEmail)
-      .then(userAliases => [user.preferredEmail, ...userAliases.map(alias => alias.source)]);
+    return esnConfig('features')
+      .inModule('linagora.esn.unifiedinbox')
+      .forUser(user)
+      .get()
+      .then(features => {
+        if (features && features.identity && features.identity.acceptDomainAliasesAsEmailSource) {
+          return jamesModule.lib.client.getAllowedFromHeaders(user.preferredEmail);
+        }
+
+        return jamesModule.lib.client.listUserAliases(user.preferredEmail)
+          .then(userAliases => [user.preferredEmail, ...userAliases.map(alias => alias.source)]);
+      });
   }
 
   function _populateUsability(targetUser, identities) {
