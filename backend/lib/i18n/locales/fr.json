@@ -292,5 +292,7 @@
   "default": "défaut",
   "This identity is not usable": "Cette identité n'est pas utilisable",
   "None": "Aucun",
-  "A problem occurred while getting data, try refreshing this page!": "Un problème s'est produit lors du chargement de certaines données, essayez de recharger la page!"
+  "A problem occurred while getting data, try refreshing this page!": "Un problème s'est produit lors du chargement de certaines données, essayez de recharger la page!",
+  "Allow users to choose identity emails from domain aliases": "Autoriser les utilisateurs à choisir des emails d'identité depuis des alias de domaine",
+  "Once enabled, users can choose identity emails not only from their emails but also from domain aliases.": "Une fois activé, les utilisateurs peuvent choisir des emails d'identité non seulement de leurs emails mais aussi de leur alias de domaine."
 }

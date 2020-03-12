@@ -12,6 +12,9 @@ module.exports = dependencies => {
         properties: {
           allowMembersToManage: {
             type: 'boolean'
+          },
+          acceptDomainAliasesAsEmailSource: {
+            type: 'boolean'
           }
         }
       }

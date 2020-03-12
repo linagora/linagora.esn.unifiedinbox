@@ -292,5 +292,7 @@
   "default": "дефолт",
   "This identity is not usable": "Эта личность не используется",
   "None": "Никто",
-  "A problem occurred while getting data, try refreshing this page!": "Возникла проблема при получении данных, попробуйте обновить эту страницу!"
+  "A problem occurred while getting data, try refreshing this page!": "Возникла проблема при получении данных, попробуйте обновить эту страницу!",
+  "Allow users to choose identity emails from domain aliases": "Разрешить пользователям выбирать идентификационные электронные письма из псевдонимов домена",
+  "Once enabled, users can choose identity emails not only from their emails but also from domain aliases.": "После включения пользователи могут выбирать идентификационные электронные письма не только из своих электронных писем, но и из псевдонимов доменов."
 }
