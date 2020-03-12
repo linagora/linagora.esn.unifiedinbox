@@ -81,6 +81,6 @@ ng-form.p-t-25(name='form')
       .col-xs-8.field-name #{__('Allow users to manage their identities')}
         p.text-muted #{__('Allow users to create or remove identities based on their mail aliases')}
       .col-xs-4.flex-end
-        toggle-switch(ng-model="$ctrl.configurations.features.value.allowMembersToManageIdentities", form="form")
+        toggle-switch(ng-model="$ctrl.configurations.features.value.identity.allowMembersToManage", form="form")
 
     .inbox-config-item-dd(dynamic-directive='inbox-config-item')
