@@ -14,6 +14,8 @@ module.exports = dependencies => {
    *     tags:
    *       - Identity
    *     description: Get identities belong to a specific user.
+   *     parameters:
+   *       - $ref: "#/parameters/uss_uuid"
    *     responses:
    *       200:
    *         $ref: "#/responses/ib_identities"
