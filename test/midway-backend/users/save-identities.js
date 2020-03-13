@@ -242,7 +242,7 @@ describe('The user identities saving API', function() {
       helpers.requireBackend('core/esn-config')('features')
         .inModule('linagora.esn.unifiedinbox')
         .forUser(admin)
-        .store({ allowMembersToManageIdentities: false })
+        .store({ identity: { allowMembersToManage: false } })
         .then(() => done())
         .catch(done);
     });
@@ -270,7 +270,7 @@ describe('The user identities saving API', function() {
       helpers.requireBackend('core/esn-config')('features')
         .inModule('linagora.esn.unifiedinbox')
         .forUser(admin)
-        .store({ allowMembersToManageIdentities: true })
+        .store({ identity: { allowMembersToManage: true } })
         .then(() => done())
         .catch(done);
     });
@@ -298,7 +298,7 @@ describe('The user identities saving API', function() {
       helpers.requireBackend('core/esn-config')('features')
         .inModule('linagora.esn.unifiedinbox')
         .forUser(admin)
-        .store({ allowMembersToManageIdentities: false })
+        .store({ identity: { allowMembersToManage: false } })
         .then(() => helpers.api.loginAsUser(app, admin.emails[0], password, (err, requestAsAdmin) => {
           if (err) return done(err);
 

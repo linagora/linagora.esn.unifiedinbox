@@ -292,5 +292,7 @@
   "default": "mặc định",
   "This identity is not usable": "Định danh này không khả dụng",
   "None": "Không chọn thư",
-  "A problem occurred while getting data, try refreshing this page!": "Có lỗi xảy ra, hãy thử tải lại trình duyệt!"
+  "A problem occurred while getting data, try refreshing this page!": "Có lỗi xảy ra, hãy thử tải lại trình duyệt!",
+  "Allow users to choose identity emails from domain aliases": "Cho phép người dùng chọn thư điện tử cho định danh từ các tên miền thay thế",
+  "Once enabled, users can choose identity emails not only from their emails but also from domain aliases.": "Một khi bật, người dùng có thể chọn thư điện tử cho định danh không chỉ từ thư điện tử của họ mà còn từ các tên miền thay thế."
 }

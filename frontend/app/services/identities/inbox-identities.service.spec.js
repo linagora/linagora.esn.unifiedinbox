@@ -53,7 +53,9 @@ describe('The inboxIdentitiesService factory', function() {
 
     it('should return true when user is allowed to edit identity', function(done) {
       session.userIsDomainAdministrator = function() { return false; };
-      config['linagora.esn.unifiedinbox.features.allowMembersToManageIdentities'] = true;
+      config['linagora.esn.unifiedinbox.features.identity'] = {
+        allowMembersToManage: true
+      };
 
       inboxIdentitiesService.canEditIdentities().then(function(canEdit) {
         expect(canEdit).to.be.true;
@@ -65,7 +67,9 @@ describe('The inboxIdentitiesService factory', function() {
 
     it('should return false when user is not allowed to edit identity', function(done) {
       session.userIsDomainAdministrator = function() { return false; };
-      config['linagora.esn.unifiedinbox.features.allowMembersToManageIdentities'] = false;
+      config['linagora.esn.unifiedinbox.features.identity'] = {
+        allowMembersToManage: false
+      };
 
       inboxIdentitiesService.canEditIdentities().then(function(canEdit) {
         expect(canEdit).to.be.false;
