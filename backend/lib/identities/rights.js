@@ -27,7 +27,7 @@ module.exports = dependencies => {
           .inModule('linagora.esn.unifiedinbox')
           .forUser(target)
           .get()
-          .then(features => !!(features && features.allowMembersToManageIdentities));
+          .then(features => !!(features && features.identity && features.identity.allowMembersToManage));
       });
   }
 

@@ -24,7 +24,11 @@
       function canEditIdentities() {
         return session.userIsDomainAdministrator() ?
           $q.when(true) :
-          esnConfig('linagora.esn.unifiedinbox.features.allowMembersToManageIdentities', false);
+          esnConfig('linagora.esn.unifiedinbox.features.identity', {
+            allowMembersToManage: false
+          }).then(function(identity) {
+            return identity.allowMembersToManage;
+          });
       }
 
       function getAllIdentities(userId) {
