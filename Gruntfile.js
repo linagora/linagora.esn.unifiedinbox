@@ -124,7 +124,7 @@ module.exports = function(grunt) {
           }
         },
         paths: [
-          'backend/webserver/api/*.js',
+          'backend/webserver/api/*/*.js',
           'doc/REST_API/swagger/*/*.js',
           'node_modules/linagora-rse/doc/REST_API/swagger/*/*.js'
         ]
