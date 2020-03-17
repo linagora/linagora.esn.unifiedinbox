@@ -37,13 +37,13 @@ describe('The inboxMessageBodyHtml component', function() {
     });
   });
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, jmap, _newComposerService_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_, jmapDraft, _newComposerService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     newComposerService = _newComposerService_;
     $timeout = _$timeout_;
 
-    $rootScope.message = new jmap.Message({}, 'id', 'blobId', 'threadId', ['inbox'], {
+    $rootScope.message = new jmapDraft.Message({}, 'id', 'blobId', 'threadId', ['inbox'], {
       htmlBody: '<div>Message HTML Body</div>'
     });
   }));

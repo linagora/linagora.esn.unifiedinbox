@@ -3,8 +3,8 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .factory('jmap', function($window) {
-      return $window.jmap;
+    .factory('jmapDraft', function($window) {
+      return $window.jmapDraft;
     })
 
     .factory('dollarQPromiseProvider', function($q) {

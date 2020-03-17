@@ -317,7 +317,7 @@ angular.module('linagora.esn.unifiedinbox')
     inboxMailboxesService.assignMailboxesList($scope, inboxMailboxesService.filterSystemMailboxes);
   })
 
-  .controller('addFolderController', function($scope, jmap, inboxMailboxesService, rejectWithErrorNotification, $modal) {
+  .controller('addFolderController', function($scope, inboxMailboxesService, rejectWithErrorNotification, $modal) {
     inboxMailboxesService.assignMailboxesList($scope);
 
     $scope.mailbox = $scope.mailbox ? $scope.mailbox : {};
@@ -409,7 +409,7 @@ angular.module('linagora.esn.unifiedinbox')
     $stateParams,
     $q,
     moment,
-    jmap,
+    jmapDraft,
     withJmapClient,
     rejectWithErrorNotification,
     asyncJmapAction,
@@ -520,7 +520,7 @@ angular.module('linagora.esn.unifiedinbox')
             success: 'Vacation settings saved',
             failure: 'Failed to save vacation settings'
           }, function(client) {
-            return client.setVacationResponse(new jmap.VacationResponse(client, $scope.vacation));
+            return client.setVacationResponse(new jmapDraft.VacationResponse(client, $scope.vacation));
           }, {
             onFailure: {
               linkText: 'Go Back',

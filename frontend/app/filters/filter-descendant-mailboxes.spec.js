@@ -12,17 +12,17 @@ describe('The inboxFilterDescendantMailboxes filter', function() {
     module('linagora.esn.unifiedinbox');
   });
 
-  beforeEach(inject(function(inboxFilterDescendantMailboxesFilter, inboxMailboxesCache, jmap, ___) {
+  beforeEach(inject(function(inboxFilterDescendantMailboxesFilter, inboxMailboxesCache, jmapDraft, ___) {
     filter = inboxFilterDescendantMailboxesFilter;
     cache = inboxMailboxesCache;
     _ = ___;
 
     [
-      new jmap.Mailbox(null, '1', '1'),
-      new jmap.Mailbox(null, '2', '2', { parentId: '1' }),
-      new jmap.Mailbox(null, '3', '3', { parentId: '2' }),
-      new jmap.Mailbox(null, '4', '4'),
-      new jmap.Mailbox(null, '5', '5', { parentId: '4' })
+      new jmapDraft.Mailbox(null, '1', '1'),
+      new jmapDraft.Mailbox(null, '2', '2', { parentId: '1' }),
+      new jmapDraft.Mailbox(null, '3', '3', { parentId: '2' }),
+      new jmapDraft.Mailbox(null, '4', '4'),
+      new jmapDraft.Mailbox(null, '5', '5', { parentId: '4' })
     ].forEach(function(mailbox) {
       cache.push(mailbox);
     });

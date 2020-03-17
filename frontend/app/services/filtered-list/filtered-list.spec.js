@@ -6,13 +6,13 @@ var expect = chai.expect;
 
 describe('The inboxFilteredList factory', function() {
 
-  var $rootScope, jmapClient, jmap, inboxFilteringService, inboxFilters, _, inboxFilteredList, esnSearchProvider, inboxHostedMailMessagesProvider, INBOX_EVENTS, PROVIDER_TYPES, counter, inboxConfigMock;
+  var $rootScope, jmapClient, jmapDraft, inboxFilteringService, inboxFilters, _, inboxFilteredList, esnSearchProvider, inboxHostedMailMessagesProvider, INBOX_EVENTS, PROVIDER_TYPES, counter, inboxConfigMock;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     jmapClient = {
       getMailboxes: function() {
         return $q.when([
-          new jmap.Mailbox(jmapClient, 'id_inbox', 'inbox', { role: 'inbox' })
+          new jmapDraft.Mailbox(jmapClient, 'id_inbox', 'inbox', { role: 'inbox' })
         ]);
       }
     };
@@ -25,11 +25,11 @@ describe('The inboxFilteredList factory', function() {
     });
   }));
 
-  beforeEach(inject(function(_$rootScope_, _jmap_, _inboxFilteringService_, _inboxFilters_, ___, _inboxFilteredList_,
+  beforeEach(inject(function(_$rootScope_, _jmapDraft_, _inboxFilteringService_, _inboxFilters_, ___, _inboxFilteredList_,
                              _esnSearchProvider_,
                              _inboxHostedMailMessagesProvider_, _INBOX_EVENTS_, _PROVIDER_TYPES_) {
     $rootScope = _$rootScope_;
-    jmap = _jmap_;
+    jmapDraft = _jmapDraft_;
     inboxFilteringService = _inboxFilteringService_;
     inboxFilters = _inboxFilters_;
     _ = ___;
@@ -41,7 +41,7 @@ describe('The inboxFilteredList factory', function() {
   }));
 
   function newMessage(options) {
-    var message = new jmap.Message(jmapClient, 'id' + ++counter, 'blobId', 'threadId', ['id_inbox'], options);
+    var message = new jmapDraft.Message(jmapClient, 'id' + ++counter, 'blobId', 'threadId', ['id_inbox'], options);
 
     message.provider = inboxHostedMailMessagesProvider;
 
@@ -218,7 +218,7 @@ describe('The inboxFilteredList factory', function() {
   });
 
   it('should not throw when message\'s provider has missing itemMatches function', function() {
-    var message = new jmap.Message(jmapClient, 'id', 'blobId', 'threadId', ['id_inbox'], {}),
+    var message = new jmapDraft.Message(jmapClient, 'id', 'blobId', 'threadId', ['id_inbox'], {}),
       fakeProvider = function() {
         return new esnSearchProvider({
           uid: '123',

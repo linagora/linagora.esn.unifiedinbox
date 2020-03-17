@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .run(function(limitToFilter, jmap, inboxMailboxesCache, _, INBOX_DISPLAY_NAME_SIZE) {
+    .run(function(limitToFilter, jmapDraft, inboxMailboxesCache, _, INBOX_DISPLAY_NAME_SIZE) {
       function getMailboxDescendants(mailboxId) {
         var descendants = [],
             toScanMailboxIds = [mailboxId],
@@ -28,7 +28,7 @@
         return _.uniq(descendants);
       }
 
-      Object.defineProperties(jmap.Mailbox.prototype, {
+      Object.defineProperties(jmapDraft.Mailbox.prototype, {
         descendants: {
           configurable: true,
           get: function() {

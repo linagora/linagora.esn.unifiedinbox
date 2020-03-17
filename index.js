@@ -12,7 +12,7 @@ const getPath = item => path.join('../components', item);
 const EXTERNAL_COMPONENTS_JS = [
   'angularjs-dragula/dist/angularjs-dragula.js',
   'sanitize-html/dist/sanitize-html.js',
-  'jmap-client/dist/jmap-client.min.js'
+  'jmap-draft-client/dist/jmap-draft-client.min.js'
 ].map(getPath);
 
 const EXTERNAL_COMPONENTS_CSS = [

@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The linagora.esn.unifiedinbox module controllers', function() {
 
   var $stateParams, $rootScope, scope, $controller, $timeout, $interval,
-      jmapClient, jmap, notificationFactory, Offline = {},
+      jmapClient, jmapDraft, notificationFactory, Offline = {},
       newComposerService = {}, $state, $modal, $hide, navigateTo, inboxPlugins, inboxFilteredList,
       inboxMailboxesService, inboxJmapItemService, _, fileUploadMock, config, moment, inboxMailboxesCache,
       esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
@@ -40,10 +40,10 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     module('linagora.esn.unifiedinbox', function($provide) {
       jmapClient = {
         getVacationResponse: function() {
-          return $q.when(new jmap.SetResponse(jmapClient));
+          return $q.when(new jmapDraft.SetResponse(jmapClient));
         },
         getMailboxes: function() {
-          return $q.when(new jmap.SetResponse(jmapClient));
+          return $q.when(new jmapDraft.SetResponse(jmapClient));
         }
       };
       config = {};
@@ -98,7 +98,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
   });
 
-  beforeEach(angular.mock.inject(function(_$rootScope_, _$controller_, _$timeout_, _$interval_, _jmap_, _inboxPlugins_, _inboxFilteredList_,
+  beforeEach(angular.mock.inject(function(_$rootScope_, _$controller_, _$timeout_, _$interval_, _jmapDraft_, _inboxPlugins_, _inboxFilteredList_,
                                           _inboxMailboxesService_, ___, _JMAP_GET_MESSAGES_VIEW_,
                                           _DEFAULT_FILE_TYPE_, _moment_, _DEFAULT_MAX_SIZE_UPLOAD_, _inboxJmapItemService_,
                                           _INBOX_EVENTS_, _inboxMailboxesCache_, _esnPreviousPage_, _inboxSelectionService_, _inboxUnavailableAccountNotifier_,
@@ -107,7 +107,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     $controller = _$controller_;
     $timeout = _$timeout_;
     $interval = _$interval_;
-    jmap = _jmap_;
+    jmapDraft = _jmapDraft_;
     inboxMailboxesService = _inboxMailboxesService_;
     inboxJmapItemService = _inboxJmapItemService_;
     inboxMailboxesCache = _inboxMailboxesCache_;
@@ -188,13 +188,13 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should call our inbox provider as expected', function() {
-      folder = _.assign(new jmap.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmap.MailboxRole.INBOX});
+      folder = _.assign(new jmapDraft.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmapDraft.MailboxRole.INBOX});
       inboxMailboxesCache.push(folder);
 
       jmapClient.getMailboxes = sinon.spy(function() {
-        return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
+        return $q.when([new jmapDraft.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
       });
-      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmap.MessageList(jmapClient, { messageIds: [1] })));
+      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmapDraft.MessageList(jmapClient, { messageIds: [1] })));
       jmapClient.getMessages = sinon.stub().returns($q.when([]));
 
       $rootScope.$digest();
@@ -210,15 +210,15 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should forward filters to our jmap provider', function() {
-      folder = _.assign(new jmap.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmap.MailboxRole.INBOX});
+      folder = _.assign(new jmapDraft.Mailbox(null, 'id_inbox', 'name_inbox'), {role: jmapDraft.MailboxRole.INBOX});
       inboxMailboxesCache.push(folder);
 
       _.find(inboxFilters, { id: 'isUnread' }).checked = true; // This simulated the selection of isUnread
 
-      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmap.MessageList(jmapClient, { messageIds: [1] })));
+      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmapDraft.MessageList(jmapClient, { messageIds: [1] })));
       jmapClient.getMessages = sinon.stub().returns($q.when([]));
       jmapClient.getMailboxes = sinon.spy(function() {
-        return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
+        return $q.when([new jmapDraft.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
       });
 
       $rootScope.$digest();
@@ -272,10 +272,10 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should listen to "FILTER_CHANGED" event, resetting infinite scroll', function() {
-      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmap.MessageList(jmapClient, { messageIds: [1] })));
+      jmapClient.getMessageList = sinon.stub().returns($q.when(new jmapDraft.MessageList(jmapClient, { messageIds: [1] })));
       jmapClient.getMessages = sinon.stub().returns($q.when([]));
       jmapClient.getMailboxes = function() {
-        return $q.when([new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
+        return $q.when([new jmapDraft.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' })]);
       };
 
       initController('unifiedInboxController');
@@ -296,7 +296,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should update inboxFilteredList upon DRAFT_CREATED received, when browsing drafts folders', function() {
-      folder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
+      folder = _.assign(new jmapDraft.Mailbox(null, 'id', 'DRAFTS'), {role: jmapDraft.MailboxRole.DRAFTS});
       inboxMailboxesCache.push(folder);
 
       initController('unifiedInboxController');
@@ -314,7 +314,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should only increment unread drafts counter upon DRAFT_CREATED received, when browsing from anywhere but drafts', function() {
-      folder = _.assign(new jmap.Mailbox(null, 'id', 'DRAFTS'), {role: jmap.MailboxRole.DRAFTS});
+      folder = _.assign(new jmapDraft.Mailbox(null, 'id', 'DRAFTS'), {role: jmapDraft.MailboxRole.DRAFTS});
       inboxMailboxesCache.push(folder);
 
       initController('unifiedInboxController');
@@ -394,12 +394,12 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     var jmapMessage;
 
     beforeEach(function() {
-      jmapMessage = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', [$stateParams.mailbox], {
+      jmapMessage = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', [$stateParams.mailbox], {
         isUnread: false
       });
 
       jmapClient.getMessages = function() { return $q.when([jmapMessage]); };
-      jmapClient.setMessages = function() { return $q.when(new jmap.SetResponse()); };
+      jmapClient.setMessages = function() { return $q.when(new jmapDraft.SetResponse()); };
       jmapClient.updateMessage = function() { return $q.when(); };
     });
 
@@ -433,7 +433,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should update $scope.email if it exists (opening an item from the list)', function(done) {
-      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
+      $stateParams.item = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
         id: 'id',
         isFlagged: false
       });
@@ -453,7 +453,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     });
 
     it('should stop throbber when JMAP request has failed', function(done) {
-      $stateParams.item = new jmap.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
+      $stateParams.item = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId1', 'threadId1', [$stateParams.mailbox], {
         id: 'id',
         isFlagged: false
       });
@@ -791,7 +791,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     }
 
     beforeEach(function() {
-      jmapThread = new jmap.Thread(jmapClient, threadId);
+      jmapThread = new jmapDraft.Thread(jmapClient, threadId);
 
       mockGetThreadAndMessages([{
         id: 'email1',
@@ -809,7 +809,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         return $q.when([jmapThread]);
       };
       jmapClient.setMessages = function() {
-        return $q.when(new jmap.SetResponse());
+        return $q.when(new jmapDraft.SetResponse());
       };
     });
 
@@ -877,7 +877,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     it('should assign thread.subject from the last message', function() {
       jmapClient.getThreads = function() {
-        return $q.when([new jmap.Thread({
+        return $q.when([new jmapDraft.Thread({
           getMessages: function() {
             return [
               { mailboxIds: ['inbox'], id: 'email1', subject: 'thread subject1' },
@@ -1186,7 +1186,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
   describe('The inboxDeleteFolderController', function() {
 
     function newMailbox(id, parentId) {
-      return new jmap.Mailbox(null, id, id, { parentId: parentId });
+      return new jmapDraft.Mailbox(null, id, id, { parentId: parentId });
     }
 
     it('should initialize $scope.message containing to-be-deleted mailboxes', function() {
@@ -1195,7 +1195,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       inboxMailboxesCache.push(newMailbox('3', '2'));
       inboxMailboxesCache.push(newMailbox('4', '2'));
       inboxMailboxesCache.push(newMailbox('5', '2'));
-      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
       scope.mailbox = inboxMailboxesCache[0];
 
       initController('inboxDeleteFolderController');
@@ -1211,7 +1211,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       inboxMailboxesCache.push(newMailbox('4', '2'));
       inboxMailboxesCache.push(newMailbox('5', '2'));
       inboxMailboxesCache.push(newMailbox('6', '2'));
-      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
       scope.mailbox = inboxMailboxesCache[0];
 
       initController('inboxDeleteFolderController');
@@ -1222,7 +1222,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     it('should initialize $scope.message properly when the mailbox has no descendant', function() {
       inboxMailboxesCache.push(newMailbox('1'));
-      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+      jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
       scope.mailbox = inboxMailboxesCache[0];
 
       initController('inboxDeleteFolderController');
@@ -1237,7 +1237,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         inboxMailboxesCache.push(newMailbox('1'));
         inboxMailboxesCache.push(newMailbox('2', '1'));
         inboxMailboxesCache.push(newMailbox('3', '2'));
-        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
         scope.mailbox = inboxMailboxesCache[0];
 
         var ctrl = initController('inboxDeleteFolderController');
@@ -1253,7 +1253,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         inboxMailboxesCache.push(newMailbox('1'));
         inboxMailboxesCache.push(newMailbox('2', '1'));
         inboxMailboxesCache.push(newMailbox('state.context', '2'));
-        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
         scope.mailbox = inboxMailboxesCache[0];
 
         var ctrl = initController('inboxDeleteFolderController');
@@ -1267,7 +1267,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
       it('should support the adaptive user interface concept: it goes to unifiedinbox if destroyMailbox is resolved', function() {
         inboxMailboxesCache.push(newMailbox('state.context'));
-        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmap.SetResponse()); });
+        jmapClient.setMailboxes = sinon.spy(function() { return $q.when(new jmapDraft.SetResponse()); });
         scope.mailbox = inboxMailboxesCache[0];
 
         var ctrl = initController('inboxDeleteFolderController');
@@ -2048,8 +2048,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         });
 
         it('should return true when all selected email belong to mailboxes that allow moving', function() {
-          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+          var message1 = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+              message2 = new jmapDraft.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
 
           selectedItemsMock = [message1, message2];
           $stateParams.context = null;
@@ -2062,8 +2062,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         });
 
         it('should return false when emails belong to mailboxes that forbid moving', function() {
-          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
-              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
+          var message1 = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1234']),
+              message2 = new jmapDraft.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['1235']);
 
           selectedItemsMock = [message1, message2];
           $stateParams.context = null;
@@ -2076,8 +2076,8 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         });
 
         it('should return true when selected emails belong to multiple mailboxes that all allow moving', function() {
-          var message1 = new jmap.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
-              message2 = new jmap.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
+          var message1 = new jmapDraft.Message(jmapClient, 'messageId1', 'blobId', 'threadId1', ['1', '2']),
+              message2 = new jmapDraft.Message(jmapClient, 'messageId2', 'blobId', 'threadId2', ['3', '4', '5']);
 
           selectedItemsMock = [message1, message2];
           $stateParams.context = null;

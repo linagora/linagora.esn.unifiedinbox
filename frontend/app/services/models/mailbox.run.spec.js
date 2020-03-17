@@ -6,19 +6,19 @@ var expect = chai.expect;
 
 describe('The Mailbox run block', function() {
 
-  var jmap, inboxMailboxesCache;
+  var jmapDraft, inboxMailboxesCache;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     $provide.constant('INBOX_DISPLAY_NAME_SIZE', 10);
   }));
 
-  beforeEach(inject(function(_jmap_, _inboxMailboxesCache_) {
-    jmap = _jmap_;
+  beforeEach(inject(function(_jmapDraft_, _inboxMailboxesCache_) {
+    jmapDraft = _jmapDraft_;
     inboxMailboxesCache = _inboxMailboxesCache_;
   }));
 
   function newMailbox(id, name, parentId) {
-    return new jmap.Mailbox(null, id, name, { parentId: parentId });
+    return new jmapDraft.Mailbox(null, id, name, { parentId: parentId });
   }
 
   describe('The "displayName" property', function() {

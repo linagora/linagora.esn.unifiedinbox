@@ -5,19 +5,19 @@
 var expect = chai.expect;
 
 describe('The Thread run block', function() {
-  var jmap, _;
+  var jmapDraft, _;
 
   beforeEach(function() {
     module('linagora.esn.unifiedinbox');
   });
 
-  beforeEach(inject(function(_jmap_, ___) {
-    jmap = _jmap_;
+  beforeEach(inject(function(_jmapDraft_, ___) {
+    jmapDraft = _jmapDraft_;
     _ = ___;
   }));
 
   function newThread(emails) {
-    var thread = new jmap.Thread(null, 'threadId', { messageIds: _(emails).pluck('id').value() });
+    var thread = new jmapDraft.Thread(null, 'threadId', { messageIds: _(emails).pluck('id').value() });
 
     thread.emails = emails;
 
@@ -25,7 +25,7 @@ describe('The Thread run block', function() {
   }
 
   function newMessage(mailboxIds, options) {
-    return new jmap.Message(null, 'id', 'blobId', 'threadId', mailboxIds, options);
+    return new jmapDraft.Message(null, 'id', 'blobId', 'threadId', mailboxIds, options);
   }
 
   it('should have id, mailboxIds, subject, date, hasAttachment and emails properties', function() {

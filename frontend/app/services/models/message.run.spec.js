@@ -5,7 +5,7 @@
 var expect = chai.expect;
 
 describe('The Message run block', function() {
-  var jmap, inboxMailboxesService;
+  var jmapDraft, inboxMailboxesService;
 
   beforeEach(module('linagora.esn.unifiedinbox', function($provide) {
     $provide.value('inboxMailboxesService', inboxMailboxesService = {
@@ -13,8 +13,8 @@ describe('The Message run block', function() {
     });
   }));
 
-  beforeEach(inject(function(_jmap_, session) {
-    jmap = _jmap_;
+  beforeEach(inject(function(_jmapDraft_, session) {
+    jmapDraft = _jmapDraft_;
 
     session.user = {
       preferredEmail: 'user@linagora.com'
@@ -22,7 +22,7 @@ describe('The Message run block', function() {
   }));
 
   function newMessage(options) {
-    return new jmap.Message(null, 'id', 'blobId', 'threadId', ['inbox'], options);
+    return new jmapDraft.Message(null, 'id', 'blobId', 'threadId', ['inbox'], options);
   }
 
   it('should have a correct initial value for isUnread', function() {

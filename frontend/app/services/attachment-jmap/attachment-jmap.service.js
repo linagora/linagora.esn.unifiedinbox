@@ -6,7 +6,7 @@
 
   function inboxAttachmentJmap(
     $q,
-    jmap,
+    jmapDraft,
     fileUploadService,
     attachmentUploadService,
     DEFAULT_FILE_TYPE,
@@ -41,7 +41,7 @@
     }
 
     function fileToAttachment(client, file) {
-      var attachment = new jmap.Attachment(client, '', {
+      var attachment = new jmapDraft.Attachment(client, '', {
         name: file.name,
         size: file.size,
         type: file.type || DEFAULT_FILE_TYPE

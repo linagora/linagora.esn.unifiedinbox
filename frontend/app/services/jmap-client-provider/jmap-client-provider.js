@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .service('jmapClientProvider', function($q, inboxConfig, jmap, dollarHttpTransport, dollarQPromiseProvider, generateJwtToken, inboxCustomRoleMailboxService) {
+    .service('jmapClientProvider', function($q, inboxConfig, jmapDraft, dollarHttpTransport, dollarQPromiseProvider, generateJwtToken, inboxCustomRoleMailboxService) {
       var jmapClient;
 
       return {
@@ -18,7 +18,7 @@
           inboxConfig('api'),
           inboxConfig('downloadUrl')
         ]).then(function(data) {
-          jmapClient = new jmap.Client(dollarHttpTransport, dollarQPromiseProvider)
+          jmapClient = new jmapDraft.Client(dollarHttpTransport, dollarQPromiseProvider)
             .withAPIUrl(data[1])
             .withDownloadUrl(data[2])
             .withAuthenticationToken('Bearer ' + data[0])

@@ -3,9 +3,9 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .run(function(jmap, inboxMakeSelectable, _) {
+    .run(function(jmapDraft, inboxMakeSelectable, _) {
       function _defineFlagProperty(flag) {
-        Object.defineProperty(jmap.Thread.prototype, flag, {
+        Object.defineProperty(jmapDraft.Thread.prototype, flag, {
           configurable: true,
           get: function() {
             return _.any(this.emails, flag);
@@ -19,7 +19,7 @@
       }
 
       function _defineLastEmailProperty(property, defaultValue) {
-        Object.defineProperty(jmap.Thread.prototype, property, {
+        Object.defineProperty(jmapDraft.Thread.prototype, property, {
           configurable: true,
           get: function() {
             return (this.lastEmail && this.lastEmail[property]) || defaultValue;
@@ -27,7 +27,7 @@
         });
       }
 
-      Object.defineProperties(jmap.Thread.prototype, {
+      Object.defineProperties(jmapDraft.Thread.prototype, {
         mailboxIds: {
           configurable: true,
           get: function() {
@@ -48,7 +48,7 @@
       _defineFlagProperty('isUnread');
       _defineFlagProperty('isFlagged');
 
-      inboxMakeSelectable(jmap.Thread.prototype);
+      inboxMakeSelectable(jmapDraft.Thread.prototype);
     });
 
 })();

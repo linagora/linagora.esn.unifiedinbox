@@ -5,13 +5,11 @@
     .factory('inboxMailboxesFilterService', function(
       $q,
       $sanitize,
-      $rootScope,
       _,
       esnI18nService,
       inboxMailboxesService,
       JMAP_FILTER,
-      uuid4,
-      jmap,
+      jmapDraft,
       asyncJmapAction,
       withJmapClient
     ) {
@@ -209,24 +207,24 @@
 
         switch (type) {
           case JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.from
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            filter = new jmapDraft.FilterRule(null, name).when.from
+              .value(conditionValue).comparator(jmapDraft.FilterRule.Comparator.EXACTLY_EQUALS);
             break;
           case JMAP_FILTER.CONDITIONS.TO.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.to
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            filter = new jmapDraft.FilterRule(null, name).when.to
+              .value(conditionValue).comparator(jmapDraft.FilterRule.Comparator.EXACTLY_EQUALS);
             break;
           case JMAP_FILTER.CONDITIONS.CC.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.cc
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            filter = new jmapDraft.FilterRule(null, name).when.cc
+              .value(conditionValue).comparator(jmapDraft.FilterRule.Comparator.EXACTLY_EQUALS);
             break;
           case JMAP_FILTER.CONDITIONS.RECIPIENT.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.recipient
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.EXACTLY_EQUALS);
+            filter = new jmapDraft.FilterRule(null, name).when.recipient
+              .value(conditionValue).comparator(jmapDraft.FilterRule.Comparator.EXACTLY_EQUALS);
             break;
           case JMAP_FILTER.CONDITIONS.SUBJECT.JMAP_KEY:
-            filter = new jmap.FilterRule(null, name).when.subject
-              .value(conditionValue).comparator(jmap.FilterRule.Comparator.CONTAINS);
+            filter = new jmapDraft.FilterRule(null, name).when.subject
+              .value(conditionValue).comparator(jmapDraft.FilterRule.Comparator.CONTAINS);
         }
 
         switch (actionDefinition.action) {

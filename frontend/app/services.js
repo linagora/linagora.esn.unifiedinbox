@@ -18,13 +18,13 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('sendEmail', function(_, $http, $q, inboxConfig, inBackground, jmap, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
+  .factory('sendEmail', function(_, $http, $q, inboxConfig, inBackground, jmapDraft, withJmapClient, inboxJmapHelper, inboxMailboxesService, httpConfigurer, inboxEmailSendingHookService) {
     function sendBySmtp(email) {
       return $http.post(httpConfigurer.getUrl('/unifiedinbox/api/inbox/sendemail'), email);
     }
 
     function sendByJmapDirectlyToOutbox(client, message) {
-      return inboxMailboxesService.getMailboxWithRole(jmap.MailboxRole.OUTBOX).then(function(outbox) {
+      return inboxMailboxesService.getMailboxWithRole(jmapDraft.MailboxRole.OUTBOX).then(function(outbox) {
         return client.send(message, outbox);
       });
     }
@@ -56,7 +56,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .factory('emailSendingService', function($q, emailService, jmap, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
+  .factory('emailSendingService', function($q, emailService, jmapDraft, _, session, emailBodyService, sendEmail, inboxJmapHelper, INBOX_ATTACHMENT_TYPE_JMAP, INBOX_MESSAGE_HEADERS) {
     var referencingEmailOptions = {
       reply: {
         subjectPrefix: 'Re: ',
@@ -221,7 +221,7 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function getReplyToRecipients(email) {
-      var replyTo = _.reject(email.replyTo, { email: jmap.EMailer.unknown().email });
+      var replyTo = _.reject(email.replyTo, { email: jmapDraft.EMailer.unknown().email });
 
       return replyTo.length > 0 ? replyTo : [email.from];
     }
