@@ -7,7 +7,7 @@ var expect = chai.expect;
 describe('The Unified Inbox Angular module providers', function() {
 
   var $rootScope, inboxProviders, inboxHostedMailMessagesProvider, inboxHostedMailAttachmentProvider, inboxHostedMailThreadsProvider, inboxSearchResultsProvider,
-      jmapClient, inboxMailboxesService, inboxConfigMock, jmap, computeUniqueSetOfRecipients, ELEMENTS_PER_REQUEST;
+      jmapClient, inboxMailboxesService, inboxConfigMock, jmapDraft, computeUniqueSetOfRecipients, ELEMENTS_PER_REQUEST;
 
   function elements(id, length, offset) {
     var array = [], start = offset || 0;
@@ -32,9 +32,9 @@ describe('The Unified Inbox Angular module providers', function() {
       jmapClient = {
         getMailboxes: function() {
           return $q.when([
-            new jmap.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' }),
-            new jmap.Mailbox({}, 'id_trash', 'name_trash', { role: 'trash' }),
-            new jmap.Mailbox({}, 'id_spam', 'name_spam', { role: 'spam' })
+            new jmapDraft.Mailbox({}, 'id_inbox', 'name_inbox', { role: 'inbox' }),
+            new jmapDraft.Mailbox({}, 'id_trash', 'name_trash', { role: 'trash' }),
+            new jmapDraft.Mailbox({}, 'id_spam', 'name_spam', { role: 'spam' })
           ]);
         },
         getMessageList: function(options) {
@@ -68,7 +68,7 @@ describe('The Unified Inbox Angular module providers', function() {
   });
 
   beforeEach(angular.mock.inject(function(_$rootScope_, _inboxProviders_, _inboxHostedMailMessagesProvider_, _inboxSearchResultsProvider_,
-                                          _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _inboxMailboxesService_, _jmap_,
+                                          _inboxHostedMailAttachmentProvider_, _inboxHostedMailThreadsProvider_, _inboxMailboxesService_, _jmapDraft_,
                                           _computeUniqueSetOfRecipients_, _ELEMENTS_PER_REQUEST_) {
     $rootScope = _$rootScope_;
     inboxProviders = _inboxProviders_;
@@ -77,7 +77,7 @@ describe('The Unified Inbox Angular module providers', function() {
     inboxHostedMailAttachmentProvider = _inboxHostedMailAttachmentProvider_;
     inboxHostedMailThreadsProvider = _inboxHostedMailThreadsProvider_;
     inboxMailboxesService = _inboxMailboxesService_;
-    jmap = _jmap_;
+    jmapDraft = _jmapDraft_;
     computeUniqueSetOfRecipients = _computeUniqueSetOfRecipients_;
 
     ELEMENTS_PER_REQUEST = _ELEMENTS_PER_REQUEST_;
@@ -200,7 +200,7 @@ describe('The Unified Inbox Angular module providers', function() {
     describe('The itemMatches function', function() {
 
       function newMessage(mailboxId, options) {
-        return new jmap.Message(null, 'id', 'blobId', 'threadId', [mailboxId || 'id_inbox'], options);
+        return new jmapDraft.Message(null, 'id', 'blobId', 'threadId', [mailboxId || 'id_inbox'], options);
       }
 
       function jmapFilter(context, filter) {

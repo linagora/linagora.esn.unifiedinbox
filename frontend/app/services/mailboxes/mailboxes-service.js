@@ -8,7 +8,7 @@
       'drafts'
     ])
 
-    .factory('inboxMailboxesService', function($q, _, $state, $rootScope, withJmapClient, jmap, asyncJmapAction,
+    .factory('inboxMailboxesService', function($q, _, $state, $rootScope, withJmapClient, jmapDraft, asyncJmapAction,
                                                inboxSpecialMailboxes, inboxMailboxesCache, inboxSharedMailboxesService,
                                                esnI18nService, INBOX_EVENTS, MAILBOX_LEVEL_SEPARATOR, INBOX_RESTRICTED_MAILBOXES) {
 
@@ -308,11 +308,11 @@
         var mailbox = _getMailboxFromId(fromMailboxObjectOrId);
 
         if (mailbox) {
-          if (mailbox.role === jmap.MailboxRole.DRAFTS) {
+          if (mailbox.role === jmapDraft.MailboxRole.DRAFTS) {
             return true;
           }
 
-          if (mailbox.role === jmap.MailboxRole.TRASH) {
+          if (mailbox.role === jmapDraft.MailboxRole.TRASH) {
             return false;
           }
         }
@@ -323,13 +323,13 @@
       function canUnSpamMessages(fromMailboxObjectOrId) {
         var mailbox = _getMailboxFromId(fromMailboxObjectOrId);
 
-        return !!mailbox && mailbox.role === jmap.MailboxRole.SPAM;
+        return !!mailbox && mailbox.role === jmapDraft.MailboxRole.SPAM;
       }
 
       function canMoveMessage(message, toMailbox) {
         // do not allow moving draft message, except to trash
         if (message.isDraft) {
-          return toMailbox && toMailbox.role === jmap.MailboxRole.TRASH;
+          return toMailbox && toMailbox.role === jmapDraft.MailboxRole.TRASH;
         }
 
         // do not allow moving to the same mailbox
@@ -351,7 +351,7 @@
 
       function getMessageListFilter(mailboxId) {
         if (!mailboxId) {
-          return getMailboxWithRole(jmap.MailboxRole.INBOX).then(function(mailbox) {
+          return getMailboxWithRole(jmapDraft.MailboxRole.INBOX).then(function(mailbox) {
             return { inMailboxes: [mailbox.id] };
           });
         }
@@ -391,7 +391,7 @@
           return $q.when([]);
         }
 
-        return $q.all(roles.map(jmap.MailboxRole.fromRole).map(getMailboxWithRole))
+        return $q.all(roles.map(jmapDraft.MailboxRole.fromRole).map(getMailboxWithRole))
           .catch(_.constant([]))
           .then(function(mailboxes) {
             return _(mailboxes).filter(Boolean).map('id').value();
@@ -478,7 +478,7 @@
 
       function getUserInbox() {
         return _getAllMailboxes(_.partialRight(_.filter, function(mailbox) {
-          return mailbox && mailbox.role === jmap.MailboxRole.INBOX &&
+          return mailbox && mailbox.role === jmapDraft.MailboxRole.INBOX &&
             !inboxSharedMailboxesService.isShared(mailbox);
         })).then(_.head);
       }
@@ -507,7 +507,7 @@
       }
 
       function updateUnreadDraftsCount(currentInboxListId, updateDraftsList) {
-        var draftsFolder = _.find(inboxMailboxesCache, {role: jmap.MailboxRole.DRAFTS}),
+        var draftsFolder = _.find(inboxMailboxesCache, {role: jmapDraft.MailboxRole.DRAFTS}),
             isBrowsingDrafts = currentInboxListId && currentInboxListId === draftsFolder.id;
 
         updateDraftsList = updateDraftsList || $q.when();

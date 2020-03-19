@@ -5,7 +5,7 @@
 var expect = chai.expect;
 
 describe('The inboxMailboxesFilterService factory', function() {
-  var $rootScope, asyncJmapAction, jmapClient, inboxMailboxesFilterService, JMAP_FILTER, jmap;
+  var $rootScope, asyncJmapAction, jmapClient, inboxMailboxesFilterService, JMAP_FILTER, jmapDraft;
 
   beforeEach(function() {
     module('esn.i18n', function($translateProvider) {
@@ -40,26 +40,26 @@ describe('The inboxMailboxesFilterService factory', function() {
     });
   });
 
-  beforeEach(inject(function(_$rootScope_, _inboxMailboxesFilterService_, _JMAP_FILTER_, _jmap_) {
+  beforeEach(inject(function(_$rootScope_, _inboxMailboxesFilterService_, _JMAP_FILTER_, _jmapDraft_) {
     inboxMailboxesFilterService = _inboxMailboxesFilterService_;
     JMAP_FILTER = _JMAP_FILTER_;
     $rootScope = _$rootScope_;
-    jmap = _jmap_;
-    jmap.OldFilterRule = jmap.OldFilterRule || jmap.FilterRule;
-    jmap.FilterRule = getDeterministicFilterRule();
+    jmapDraft = _jmapDraft_;
+    jmapDraft.OldFilterRule = jmapDraft.OldFilterRule || jmapDraft.FilterRule;
+    jmapDraft.FilterRule = getDeterministicFilterRule();
   }));
 
   function getDeterministicFilterRule() {
     var id = 0;
     var FilterRule = function(jmapClient, name) {
-      var res = new jmap.OldFilterRule(jmapClient, name);
+      var res = new jmapDraft.OldFilterRule(jmapClient, name);
 
       res.id = String(++id);
 
       return res;
     };
 
-    FilterRule.Comparator = jmap.OldFilterRule.Comparator;
+    FilterRule.Comparator = jmapDraft.OldFilterRule.Comparator;
 
     return FilterRule;
   }
@@ -156,7 +156,7 @@ describe('The inboxMailboxesFilterService factory', function() {
 
   describe('deleteFilter', function() {
     beforeEach(function() {
-      jmap.FilterRule = getDeterministicFilterRule();
+      jmapDraft.FilterRule = getDeterministicFilterRule();
 
       inboxMailboxesFilterService.addFilter(
         JMAP_FILTER.CONDITIONS.FROM.JMAP_KEY, 'My filter 1', 'admin@open-paas.org', {

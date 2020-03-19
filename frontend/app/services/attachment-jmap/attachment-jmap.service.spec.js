@@ -157,17 +157,17 @@ describe('The inboxAttachmentJmap service', function() {
   });
 
   describe('The fileToAttachment fn', function() {
-    var jmap;
+    var jmapDraft;
 
-    beforeEach(inject(function(_jmap_) {
-      jmap = _jmap_;
+    beforeEach(inject(function(_jmapDraft_) {
+      jmapDraft = _jmapDraft_;
     }));
 
     it('should return a JMAP attachment instance', function() {
       var file = { name: 'Learn_JS_in_6_hours.pdf', size: 12345 };
       var attachment = inboxAttachmentJmap.fileToAttachment({}, file);
 
-      expect(attachment).to.be.an.instanceof(jmap.Attachment);
+      expect(attachment).to.be.an.instanceof(jmapDraft.Attachment);
       expect(attachment).to.shallowDeepEqual({
         attachmentType: INBOX_ATTACHMENT_TYPE_JMAP,
         name: file.name,

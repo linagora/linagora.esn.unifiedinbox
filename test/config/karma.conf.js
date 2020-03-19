@@ -19,7 +19,7 @@ module.exports = function(config) {
       'node_modules/sinon/pkg/sinon.js',
       'frontend/components/moment/moment.js',
       'frontend/components/moment-timezone/builds/moment-timezone-with-data.js',
-      'frontend/components/jmap-client/dist/jmap-client.js',
+      'frontend/components/jmap-draft-client/dist/jmap-draft-client.js',
       'frontend/components/angular-moment/angular-moment.js',
       'frontend/components/angular-sanitize/angular-sanitize.js',
       'frontend/components/angular-material/angular-material.js',

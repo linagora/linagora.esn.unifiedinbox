@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  /* global chai: false, sinon: false, jmap: false, $q: false */
+  /* global chai: false, sinon: false, jmapDraft: false, $q: false */
   var expect = chai.expect;
 
   describe('The inboxSharedMailboxesPermissionsService service', function() {
@@ -25,7 +25,7 @@
     beforeEach(function() {
       firstSharingRole = sharingRolesService.getDefaultRole();
       firstSharingPermissions = INBOX_MAILBOX_SHARING_PERMISSIONS[firstSharingRole];
-      mailboxToShare = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Personal'} });
+      mailboxToShare = new jmapDraft.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Personal'} });
     });
 
     describe('The grantAndUpdate function', function() {
@@ -59,7 +59,7 @@
 
       it('should reject when not performed by mailbox\'s owner', function(done) {
         var shareOwner = 'user1@open-paas.org';
-        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+        var share = new jmapDraft.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
 
         sharingRolesService.grantAndUpdate(firstSharingRole, share, 'user2@open-paas.org')
           .catch(function(m) {
@@ -137,7 +137,7 @@
 
       it('should reject when not performed by mailbox\'s owner', function(done) {
         var shareOwner = 'user1@open-paas.org';
-        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+        var share = new jmapDraft.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
 
         sharingRolesService.grant(firstSharingRole, share, 'user2@open-paas.org')
           .catch(function(m) {
@@ -182,7 +182,7 @@
 
       it('should reject when not performed by mailbox\'s owner', function(done) {
         var shareOwner = 'user1@open-paas.org';
-        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+        var share = new jmapDraft.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
 
         sharingRolesService.revoke(share, 'user2@open-paas.org')
           .catch(function(m) {
@@ -228,7 +228,7 @@
 
       it('should reject when not performed by mailbox\'s owner', function(done) {
         var shareOwner = 'user1@open-paas.org';
-        var share = new jmap.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
+        var share = new jmapDraft.Mailbox({}, 'id', 'share #1', { namespace: { type: 'Delegated', owner: shareOwner}});
 
         sharingRolesService.revokeAndUpdate(share, 'user2@open-paas.org')
           .catch(function(m) {

@@ -54,7 +54,7 @@ describe('The Unified Inbox Angular module services', function() {
 
   describe('The sendEmail service', function() {
 
-    var $httpBackend, $rootScope, jmap, sendEmail, backgroundProcessorService, jmapClientMock;
+    var $httpBackend, $rootScope, jmapDraft, sendEmail, backgroundProcessorService, jmapClientMock;
 
     beforeEach(function() {
       jmapClientMock = {};
@@ -65,10 +65,10 @@ describe('The Unified Inbox Angular module services', function() {
         });
       });
 
-      angular.mock.inject(function(_$httpBackend_, _$rootScope_, _jmap_, _sendEmail_, _backgroundProcessorService_) {
+      angular.mock.inject(function(_$httpBackend_, _$rootScope_, _jmapDraft_, _sendEmail_, _backgroundProcessorService_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
-        jmap = _jmap_;
+        jmapDraft = _jmapDraft_;
         sendEmail = _sendEmail_;
         backgroundProcessorService = _backgroundProcessorService_;
       });
@@ -128,7 +128,7 @@ describe('The Unified Inbox Angular module services', function() {
         config['linagora.esn.unifiedinbox.isJmapSendingEnabled'] = true;
         config['linagora.esn.unifiedinbox.isSaveDraftBeforeSendingEnabled'] = false;
 
-        outbox = new jmap.Mailbox({}, 'id_outbox', 'name_outbox', { role: 'outbox' });
+        outbox = new jmapDraft.Mailbox({}, 'id_outbox', 'name_outbox', { role: 'outbox' });
         jmapClientMock.getMailboxes = function() {
           return $q.when([outbox]);
         };

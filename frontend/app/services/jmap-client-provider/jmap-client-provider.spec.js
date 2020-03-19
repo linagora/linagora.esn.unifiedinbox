@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The jmapClientProvider service', function() {
 
-  var $rootScope, jmapClientProvider, jmap, config;
+  var $rootScope, jmapClientProvider, jmapDraft, config;
 
   beforeEach(function() {
     angular.mock.module('linagora.esn.unifiedinbox', function($provide) {
@@ -23,10 +23,10 @@ describe('The jmapClientProvider service', function() {
   });
 
   function injectServices() {
-    angular.mock.inject(function(_$rootScope_, _jmapClientProvider_, _jmap_) {
+    angular.mock.inject(function(_$rootScope_, _jmapClientProvider_, _jmapDraft_) {
       $rootScope = _$rootScope_;
       jmapClientProvider = _jmapClientProvider_;
-      jmap = _jmap_;
+      jmapDraft = _jmapDraft_;
     });
   }
 
@@ -59,7 +59,7 @@ describe('The jmapClientProvider service', function() {
     injectServices.bind(this)();
 
     jmapClientProvider.get().then(function(client) {
-      expect(client).to.be.an.instanceof(jmap.Client);
+      expect(client).to.be.an.instanceof(jmapDraft.Client);
       expect(client.authToken).to.equal('Bearer expected jwt');
       expect(client.apiUrl).to.equal('expected jmap api');
       expect(client.downloadUrl).to.equal('expected jmap downloadUrl');

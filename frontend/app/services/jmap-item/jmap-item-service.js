@@ -3,9 +3,9 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService, backgroundAction,
+    .service('inboxJmapItemService', function($q, $rootScope, session, newComposerService, emailSendingService,
                                               withJmapClient,
-                                              jmap, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, notificationFactory, _, esnI18nService,
+                                              jmapDraft, inboxMailboxesService, infiniteListService, inboxSelectionService, asyncJmapAction, notificationFactory, _, esnI18nService,
                                               INBOX_EVENTS, INBOX_DISPLAY_NAME_SIZE, inboxFilteredList, inboxConfig, uuid4, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS,
                                               INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS, INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS) {
 
@@ -47,15 +47,15 @@
       }
 
       function moveToTrash(itemOrItems) {
-        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.TRASH);
+        return _moveToMailboxWithRole(itemOrItems, jmapDraft.MailboxRole.TRASH);
       }
 
       function moveToSpam(itemOrItems) {
-        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.SPAM);
+        return _moveToMailboxWithRole(itemOrItems, jmapDraft.MailboxRole.SPAM);
       }
 
       function unSpam(itemOrItems) {
-        return _moveToMailboxWithRole(itemOrItems, jmap.MailboxRole.INBOX);
+        return _moveToMailboxWithRole(itemOrItems, jmapDraft.MailboxRole.INBOX);
       }
 
       function _updateItemMailboxIds(item, newMailboxIds) {
@@ -338,7 +338,7 @@
         }, function(client) {
           var encodedSubject = encodeURIComponent(messageSubject + '.eml');
 
-          return new jmap.Attachment(client, item.blobId, { name: encodedSubject }).getSignedDownloadUrl();
+          return new jmapDraft.Attachment(client, item.blobId, { name: encodedSubject }).getSignedDownloadUrl();
         });
       }
 
@@ -409,7 +409,7 @@
 
       function disableVacation() {
         return asyncJmapAction('Modification of vacation settings', function(client) {
-          return client.setVacationResponse(new jmap.VacationResponse(client, { isEnabled: false }))
+          return client.setVacationResponse(new jmapDraft.VacationResponse(client, { isEnabled: false }))
             .then(function() {
               $rootScope.$broadcast(INBOX_EVENTS.VACATION_STATUS);
             });

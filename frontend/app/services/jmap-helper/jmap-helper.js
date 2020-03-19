@@ -3,7 +3,7 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .factory('inboxJmapHelper', function($q, jmap, emailBodyService, withJmapClient, inboxIdentitiesService, _, JMAP_GET_MESSAGES_VIEW) {
+    .factory('inboxJmapHelper', function($q, jmapDraft, emailBodyService, withJmapClient, inboxIdentitiesService, _, JMAP_GET_MESSAGES_VIEW) {
       return {
         getMessageById: getMessageById,
         toOutboundMessage: toOutboundMessage
@@ -21,11 +21,11 @@
         return $q.when(emailState.identity || inboxIdentitiesService.getDefaultIdentity())
           .then(function(identity) {
             var message = {
-              from: new jmap.EMailer({
+              from: new jmapDraft.EMailer({
                 email: identity.email,
                 name: identity.name
               }),
-              replyTo: identity.replyTo ? [new jmap.EMailer({ email: identity.replyTo })] : null,
+              replyTo: identity.replyTo ? [new jmapDraft.EMailer({ email: identity.replyTo })] : null,
               subject: emailState.subject,
               to: _mapToEMailer(emailState.to),
               cc: _mapToEMailer(emailState.cc),
@@ -42,13 +42,13 @@
               });
             }
 
-            return new jmap.OutboundMessage(jmapClient, message);
+            return new jmapDraft.OutboundMessage(jmapClient, message);
           });
       }
 
       function _mapToEMailer(recipients) {
         return (recipients || []).map(function(recipient) {
-          return new jmap.EMailer({
+          return new jmapDraft.EMailer({
             name: recipient.name,
             email: recipient.email
           });

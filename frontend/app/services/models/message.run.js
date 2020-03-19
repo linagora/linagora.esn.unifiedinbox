@@ -3,8 +3,8 @@
 
   angular.module('linagora.esn.unifiedinbox')
 
-    .run(function(jmap, inboxMakeSelectable, inboxMailboxesService, emailSendingService) {
-      Object.defineProperties(jmap.Message.prototype, {
+    .run(function(jmapDraft, inboxMakeSelectable, inboxMailboxesService, emailSendingService) {
+      Object.defineProperties(jmapDraft.Message.prototype, {
         isUnread: {
           configurable: true,
           get: function() { return this._isUnread; },
@@ -27,7 +27,7 @@
         }
       });
 
-      inboxMakeSelectable(jmap.Message.prototype);
+      inboxMakeSelectable(jmapDraft.Message.prototype);
     });
 
 })();

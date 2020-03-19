@@ -6,7 +6,7 @@ var expect = chai.expect;
 
 describe('The inboxJmapHelper service', function() {
 
-  var inboxJmapHelper, jmap, emailBodyServiceMock, $rootScope, notificationFactory, jmapClient;
+  var inboxJmapHelper, jmapDraft, emailBodyServiceMock, $rootScope, notificationFactory, jmapClient;
 
   beforeEach(function() {
     angular.mock.module('linagora.esn.unifiedinbox', function($provide) {
@@ -23,9 +23,9 @@ describe('The inboxJmapHelper service', function() {
       });
     });
 
-    angular.mock.inject(function(_$rootScope_, _inboxJmapHelper_, _notificationFactory_, _jmap_) {
+    angular.mock.inject(function(_$rootScope_, _inboxJmapHelper_, _notificationFactory_, _jmapDraft_) {
       inboxJmapHelper = _inboxJmapHelper_;
-      jmap = _jmap_;
+      jmapDraft = _jmapDraft_;
       $rootScope = _$rootScope_;
       notificationFactory = _notificationFactory_;
 
@@ -65,7 +65,7 @@ describe('The inboxJmapHelper service', function() {
 
   describe('The toOutboundMessage fn', function() {
 
-    it('should build and return new instance of jmap.OutboundMessage', function() {
+    it('should build and return new instance of jmapDraft.OutboundMessage', function() {
       inboxJmapHelper.toOutboundMessage({}, {
         identity: {
           name: 'Alice Cooper',
@@ -77,17 +77,17 @@ describe('The inboxJmapHelper service', function() {
         cc: [{email: 'cc@domain', name: 'cc'}],
         bcc: [{email: 'bcc@domain', name: 'bcc'}]
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Alice Cooper',
             email: 'alice@domain'
           }),
           replyTo: null,
           subject: 'expected subject',
           htmlBody: 'expected htmlBody',
-          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})],
-          cc: [new jmap.EMailer({email: 'cc@domain', name: 'cc'})],
-          bcc: [new jmap.EMailer({email: 'bcc@domain', name: 'bcc'})]
+          to: [new jmapDraft.EMailer({email: 'to@domain', name: 'to'})],
+          cc: [new jmapDraft.EMailer({email: 'cc@domain', name: 'cc'})],
+          bcc: [new jmapDraft.EMailer({email: 'bcc@domain', name: 'bcc'})]
         }));
       });
       $rootScope.$digest();
@@ -102,8 +102,8 @@ describe('The inboxJmapHelper service', function() {
         htmlBody: 'expected htmlBody',
         attachments: [{ blobId: '1' }, { blobId: '' }]
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Alice Cooper',
             email: 'alice@domain'
           }),
@@ -111,7 +111,7 @@ describe('The inboxJmapHelper service', function() {
           to: [],
           cc: [],
           bcc: [],
-          attachments: [new jmap.Attachment({}, '1')]
+          attachments: [new jmapDraft.Attachment({}, '1')]
         }));
       });
       $rootScope.$digest();
@@ -160,13 +160,13 @@ describe('The inboxJmapHelper service', function() {
         },
         to: [{email: 'to@domain', name: 'to'}]
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Alice Cooper',
             email: 'alice@domain'
           }),
-          replyTo: [new jmap.EMailer({ email: 'bob@domain' })],
-          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})],
+          replyTo: [new jmapDraft.EMailer({ email: 'bob@domain' })],
+          to: [new jmapDraft.EMailer({email: 'to@domain', name: 'to'})],
           subject: null,
           htmlBody: null,
           cc: [],
@@ -180,13 +180,13 @@ describe('The inboxJmapHelper service', function() {
       inboxJmapHelper.toOutboundMessage({}, {
         to: [{email: 'to@domain', name: 'to'}]
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Default Name',
             email: 'default@domain.com'
           }),
           replyTo: null,
-          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})],
+          to: [new jmapDraft.EMailer({email: 'to@domain', name: 'to'})],
           subject: null,
           htmlBody: null,
           cc: [],
@@ -210,8 +210,8 @@ describe('The inboxJmapHelper service', function() {
         },
         to: [{email: 'to@domain', name: 'to'}], cc: [], bcc: []
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Sender',
             email: 'sender@domain'
           }),
@@ -222,7 +222,7 @@ describe('The inboxJmapHelper service', function() {
             'In-Reply-To': '123',
             References: '123 456'
           },
-          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
+          to: [new jmapDraft.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
         }));
       });
       $rootScope.$digest();
@@ -238,15 +238,15 @@ describe('The inboxJmapHelper service', function() {
         htmlBody: 'expected htmlBody',
         to: [{email: 'to@domain', name: 'to'}], cc: [], bcc: []
       }).then(function(message) {
-        expect(message).to.deep.equal(new jmap.OutboundMessage({}, {
-          from: new jmap.EMailer({
+        expect(message).to.deep.equal(new jmapDraft.OutboundMessage({}, {
+          from: new jmapDraft.EMailer({
             name: 'Sender',
             email: 'sender@domain'
           }),
           replyTo: null,
           subject: 'expected subject',
           htmlBody: 'expected htmlBody',
-          to: [new jmap.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
+          to: [new jmapDraft.EMailer({email: 'to@domain', name: 'to'})], cc: [], bcc: []
         }));
       });
       $rootScope.$digest();

@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  /* global chai: false, sinon: false, jmap: false */
+  /* global chai: false, sinon: false, jmapDraft: false */
   var expect = chai.expect;
 
   describe('The inboxSharedMailboxesService service', function() {
@@ -45,13 +45,13 @@
       });
 
       it('should return false for system mailboxes', function() {
-        var systemMailbox = new jmap.Mailbox({}, 'id_outbox', 'name_outbox', { role: 'outbox' });
+        var systemMailbox = new jmapDraft.Mailbox({}, 'id_outbox', 'name_outbox', { role: 'outbox' });
 
         expect(inboxSharedMailboxesService.isShared(systemMailbox)).to.equal(false);
       });
 
       it('should return true when mailbox is shared', function() {
-        var sharedMailbox = new jmap.Mailbox({}, 'id_shared', 'shared_mailbox', { namespace: { type: 'dElEgAtEd'} });
+        var sharedMailbox = new jmapDraft.Mailbox({}, 'id_shared', 'shared_mailbox', { namespace: { type: 'dElEgAtEd'} });
 
         expect(inboxSharedMailboxesService.isShared(sharedMailbox)).to.equal(true);
       });
