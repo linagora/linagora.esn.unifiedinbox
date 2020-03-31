@@ -275,6 +275,7 @@ angular.module('linagora.esn.unifiedinbox')
         return email;
       }
 
+      email = angular.extend({}, email);
       email.mappingsUrlAndCid.forEach(function(mapping) {
         email.htmlBody = email.htmlBody.replace(mapping.url, mapping.cid);
       });
