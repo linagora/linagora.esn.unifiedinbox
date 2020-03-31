@@ -1559,9 +1559,7 @@ describe('The Unified Inbox Angular module services', function() {
           '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
         };
 
-        emailSendingService.handleInlineImageBeforeSending(email);
-
-        expect(email.htmlBody).to.have.string('cid:contentIdA', 'cid:contentIdB');
+        expect(emailSendingService.handleInlineImageBeforeSending(email).htmlBody).to.have.string('cid:contentIdA', 'cid:contentIdB');
       });
 
       it('should remove mappingsUrlAndCid property', function() {
@@ -1580,9 +1578,7 @@ describe('The Unified Inbox Angular module services', function() {
           '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
         };
 
-        emailSendingService.handleInlineImageBeforeSending(email);
-
-        expect(email.mappingsUrlAndCid).to.be.undefined;
+        expect(emailSendingService.handleInlineImageBeforeSending(email).mappingsUrlAndCid).to.be.undefined;
       });
     });
   });
