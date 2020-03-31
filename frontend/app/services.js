@@ -276,7 +276,7 @@ angular.module('linagora.esn.unifiedinbox')
       }
 
       email.mappingsUrlAndCid.forEach(function(mapping) {
-        email.htmlBody = email.htmlBody.replace(mapping.url, mapping.cid);
+        email.htmlBody = email.htmlBody.replace(mapping.url, 'cid:' + mapping.cid);
       });
 
       delete email.mappingsUrlAndCid;
@@ -382,21 +382,19 @@ angular.module('linagora.esn.unifiedinbox')
     }
 
     function _handleInlineAttachment(newEmail, attachments) {
-      var inlineCids = _getInlineImageSources(newEmail.quoted.htmlBody);
-      var inlineImageMappingsUrlAndCid = _getInlineImageMappingsUrlAndCid(inlineCids, attachments);
+      var inlineCids = _getCidFromImageSources(newEmail.quoted.htmlBody);
 
       attachments.forEach(function(attachment) {
         newEmail.attachments.push(attachment);
       });
 
-      return $q.all(inlineImageMappingsUrlAndCid)
+      return _getInlineImageMappingsUrlAndCid(inlineCids, attachments)
         .then(function(mappings) {
           newEmail.mappingsUrlAndCid = mappings;
           mappings.forEach(function(mapping) {
-            newEmail.quoted.htmlBody = newEmail.quoted.htmlBody.replace(mapping.cid, mapping.url);
+            newEmail.quoted.htmlBody = newEmail.quoted.htmlBody.replace('cid:' + mapping.cid, mapping.url);
           });
-        })
-        .then($q.when());
+        });
     }
 
     function _getInlineAttachments(attachments) {
@@ -405,28 +403,37 @@ angular.module('linagora.esn.unifiedinbox')
       });
     }
 
-    function _getInlineImageSources(messageBody) {
+    function _getCidFromImageSources(messageBody) {
       var document = new DOMParser().parseFromString(messageBody, 'text/html');
       var elements = document.getElementsByTagName('img');
 
       // elements is a HTMLCollection and isn't a 'true' array,
       // elements doesn't have 'forEach', 'map' function like an array. Therefore, we have to convert it to array.
       return [].map.call(elements, function(element) {
-        return element.src;
-      });
+        var cidMatch = element &&
+                       element.src &&
+                       element.src.match(/^cid:(\S+)/);
+
+        return cidMatch && cidMatch[1];
+      }).filter(Boolean);
     }
 
     function _getInlineImageMappingsUrlAndCid(cids, attachments) {
-      return cids.map(function(cid) {
+      var mappingPromises = [];
+
+      cids.forEach(function(cid) {
         var inlineAttachment = _.find(attachments, function(attachment) {
-          return attachment.cid === cid.split('cid:')[1];
+          return attachment.cid === cid;
         });
 
-        return inlineAttachment.getSignedDownloadUrl()
-          .then(function(url) {
-            return {url: url, cid: 'cid:' + inlineAttachment.cid};
-          });
+        if (inlineAttachment && inlineAttachment.getSignedDownloadUrl) {
+          mappingPromises.push(inlineAttachment.getSignedDownloadUrl().then(function(url) {
+            return {url: url, cid: inlineAttachment.cid};
+          }));
+        }
       });
+
+      return mappingPromises.length > 0 ? $q.all(mappingPromises) : $q.when([]);
     }
   })
 
