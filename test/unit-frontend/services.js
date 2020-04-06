@@ -888,14 +888,15 @@ describe('The Unified Inbox Angular module services', function() {
           ],
           htmlBody: '<p>my body</p>' +
           '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
-          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>' +
+          '<img src="http://random/image.png">'
         };
 
         sender = {displayName: 'sender', email: 'sender@linagora.com'};
 
         mockGetMessages(email);
         emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
-          expect(email.htmlBody).to.have.string('imageUrlA', 'imageUrlB');
+          expect(email.htmlBody).to.have.string('imageUrlA', 'imageUrlB', 'http://random/image.png');
         }).then(done, done);
 
         $rootScope.$digest();
@@ -910,7 +911,9 @@ describe('The Unified Inbox Angular module services', function() {
           ],
           htmlBody: '<p>my body</p>' +
           '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
-          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>' +
+          '<img src="http://random/image.png">' +
+          '<img>'
         };
 
         sender = {displayName: 'sender', email: 'sender@linagora.com'};
@@ -918,8 +921,8 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
           expect(email.mappingsUrlAndCid).to.deep.equal([
-            { url: 'imageUrlA', cid: 'cid:contentIdA'},
-            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+            { url: 'imageUrlA', cid: 'contentIdA'},
+            { url: 'imageUrlB', cid: 'contentIdB'}
           ]);
         }).then(done, done);
 
@@ -1192,7 +1195,9 @@ describe('The Unified Inbox Angular module services', function() {
           ],
           htmlBody: '<p>my body</p>' +
           '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
-          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>' +
+          '<img src="http://random/image.png">' +
+          '<img>'
         };
 
         sender = {displayName: 'sender', email: 'sender@linagora.com'};
@@ -1200,8 +1205,8 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
           expect(email.mappingsUrlAndCid).to.deep.equal([
-            { url: 'imageUrlA', cid: 'cid:contentIdA'},
-            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+            { url: 'imageUrlA', cid: 'contentIdA'},
+            { url: 'imageUrlB', cid: 'contentIdB'}
           ]);
         }).then(done, done);
 
@@ -1450,7 +1455,9 @@ describe('The Unified Inbox Angular module services', function() {
           ],
           htmlBody: '<p>my body</p>' +
           '<p><img height="1" width="1" alt="imageA" src="cid:contentIdA"></p>' +
-          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>'
+          '<p><img height="1" width="1" alt="imageB" src="cid:contentIdB"></p>' +
+          '<img src="http://random/image.png">' +
+          '<img>'
         };
 
         sender = {displayName: 'sender', email: 'sender@linagora.com'};
@@ -1458,8 +1465,8 @@ describe('The Unified Inbox Angular module services', function() {
         mockGetMessages(email);
         emailSendingService.createReplyAllEmailObject('id', sender).then(function(email) {
           expect(email.mappingsUrlAndCid).to.deep.equal([
-            { url: 'imageUrlA', cid: 'cid:contentIdA'},
-            { url: 'imageUrlB', cid: 'cid:contentIdB'}
+            { url: 'imageUrlA', cid: 'contentIdA'},
+            { url: 'imageUrlB', cid: 'contentIdB'}
           ]);
         }).then(done, done);
 
@@ -1544,17 +1551,15 @@ describe('The Unified Inbox Angular module services', function() {
             { name: 'B', isInline: true, cid: 'contentIdB' }
           ],
           mappingsUrlAndCid: [
-            {url: 'imageUrlA', cid: 'cid:contentIdA'},
-            {url: 'imageUrlB', cid: 'cid:contentIdB'}
+            {url: 'imageUrlA', cid: 'contentIdA'},
+            {url: 'imageUrlB', cid: 'contentIdB'}
           ],
           htmlBody: '<p>my body</p>' +
           '<p><img src="imageUrlA" alt="imageA" width="1" height="1"></p>' +
           '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
         };
 
-        emailSendingService.handleInlineImageBeforeSending(email);
-
-        expect(email.htmlBody).to.have.string('cid:contentIdA', 'cid:contentIdB');
+        expect(emailSendingService.handleInlineImageBeforeSending(email).htmlBody).to.have.string('cid:contentIdA', 'cid:contentIdB');
       });
 
       it('should remove mappingsUrlAndCid property', function() {
@@ -1573,9 +1578,7 @@ describe('The Unified Inbox Angular module services', function() {
           '<p><img src="imageUrlA" alt="imageB" width="1" height="1"></p>'
         };
 
-        emailSendingService.handleInlineImageBeforeSending(email);
-
-        expect(email.mappingsUrlAndCid).to.be.undefined;
+        expect(emailSendingService.handleInlineImageBeforeSending(email).mappingsUrlAndCid).to.be.undefined;
       });
     });
   });
