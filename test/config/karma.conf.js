@@ -94,6 +94,7 @@ module.exports = function(config) {
       'frontend/views/**/*.pug'
     ],
     exclude: [
+      'node_modules/linagora-rse/test/fixtures/simulated-collaboration/**/*.js',
       'node_modules/linagora-rse/frontend/js/**/*.spec.js',
       'frontend/app/module-registry.run.js',
       'frontend/app/search/search-query.run.js',

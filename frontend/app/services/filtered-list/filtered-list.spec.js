@@ -256,6 +256,23 @@ describe('The inboxFilteredList factory', function() {
       expect(inboxFilteredList.list()).to.deep.equal(messages);
     });
 
+    it('should order items correctly', function() {
+      var messages = [
+        newMessage({ isUnread: true, date: new Date('24 April 2020') }),
+        newMessage({ isUnread: true, date: new Date('23 April 2020') }),
+        newMessage({ isUnread: true, date: new Date('22 April 2020') })
+      ];
+
+      inboxFilteredList.addAll([
+        messages[1],
+        messages[2],
+        messages[0]
+      ]);
+      $rootScope.$digest();
+
+      expect(inboxFilteredList.list()).to.deep.equal(messages);
+    });
+
     it('should link items, considering edges correctly', function() {
       var messages = [
         newMessage({ isUnread: true, date: 1 }),
