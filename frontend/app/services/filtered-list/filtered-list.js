@@ -74,7 +74,7 @@
         // In the future, if we make the order configurable for instance, we will just have to change the callback
         // function passed to `sortedIndex` and the array will be sorted differently
         items.splice(_.sortedIndex(items, item, function(element) {
-          return -element.date;
+          return -(new Date(element.date).getTime());
         }), 0, item);
       });
 
