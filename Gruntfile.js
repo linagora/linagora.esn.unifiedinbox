@@ -130,6 +130,16 @@ module.exports = function(grunt) {
       }
     },
 
+    swagger_checker: {
+      options: {
+        path: './doc/REST_API/swagger/unifiedinbox-swagger.json',
+        validate: {
+          schema: true,
+          spec: false
+        }
+      }
+    },
+
     puglint: {
       all: {
         options: {
@@ -158,6 +168,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('@linagora/grunt-i18n-checker');
   grunt.loadNpmTasks('grunt-swagger-generate');
+  grunt.loadNpmTasks('grunt-swagger-checker');
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.loadTasks('tasks');
@@ -177,6 +188,7 @@ module.exports = function(grunt) {
   grunt.registerTask('linters-dev', 'Check changed files for lint', ['prepare-quick-lint', 'jshint:quick', 'jscs:quick', 'lint_pattern:quick']);
   grunt.registerTask('pug-linter', 'Check the pug/jade files', ['puglint:all']);
   grunt.registerTask('swagger-generate', 'Grunt plugin for swagger generate', ['swagger_generate']);
+  grunt.registerTask('swagger-validate', ['swagger_checker']);
 
   grunt.registerTask('default', ['test']);
 };

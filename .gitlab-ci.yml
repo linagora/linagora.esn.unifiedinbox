@@ -128,6 +128,7 @@ swagger:
   stage: swagger
   script:
     - grunt swagger-generate
+    - grunt swagger-validate
   artifacts:
     paths:
       - ./doc/REST_API/swagger/unifiedinbox-swagger.json
