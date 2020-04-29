@@ -18,6 +18,7 @@ before(function(done) {
     backendPath: backendPath,
     fixtures: path.resolve(basePath, 'test/midway-backend/fixtures'),
     mongoUrl: testConfig.mongodb.connectionString,
+    mongoConnectionOptions: testConfig.mongodb.connectionOptions,
     initCore(callback) {
       rse.core.init(() => { callback && process.nextTick(callback); });
     }
@@ -32,7 +33,7 @@ before(function(done) {
 
   this.connectMongoose = function(mongoose, done) {
     mongoose.Promise = require('q').Promise; // http://mongoosejs.com/docs/promises.html
-    mongoose.connect(this.testEnv.mongoUrl, done);
+    mongoose.connect(this.testEnv.mongoUrl, this.testEnv.mongoConnectionOptions, done);
   };
 
   rse = require('linagora-rse');

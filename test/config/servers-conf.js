@@ -17,7 +17,14 @@ module.exports = {
   mongodb: {
     host: 'mongo',
     port: 27017,
-    connectionString: 'mongodb://mongo/tests'
+    connectionString: 'mongodb://mongo/tests',
+    connectionOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      auto_reconnect: true
+    }
   },
   elasticsearch: {
     host: 'elasticsearch',
