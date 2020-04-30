@@ -78,7 +78,7 @@ describe('The forwarding creation API', function() {
     it('should return 403 if domain admin gets forwarding for not domain member', function(done) {
       helpers.requireBackend('core/esn-config')('forwarding').inModule('linagora.esn.unifiedinbox')
         .store(true, helpers.callbacks.noErrorAnd(() => {
-          helpers.api.applyDomainDeployment('openAndPrivateCommunities', function(err, deployedModels2) {
+          helpers.api.applyDomainDeployment('openAndPrivateCollaborations', function(err, deployedModels2) {
             if (err) {
               return done(err);
             }
