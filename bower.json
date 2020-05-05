@@ -1,7 +1,7 @@
 {
   "name": "linagora.esn.unifiedinbox",
   "main": "index.js",
-  "version": "1.7.4",
+  "version": "1.7.4-dev",
   "authors": [
     "Linagora <lgs-openpaas-dev@linagora.com>"
   ],
