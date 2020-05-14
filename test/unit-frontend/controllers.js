@@ -87,6 +87,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       $provide.value('inboxFilterDescendantMailboxesFilter', inboxFilterDescendantMailboxesFilter);
       $provide.decorator('inboxFilteredList', function($delegate) {
         $delegate.addAll = sinon.spy($delegate.addAll);
+        $delegate.reset = sinon.spy($delegate.reset);
 
         return $delegate;
       });
@@ -159,6 +160,12 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
 
     afterEach(function() {
       inboxFilteringService.clearFilters();
+    });
+
+    it('should clear filtered list on init the controller', function() {
+      initController('unifiedInboxController');
+
+      expect(inboxFilteredList.reset).to.have.been.calledOnce;
     });
 
     it('should leverage inboxProviders.getAll with options', function() {
