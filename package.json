@@ -1,6 +1,6 @@
 {
   "name": "linagora.esn.unifiedinbox",
-  "version": "1.7.5-dev",
+  "version": "1.7.5-rc2",
   "description": "OpenPaaS Unified Inbox module",
   "main": "index.js",
   "devDependencies": {
