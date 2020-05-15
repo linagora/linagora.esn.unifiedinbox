@@ -907,6 +907,21 @@ describe('The inboxMailboxesService factory', function() {
       $rootScope.$digest();
     });
 
+    it('should filter only unread messages in the mailbox in case user marks all as read', function(done) {
+      var mailboxId = '123';
+
+      inboxSpecialMailboxes.get = function() {};
+
+      inboxMailboxesService.getMessageListFilter(mailboxId, { isUnread: true }).then(function(filter) {
+        expect(filter).to.deep.equal({
+          inMailboxes: [mailboxId],
+          isUnread: true
+        });
+        done();
+      });
+
+      $rootScope.$digest();
+    });
   });
 
   describe('The createMailbox function', function() {
