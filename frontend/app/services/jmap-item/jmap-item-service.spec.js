@@ -751,7 +751,10 @@ describe('The inboxJmapItemService service', function() {
 
       jmapClientMock.getMessageList = function(opts) {
         expect(opts).to.deep.equal({
-          filter: { inMailboxes: [mailboxId]},
+          filter: {
+            inMailboxes: [mailboxId],
+            isUnread: true
+          },
           limit: perPage,
           position: 0
         });
