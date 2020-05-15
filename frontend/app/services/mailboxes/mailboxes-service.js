@@ -349,10 +349,12 @@
 
       }
 
-      function getMessageListFilter(mailboxId) {
+      function getMessageListFilter(mailboxId, options) {
+        options = options || {};
+
         if (!mailboxId) {
           return getMailboxWithRole(jmapDraft.MailboxRole.INBOX).then(function(mailbox) {
-            return { inMailboxes: [mailbox.id] };
+            return _.assign({}, { inMailboxes: [mailbox.id] }, options);
           });
         }
 
@@ -380,7 +382,7 @@
               });
           }
         } else {
-          filter = { inMailboxes: [mailboxId] };
+          filter = _.assign({}, { inMailboxes: [mailboxId] }, options);
         }
 
         return $q.when(filter);

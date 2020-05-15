@@ -374,7 +374,7 @@
 
       function setAllFlag(mailboxId, flag, state) {
 
-        return inboxMailboxesService.getMessageListFilter(mailboxId).then(function(mailboxFilter) {
+        return inboxMailboxesService.getMessageListFilter(mailboxId, { isUnread: true }).then(function(mailboxFilter) {
           $rootScope.$broadcast(INBOX_EVENTS.BADGE_LOADING_ACTIVATED, mailboxId);
 
           return inboxConfig('numberItemsPerPageOnBulkReadOperations', INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_READ_OPERATIONS).then(function(numberItemsPerPageOnBulkReadOperations) {
