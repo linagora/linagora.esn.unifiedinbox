@@ -4,6 +4,7 @@ const AwesomeModule = require('awesome-module');
 const Dependency = AwesomeModule.AwesomeModuleDependency;
 
 const FRONTEND_JS_PATH = path.join(__dirname, 'frontend/app/');
+const FRONTEND_JS_PATH_BUILD = __dirname + '/dist/';
 const APP_ENTRY_POINT = path.join(FRONTEND_JS_PATH, 'app.js');
 const NAMESPACE = 'unifiedinbox';
 const MODULE_NAME = 'linagora.esn.unifiedinbox';
@@ -55,14 +56,11 @@ module.exports = new AwesomeModule(MODULE_NAME, {
       require('./backend/webserver/mailto/app')(dependencies);
       const app = require('./backend/webserver/application')(dependencies);
       const webserverWrapper = dependencies('webserver-wrapper');
-      const frontendFullPathModules = [APP_ENTRY_POINT].concat(
-        glob.sync([
-          `${FRONTEND_JS_PATH}**/!(*spec).js`,
-          `!${FRONTEND_JS_PATH}/mailto/**`,
-          `!${APP_ENTRY_POINT}`
-        ])
-      );
-      const frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH, ''));
+      const frontendFullPathModules = glob.sync([
+        `${FRONTEND_JS_PATH_BUILD}**/*.js`,
+        `${FRONTEND_JS_PATH_BUILD}**/!(*spec).js`
+      ]);
+      const frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH_BUILD, ''));
 
       webserverWrapper.injectJS(NAMESPACE, EXTERNAL_COMPONENTS_JS, 'esn');
       webserverWrapper.injectCSS(NAMESPACE, EXTERNAL_COMPONENTS_CSS, 'esn');
