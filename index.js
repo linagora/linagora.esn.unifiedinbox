@@ -56,11 +56,24 @@ module.exports = new AwesomeModule(MODULE_NAME, {
       require('./backend/webserver/mailto/app')(dependencies);
       const app = require('./backend/webserver/application')(dependencies);
       const webserverWrapper = dependencies('webserver-wrapper');
-      const frontendFullPathModules = glob.sync([
-        `${FRONTEND_JS_PATH_BUILD}**/*.js`,
-        `${FRONTEND_JS_PATH_BUILD}**/!(*spec).js`
-      ]);
-      const frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH_BUILD, ''));
+      let frontendFullPathModules, frontendUriModules;
+
+      if (process.env.NODE_ENV !== 'production') {
+        frontendFullPathModules = [APP_ENTRY_POINT].concat(
+          glob.sync([
+            `${FRONTEND_JS_PATH}**/!(*spec).js`,
+            `!${FRONTEND_JS_PATH}/mailto/**`,
+            `!${APP_ENTRY_POINT}`
+          ])
+        );
+        frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH, ''));
+      } else {
+        frontendFullPathModules = glob.sync([
+          `${FRONTEND_JS_PATH_BUILD}**/*.js`,
+          `${FRONTEND_JS_PATH_BUILD}**/!(*spec).js`
+        ]);
+        frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH_BUILD, ''));
+      }
 
       webserverWrapper.injectJS(NAMESPACE, EXTERNAL_COMPONENTS_JS, 'esn');
       webserverWrapper.injectCSS(NAMESPACE, EXTERNAL_COMPONENTS_CSS, 'esn');

@@ -8,7 +8,7 @@ const FRONTEND_PATH = constants.FRONTEND_PATH,
       CORE_FRONTEND_PATH = constants.CORE_FRONTEND_PATH;
 
 module.exports = (dependencies, application) => {
-  application.use(express.static(FRONTEND_PATH_BUILD));
+  application.use(express.static(process.env.NODE_ENV !== 'production' ? FRONTEND_PATH : FRONTEND_PATH_BUILD));
   application.set('views', [
     FRONTEND_PATH + '/views',
     FRONTEND_PATH + '/app'
