@@ -66,12 +66,13 @@ module.exports = new AwesomeModule(MODULE_NAME, {
             `!${APP_ENTRY_POINT}`
           ])
         );
+
         frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH, ''));
       } else {
         frontendFullPathModules = glob.sync([
-          `${FRONTEND_JS_PATH_BUILD}**/*.js`,
-          `${FRONTEND_JS_PATH_BUILD}**/!(*spec).js`
+          FRONTEND_JS_PATH_BUILD + '*.js'
         ]);
+
         frontendUriModules = frontendFullPathModules.map(filepath => filepath.replace(FRONTEND_JS_PATH_BUILD, ''));
       }
 

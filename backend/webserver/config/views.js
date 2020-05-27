@@ -1,11 +1,7 @@
 'use strict';
 
-const express = require('express'),
-      constants = require('../constants');
-
-const FRONTEND_PATH = constants.FRONTEND_PATH,
-      FRONTEND_PATH_BUILD = constants.FRONTEND_PATH_BUILD,
-      CORE_FRONTEND_PATH = constants.CORE_FRONTEND_PATH;
+const express = require('express');
+const { FRONTEND_PATH, FRONTEND_PATH_BUILD, CORE_FRONTEND_PATH } = require('../constants');
 
 module.exports = (dependencies, application) => {
   application.use(express.static(process.env.NODE_ENV !== 'production' ? FRONTEND_PATH : FRONTEND_PATH_BUILD));
