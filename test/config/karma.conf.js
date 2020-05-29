@@ -99,7 +99,8 @@ module.exports = function(config) {
       'frontend/app/module-registry.run.js',
       'frontend/app/search/search-query.run.js',
       'frontend/app/mailto/mailto.mocks.js',
-      'frontend/app/mailto/mailto.pug'
+      'frontend/app/mailto/mailto.pug',
+      'frontend/app/services/jmap-client-provider/jmap-client-provider.run.js'
     ],
     frameworks: ['mocha'],
     colors: true,
