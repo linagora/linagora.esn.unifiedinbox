@@ -494,7 +494,6 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
   });
 
   describe('The recipientsAutoComplete directive', function() {
-
     function compileDirectiveThenGetScope() {
       compileDirective('<div><recipients-auto-complete ng-model="model" template="recipients-auto-complete"></recipients-auto-complete></div>', {
         $composerController: {
@@ -560,6 +559,16 @@ describe('The linagora.esn.unifiedinbox Main module directives', function() {
       var scope = compileDirectiveThenGetScope();
 
       expect(scope.onTagAdding({ email: 'invalid-email' })).to.equal(false);
+    });
+
+    it('should add new tag even if there is a not invalid email format when ignoring email format', function() {
+      compileDirective('<div><recipients-auto-complete ng-model="model" template="recipients-auto-complete" ignore-email-format="true"></recipients-auto-complete></div>', {
+        $composerController: {}
+      });
+
+      var scope = element.find('recipients-auto-complete').isolateScope();
+
+      expect(scope.onTagAdding({ email: 'invalid-email' })).to.equal(true);
     });
 
     it('should fallback to email when name is missing', function() {
