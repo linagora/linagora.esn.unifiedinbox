@@ -278,7 +278,8 @@ angular.module('linagora.esn.unifiedinbox')
         excludedEmails: '=',
         addClass: '=?',
         onEmailAdded: '=',
-        onEmailRemoved: '='
+        onEmailRemoved: '=',
+        ignoreEmailFormat: '=?'
       },
       templateUrl: '/unifiedinbox/views/composer/recipients-auto-complete.html',
       link: function(scope, element) {
@@ -329,7 +330,7 @@ angular.module('linagora.esn.unifiedinbox')
             tag.name = tag.name.trim();
             tag.email = tag.name;
           } else if (!tag.name || (tag.name && !tag.name.trim())) {
-              tag.name = tag.email;
+            tag.name = tag.email;
           }
         }
 
@@ -353,8 +354,7 @@ angular.module('linagora.esn.unifiedinbox')
 
         scope.onTagAdding = function($tag) {
           normalizeToEMailer($tag);
-
-          if (!emailService.isValidEmail($tag.email)) {
+          if (!scope.ignoreEmailFormat && !emailService.isValidEmail($tag.email)) {
             return false;
           }
 
