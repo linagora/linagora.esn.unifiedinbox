@@ -318,13 +318,19 @@ angular.module('linagora.esn.unifiedinbox')
     inboxMailboxesService.assignMailboxesList($scope, inboxMailboxesService.filterSystemMailboxes);
   })
 
-  .controller('addFolderController', function($scope, inboxMailboxesService, rejectWithErrorNotification, $modal) {
+  .controller('addFolderController', function(
+    $scope,
+    $modal,
+    rejectWithErrorNotification,
+    inboxMailboxesService,
+    inboxUtils
+  ) {
     inboxMailboxesService.assignMailboxesList($scope);
 
     $scope.mailbox = $scope.mailbox ? $scope.mailbox : {};
 
     $scope.addFolder = function(hide) {
-      if (!$scope.mailbox.name) {
+      if (!$scope.mailbox.name || !inboxUtils.isValidMailboxName($scope.mailbox.name)) {
         return rejectWithErrorNotification('Please enter a valid folder name');
       }
       hide();
@@ -345,7 +351,7 @@ angular.module('linagora.esn.unifiedinbox')
     };
   })
 
-  .controller('editFolderController', function($scope, inboxMailboxesService, _, rejectWithErrorNotification) {
+  .controller('editFolderController', function($scope, inboxMailboxesService, _, rejectWithErrorNotification, inboxUtils) {
     var originalMailbox;
 
     inboxMailboxesService
@@ -356,7 +362,7 @@ angular.module('linagora.esn.unifiedinbox')
       });
 
     $scope.editFolder = function(hide) {
-      if (!$scope.mailbox.name) {
+      if (!$scope.mailbox.name || !inboxUtils.isValidMailboxName($scope.mailbox.name)) {
         return rejectWithErrorNotification('Please enter a valid folder name');
       }
       hide();

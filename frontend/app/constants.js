@@ -31,6 +31,9 @@
     .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_DELETE_OPERATIONS', 30)
     .constant('INBOX_DEFAULT_NUMBER_ITEMS_PER_PAGE_ON_BULK_UPDATE_OPERATIONS', 30)
     .constant('DEFAULT_VIEW', 'messages')
+    .constant('INBOX_DEFAULT_MAILBOX_NAMES', {
+      INBOX: 'INBOX'
+    })
     .constant('INBOX_MESSAGE_HEADERS', {
       READ_RECEIPT: 'Disposition-Notification-To',
       REPLY_TO: 'In-Reply-To',
