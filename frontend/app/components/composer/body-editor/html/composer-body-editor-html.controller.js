@@ -54,6 +54,11 @@
       }
 
       function onSummernoteBlur() {
+        // Work around to fix paste(Ctrl + v) issue on Firefox
+        if ($element.find('.summernote').summernote('isEmpty')) {
+          return;
+        }
+
         self.onBodyUpdate({ $body: $element.find('.summernote').summernote('code') });
       }
 
