@@ -11,7 +11,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       newComposerService = {}, $state, $modal, $hide, navigateTo, inboxPlugins, inboxFilteredList,
       inboxMailboxesService, inboxJmapItemService, _, fileUploadMock, config, moment, inboxMailboxesCache,
       esnPreviousPage, inboxFilterDescendantMailboxesFilter, inboxSelectionService,
-      inboxUserQuotaService, inboxUnavailableAccountNotifier;
+      inboxUserQuotaService, inboxUnavailableAccountNotifier, inboxUtils;
   var JMAP_GET_MESSAGES_VIEW, INBOX_EVENTS, DEFAULT_MAX_SIZE_UPLOAD, INFINITE_LIST_POLLING_INTERVAL;
 
   beforeEach(function() {
@@ -103,7 +103,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
                                           _inboxMailboxesService_, ___, _JMAP_GET_MESSAGES_VIEW_,
                                           _DEFAULT_FILE_TYPE_, _moment_, _DEFAULT_MAX_SIZE_UPLOAD_, _inboxJmapItemService_,
                                           _INBOX_EVENTS_, _inboxMailboxesCache_, _esnPreviousPage_, _inboxSelectionService_, _inboxUnavailableAccountNotifier_,
-                                          _INFINITE_LIST_POLLING_INTERVAL_) {
+                                          _INFINITE_LIST_POLLING_INTERVAL_, _inboxUtils_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -123,6 +123,7 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
     inboxPlugins = _inboxPlugins_;
     INFINITE_LIST_POLLING_INTERVAL = _INFINITE_LIST_POLLING_INTERVAL_;
     inboxFilteredList = _inboxFilteredList_;
+    inboxUtils = _inboxUtils_;
 
     scope = $rootScope.$new();
   }));
@@ -1088,6 +1089,25 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         expect($hide).to.have.not.been.called;
       });
 
+      it('should do nothing and reject promise if mailbox name is not valid', function(done) {
+        jmapClient.getMailboxes = function() { return $q.when([]); };
+        jmapClient.createMailbox = sinon.spy();
+        inboxUtils.isValidMailboxName = sinon.stub().returns(false);
+
+        initController('addFolderController');
+
+        scope.mailbox = { name: 'Name', parentId: 123 };
+        scope.addFolder($hide).then(done.bind(null, 'should reject'), function(err) {
+          expect(err.message).to.equal('Please enter a valid folder name');
+          expect(inboxUtils.isValidMailboxName).to.have.been.calledWith(scope.mailbox.name);
+          expect(jmapClient.createMailbox).to.not.have.been.called;
+
+          done();
+        });
+        scope.$digest();
+        expect($hide).to.have.not.been.called;
+      });
+
       it('should display an error notification with a "Reopen" link', function(done) {
         jmapClient.getMailboxes = function() { return $q.when([]); };
         inboxMailboxesService.createMailbox = function(success, failure) { return $q.reject(failure); };
@@ -1186,6 +1206,23 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
         expect($hide).to.have.not.been.called;
       });
 
+      it('should do nothing and reject promise if mailbox name is invalid', function(done) {
+        jmapClient.getMailboxes = function() { return $q.when([]); };
+        jmapClient.updateMailbox = sinon.spy();
+        inboxUtils.isValidMailboxName = sinon.stub().returns(false);
+
+        initController('editFolderController');
+
+        scope.mailbox = { name: 'Name', parentId: 123 };
+        scope.editFolder($hide).then(done.bind(null, 'should reject'), function(err) {
+          expect(err.message).to.equal('Please enter a valid folder name');
+          expect(inboxUtils.isValidMailboxName).to.have.been.calledWith(scope.mailbox.name);
+          expect(jmapClient.updateMailbox).to.not.have.been.called;
+          done();
+        });
+        scope.$digest();
+        expect($hide).to.have.not.been.called;
+      });
     });
 
   });
