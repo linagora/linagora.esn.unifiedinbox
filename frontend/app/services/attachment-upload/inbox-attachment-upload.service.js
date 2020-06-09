@@ -110,7 +110,8 @@
         attachment.upload.cancel = uploadTask.cancel;
         attachment.upload.promise = uploadTask.promise.then(function() {
           attachment.status = 'uploaded';
-        }, function() {
+        }, function(error) {
+          attachmentProvider.handleErrorOnUploading && attachmentProvider.handleErrorOnUploading(error.response);
           attachment.status = 'error';
         }, function(progress) {
           attachment.upload.progress = progress;

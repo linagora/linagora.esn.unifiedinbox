@@ -95,6 +95,26 @@ describe('The inboxAttachmentUploadService service', function() {
       expect(attachment.status).to.equal('error');
     });
 
+    it('should call handle error on promise rejected if provider can handle it', function() {
+      var error = { response: 'something failed' };
+
+      attachmentProviderMock.upload = function() {
+        return {
+          promise: $q.reject(error)
+        };
+      };
+
+      attachmentProviderMock.handleErrorOnUploading = sinon.spy();
+
+      var attachment = {attachmentType: 'provider'};
+
+      inboxAttachmentUploadService._upload(attachment);
+      $rootScope.$digest();
+
+      expect(attachmentProviderMock.handleErrorOnUploading).to.have.been.calledOnce;
+      expect(attachmentProviderMock.handleErrorOnUploading).to.have.been.calledWith(error.response);
+    });
+
     it('should update the upload progress on promise notified', function() {
       var uploadDeferred = $q.defer();
 
