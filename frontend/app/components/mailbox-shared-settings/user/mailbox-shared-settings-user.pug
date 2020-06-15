@@ -3,9 +3,9 @@
     .avatar
       esn-avatar(user-id="ctrl.user._id")
     .title
-      .name
+      .name.ellipsis(title="{{::ctrl.user.displayName}}")
         span {{::ctrl.user.displayName}}
-      .owner
+      .owner.ellipsis(title="{{::ctrl.user.preferredEmail}}")
         span {{::ctrl.user.preferredEmail}}
 
   .rights(ng-if="ctrl.isOwner()")
