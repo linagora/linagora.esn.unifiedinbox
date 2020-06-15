@@ -8,6 +8,8 @@
     .flex-row;
     .flex-shorthand(1, 0, 40%);
 
+    max-width: 30%;
+
     .avatar {
       margin-right: 8px;
 
@@ -18,6 +20,8 @@
 
     .title {
       .flex-column;
+
+      max-width: 100%;
 
       .name {
         font-weight: 600;
@@ -33,8 +37,10 @@
     .flex-grow;
     .all-centered;
 
+    padding-left: 20px;
+
     .select {
-      max-width: 120px;
+      max-width: 60%;
     }
 
     .mdi {
@@ -58,12 +64,8 @@
 
 .is-desktop {
   .inbox-mailbox-shared-settings-user {
-    .rights {
-      padding-left: 15px;
-
-      .select {
-        max-width: 300px;
-      }
+    .meta {
+      max-width: 40%;
     }
 
     .actions {
