@@ -1693,13 +1693,13 @@ describe('The linagora.esn.unifiedinbox module controllers', function() {
       });
 
       it('should set time to default if it is not fixed', function() {
-        vacation.toDate = new Date(2016, 9, 22);
+        vacation.toDate = new Date(Date.UTC(2016, 9, 22));
         ctrl = initController('inboxConfigurationVacationController');
         ctrl.momentTimes.toDate.fixed = false;
         ctrl.updateDateAndTime('toDate');
 
         expect(moment.isMoment(scope.vacation.toDate)).to.be.true;
-        expect(scope.vacation.toDate.isSame(new Date(2016, 9, 22, 23, 59, 59))).to.be.true;
+        expect(scope.vacation.toDate.isSame(new Date(Date.UTC(2016, 9, 22, 23, 59, 59)))).to.be.true;
       });
     });
 
