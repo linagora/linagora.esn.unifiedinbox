@@ -3,9 +3,9 @@
     .avatar
       esn-avatar(user-id="ctrl.owner._id")
     .title
-      .name
+      .name.ellipsis(title="{{::ctrl.owner.displayName}}")
         span {{::ctrl.owner.displayName}}
-      .owner
+      .owner.ellipsis(title="{{::ctrl.owner.preferredEmail}}")
         span {{::ctrl.owner.preferredEmail}}
 
   .actions
