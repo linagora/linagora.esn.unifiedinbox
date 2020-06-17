@@ -4,7 +4,7 @@
   angular.module('linagora.esn.unifiedinbox')
     .factory('inboxEmailSendingHookService', inboxEmailSendingHookService);
 
-  function inboxEmailSendingHookService($q) {
+  function inboxEmailSendingHookService($q, _) {
     var preSendingHooks = [];
     var postSendingHooks = [];
 
@@ -30,10 +30,12 @@
     }
 
     function preSending(email) {
+      var cloneEmail = _.assign({}, email);
+
       return $q.all(preSendingHooks.map(function(hook) {
-        return hook(email);
+        return hook(cloneEmail);
       })).then(function() {
-        return email;
+        return cloneEmail;
       });
     }
 
