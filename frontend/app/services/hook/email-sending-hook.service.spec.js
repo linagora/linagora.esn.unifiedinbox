@@ -42,9 +42,9 @@ describe('The inboxEmailSendingHookService', function() {
       inboxEmailSendingHookService.registerPreSendingHook(hook);
       inboxEmailSendingHookService.registerPreSendingHook(hook2);
 
-      inboxEmailSendingHookService.preSending('email').then(function() {
-        expect(hook).to.have.been.calledWith('email');
-        expect(hook2).to.have.been.calledWith('email');
+      inboxEmailSendingHookService.preSending({}).then(function() {
+        expect(hook).to.have.been.calledWith({});
+        expect(hook2).to.have.been.calledWith({});
         done();
       });
       $rootScope.$digest();
@@ -57,9 +57,9 @@ describe('The inboxEmailSendingHookService', function() {
 
       inboxEmailSendingHookService.registerPreSendingHook(hook);
 
-      inboxEmailSendingHookService.preSending('email').then(function(data) {
-        expect(hook).to.have.been.calledWith('email');
-        expect(data).to.equal('email');
+      inboxEmailSendingHookService.preSending({}).then(function(data) {
+        expect(hook).to.have.been.calledWith({});
+        expect(data).to.deep.equal({});
         done();
       });
       $rootScope.$digest();
@@ -72,16 +72,16 @@ describe('The inboxEmailSendingHookService', function() {
 
       inboxEmailSendingHookService.registerPreSendingHook(hook);
 
-      inboxEmailSendingHookService.preSending('email').catch(function() {
-        expect(hook).to.have.been.calledWith('email');
+      inboxEmailSendingHookService.preSending({}).catch(function() {
+        expect(hook).to.have.been.calledWith({});
         done();
       });
       $rootScope.$digest();
     });
 
     it('should resolve the input email when there is no hook', function(done) {
-      inboxEmailSendingHookService.preSending('email').then(function(data) {
-        expect(data).to.equal('email');
+      inboxEmailSendingHookService.preSending({}).then(function(data) {
+        expect(data).to.deep.equal({});
         done();
       });
       $rootScope.$digest();
