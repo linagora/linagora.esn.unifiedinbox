@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 
 const FRONTEND_PATH = require('./constants').FRONTEND_PATH;
 
@@ -14,7 +15,7 @@ module.exports = function(dependencies) {
   require('./config/views')(dependencies, application);
 
   application.use(express.static(FRONTEND_PATH));
-  application.use('/api/inbox', authorize.requiresAPILogin, require('./api')(dependencies));
+  application.use('/api/inbox', cors({origin: true, credentials: true}), authorize.requiresAPILogin, require('./api')(dependencies));
   application.use('/mailto', authenticate.loginHandler, authorize.loginAndContinue, require('./mailto')(dependencies));
 
   return application;
